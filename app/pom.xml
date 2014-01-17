@@ -14,6 +14,10 @@
 
     <name>APP_NAME - App</name>
 
+    <properties>
+        <parceler.version>0.2.1</parceler.version>
+    </properties>
+
     <repositories>
         <repository>
             <id>Atomic Robot Maven Repository</id>
@@ -26,6 +30,18 @@
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.parceler</groupId>
+            <artifactId>parceler</artifactId>
+            <version>${parceler.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.parceler</groupId>
+            <artifactId>parceler-api</artifactId>
+            <version>${parceler.version}</version>
         </dependency>
 
         <dependency>
