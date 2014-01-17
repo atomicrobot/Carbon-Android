@@ -5,6 +5,7 @@ Development Requirements
 - Git on path
 - Maven 3.1.1 (or later) on path
 - Latest version of the ADT (19+) on path with Android 4.0+ artifacts and all extra artifacts downloaded.
+    - HAXM installed (see: http://developer.android.com/tools/devices/emulator.html)
 - IntelliJ 13+ is recommended for the IDE.
 
 Project Setup
@@ -16,14 +17,30 @@ Project Setup
 - Open the project up in your favorite IDE.
 - You'll also probably need a release key at some point.  Go to the distribution/keys directory and run `generateKey.sh release`
 
-Device/Emulator
+Emulator
 ---------------
 Ensure that you have a emulator with Android 4.1 or higher running or an equivalent device attached. If you would like
 the build to start and emulator ensure that an avd with the name `16instrumentationtest` exists.  If you are using an
 emulator there is value in setting up HAXM so you use the much faster x86 emulator images.
 
+IntelliJ Setup
+---------------
+You will need to setup several run configurations to be useful.  The following are recommended:
+
+- Add a new "Android Application" run configuration called "app".  Run this when you want to run the app.
+    - Set the "Module" to "app".
+    - Set the "Target device" to "Show chooser dialog".
+- Add a new "JUnit" run configuration called "app tests".  Run this when you want to run the fast unit tests.
+    - Set the "Test kind" to "All in package".
+    - Set "Search for tests" to "In a single module".
+    - Set "Working directory" to "$MODULE_DIR$".
+    - Set "Use classpath of module" to "app".
+- Add a new "Android Tests" run configuration called "instrumentation".  Run this when you want to run the slow instrumentation tests.
+    - Set the "Module" to "instrumentation".
+    - Set the "Target device" to "Show chooser dialog".
+
 Full Build
-----------
+---------------
 A full build can be executed with the command:
 
 `mvn clean install`
@@ -31,7 +48,7 @@ A full build can be executed with the command:
 This will build everything as well as deploy the app to the emulator/device and execute the instrumentation tests there.
 
 Release Build
--------------
+---------------
 The release build can be invoked with something like this (ideally on a CI environment):
 
 ``mvn clean install -P release -Dbuild.number=123 -Dfingerprint=`git rev-parse HEAD` `` (markdown escaped)
