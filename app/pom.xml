@@ -258,6 +258,11 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
             </plugin>
@@ -266,13 +271,22 @@
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
-                    <excludeFilterFile>../findbugs-exclude.xml</excludeFilterFile>
+                    <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.0.1</version>
+
+                <configuration>
+                    <linkXRef>true</linkXRef>
+                    <detail>true</detail>
+                    <sourceEncoding>UTF-8</sourceEncoding>
+                    <rulesets>
+                        <ruleset>../config/pmd-rulesets.xml</ruleset>
+                    </rulesets>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

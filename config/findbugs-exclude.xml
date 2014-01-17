@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Ignore warnings about field names in R -->
+    <Match>
+        <Class name="~.*\.R(?:\$.*)?$"/>
+        <Bug code="Nm,MS,NP"/>
+    </Match>
+</FindBugsFilter>
