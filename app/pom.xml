@@ -48,28 +48,15 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/res</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/src/templates/res</directory>
-                                    <targetPath>${project.basedir}/res</targetPath>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
@@ -143,7 +130,36 @@
                             </execution>
                         </executions>
                     </plugin>
-
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/res</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/res</directory>
+                                            <filtering>false</filtering>
+                                            <targetPath>${project.build.directory}/res</targetPath>
+                                            <includes>
+                                                <include>**/*</include>
+                                            </includes>
+                                        </resource>
+                                        <resource>
+                                            <directory>${project.basedir}/src/templates/res</directory>
+                                            <targetPath>${project.build.directory}/res</targetPath>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jarsigner-plugin</artifactId>
@@ -187,6 +203,7 @@
                                 <outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk
                                 </outputApk>
                             </zipalign>
+                            <resourceDirectory>${project.build.directory}/res</resourceDirectory>
                             <manifest>
                                 <debuggable>false</debuggable>
                                 <versionName>${project.version} b${build.number}</versionName>
@@ -270,3 +287,4 @@
         </plugins>
     </reporting>
 </project>
+

@@ -36,7 +36,4 @@ The release build can be invoked with something like this (ideally on a CI envir
 
 ``mvn clean install -P release -Dbuild.number=123 -Dfingerprint=`git rev-parse HEAD` `` (markdown escaped)
 
-which will in turn sign and zipalign the apk.  Few things to note:
-
-- This will modify project files so if you are running it locally make sure to avoid committing files it might have changed.
-- Make sure to install and verify this build works to make sure ProGuard didn't create unexpected issues!
+which will in turn sign and zipalign the apk.
