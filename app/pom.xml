@@ -23,19 +23,26 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.android</groupId>
-            <artifactId>android</artifactId>
+            <artifactId>android-test</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android-test</artifactId>
-            <scope>provided</scope>
+            <groupId>org.robolectric</groupId>
+            <artifactId>robolectric</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -72,6 +79,9 @@
                     <manifest>
                         <debuggable>true</debuggable>
                     </manifest>
+                    <lint>
+                        <skip>false</skip>
+                    </lint>
                 </configuration>
                 <executions>
                     <execution>
@@ -87,6 +97,16 @@
                         <goals>
                             <goal>zipalign</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>lint</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>lint</goal>
+                        </goals>
+                        <configuration>
+                            <lintEnableHtml>true</lintEnableHtml>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -223,4 +243,29 @@
             </build>
         </profile>
     </profiles>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.0.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.16</version>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

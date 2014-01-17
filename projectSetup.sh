@@ -32,7 +32,8 @@ function updateFiles()
 
     updateFile app/src/main/java/MainApplication.java
     updateFile app/src/main/java/MainActivity.java
-    updateFile app/src/main/java/MainFragment.java	
+    updateFile app/src/main/java/MainFragment.java
+    updateFile app/src/test/java/SampleRobolectricTest.java
 
     updateFile app/res/layout/activity_main.xml
     updateFile app/res/values/strings.xml
@@ -50,6 +51,9 @@ function moveFilesToNewHome()
 
 	mkdir -p "app/src/main/java/${packagePath}/ui/fragments"
 	mv "app/src/main/java/MainFragment.java" "app/src/main/java/${packagePath}/ui/fragments/MainFragment.java"
+
+    mkdir -p "app/src/test/java/${packagePath}"
+    mv "app/src/test/java/SampleRobolectricTest.java" "app/src/test/java/${packagePath}/SampleRobolectricTest.java"
 }
 
 updateFiles
