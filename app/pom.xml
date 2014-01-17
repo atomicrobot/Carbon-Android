@@ -76,6 +76,7 @@
                 <artifactId>android-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
+                    <updatedManifestFile>${project.build.directory}/AndroidManifest.xml</updatedManifestFile>
                     <manifest>
                         <debuggable>true</debuggable>
                     </manifest>
