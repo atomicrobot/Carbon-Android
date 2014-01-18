@@ -43,9 +43,10 @@ Full Build
 ---------------
 A full build can be executed with the command:
 
-`mvn clean install`
+`mvn clean install site`
 
-This will build everything as well as deploy the app to the emulator/device and execute the instrumentation tests there.
+This will build everything, run unit tests, run integration tests, and generate project reports.
+The APK should not be treated as a shippable (internal or external build); the value is in the build completion, test execution, and site reports.
 
 Release Build
 ---------------
