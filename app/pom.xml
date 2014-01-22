@@ -20,8 +20,8 @@
 
     <repositories>
         <repository>
-            <id>Atomic Robot Maven Repository</id>
-            <url>https://bitbucket.org/atomicrobot/maven-repo-releases/raw/master/repository</url>
+            <id>Atomic Robot - Release Repository</id>
+            <url>http://madebyatomicrobot.github.io/maven-repo/releases</url>
         </repository>
     </repositories>
 
