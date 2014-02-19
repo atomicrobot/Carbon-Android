@@ -52,6 +52,6 @@ Release Build
 ---------------
 The release build can be invoked with something like this (ideally on a CI environment):
 
-``mvn clean install -P release -Dbuild.number=123 -Dfingerprint=`git rev-parse HEAD` `` (markdown escaped)
+``mvn clean install -P release -Dbuild.version=1.0.0 -Dbuild.number=123 -Dfingerprint=`git rev-parse HEAD` `` (markdown escaped)
 
 which will in turn sign and zipalign the apk.

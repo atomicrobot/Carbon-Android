@@ -7,3 +7,5 @@ target
 .project
 .idea
 gen
+out
+.crashlytics_data

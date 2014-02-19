@@ -37,6 +37,9 @@ function updateFiles()
 
     updateFile app/res/layout/activity_main.xml
     updateFile app/res/values/strings.xml
+
+    updateFile instrumentation/src/main/java/AllTests.java
+    updateFile instrumentation/src/main/java/DummyTest.java
 }
 
 function moveFilesToNewHome() 
@@ -54,6 +57,12 @@ function moveFilesToNewHome()
 
     mkdir -p "app/src/test/java/${packagePath}"
     mv "app/src/test/java/SampleRobolectricTest.java" "app/src/test/java/${packagePath}/SampleRobolectricTest.java"
+
+    mkdir -p "instrumentation/src/main/java/${packagePath}"
+    mv "instrumentation/src/main/java/AllTests.java" "instrumentation/src/main/java/${packagePath}/AllTests.java"
+
+    mkdir -p "instrumentation/src/main/java/${packagePath}"
+    mv "instrumentation/src/main/java/DummyTest.java" "instrumentation/src/main/java/${packagePath}/DummyTest.java"
 }
 
 updateFiles
