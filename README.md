@@ -16,6 +16,7 @@ Project Setup
 - Import the project to git (`git init` and then add the remotes, push, etc)
 - Open the project up in your favorite IDE.
 - You'll also probably need a release key at some point.  Go to the distribution/keys directory and run `generateKey.sh release`
+- To complete Crashlytics setup, you'll need to run the app once where Crashlytics.start() is called outside of the BuildConfig code block.
 
 Emulator
 ---------------
