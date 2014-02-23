@@ -31,6 +31,7 @@
             <artifactId>app</artifactId>
             <version>${project.version}</version>
             <type>apk</type>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>PACKAGE_NAME</groupId>

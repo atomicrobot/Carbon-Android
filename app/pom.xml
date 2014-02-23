@@ -33,28 +33,27 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <properties>
+        <parceler.version>0.2.6</parceler.version>
+        <dagger.version>1.2.1</dagger.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android-test</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.robolectric</groupId>
-            <artifactId>robolectric</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
+            <groupId>com.android.support</groupId>
+            <artifactId>support-v4</artifactId>
+            <version>19.0.0</version>
         </dependency>
 
         <dependency>
@@ -68,6 +67,19 @@
             <groupId>com.squareup</groupId>
             <artifactId>otto</artifactId>
             <version>1.3.4</version>
+        </dependency>
+
+        <!-- Dependency injection -->
+        <dependency>
+            <groupId>com.squareup.dagger</groupId>
+            <artifactId>dagger</artifactId>
+            <version>${dagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.dagger</groupId>
+            <artifactId>dagger-compiler</artifactId>
+            <version>${dagger.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- Networking library -->
@@ -91,24 +103,37 @@
             <version>15.0</version>
         </dependency>
 
+        <!-- Write less view code -->
+        <dependency>
+            <groupId>com.jakewharton</groupId>
+            <artifactId>butterknife</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
         <!-- Parceler -->
         <dependency>
             <groupId>org.parceler</groupId>
             <artifactId>parceler</artifactId>
-            <version>0.2.6</version>
+            <version>${parceler.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.parceler</groupId>
             <artifactId>parceler-api</artifactId>
-            <version>0.2.6</version>
+            <version>${parceler.version}</version>
         </dependency>
 
-        <!-- Google Analytics -->
+        <!-- Testing -->
         <dependency>
-            <groupId>com.google.analytics.android</groupId>
-            <artifactId>library</artifactId>
-            <version>3.01</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.robolectric</groupId>
+            <artifactId>robolectric</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -162,28 +187,6 @@
                         <configuration>
                             <lintEnableHtml>true</lintEnableHtml>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.crashlytics</groupId>
-                <artifactId>crashlytics-maven</artifactId>
-                <version>1.1.0</version>
-                <configuration>
-                    <androidResPath>${project.build.directory}/res</androidResPath>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>GenerateResources</id>
-                        <goals>
-                            <goal>GenerateResources</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>CleanupResources</id>
-                        <goals>
-                            <goal>CleanupResources</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -254,6 +257,28 @@
                                         </resource>
                                     </resources>
                                 </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.crashlytics</groupId>
+                        <artifactId>crashlytics-maven</artifactId>
+                        <version>1.1.0</version>
+                        <configuration>
+                            <androidResPath>${project.build.directory}/res</androidResPath>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>GenerateResources</id>
+                                <goals>
+                                    <goal>GenerateResources</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>CleanupResources</id>
+                                <goals>
+                                    <goal>CleanupResources</goal>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>

@@ -4,18 +4,25 @@ import android.app.Application;
 import com.crashlytics.android.Crashlytics;
 
 public class MainApplication extends Application {
-    
+    private static final String TAG = MainApplication.class.getSimpleName();
+
     @Override
     public void onCreate() {
-    	super.onCreate();
+        super.onCreate();
 
-        setupCrashReporter();
+        //noinspection ConstantConditions,PointlessBooleanExpression
+        if (BuildConfig.DEBUG) {
+            setupDebugConfiguration();
+        } else {
+            setupReleaseConfiguration();
+        }
     }
 
-    private void setupCrashReporter() {
-        //noinspection ConstantConditions,PointlessBooleanExpression
-        if (!BuildConfig.DEBUG) {
-            Crashlytics.start(this);
-        }
+    private void setupDebugConfiguration() {
+        android.util.Log.i(TAG, "Starting with the debug configuration.");
+    }
+
+    private void setupReleaseConfiguration() {
+        Crashlytics.start(this);
     }
 }

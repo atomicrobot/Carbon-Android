@@ -44,15 +44,19 @@ Full Build
 ---------------
 A full build can be executed with the command:
 
-`mvn clean install site`
+`mvn clean install`
 
-This will build everything, run unit tests, run integration tests, and generate project reports.
+This will build everything, run unit tests, and run integration tests, and generate project reports.
 The APK should not be treated as a shippable (internal or external build); the value is in the build completion, test execution, and site reports.
+
+Project Reports
+---------------
+Project reports can be generated with the command:
+
+`mvn clean site`
 
 Release Build
 ---------------
 The release build can be invoked with something like this (ideally on a CI environment):
 
-``mvn clean install -P release -Dbuild.version=1.0.0 -Dbuild.number=123 -Dfingerprint=`git rev-parse HEAD` `` (markdown escaped)
-
-which will in turn sign and zipalign the apk.
+``mvn clean install -P release -Dbuild.version=1.0.0 -Dbuild.number=123 -Dfingerprint=`git rev-parse HEAD` ``
