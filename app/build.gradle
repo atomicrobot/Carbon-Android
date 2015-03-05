@@ -70,10 +70,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("TODO")
-            storePassword "TODO"
-            keyAlias "TODO"
-            keyPassword "TODO"
+            storeFile file('../distribution/keys/demo.jks')
+            storePassword 'demo123'
+            keyAlias 'demo'
+            keyPassword 'demo123'
         }
     }
 
