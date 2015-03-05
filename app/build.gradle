@@ -17,7 +17,7 @@ apply plugin: 'com.github.ben-manes.versions'
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.hugo'
-apply plugin: 'crashlytics'
+//apply plugin: 'crashlytics'
 
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
@@ -35,6 +35,8 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE'
+        exclude 'META-INF/maven/com.squareup.okhttp/okhttp/pom.xml'
+        exclude 'META-INF/maven/com.squareup.okhttp/okhttp/pom.properties'
         exclude 'META-INF/maven/com.squareup/otto/pom.xml'
         exclude 'META-INF/maven/com.squareup/otto/pom.properties'
         exclude 'META-INF/services/javax.annotation.processing.Processor'
@@ -52,7 +54,16 @@ android {
 
         buildConfigField "String", "VERSION_FINGERPRINT", rootProject.ext.versionFingerprint
 
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 
+            'proguard-rules.pro',
+            '../config/proguard/android-support-v4.pro',
+            '../config/proguard/butterknife.pro',
+            '../config/proguard/crashlytics.pro',
+            '../config/proguard/google-play-services.pro',
+            '../config/proguard/parceler.pro',
+            '../config/proguard/okhttp.pro',
+            '../config/proguard/okio.pro',
+            '../config/proguard/otto.pro'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
