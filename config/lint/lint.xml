@@ -5,6 +5,4 @@
         <ignore regexp="okio-1.2.0.jar" />
         <ignore regexp="parceler-0.2.15.jar" />
     </issue>
-
-    <issue id="RtlHardcoded" severity="ignore" />
 </lint>

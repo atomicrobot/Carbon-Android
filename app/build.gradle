@@ -70,10 +70,12 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('../distribution/keys/demo.jks')
-            storePassword 'demo123'
-            keyAlias 'demo'
-            keyPassword 'demo123'
+            apply from: rootProject.file('distribution/keys/sample.gradle')
+
+            storeFile rootProject.file(sampleKeystore)
+            storePassword sampleKeystorePassword
+            keyAlias sampleKeyAlias
+            keyPassword sampleKeyPassword
         }
     }
 

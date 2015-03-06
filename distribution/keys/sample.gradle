@@ -1,0 +1,7 @@
+
+project.ext {
+    sampleKeystore = 'distribution/keys/sample.jks'
+    sampleKeystorePassword = 'Z-LEfATdD3AlTxeVUCEEeN--vQ3yU00SEz0t1C81WNQVXeJlFSCV8RiPr8UM7oQa'
+    sampleKeyAlias = 'sample'
+    sampleKeyPassword = 'irKlcFZIhqjWCXkuT3jpGBpB6ym730C$FVMxySSfahgmuIgq03$JLc-a6vilpQ0j'
+}
