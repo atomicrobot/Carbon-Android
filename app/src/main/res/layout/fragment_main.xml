@@ -9,12 +9,14 @@
         style="?android:textAppearanceMedium"
         android:id="@+id/version"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_short"/>
 
     <TextView
         style="?android:textAppearanceMedium"
         android:id="@+id/fingerprint"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_short"/>
 
 </LinearLayout>
