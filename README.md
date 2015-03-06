@@ -38,3 +38,11 @@ Recommend setting up a three step build chain.
 
 ### Performance gain
 Add `-PdisablePreDex` to all of the Gradle commands that would result in building the app module to eliminate some overhead.
+
+## Gradle and plugins
+
+To see what the dependency tree currently looks like:
+`./gradlew app:dependencies`
+
+To see what dependencies might be out of date:
+`./gradlew app:dependencyUpdates -Drevision=release`
