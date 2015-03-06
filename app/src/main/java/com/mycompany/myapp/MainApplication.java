@@ -5,9 +5,12 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import hugo.weaving.DebugLog;
+
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
 
+    @DebugLog
     @Override
     public void onCreate() {
         super.onCreate();

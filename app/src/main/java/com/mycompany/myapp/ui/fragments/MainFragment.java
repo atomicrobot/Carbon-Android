@@ -8,7 +8,11 @@ import android.view.ViewGroup;
 
 import com.mycompany.myapp.R;
 
+import hugo.weaving.DebugLog;
+
 public class MainFragment extends Fragment {
+
+    @DebugLog
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_main, container, false);
