@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- See: https://android-review.googlesource.com/#/c/93190/1 -->
+    <issue id="InvalidPackage">
+        <ignore regexp="okio-1.2.0.jar" />
+        <ignore regexp="parceler-0.2.15.jar" />
+    </issue>
+
+    <issue id="RtlHardcoded" severity="ignore" />
+</lint>

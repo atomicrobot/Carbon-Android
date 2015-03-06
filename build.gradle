@@ -1,0 +1,61 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.1.2'
+    }
+}
+
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    // Automatically also pull down javadocs and sources (if available)
+    apply plugin: 'idea'
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+
+    // Verbose output for usage of deprecated APIs
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation"
+    }
+}
+
+// Disable predexing (enable on build servers)
+project.ext.preDexLibs = !project.hasProperty('disablePreDex')
+subprojects {
+    project.plugins.whenPluginAdded { plugin ->
+        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        }
+    }
+}
+
+ext {
+    compileSdkVersion = 21
+    buildToolsVersion = "21.1.2"
+    minSdkVersion = 15
+    targetSdkVersion = 21 
+
+    appVersion = "1.0"
+    versionFingerprint = project.hasProperty("fingerprint") ? ("\"" + fingerprint + "\"") : "\"DEV\""
+
+    versionCode = project.hasProperty("buildNumber") ? Integer.parseInt(buildNumber) : 1
+    versionName = "$appVersion b$versionCode"
+
+    libraryAndroidSupport = 'com.android.support:support-v4:21.0.3'
+    libraryAndroidAppCompat = 'com.android.support:appcompat-v7:21.0.3'
+    libraryGooglePlayServices = 'com.google.android.gms:play-services-base:6.5.87'  
+}
+

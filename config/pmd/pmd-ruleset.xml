@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<ruleset name="Custom ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <exclude-pattern>.*/R.java</exclude-pattern>
+    <exclude-pattern>.*/gen/.*</exclude-pattern>
+
+    <rule ref="rulesets/java/android.xml" />
+
+    <rule ref="rulesets/java/basic.xml">
+        <exclude name="CollapsibleIfStatements" />
+    </rule>
+    <rule ref="rulesets/java/braces.xml" />
+    <rule ref="rulesets/java/clone.xml" />
+    <!--<rule ref="rulesets/java/codesize.xml" />  This is noisy...but probably correct-->
+    <!--<rule ref="rulesets/java/comments.xml" />  IMO promotes non-self-reading code-->
+    <!--<rule ref="rulesets/java/controversial.xml" />  No one likes controversy...-->
+    <!--<rule ref="rulesets/java/design.xml" />  Need to tune this to a subset of rules...-->
+    <rule ref="rulesets/java/empty.xml"/>
+    <rule ref="rulesets/java/empty.xml/EmptyCatchBlock">
+        <properties>
+            <property name="allowCommentedBlocks" value="true" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/java/imports.xml" />
+    <!--<rule ref="rulesets/java/naming.xml" />-->
+    <!--<rule ref="rulesets/java/optimizations.xml" />-->
+    <rule ref="rulesets/java/sunsecure.xml">
+        <exclude name="MethodReturnsInternalArray" />  <!-- Both of these are actually probably worth including-->
+        <exclude name="ArrayIsStoredDirectly" />
+    </rule>
+    <!--<rule ref="rulesets/java/strictexception.xml" />  Turning this on would probably be good-->
+    <!--<rule ref="rulesets/java/strings.xml" />  Needs tuned-->
+    <rule ref="rulesets/java/typeresolution.xml">
+        <exclude name="LooseCoupling" />
+        <exclude name="SignatureDeclareThrowsException" />
+    </rule>
+    <rule ref="rulesets/java/unnecessary.xml">
+        <exclude name="UselessParentheses" /> <!-- This can improve readability; keep excluded!-->
+    </rule>
+    <rule ref="rulesets/java/unusedcode.xml">
+        <exclude name="UnusedPrivateField" />  <!-- temporary... -->
+        <exclude name="UnusedFormalParameter" /> <!-- temp to... -->
+    </rule>
+    <!-- This XPath needs tweaked...
+    <rule ref="rulesets/java/unusedcode.xml/UnusedPrivateField">
+        <properties>
+            <property name="violationSuppressXPath" value="//FieldDeclaration[../Annotation/SingleMemberAnnotation/Name/@Image='com.google.api.client.util.Key']"/>
+        </properties>
+    </rule>
+    -->
+
+</ruleset>
