@@ -54,17 +54,17 @@ android {
 
         buildConfigField "String", "VERSION_FINGERPRINT", rootProject.ext.versionFingerprint
 
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 
-            'proguard-rules.pro',
-            '../config/proguard/android-support-v4.pro',
-            '../config/proguard/butterknife.pro',
-            '../config/proguard/crashlytics.pro',
-            '../config/proguard/google-play-services.pro',
-            '../config/proguard/okhttp.pro',
-            '../config/proguard/okio.pro',
-            '../config/proguard/otto.pro',
-            '../config/proguard/parceler.pro',
-            '../config/proguard/retrofit.pro',
+        proguardFile getDefaultProguardFile('proguard-android.txt')
+        proguardFile 'proguard-rules.pro'
+        proguardFile '../config/proguard/android-support-v4.pro'
+        proguardFile '../config/proguard/butterknife.pro'
+        proguardFile '../config/proguard/crashlytics.pro'
+        proguardFile '../config/proguard/google-play-services.pro'
+        proguardFile '../config/proguard/okhttp.pro'
+        proguardFile '../config/proguard/okio.pro'
+        proguardFile '../config/proguard/otto.pro'
+        proguardFile '../config/proguard/parceler.pro'
+        proguardFile '../config/proguard/retrofit.pro'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
