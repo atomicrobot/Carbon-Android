@@ -1,7 +1,6 @@
 package com.mycompany.myapp.ui.activities;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 
 import com.mycompany.myapp.R;
