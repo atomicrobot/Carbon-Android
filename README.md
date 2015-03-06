@@ -25,11 +25,14 @@ the organization settings, and then get the keys and secrets it displays.
 
 ### Building the app
 This is approximately the gradle command to use for a TeamCity configuration:
+
 `app:assembleRelease -Pfingerprint=%build.vcs.number% -PbuildNumber=%build.number% -PdisablePreDex
+
 This will pull in the current Git SHA and auto incrementing build number as part of the build.
 
 ### Build Chain
 Recommend setting up a three step build chain.
+
 1. Run the static analysis tools (see above)
 2. Run the automated tests (see above)
 3. Build the app (see above)
