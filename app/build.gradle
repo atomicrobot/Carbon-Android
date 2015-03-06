@@ -17,7 +17,7 @@ apply plugin: 'com.github.ben-manes.versions'
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.hugo'
-//apply plugin: 'crashlytics'
+apply plugin: 'crashlytics'
 
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
@@ -96,6 +96,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile rootProject.ext.libraryAndroidSupport
+    compile rootProject.ext.libraryAndroidAppCompat
     compile rootProject.ext.libraryGooglePlayServices
 
     compile 'com.jakewharton:butterknife:6.0.0'

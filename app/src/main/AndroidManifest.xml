@@ -7,24 +7,27 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:name=".MainApplication"
-        android:theme="@style/app_theme">
+        android:theme="@style/AppTheme">
 
         <activity
             android:label="@string/app_name"
-            android:name=".ui.activities.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+            android:name=".ui.activities.MainActivity" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+        <activity-alias
+            android:name=".Launcher"
+            android:targetActivity=".ui.activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
 
         <meta-data
             android:name="com.crashlytics.ApiKey"
-            android:value="TODO"/>
+            android:value="731470e0695708deebc77da163f2c2ef0cc7dc29"/>
 
     </application>
 

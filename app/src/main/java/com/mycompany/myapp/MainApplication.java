@@ -1,6 +1,8 @@
 package com.mycompany.myapp;
 
 import android.app.Application;
+import android.util.Log;
+
 import com.crashlytics.android.Crashlytics;
 
 public class MainApplication extends Application {
@@ -15,10 +17,12 @@ public class MainApplication extends Application {
         } else {
             setupReleaseConfiguration();
         }
+
+        setupReleaseConfiguration();
     }
 
     private void setupDebugConfiguration() {
-        android.util.Log.i(TAG, "Starting with the debug configuration.");
+        Log.i(TAG, "Starting with the debug configuration.");
     }
 
     private void setupReleaseConfiguration() {

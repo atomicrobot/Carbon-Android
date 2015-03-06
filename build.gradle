@@ -55,6 +55,7 @@ ext {
     versionName = "$appVersion b$versionCode"
 
     libraryAndroidSupport = 'com.android.support:support-v4:21.0.3'
+    libraryAndroidAppCompat = 'com.android.support:appcompat-v7:21.0.3'
     libraryGooglePlayServices = 'com.google.android.gms:play-services-base:6.5.87'  
 }
 
