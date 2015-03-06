@@ -1,34 +1,32 @@
 package com.mycompany.myapp;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+import com.mycompany.myapp.monitoring.CrashReporter;
+
+import javax.inject.Inject;
 
 import hugo.weaving.DebugLog;
 
 public class MainApplication extends Application {
-    private static final String TAG = MainApplication.class.getSimpleName();
+
+    private ApplicationComponent applicationComponent;
+
+    @Inject
+    CrashReporter crashReporter;
 
     @DebugLog
     @Override
     public void onCreate() {
         super.onCreate();
 
-        if (BuildConfig.DEBUG) {
-            setupDebugConfiguration();
-        } else {
-            setupReleaseConfiguration();
-        }
+        applicationComponent = ApplicationComponent.Initializer.init(this);
+        applicationComponent.inject(this);
 
-        setupReleaseConfiguration();
+        crashReporter.startCrashReporter();
     }
 
-    private void setupDebugConfiguration() {
-        Log.i(TAG, "Starting with the debug configuration.");
-    }
-
-    private void setupReleaseConfiguration() {
-        Crashlytics.start(this);
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
     }
 }
