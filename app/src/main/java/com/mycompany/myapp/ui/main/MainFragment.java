@@ -9,7 +9,14 @@ import android.widget.TextView;
 
 import com.mycompany.myapp.BuildConfig;
 import com.mycompany.myapp.R;
+import com.mycompany.myapp.data.api.github.GitHubBusService;
+import com.mycompany.myapp.data.api.github.GitHubBusService.LoadCommitsRequest;
+import com.mycompany.myapp.data.api.github.GitHubBusService.LoadCommitsResponse;
+import com.mycompany.myapp.data.api.github.model.Commit;
 import com.mycompany.myapp.ui.BaseFragment;
+import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -19,6 +26,9 @@ import icepick.Icepick;
 import icepick.Icicle;
 
 public class MainFragment extends BaseFragment<MainComponent> {
+
+    @Inject
+    GitHubBusService gitHubBusService;
 
     @InjectView(R.id.editText)
     EditText editText;
@@ -71,10 +81,19 @@ public class MainFragment extends BaseFragment<MainComponent> {
         crashReporter.logMessage("woohoo from the fragment!");
 
         logger.i("Fragment is ready to go!");
+
+        gitHubBusService.loadCommits(new LoadCommitsRequest("madebyatomicrobot", "android-starter-project"));
     }
 
     @OnTextChanged(R.id.editText)
     public void onEditTextChanged(CharSequence text) {
         this.enteredText = text.toString();
+    }
+
+    @Subscribe
+    public void handleLoadCommitsResponse(LoadCommitsResponse response) {
+        for (Commit commit : response.getCommits()) {
+            logger.i("Commit message: %s", commit.getCommitMessage());
+        }
     }
 }
