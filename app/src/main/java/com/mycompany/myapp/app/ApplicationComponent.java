@@ -1,6 +1,6 @@
 package com.mycompany.myapp.app;
 
-import android.content.Context;
+import android.app.Application;
 
 import com.mycompany.myapp.data.DataModule;
 import com.mycompany.myapp.data.api.github.GitHubBusService;
@@ -24,10 +24,8 @@ import timber.log.Timber.Tree;
         GitHubModule.class
 })
 public interface ApplicationComponent {
-    @ForApplicationScope
-    Context applicationContext();
+    Application application();
 
-    @ForApplicationScope
     Tree tree();
 
     CrashReporter crashReporter();

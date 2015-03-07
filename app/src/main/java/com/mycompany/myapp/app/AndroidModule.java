@@ -1,6 +1,6 @@
 package com.mycompany.myapp.app;
 
-import android.content.Context;
+import android.app.Application;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,14 +16,7 @@ public class AndroidModule {
     }
 
     @Provides
-    @ForApplicationScope
-    public MainApplication application() {
-        return application;
-    }
-
-    @Provides
-    @ForApplicationScope
-    public Context applicationContext() {
+    public Application application() {
         return application;
     }
 }

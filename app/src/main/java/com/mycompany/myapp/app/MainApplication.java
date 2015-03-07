@@ -14,7 +14,6 @@ public class MainApplication extends Application implements HasComponent<Applica
     private ApplicationComponent component;
 
     @Inject
-    @ForApplicationScope
     Tree logger;
 
     @DebugLog

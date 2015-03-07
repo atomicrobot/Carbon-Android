@@ -1,7 +1,5 @@
 package com.mycompany.myapp.monitoring;
 
-import com.mycompany.myapp.app.ForApplicationScope;
-
 import dagger.Module;
 import dagger.Provides;
 import timber.log.Timber;
@@ -17,7 +15,6 @@ public class LoggerModule {
         tree = Timber.asTree();
     }
 
-    @ForApplicationScope
     @Provides
     Tree provideTimberTree() {
         return tree;

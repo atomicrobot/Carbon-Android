@@ -1,8 +1,7 @@
 package com.mycompany.myapp.data;
 
-import android.content.Context;
+import android.app.Application;
 
-import com.mycompany.myapp.app.ForApplicationScope;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -20,7 +19,7 @@ public class DataModule {
     static final int DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
     @Provides
-    OkHttpClient provideOkHttpClient(@ForApplicationScope Context app, @ForApplicationScope Tree logger) {
+    OkHttpClient provideOkHttpClient(Application app, Tree logger) {
         OkHttpClient client = new OkHttpClient();
 
         // Install an HTTP cache in the application cache directory.

@@ -1,6 +1,5 @@
 package com.mycompany.myapp.data.api.github;
 
-import com.mycompany.myapp.app.ForApplicationScope;
 import com.squareup.otto.Bus;
 
 import dagger.Module;
@@ -32,7 +31,7 @@ public class GitHubModule {
     }
 
     @Provides
-    GitHubBusService provideGitHubBusService(GitHubApiService api, Bus bus, @ForApplicationScope Tree logger) {
+    GitHubBusService provideGitHubBusService(GitHubApiService api, Bus bus, Tree logger) {
         return new GitHubBusService(api, bus, logger);
     }
 }
