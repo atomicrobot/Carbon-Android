@@ -10,11 +10,13 @@ import com.mycompany.myapp.monitoring.CrashReporter;
 import com.mycompany.myapp.monitoring.LoggerModule;
 import com.squareup.otto.Bus;
 
+import javax.inject.Singleton;
+
 import dagger.Component;
-import retrofit.RestAdapter;
 import retrofit.client.Client;
 import timber.log.Timber.Tree;
 
+@Singleton
 @Component(modules = {
         AndroidModule.class,
         LoggerModule.class,
@@ -33,8 +35,6 @@ public interface ApplicationComponent {
     Bus bus();
 
     Client client();
-
-    RestAdapter restAdapter();
 
     GitHubBusService gitHubBusService();
 

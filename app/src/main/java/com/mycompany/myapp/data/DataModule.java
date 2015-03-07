@@ -8,6 +8,8 @@ import com.squareup.okhttp.OkHttpClient;
 import java.io.File;
 import java.io.IOException;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import retrofit.client.Client;
@@ -16,8 +18,9 @@ import timber.log.Timber.Tree;
 
 @Module
 public class DataModule {
-    static final int DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
+    private static final int DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
+    @Singleton
     @Provides
     OkHttpClient provideOkHttpClient(Application app, Tree logger) {
         OkHttpClient client = new OkHttpClient();
@@ -34,7 +37,7 @@ public class DataModule {
         return client;
     }
 
-
+    @Singleton
     @Provides
     Client provideClient(OkHttpClient client) {
         return new OkClient(client);

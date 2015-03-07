@@ -16,7 +16,7 @@ public class ActivityModule {
     }
 
     @Provides
-    @ForActivityScope
+    @ActivityScope
     Activity provideActivity() {
         return activity;
     }

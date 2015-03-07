@@ -1,5 +1,7 @@
 package com.mycompany.myapp.monitoring;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import timber.log.Timber;
@@ -8,15 +10,10 @@ import timber.log.Timber.Tree;
 
 @Module
 public class LoggerModule {
-    private final Tree tree;
-
-    public LoggerModule() {
-        Timber.plant(new DebugTree());
-        tree = Timber.asTree();
-    }
-
+    @Singleton
     @Provides
     Tree provideTimberTree() {
-        return tree;
+        Timber.plant(new DebugTree());
+        return Timber.asTree();
     }
 }

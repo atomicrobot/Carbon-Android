@@ -3,21 +3,17 @@ package com.mycompany.myapp.modules;
 import com.mycompany.myapp.monitoring.CrashReporter;
 import com.mycompany.myapp.monitoring.LoggingOnlyCrashReporter;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import hugo.weaving.DebugLog;
 
 @Module
 public class CrashReporterModule {
-    private final CrashReporter crashReporter;
-
-    @DebugLog
-    public CrashReporterModule() {
-        this.crashReporter = new LoggingOnlyCrashReporter();
-    }
-
+    @Singleton
     @Provides
     CrashReporter crashReporter() {
-        return crashReporter;
+        return new LoggingOnlyCrashReporter();
     }
 }
