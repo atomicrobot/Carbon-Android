@@ -6,12 +6,12 @@ public class LoggingOnlyCrashReporter implements CrashReporter {
     private static final String TAG = LoggingOnlyCrashReporter.class.getSimpleName();
 
     @Override
-    public void startCrashReporter() {
-        Log.v(TAG, "Starting the logging only crash reporter.");
+    public void logMessage(String message) {
+        Log.i(TAG, message);
     }
 
     @Override
-    public void logMessage(String message) {
-        Log.e(TAG, message);
+    public void logException(String message, Exception ex) {
+        Log.e(TAG, message, ex);
     }
 }

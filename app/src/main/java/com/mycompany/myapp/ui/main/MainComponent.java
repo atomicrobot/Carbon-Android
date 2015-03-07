@@ -6,11 +6,11 @@ import com.mycompany.myapp.ui.ForActivityScope;
 
 import dagger.Component;
 
-@ForActivityScope
 @Component(
         dependencies = ApplicationComponent.class,
         modules = ActivityModule.class
 )
+@ForActivityScope
 public interface MainComponent {
     void inject(MainActivity activity);
     void inject(MainFragment fragment);

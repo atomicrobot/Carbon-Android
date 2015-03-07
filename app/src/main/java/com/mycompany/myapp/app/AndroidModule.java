@@ -2,8 +2,6 @@ package com.mycompany.myapp.app;
 
 import android.content.Context;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import hugo.weaving.DebugLog;
@@ -18,14 +16,12 @@ public class AndroidModule {
     }
 
     @Provides
-    @Singleton
     @ForApplicationScope
     public MainApplication application() {
         return application;
     }
 
     @Provides
-    @Singleton
     @ForApplicationScope
     public Context applicationContext() {
         return application;
