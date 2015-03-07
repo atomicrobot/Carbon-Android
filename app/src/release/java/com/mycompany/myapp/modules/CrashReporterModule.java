@@ -17,6 +17,6 @@ public class CrashReporterModule {
 
     @Provides
     CrashReporter provideCrashReporter() {
-        return crashReporter
+        return crashReporter;
     }
 }
