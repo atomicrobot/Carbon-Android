@@ -3,7 +3,6 @@ package com.mycompany.myapp.ui.main;
 import android.os.Bundle;
 
 import com.mycompany.myapp.R;
-import com.mycompany.myapp.app.MainApplication;
 import com.mycompany.myapp.ui.ActivityModule;
 import com.mycompany.myapp.ui.BaseActivity;
 
@@ -13,7 +12,7 @@ public class MainActivity extends BaseActivity<MainComponent> {
     @Override
     protected MainComponent buildComponent() {
         return Dagger_MainComponent.builder()
-                .applicationComponent(((MainApplication) getApplication()).getApplicationComponent())
+                .applicationComponent(getApplicationComponent())
                 .activityModule(new ActivityModule(this))
                 .build();
     }

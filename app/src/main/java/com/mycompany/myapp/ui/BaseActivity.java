@@ -3,6 +3,9 @@ package com.mycompany.myapp.ui;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
+import com.mycompany.myapp.app.ApplicationComponent;
+import com.mycompany.myapp.app.HasComponent;
+import com.mycompany.myapp.app.MainApplication;
 import com.mycompany.myapp.monitoring.CrashReporter;
 import com.squareup.otto.Bus;
 
@@ -43,5 +46,9 @@ public abstract class BaseActivity<T> extends ActionBarActivity implements HasCo
     @Override
     public T getComponent() {
         return component;
+    }
+
+    protected ApplicationComponent getApplicationComponent() {
+        return ((MainApplication) getApplication()).getComponent();
     }
 }

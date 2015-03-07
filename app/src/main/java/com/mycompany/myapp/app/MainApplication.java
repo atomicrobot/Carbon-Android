@@ -7,9 +7,8 @@ import com.mycompany.myapp.BuildConfig;
 
 import hugo.weaving.DebugLog;
 
-public class MainApplication extends Application {
-
-    private ApplicationComponent applicationComponent;
+public class MainApplication extends Application implements HasComponent<ApplicationComponent> {
+    private ApplicationComponent component;
 
     @DebugLog
     @Override
@@ -18,10 +17,10 @@ public class MainApplication extends Application {
 
         startCrashReporter();
 
-        applicationComponent = Dagger_ApplicationComponent.builder()
+        component = Dagger_ApplicationComponent.builder()
                 .androidModule(new AndroidModule(this))
                 .build();
-        applicationComponent.inject(this);
+        component.inject(this);
     }
 
     /**
@@ -34,7 +33,8 @@ public class MainApplication extends Application {
         }
     }
 
-    public ApplicationComponent getApplicationComponent() {
-        return applicationComponent;
+    @Override
+    public ApplicationComponent getComponent() {
+        return component;
     }
 }
