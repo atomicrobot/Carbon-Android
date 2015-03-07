@@ -42,6 +42,20 @@ subprojects {
     }
 }
 
+// Prevent wildcard dependencies
+allprojects {
+    afterEvaluate { project ->
+        project.configurations.all {
+            resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+                def requested = details.requested
+                if (requested.version.contains('+')) {
+                    throw new GradleException("Wildcard dependency forbidden: ${requested.group}:${requested.name}:${requested.version}")
+                }
+            }
+        }
+    }
+}
+
 ext {
     // Build (this implementation assumes values are being provided as arguments, perhaps by a build server)
     appVersion = "1.0"
