@@ -5,6 +5,12 @@
               android:layout_height="match_parent"
               android:padding="16dp">
 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/placeholder_short"/>
+
     <TextView
         style="?android:textAppearanceMedium"
         android:id="@+id/version"
