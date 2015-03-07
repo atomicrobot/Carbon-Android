@@ -1,4 +1,4 @@
-package com.mycompany.myapp;
+package com.mycompany.myapp.app;
 
 import android.app.Application;
 
@@ -20,7 +20,9 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        applicationComponent = ApplicationComponent.Initializer.init(this);
+        applicationComponent = Dagger_ApplicationComponent.builder()
+                .androidModule(new AndroidModule(this))
+                .build();
         applicationComponent.inject(this);
 
         crashReporter.startCrashReporter();

@@ -9,4 +9,9 @@ public class LoggingOnlyCrashReporter implements CrashReporter {
     public void startCrashReporter() {
         Log.v(TAG, "Starting the logging only crash reporter.");
     }
+
+    @Override
+    public void logMessage(String message) {
+        Log.e(TAG, message);
+    }
 }

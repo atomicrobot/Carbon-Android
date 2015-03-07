@@ -8,6 +8,6 @@
         android:id="@+id/fragment_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.mycompany.myapp.ui.fragments.MainFragment"/>
+        android:name="com.mycompany.myapp.ui.main.MainFragment"/>
 </LinearLayout>
 

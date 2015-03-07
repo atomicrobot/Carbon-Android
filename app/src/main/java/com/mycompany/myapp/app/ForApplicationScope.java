@@ -1,4 +1,4 @@
-package com.mycompany.myapp.modules;
+package com.mycompany.myapp.app;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -9,5 +9,5 @@ import javax.inject.Qualifier;
 @Qualifier
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ForApplication {
+public @interface ForApplicationScope {
 }

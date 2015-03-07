@@ -8,8 +8,15 @@ import dagger.Provides;
 
 @Module
 public class CrashReporterModule {
+    private final CrashReporter crashReporter;
+
+    public CrashReporterModule() {
+        this.crashReporter = new CrashlyticsCrashReporter();
+    }
+
+    @DebugLog
     @Provides
     CrashReporter provideCrashReporter() {
-        return new CrashlyticsCrashReporter();
+        return crashReporter
     }
 }
