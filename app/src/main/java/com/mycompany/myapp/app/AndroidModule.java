@@ -6,11 +6,13 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import hugo.weaving.DebugLog;
 
 @Module
 public class AndroidModule {
     private final MainApplication application;
 
+    @DebugLog
     public AndroidModule(MainApplication application) {
         this.application = application;
     }

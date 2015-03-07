@@ -11,11 +11,11 @@ import hugo.weaving.DebugLog;
 public class CrashReporterModule {
     private final CrashReporter crashReporter;
 
+    @DebugLog
     public CrashReporterModule() {
         this.crashReporter = new LoggingOnlyCrashReporter();
     }
 
-    @DebugLog
     @Provides
     CrashReporter crashReporter() {
         return crashReporter;

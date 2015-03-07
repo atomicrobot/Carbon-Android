@@ -10,11 +10,11 @@ import dagger.Provides;
 public class CrashReporterModule {
     private final CrashReporter crashReporter;
 
+    @DebugLog
     public CrashReporterModule() {
         this.crashReporter = new CrashlyticsCrashReporter();
     }
 
-    @DebugLog
     @Provides
     CrashReporter provideCrashReporter() {
         return crashReporter

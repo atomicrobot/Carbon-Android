@@ -11,6 +11,9 @@ public class BusModule {
     private final Bus bus = new Bus();
 
     @DebugLog
+    public BusModule() {
+    }
+
     @Provides
     Bus provideBus() {
         return bus;
