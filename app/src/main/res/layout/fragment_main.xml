@@ -1,28 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="16dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editText"
+    <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/placeholder_short"/>
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#DDD"
+        android:elevation="1dp">
 
-    <TextView
-        style="?android:textAppearanceMedium"
-        android:id="@+id/version"
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"/>
+
+        <EditText
+            android:id="@+id/repository"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Placeholder"/>
+
+        <Button
+            android:id="@+id/fetch_commits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fetch Commits"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/placeholder_short"/>
+        android:layout_alignParentBottom="true"
+        android:padding="16dp"
+        android:background="#DDD"
+        android:elevation="1dp">
 
-    <TextView
-        style="?android:textAppearanceMedium"
-        android:id="@+id/fingerprint"
+        <TextView
+            style="?android:textAppearanceSmall"
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/placeholder_short"/>
+
+        <TextView
+            style="?android:textAppearanceSmall"
+            android:id="@+id/fingerprint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/placeholder_short"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/commits"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/placeholder_short"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/header"
+        android:layout_above="@id/footer"/>
 
-</LinearLayout>
+</RelativeLayout>

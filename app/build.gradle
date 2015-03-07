@@ -119,6 +119,9 @@ dependencies {
     // Android/Google libraries
     compile rootProject.ext.libraryAndroidSupport
     compile rootProject.ext.libraryAndroidAppCompat
+    compile rootProject.ext.libraryAndroidRecyclerView
+    compile rootProject.ext.libraryAndroidCardView
+    compile rootProject.ext.libraryAndroidAppCompat
     compile rootProject.ext.libraryGooglePlayServices
 
     // Networking - HTTP
