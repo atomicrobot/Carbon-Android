@@ -26,5 +26,7 @@ public class MainActivity extends BaseActivity<MainComponent> {
         setContentView(R.layout.activity_main);
 
         crashReporter.logMessage("woohoo from the activity!");
+
+        logger.i("Activity is ready to go!");
     }
 }

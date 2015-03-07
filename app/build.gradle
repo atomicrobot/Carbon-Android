@@ -146,7 +146,10 @@ dependencies {
     compile 'frankiesardo:icepick:3.0.1'
     provided 'frankiesardo:icepick-processor:3.0.1'
 
-    // Monitoring
+    // Monitoring - Timber (logging)
+    compile 'com.jakewharton.timber:timber:2.7.1'
+
+    // Monitoring - Crashlytics
     compile 'com.crashlytics.android:crashlytics:1.1.13'
 
     // Unit test

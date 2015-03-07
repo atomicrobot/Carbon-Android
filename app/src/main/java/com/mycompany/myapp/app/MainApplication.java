@@ -5,10 +5,17 @@ import android.app.Application;
 import com.crashlytics.android.Crashlytics;
 import com.mycompany.myapp.BuildConfig;
 
+import javax.inject.Inject;
+
 import hugo.weaving.DebugLog;
+import timber.log.Timber.Tree;
 
 public class MainApplication extends Application implements HasComponent<ApplicationComponent> {
     private ApplicationComponent component;
+
+    @Inject
+    @ForApplicationScope
+    Tree logger;
 
     @DebugLog
     @Override
@@ -21,6 +28,8 @@ public class MainApplication extends Application implements HasComponent<Applica
                 .androidModule(new AndroidModule(this))
                 .build();
         component.inject(this);
+
+        logger.i("Application is ready to go!");
     }
 
     /**

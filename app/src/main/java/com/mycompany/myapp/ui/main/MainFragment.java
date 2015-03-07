@@ -69,6 +69,8 @@ public class MainFragment extends BaseFragment<MainComponent> {
         fingerprintView.setText(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT));
 
         crashReporter.logMessage("woohoo from the fragment!");
+
+        logger.i("Fragment is ready to go!");
     }
 
     @OnTextChanged(R.id.editText)
