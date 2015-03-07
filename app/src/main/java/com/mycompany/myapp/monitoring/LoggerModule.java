@@ -1,4 +1,4 @@
-package com.mycompany.myapp.modules;
+package com.mycompany.myapp.monitoring;
 
 import com.mycompany.myapp.app.ForApplicationScope;
 
