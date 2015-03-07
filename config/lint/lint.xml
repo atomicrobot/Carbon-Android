@@ -4,5 +4,6 @@
     <issue id="InvalidPackage">
         <ignore regexp="okio-1.2.0.jar" />
         <ignore regexp="parceler-0.2.15.jar" />
+        <ignore regexp="clojure-1.6.0.jar" />
     </issue>
 </lint>
