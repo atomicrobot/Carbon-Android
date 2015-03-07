@@ -20,6 +20,8 @@ import com.mycompany.myapp.data.api.github.model.Commit;
 import com.mycompany.myapp.ui.BaseFragment;
 import com.squareup.otto.Subscribe;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,8 +90,10 @@ public class MainFragment extends BaseFragment<MainComponent> {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
 
         adapter = new CommitsAdapter();
+        adapter.restore(savedInstanceState);
         commitsView.setAdapter(adapter);
     }
 
@@ -97,6 +101,9 @@ public class MainFragment extends BaseFragment<MainComponent> {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
+        if (adapter != null) {
+            adapter.save(outState);
+        }
     }
 
     @DebugLog
@@ -126,7 +133,21 @@ public class MainFragment extends BaseFragment<MainComponent> {
     }
 
     public class CommitsAdapter extends RecyclerView.Adapter<ViewHolder> {
+        private static final String EXTRA_COMMITS = "commits";
+
         private List<Commit> commits = new ArrayList<>();
+
+        public void save(Bundle bundle) {
+            if (bundle != null) {
+                bundle.putParcelable(EXTRA_COMMITS, Parcels.wrap(commits));
+            }
+        }
+
+        public void restore(Bundle bundle) {
+            if (bundle != null) {
+                commits = Parcels.unwrap(bundle.getParcelable(EXTRA_COMMITS));
+            }
+        }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
