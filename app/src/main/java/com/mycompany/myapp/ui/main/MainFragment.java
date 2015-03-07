@@ -2,6 +2,7 @@ package com.mycompany.myapp.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -137,13 +138,17 @@ public class MainFragment extends BaseFragment<MainComponent> {
         public void onBindViewHolder(ViewHolder holder, int position) {
             Commit commit = commits.get(position);
             holder.messageView.setText(commit.getCommitMessage());
-            holder.authorView.setText(commit.getAuthor());
+            holder.authorView.setText(formatAuthor(R.string.author_format, commit.getAuthor()));
         }
 
         @Override
         public int getItemCount() {
             return commits.size();
         }
+    }
+
+    private String formatAuthor(@StringRes int authorFormatId, String author) {
+        return getString(authorFormatId, author);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
