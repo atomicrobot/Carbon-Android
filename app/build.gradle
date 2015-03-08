@@ -196,7 +196,7 @@ configurations.all {
 
 task findbugs(type: FindBugs, dependsOn: assembleDebug) {
     excludeFilter file("${project.rootDir}/config/findbugs/exclude.xml")
-    classes = fileTree('build/intermediates/classes/debug/')
+    classes = fileTree('build/intermediates/classes/app/debug/')
     source = fileTree('src/main/java/')
     classpath = files()
     effort = 'max'
