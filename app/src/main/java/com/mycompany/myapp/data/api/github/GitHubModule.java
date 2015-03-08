@@ -11,7 +11,6 @@ import dagger.Provides;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 import retrofit.RestAdapter;
-import retrofit.RestAdapter.LogLevel;
 import retrofit.client.Client;
 import retrofit.converter.Converter;
 import retrofit.converter.JacksonConverter;
