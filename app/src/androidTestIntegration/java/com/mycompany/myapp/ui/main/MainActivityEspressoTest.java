@@ -16,12 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withTagKey;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.test.espresso.action.ViewActions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @LargeTest
 public class MainActivityEspressoTest extends ActivityInstrumentationTestCase2<MainActivity> {
