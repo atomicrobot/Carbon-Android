@@ -130,7 +130,8 @@ dependencies {
 
     // Networking - REST
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.squareup.retrofit:retrofit-converters:1.9.0'
+    compile 'com.squareup.retrofit:converter-jackson:1.9.0'
+
 
     // Networking - Encoding
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
