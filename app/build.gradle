@@ -93,6 +93,16 @@ android {
         }
     }
 
+    productFlavors {
+        app {
+
+        }
+
+        integration {
+
+        }
+    }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -166,12 +176,22 @@ dependencies {
 
     // Unit test
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile 'org.mockito:mockito-core:1.10.19'
+
+    // Integration test
+    integrationCompile 'org.mockito:mockito-core:1.10.19'
+    integrationCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    integrationCompile 'com.google.dexmaker:dexmaker:1.2'
 
     // Instrumentation test
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.0'
+}
+
+// Hack due to mockito for integration tests and junit for unit test...
+configurations.all {
+    resolutionStrategy.force 'org.hamcrest:hamcrest-core:1.1'
 }
 
 task findbugs(type: FindBugs, dependsOn: assembleDebug) {

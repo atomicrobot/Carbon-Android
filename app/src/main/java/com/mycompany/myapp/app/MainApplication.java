@@ -26,7 +26,8 @@ public class MainApplication extends Application implements HasComponent<Applica
     }
 
     private void initApplication() {
-        new ApplicationInitialization(this).immediateInitialization();
+        new BuildConfigApplicationInitialization(this).immediateInitialization();
+        new BuildFlavorApplicationInitialization(this).immediateInitialization();
     }
 
     private void upgradeSecurityProvider() {

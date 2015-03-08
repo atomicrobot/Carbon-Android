@@ -6,10 +6,10 @@ import android.os.Bundle;
 
 import com.mycompany.myapp.ui.RiseAndShine;
 
-public class ApplicationInitialization {
+public class BuildConfigApplicationInitialization {
     private final MainApplication application;
 
-    public ApplicationInitialization(MainApplication application) {
+    public BuildConfigApplicationInitialization(MainApplication application) {
         this.application = application;
     }
 
