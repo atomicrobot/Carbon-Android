@@ -8,6 +8,7 @@ import com.mycompany.myapp.data.api.github.GitHubBusService;
 import com.mycompany.myapp.data.api.github.GitHubBusService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.GitHubBusService.LoadCommitsResponse;
 import com.mycompany.myapp.data.api.github.model.Commit;
+import com.squareup.spoon.Spoon;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -68,9 +69,13 @@ public class MainActivityEspressoTest extends ActivityInstrumentationTestCase2<M
             }
         }).when(gitHubBusService).loadCommits(any(LoadCommitsRequest.class));
 
+        Spoon.screenshot(activity, "before_fetching_commits");
+
         onView(withId(R.id.fetch_commits)).perform(click());
 
         onView(withId(R.id.author)).check(matches(withText("Author: Test author")));
         onView(withId(R.id.message)).check(matches(withText("Test commit message")));
+
+        Spoon.screenshot(activity, "after_fetching_commits");
     }
 }
