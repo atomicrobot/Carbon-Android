@@ -1,6 +1,11 @@
 package com.mycompany.myapp.app;
 
 import android.app.Application;
+import android.content.Intent;
+
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.security.ProviderInstaller;
+import com.google.android.gms.security.ProviderInstaller.ProviderInstallListener;
 
 import javax.inject.Inject;
 
@@ -15,8 +20,30 @@ public class MainApplication extends Application implements HasComponent<Applica
     @Override
     public void onCreate() {
         super.onCreate();
-        new ApplicationInitialization(this).immediateInitialization();
+        initApplication();
+        upgradeSecurityProvider();
+        initApplicationComponent();
+    }
 
+    private void initApplication() {
+        new ApplicationInitialization(this).immediateInitialization();
+    }
+
+    private void upgradeSecurityProvider() {
+        ProviderInstaller.installIfNeededAsync(this, new ProviderInstallListener() {
+            @Override
+            public void onProviderInstalled() {
+
+            }
+
+            @Override
+            public void onProviderInstallFailed(int errorCode, Intent recoveryIntent) {
+                GooglePlayServicesUtil.showErrorNotification(errorCode, MainApplication.this);
+            }
+        });
+    }
+
+    private void initApplicationComponent() {
         component = Dagger_ApplicationComponent.builder()
                 .androidModule(new AndroidModule(this))
                 .build();
