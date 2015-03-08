@@ -10,7 +10,8 @@ buildscript {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
 
-        classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.14.1'
+        //classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.14.1'
+        classpath 'de.felixschulze.gradle:gradle-spoon-plugin:2.1'
 
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.7'
     }
@@ -23,7 +24,9 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'crashlytics'
 
-apply plugin: 'spoon'
+//apply plugin: 'spoon'
+apply plugin: 'de.felixschulze.gradle.spoon'
+
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
@@ -223,4 +226,9 @@ task pmd(type: Pmd, dependsOn: assembleDebug) {
         xml.enabled = false
         html.enabled = true
     }
+}
+
+spoon {
+    teamCityLog = true
+    failIfNoDeviceConnected = true
 }
