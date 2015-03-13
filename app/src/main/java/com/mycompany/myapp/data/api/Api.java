@@ -1,4 +1,4 @@
-package com.mycompany.myapp.data.api.github;
+package com.mycompany.myapp.data.api;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

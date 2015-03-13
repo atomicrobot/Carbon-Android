@@ -2,6 +2,7 @@ package com.mycompany.myapp.data.api.github;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mycompany.myapp.data.api.Api;
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
