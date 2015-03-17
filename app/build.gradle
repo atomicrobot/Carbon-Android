@@ -10,7 +10,7 @@ buildscript {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
 
-        // When we update this version we will probably want to remove the spoon-runner overide
+        // When we update this version we will probably want to remove the spoon-runner override
         classpath ('de.felixschulze.gradle:gradle-spoon-plugin:2.2') {
             classpath 'com.squareup.spoon:spoon-runner:1.1.3'
         }
