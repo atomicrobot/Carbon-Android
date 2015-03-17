@@ -10,8 +10,10 @@ buildscript {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
 
-        //classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.14.1'
-        classpath 'de.felixschulze.gradle:gradle-spoon-plugin:2.2'
+        // When we update this version we will probably want to remove the spoon-runner overide
+        classpath ('de.felixschulze.gradle:gradle-spoon-plugin:2.2') {
+            classpath 'com.squareup.spoon:spoon-runner:1.1.3'
+        }
 
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.7'
     }
@@ -24,7 +26,6 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'crashlytics'
 
-//apply plugin: 'spoon'
 apply plugin: 'de.felixschulze.gradle.spoon'
 
 apply plugin: 'findbugs'
@@ -197,6 +198,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
+
     androidTestCompile 'com.squareup.spoon:spoon-client:1.1.3'
 }
 
