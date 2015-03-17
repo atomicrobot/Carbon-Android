@@ -197,7 +197,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
-    androidTestCompile 'com.squareup.spoon:spoon-client:1.1.2'
+    androidTestCompile 'com.squareup.spoon:spoon-client:1.1.3'
 }
 
 // Hack due to mockito for integration tests and junit for unit test...
