@@ -8,7 +8,7 @@ import dagger.Provides;
 import static org.mockito.Mockito.mock;
 
 @Module
-public class MockGitHubModule {
+public class GitHubModule {
     @Singleton
     @Provides
     GitHubBusService provideGitHubBusService() {
