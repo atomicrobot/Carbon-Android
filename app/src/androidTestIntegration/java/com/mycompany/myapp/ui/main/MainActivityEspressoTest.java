@@ -8,6 +8,7 @@ import com.mycompany.myapp.data.api.github.GitHubBusService;
 import com.mycompany.myapp.data.api.github.GitHubBusService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.GitHubBusService.LoadCommitsResponse;
 import com.mycompany.myapp.data.api.github.model.Commit;
+import com.squareup.otto.Bus;
 import com.squareup.spoon.Spoon;
 
 import org.mockito.invocation.InvocationOnMock;
@@ -28,8 +29,6 @@ import static org.mockito.Mockito.when;
 
 @LargeTest
 public class MainActivityEspressoTest extends ActivityInstrumentationTestCase2<MainActivity> {
-    private MainTestInjections testInjections;
-
     private MainActivity activity;
 
     public MainActivityEspressoTest() {
@@ -40,9 +39,6 @@ public class MainActivityEspressoTest extends ActivityInstrumentationTestCase2<M
     public void setUp() throws Exception {
         super.setUp();
         activity = getActivity();
-
-        testInjections = new MainTestInjections();
-        activity.getComponent().inject(testInjections);
     }
 
     public void testBuildFingerprint() {
@@ -50,7 +46,9 @@ public class MainActivityEspressoTest extends ActivityInstrumentationTestCase2<M
     }
 
     public void testFetchAndDisplayCommits() {
-        GitHubBusService gitHubBusService = testInjections.gitHubBusService;
+        final Bus bus = activity.getComponent().bus();
+        final GitHubBusService gitHubBusService = activity.getComponent().gitHubBusService();
+
         final LoadCommitsRequest request = new LoadCommitsRequest("madebyatomicrobot", "android-starter-project");
 
         doAnswer(new Answer() {
@@ -64,7 +62,7 @@ public class MainActivityEspressoTest extends ActivityInstrumentationTestCase2<M
                 commits.add(commit);
 
                 LoadCommitsResponse response = new LoadCommitsResponse(request, commits);
-                testInjections.bus.post(response);
+                bus.post(response);
                 return null;
             }
         }).when(gitHubBusService).loadCommits(any(LoadCommitsRequest.class));
