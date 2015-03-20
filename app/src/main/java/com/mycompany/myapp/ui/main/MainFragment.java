@@ -36,6 +36,13 @@ import icepick.Icicle;
 
 public class MainFragment extends BaseFragment<MainComponent> {
 
+    public interface MainFragmentListener {
+
+    }
+
+    @Inject
+    MainFragmentListener listener;
+
     @Inject
     GitHubBusService gitHubBusService;
 
