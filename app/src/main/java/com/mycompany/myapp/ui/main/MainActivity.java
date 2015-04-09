@@ -11,7 +11,7 @@ import hugo.weaving.DebugLog;
 public class MainActivity extends BaseActivity<MainComponent> implements MainFragmentListener {
     @Override
     protected MainComponent buildComponent() {
-        return Dagger_MainComponent.builder()
+        return DaggerMainComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .mainUIModule(new MainUIModule(this))
                 .build();
