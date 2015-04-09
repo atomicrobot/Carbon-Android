@@ -45,7 +45,7 @@ public class MainApplication extends Application implements HasComponent<Applica
     }
 
     private void initApplicationComponent() {
-        component = Dagger_ApplicationComponent.builder()
+        component = DaggerApplicationComponent.builder()
                 .androidModule(new AndroidModule(this))
                 .build();
         component.inject(this);
