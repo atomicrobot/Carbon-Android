@@ -6,7 +6,6 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.inject.Singleton;
 
@@ -14,7 +13,6 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
-import timber.log.Timber.Tree;
 
 @Module
 public class DataModule {
@@ -22,17 +20,13 @@ public class DataModule {
 
     @Singleton
     @Provides
-    OkHttpClient provideOkHttpClient(Application app, Tree logger) {
+    OkHttpClient provideOkHttpClient(Application app) {
         OkHttpClient client = new OkHttpClient();
 
         // Install an HTTP cache in the application cache directory.
-        try {
-            File cacheDir = new File(app.getCacheDir(), "http");
-            Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
-            client.setCache(cache);
-        } catch (IOException e) {
-            logger.e(e, "Unable to install disk cache.");
-        }
+        File cacheDir = new File(app.getCacheDir(), "http");
+        Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
+        client.setCache(cache);
 
         return client;
     }

@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.2'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 
@@ -63,17 +63,21 @@ ext {
     versionCode = project.hasProperty("buildNumber") ? Integer.parseInt(buildNumber) : 1
     versionName = "$appVersion b$versionCode"
 
-    // Build settings that are likely to be resued across different modules
-    compileSdkVersion = 21
-    buildToolsVersion = "21.1.2"
+    // Build settings that are likely to be reused across different modules
+    compileSdkVersion = 22
+    buildToolsVersion = "22.0.1"
     minSdkVersion = 15
-    targetSdkVersion = 21
+    targetSdkVersion = 22
 
     // Libraries are are likely to be reused across different modules
-    libraryAndroidSupport = 'com.android.support:support-v4:21.0.3'
-    libraryAndroidAppCompat = 'com.android.support:appcompat-v7:21.0.3'
-    libraryAndroidRecyclerView = 'com.android.support:recyclerview-v7:21.0.3'
-    libraryAndroidCardView = 'com.android.support:cardview-v7:21.0.3'
-    libraryGooglePlayServices = 'com.google.android.gms:play-services-base:6.5.87'
+    supportVersion = '22.2.0'
+    libraryAndroidSupport = "com.android.support:support-v4:$supportVersion"
+    libraryAndroidAppCompat = "com.android.support:appcompat-v7:$supportVersion"
+    libraryAndroidRecyclerView = "com.android.support:recyclerview-v7:$supportVersion"
+    libraryAndroidCardView = "com.android.support:cardview-v7:$supportVersion"
+    libraryAndroidSupportAnnotations = "com.android.support:support-annotations:$supportVersion"
+
+    playServicesVersion = '7.5.0'
+    libraryGooglePlayServices = "com.google.android.gms:play-services-base:$playServicesVersion"
 }
 

@@ -2,14 +2,17 @@ package com.mycompany.myapp.data.api.github.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.mycompany.myapp.data.api.github.model.Commit.Author;
 import com.mycompany.myapp.data.api.github.model.Commit.CommitDetails;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.parceler.Parcels;
 
+@RunWith(AndroidJUnit4.class)
 public class CommitTests {
     /**
      * Verification that Parceler is working. The default configuration doesn't play well with other
