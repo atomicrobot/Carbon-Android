@@ -27,8 +27,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 import icepick.Icepick;
@@ -46,19 +46,19 @@ public class MainFragment extends BaseFragment<MainComponent> {
     @Inject
     GitHubBusService gitHubBusService;
 
-    @InjectView(R.id.username)
+    @Bind(R.id.username)
     EditText userNameView;
 
-    @InjectView(R.id.repository)
+    @Bind(R.id.repository)
     EditText repositoryView;
 
-    @InjectView(R.id.commits)
+    @Bind(R.id.commits)
     RecyclerView commitsView;
 
-    @InjectView(R.id.version)
+    @Bind(R.id.version)
     TextView versionView;
 
-    @InjectView(R.id.fingerprint)
+    @Bind(R.id.fingerprint)
     TextView fingerprintView;
 
     @Icicle
@@ -78,7 +78,7 @@ public class MainFragment extends BaseFragment<MainComponent> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         Icepick.restoreInstanceState(this, savedInstanceState);
 
         commitsView.setHasFixedSize(true);
@@ -90,7 +90,7 @@ public class MainFragment extends BaseFragment<MainComponent> {
     @DebugLog
     @Override
     public void onDestroyView() {
-        ButterKnife.reset(this);
+        ButterKnife.unbind(this);
         super.onDestroyView();
     }
 
@@ -180,15 +180,15 @@ public class MainFragment extends BaseFragment<MainComponent> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        @InjectView(R.id.message)
+        @Bind(R.id.message)
         TextView messageView;
 
-        @InjectView(R.id.author)
+        @Bind(R.id.author)
         TextView authorView;
 
         public ViewHolder(View view) {
             super(view);
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
     }
 }
