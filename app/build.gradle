@@ -131,6 +131,7 @@ dependencies {
     compile rootProject.ext.libraryAndroidAppCompat
     compile rootProject.ext.libraryGooglePlayServices
     compile rootProject.ext.libraryAndroidSupportAnnotations
+    compile rootProject.ext.libraryAndroidDesignSupport
 
     // Networking - HTTP
     compile 'com.squareup.okhttp:okhttp:2.4.0'
