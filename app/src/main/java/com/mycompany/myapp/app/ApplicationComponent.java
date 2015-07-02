@@ -1,20 +1,15 @@
 package com.mycompany.myapp.app;
 
-import android.app.Application;
-
 import com.mycompany.myapp.data.DataModule;
-import com.mycompany.myapp.data.api.github.GitHubBusService;
 import com.mycompany.myapp.data.api.github.GitHubModule;
 import com.mycompany.myapp.modules.CrashReporterModule;
-import com.mycompany.myapp.monitoring.CrashReporter;
 import com.mycompany.myapp.monitoring.LoggerModule;
-import com.squareup.otto.Bus;
+import com.mycompany.myapp.ui.main.MainComponent;
+import com.mycompany.myapp.ui.main.MainUIModule;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
-import retrofit.client.Client;
-import timber.log.Timber.Tree;
 
 @Singleton
 @Component(modules = {
@@ -26,17 +21,7 @@ import timber.log.Timber.Tree;
         GitHubModule.class
 })
 public interface ApplicationComponent {
-    Application application();
-
-    Tree tree();
-
-    CrashReporter crashReporter();
-
-    Bus bus();
-
-    Client client();
-
-    GitHubBusService gitHubBusService();
+    MainComponent plus(MainUIModule module);
 
     void inject(MainApplication application);
 }
