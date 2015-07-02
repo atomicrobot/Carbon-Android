@@ -1,9 +1,9 @@
 package com.mycompany.myapp.ui;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
 import com.mycompany.myapp.app.HasComponent;
 import com.mycompany.myapp.monitoring.CrashReporter;
