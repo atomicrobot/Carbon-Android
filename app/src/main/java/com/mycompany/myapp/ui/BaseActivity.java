@@ -1,7 +1,7 @@
 package com.mycompany.myapp.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.mycompany.myapp.app.ApplicationComponent;
 import com.mycompany.myapp.app.HasComponent;
@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import hugo.weaving.DebugLog;
 import timber.log.Timber.Tree;
 
-public abstract class BaseActivity<T> extends ActionBarActivity implements HasComponent<T> {
+public abstract class BaseActivity<T> extends AppCompatActivity implements HasComponent<T> {
     @Inject
     protected Tree logger;
 
