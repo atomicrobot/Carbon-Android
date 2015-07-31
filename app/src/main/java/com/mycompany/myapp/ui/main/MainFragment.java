@@ -35,6 +35,7 @@ import butterknife.OnTextChanged;
 import hugo.weaving.DebugLog;
 import pocketknife.PocketKnife;
 import pocketknife.SaveState;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -128,6 +129,7 @@ public class MainFragment extends BaseFragment<MainComponent> {
 
         userNameView.setText(username);
         repositoryView.setText(repository);
+        subscriptions.add(loadCommits());
 
         versionView.setText(String.format("Version: %s", BuildConfig.VERSION_NAME));
         fingerprintView.setText(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT));
@@ -151,20 +153,27 @@ public class MainFragment extends BaseFragment<MainComponent> {
 
     @OnClick(R.id.fetch_commits)
     public void handleFetchCommits() {
-        subscriptions.add(
-                gitHubService.loadCommits(new LoadCommitsRequest(username, repository))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this::handleLoadCommitsResponse, this::handleError));
+        subscriptions.add(loadCommits());
     }
 
-    private void handleError(Throwable throwable) {
-        Toast.makeText(getActivity(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+    private Subscription loadCommits() {
+        return gitHubService.loadCommits(buildLoadCommitsRequest())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleLoadCommitsResponse, this::handleError);
+    }
+
+    private LoadCommitsRequest buildLoadCommitsRequest() {
+        return new LoadCommitsRequest(username, repository);
     }
 
     private void handleLoadCommitsResponse(LoadCommitsResponse response) {
         adapter.commits = response.getCommits();
         adapter.notifyDataSetChanged();
+    }
+
+    private void handleError(Throwable throwable) {
+        Toast.makeText(getActivity(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     public class CommitsAdapter extends RecyclerView.Adapter<ViewHolder> {
