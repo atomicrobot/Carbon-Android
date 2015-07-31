@@ -1,11 +1,16 @@
 package com.mycompany.myapp.ui.main;
 
-import android.support.annotation.NonNull;
+import android.app.Application;
+import android.app.Instrumentation;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.MediumTest;
 
 import com.mycompany.myapp.R;
+import com.mycompany.myapp.app.ApplicationComponent;
+import com.mycompany.myapp.app.MainApplication;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
@@ -36,21 +41,34 @@ import static org.mockito.Mockito.when;
 public class MainActivityEspressoTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class, true);
+    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class, true, false);
+
+    private GitHubService getMockGitHubService() {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Context targetContext = instrumentation.getTargetContext();
+        Application application = (Application) targetContext.getApplicationContext();
+
+        MainApplication mainApplication = (MainApplication) application;
+        ApplicationComponent applicationComponent = mainApplication.getComponent();
+        return applicationComponent.gitHubService();
+    }
 
     @Test
     public void testBuildFingerprint() {
+        GitHubService gitHubService = getMockGitHubService();
+        when(gitHubService.loadCommits(any())).thenReturn(Observable.<LoadCommitsResponse>empty());
+
+        MainActivity activity = activityRule.launchActivity(null);
         onView(withId(R.id.fingerprint)).check(matches(withText("Fingerprint: DEV")));
     }
 
     @Test
     public void testFetchAndDisplayCommits() {
-        MainActivity activity = activityRule.getActivity();
-        final GitHubService gitHubService = activity.getComponent().gitHubService();
-
+        GitHubService gitHubService = getMockGitHubService();
         Observable<LoadCommitsResponse> response = buildMockLoadCommitsResponse();
         when(gitHubService.loadCommits(any())).thenReturn(response);
 
+        MainActivity activity = activityRule.launchActivity(null);
         Spoon.screenshot(activity, "before_fetching_commits");
 
         onView(withId(R.id.fetch_commits)).perform(click());
@@ -62,7 +80,6 @@ public class MainActivityEspressoTest {
         onView(withId(R.id.message)).check(matches(withText("Test commit message")));
     }
 
-    @NonNull
     private Observable<LoadCommitsResponse> buildMockLoadCommitsResponse() {
         Commit commit = mock(Commit.class);
         when(commit.getAuthor()).thenReturn("Test author");
