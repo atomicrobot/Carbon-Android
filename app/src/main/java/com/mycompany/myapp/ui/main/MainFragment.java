@@ -31,9 +31,10 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import hugo.weaving.DebugLog;
-import icepick.Icepick;
-import icepick.Icicle;
+import pocketknife.PocketKnife;
+import pocketknife.SaveState;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -65,13 +66,13 @@ public class MainFragment extends BaseFragment<MainComponent> {
     @Bind(R.id.fingerprint)
     TextView fingerprintView;
 
-    @Icicle
+    @SaveState
     String username = "madebyatomicrobot";
 
-    @Icicle
+    @SaveState
     String repository = "android-starter-project";
 
-    private CompositeSubscription subscriptions = new CompositeSubscription();
+    private CompositeSubscription subscriptions;
 
     private CommitsAdapter adapter;
 
@@ -85,7 +86,6 @@ public class MainFragment extends BaseFragment<MainComponent> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        Icepick.restoreInstanceState(this, savedInstanceState);
 
         commitsView.setHasFixedSize(true);
         commitsView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -103,7 +103,7 @@ public class MainFragment extends BaseFragment<MainComponent> {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
+        PocketKnife.restoreInstanceState(this, savedInstanceState);
 
         adapter = new CommitsAdapter();
         adapter.restore(savedInstanceState);
@@ -113,7 +113,8 @@ public class MainFragment extends BaseFragment<MainComponent> {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+        PocketKnife.saveInstanceState(this, outState);
+
         if (adapter != null) {
             adapter.save(outState);
         }
@@ -138,11 +139,18 @@ public class MainFragment extends BaseFragment<MainComponent> {
         super.onPause();
     }
 
+    @OnTextChanged(R.id.username)
+    public void handleUsernameChanged(CharSequence username) {
+        this.username = username.toString();
+    }
+
+    @OnTextChanged(R.id.repository)
+    public void handleRepositoryChanged(CharSequence repository) {
+        this.repository = repository.toString();
+    }
+
     @OnClick(R.id.fetch_commits)
     public void handleFetchCommits() {
-        username = userNameView.getText().toString();
-        repository = repositoryView.getText().toString();
-
         subscriptions.add(
                 gitHubService.loadCommits(new LoadCommitsRequest(username, repository))
                         .subscribeOn(Schedulers.io())
