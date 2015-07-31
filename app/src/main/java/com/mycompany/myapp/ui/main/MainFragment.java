@@ -10,15 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mycompany.myapp.BuildConfig;
 import com.mycompany.myapp.R;
-import com.mycompany.myapp.data.api.github.GitHubBusService;
-import com.mycompany.myapp.data.api.github.GitHubBusService.LoadCommitsRequest;
-import com.mycompany.myapp.data.api.github.GitHubBusService.LoadCommitsResponse;
+import com.mycompany.myapp.data.api.github.GitHubService;
+import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
+import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
 import com.mycompany.myapp.data.api.github.model.Commit;
 import com.mycompany.myapp.ui.BaseFragment;
-import com.squareup.otto.Subscribe;
+import com.mycompany.myapp.util.RxUtils;
 
 import org.parceler.Parcels;
 
@@ -33,6 +34,9 @@ import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 import icepick.Icepick;
 import icepick.Icicle;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class MainFragment extends BaseFragment<MainComponent> {
 
@@ -44,7 +48,7 @@ public class MainFragment extends BaseFragment<MainComponent> {
     MainFragmentListener listener;
 
     @Inject
-    GitHubBusService gitHubBusService;
+    GitHubService gitHubService;
 
     @Bind(R.id.username)
     EditText userNameView;
@@ -66,6 +70,8 @@ public class MainFragment extends BaseFragment<MainComponent> {
 
     @Icicle
     String repository = "android-starter-project";
+
+    private CompositeSubscription subscriptions = new CompositeSubscription();
 
     private CommitsAdapter adapter;
 
@@ -117,6 +123,7 @@ public class MainFragment extends BaseFragment<MainComponent> {
     @Override
     public void onResume() {
         super.onResume();
+        subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
 
         userNameView.setText(username);
         repositoryView.setText(repository);
@@ -125,16 +132,29 @@ public class MainFragment extends BaseFragment<MainComponent> {
         fingerprintView.setText(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT));
     }
 
+    @Override
+    public void onPause() {
+        RxUtils.unsubscribeIfNotNull(subscriptions);
+        super.onPause();
+    }
+
     @OnClick(R.id.fetch_commits)
     public void handleFetchCommits() {
         username = userNameView.getText().toString();
         repository = repositoryView.getText().toString();
 
-        gitHubBusService.loadCommits(new LoadCommitsRequest(username, repository));
+        subscriptions.add(
+                gitHubService.loadCommits(new LoadCommitsRequest(username, repository))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::handleLoadCommitsResponse, this::handleError));
     }
 
-    @Subscribe
-    public void handleLoadCommitsResponse(LoadCommitsResponse response) {
+    private void handleError(Throwable throwable) {
+        Toast.makeText(getActivity(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    private void handleLoadCommitsResponse(LoadCommitsResponse response) {
         adapter.commits = response.getCommits();
         adapter.notifyDataSetChanged();
     }

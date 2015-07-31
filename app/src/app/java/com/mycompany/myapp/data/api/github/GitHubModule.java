@@ -3,7 +3,6 @@ package com.mycompany.myapp.data.api.github;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.myapp.data.api.Api;
-import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
 
@@ -54,7 +53,7 @@ public class GitHubModule {
 
     @Singleton
     @Provides
-    GitHubBusService provideGitHubBusService(GitHubApiService api, Bus bus, Tree logger) {
-        return new GitHubBusService(api, bus, logger);
+    GitHubService provideGitHubBusService(GitHubApiService api, Tree logger) {
+        return new GitHubService(api, logger);
     }
 }

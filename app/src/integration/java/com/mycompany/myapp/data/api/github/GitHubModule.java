@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mock;
 public class GitHubModule {
     @Singleton
     @Provides
-    GitHubBusService provideGitHubBusService() {
-        return mock(GitHubBusService.class);
+    GitHubService provideGitHubBusService() {
+        return mock(GitHubService.class);
     }
 }

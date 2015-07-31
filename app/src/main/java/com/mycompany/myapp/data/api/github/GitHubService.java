@@ -1,23 +1,18 @@
 package com.mycompany.myapp.data.api.github;
 
 import com.mycompany.myapp.data.api.github.model.Commit;
-import com.squareup.otto.Bus;
 
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import rx.Observable;
 import timber.log.Timber.Tree;
 
-public class GitHubBusService {
+public class GitHubService {
     private final GitHubApiService api;
-    private final Bus bus;
     private final Tree logger;
 
-    public GitHubBusService(GitHubApiService api, Bus bus, Tree logger) {
+    public GitHubService(GitHubApiService api, Tree logger) {
         this.api = api;
-        this.bus = bus;
         this.logger = logger;
     }
 
@@ -57,17 +52,8 @@ public class GitHubBusService {
         }
     }
 
-    public void loadCommits(final LoadCommitsRequest request) {
-        api.listCommits(request.user, request.repository, new Callback<List<Commit>>() {
-            @Override
-            public void success(List<Commit> commits, Response response) {
-                bus.post(new LoadCommitsResponse(request, commits));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                logger.e("Error loading commits", error);
-            }
-        });
+    public Observable<LoadCommitsResponse> loadCommits(final LoadCommitsRequest request) {
+        return api.listCommits(request.user, request.repository)
+                .map(commits -> new LoadCommitsResponse(request, commits));
     }
 }

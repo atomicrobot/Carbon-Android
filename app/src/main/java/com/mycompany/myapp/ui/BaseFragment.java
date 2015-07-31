@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 
 import com.mycompany.myapp.app.HasComponent;
 import com.mycompany.myapp.monitoring.CrashReporter;
-import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -19,9 +18,6 @@ public abstract class BaseFragment<T> extends Fragment {
 
     @Inject
     protected CrashReporter crashReporter;
-
-    @Inject
-    protected Bus bus;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -40,16 +36,4 @@ public abstract class BaseFragment<T> extends Fragment {
     }
 
     protected abstract void inject(T component);
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        bus.register(this);
-    }
-
-    @Override
-    public void onPause() {
-        bus.unregister(this);
-        super.onPause();
-    }
 }

@@ -7,7 +7,6 @@ import com.mycompany.myapp.app.ApplicationComponent;
 import com.mycompany.myapp.app.HasComponent;
 import com.mycompany.myapp.app.MainApplication;
 import com.mycompany.myapp.monitoring.CrashReporter;
-import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -21,9 +20,6 @@ public abstract class BaseActivity<T> extends AppCompatActivity implements HasCo
     @Inject
     protected CrashReporter crashReporter;
 
-    @Inject
-    protected Bus bus;
-
     private T component;
 
     @DebugLog
@@ -34,18 +30,6 @@ public abstract class BaseActivity<T> extends AppCompatActivity implements HasCo
     }
 
     protected abstract T buildComponent();
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bus.register(this);
-    }
-
-    @Override
-    protected void onPause() {
-        bus.unregister(this);
-        super.onPause();
-    }
 
     @Override
     public T getComponent() {

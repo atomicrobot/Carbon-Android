@@ -16,7 +16,6 @@ import dagger.Component;
         AndroidModule.class,
         LoggerModule.class,
         CrashReporterModule.class,
-        BusModule.class,
         DataModule.class,
         GitHubModule.class
 })

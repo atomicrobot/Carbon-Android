@@ -2,15 +2,16 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
-        maven { url 'http://download.crashlytics.com/maven' }
+        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
-        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.16.0'
+        classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         classpath 'de.felixschulze.gradle:gradle-spoon-plugin:2.3'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.0'
     }
 }
 
@@ -19,7 +20,8 @@ apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
-apply plugin: 'crashlytics'
+apply plugin: 'io.fabric'
+apply plugin: 'me.tatarka.retrolambda'
 
 apply plugin: 'de.felixschulze.gradle.spoon'
 
@@ -28,13 +30,18 @@ apply plugin: 'pmd'
 
 repositories {
     // Crashlytics
-    maven { url 'http://download.crashlytics.com/maven' }
+    maven { url 'https://maven.fabric.io/public' }
 
     // Icepick
     maven {url "https://clojars.org/repo/"}
 }
 
 android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
@@ -146,7 +153,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.3'
 
     // App architecture - Otto
-    compile 'com.squareup:otto:1.3.8'
+    compile 'io.reactivex:rxandroid:0.25.0'
 
     // App architecture - Dagger 2
     compile 'com.google.dagger:dagger:2.0.1'
@@ -170,7 +177,9 @@ dependencies {
     compile 'com.jakewharton.timber:timber:3.1.0'
 
     // Monitoring - Crashlytics
-    compile 'com.crashlytics.android:crashlytics:1.1.13'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
+        transitive = true
+    }
 
     // Unit test
     testCompile 'junit:junit:4.12'
@@ -190,6 +199,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
+
+    // Test libraries are currently lagging behind
+    androidTestCompile rootProject.ext.libraryAndroidSupportAnnotations
 
     androidTestCompile 'com.squareup.spoon:spoon-client:1.1.9'
 }
