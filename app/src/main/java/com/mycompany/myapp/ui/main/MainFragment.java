@@ -1,8 +1,9 @@
 package com.mycompany.myapp.ui.main;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,16 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mycompany.myapp.BuildConfig;
 import com.mycompany.myapp.R;
-import com.mycompany.myapp.data.api.github.GitHubService;
-import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
-import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
-import com.mycompany.myapp.data.api.github.model.Commit;
-import com.mycompany.myapp.ui.BaseFragment;
-import com.mycompany.myapp.util.RxUtils;
-
-import org.parceler.Parcels;
+import com.mycompany.myapp.ui.main.MainPresenter.CommitViewModel;
+import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,57 +26,43 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-import hugo.weaving.DebugLog;
 import pocketknife.PocketKnife;
-import pocketknife.SaveState;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
-public class MainFragment extends BaseFragment<MainComponent> {
-
-    public interface MainFragmentListener {
-
+public class MainFragment extends Fragment implements MainViewContract {
+    public interface MainFragmentHost {
+        void inject(MainFragment fragment);
     }
 
-    @Inject
-    MainFragmentListener listener;
+    @Inject MainPresenter presenter;
 
-    @Inject
-    GitHubService gitHubService;
+    @Bind(R.id.username) EditText userNameView;
 
-    @Bind(R.id.username)
-    EditText userNameView;
+    @Bind(R.id.repository) EditText repositoryView;
 
-    @Bind(R.id.repository)
-    EditText repositoryView;
+    @Bind(R.id.commits) RecyclerView commitsView;
 
-    @Bind(R.id.commits)
-    RecyclerView commitsView;
+    @Bind(R.id.version) TextView versionView;
 
-    @Bind(R.id.version)
-    TextView versionView;
+    @Bind(R.id.fingerprint) TextView fingerprintView;
 
-    @Bind(R.id.fingerprint)
-    TextView fingerprintView;
-
-    @SaveState
-    String username = "madebyatomicrobot";
-
-    @SaveState
-    String repository = "android-starter-project";
-
-    private CompositeSubscription subscriptions;
+    private MainFragmentHost host;
 
     private CommitsAdapter adapter;
 
     @Override
-    protected void inject(MainComponent component) {
-        component.inject(this);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        host = (MainFragmentHost) activity;
     }
 
-    @DebugLog
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        host.inject(this);
+
+        presenter.setView(this);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
@@ -94,7 +74,6 @@ public class MainFragment extends BaseFragment<MainComponent> {
         return view;
     }
 
-    @DebugLog
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(this);
@@ -104,93 +83,81 @@ public class MainFragment extends BaseFragment<MainComponent> {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        PocketKnife.restoreInstanceState(this, savedInstanceState);
+        PocketKnife.restoreInstanceState(this, savedInstanceState); // FIXME
 
         adapter = new CommitsAdapter();
-        adapter.restore(savedInstanceState);
         commitsView.setAdapter(adapter);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        PocketKnife.saveInstanceState(this, outState);
-
-        if (adapter != null) {
-            adapter.save(outState);
-        }
+        PocketKnife.saveInstanceState(this, outState); // FIXME
     }
 
-    @DebugLog
     @Override
     public void onResume() {
         super.onResume();
-        subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
-
-        userNameView.setText(username);
-        repositoryView.setText(repository);
-        subscriptions.add(loadCommits());
-
-        versionView.setText(String.format("Version: %s", BuildConfig.VERSION_NAME));
-        fingerprintView.setText(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT));
+        presenter.onResume();
     }
 
     @Override
     public void onPause() {
-        RxUtils.unsubscribeIfNotNull(subscriptions);
+        presenter.onPause();
         super.onPause();
     }
 
+    @Override
+    public void displayUsername(String username) {
+        userNameView.setText(username);
+    }
+
+    @Override
+    public void displayRepository(String repository) {
+        repositoryView.setText(repository);
+    }
+
+    @Override
+    public void displayCommits(List<CommitViewModel> commits) {
+        adapter.setCommits(commits);
+    }
+
+    @Override
+    public void displayError(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void displayVersion(String version) {
+        versionView.setText(version);
+    }
+
+    @Override
+    public void displayFingerprint(String fingerprint) {
+        fingerprintView.setText(fingerprint);
+    }
+
     @OnTextChanged(R.id.username)
-    public void handleUsernameChanged(CharSequence username) {
-        this.username = username.toString();
+    void handleUsernameChanged(CharSequence username) {
+        presenter.setUsername(username.toString());
     }
 
     @OnTextChanged(R.id.repository)
-    public void handleRepositoryChanged(CharSequence repository) {
-        this.repository = repository.toString();
+    void handleRepositoryChanged(CharSequence repository) {
+        presenter.setRepository(repository.toString());
     }
 
     @OnClick(R.id.fetch_commits)
-    public void handleFetchCommits() {
-        subscriptions.add(loadCommits());
+    void handleFetchCommits() {
+        presenter.fetchCommits();
     }
 
-    private Subscription loadCommits() {
-        return gitHubService.loadCommits(buildLoadCommitsRequest())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleLoadCommitsResponse, this::handleError);
-    }
+    private static class CommitsAdapter extends RecyclerView.Adapter<ViewHolder> {
+        private List<CommitViewModel> commits = new ArrayList<>();
 
-    private LoadCommitsRequest buildLoadCommitsRequest() {
-        return new LoadCommitsRequest(username, repository);
-    }
-
-    private void handleLoadCommitsResponse(LoadCommitsResponse response) {
-        adapter.commits = response.getCommits();
-        adapter.notifyDataSetChanged();
-    }
-
-    private void handleError(Throwable throwable) {
-        Toast.makeText(getActivity(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    public class CommitsAdapter extends RecyclerView.Adapter<ViewHolder> {
-        private static final String EXTRA_COMMITS = "commits";
-
-        private List<Commit> commits = new ArrayList<>();
-
-        public void save(Bundle bundle) {
-            if (bundle != null) {
-                bundle.putParcelable(EXTRA_COMMITS, Parcels.wrap(commits));
-            }
-        }
-
-        public void restore(Bundle bundle) {
-            if (bundle != null) {
-                commits = Parcels.unwrap(bundle.getParcelable(EXTRA_COMMITS));
-            }
+        private void setCommits(List<CommitViewModel> commits) {
+            this.commits = commits;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -201,9 +168,9 @@ public class MainFragment extends BaseFragment<MainComponent> {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            Commit commit = commits.get(position);
-            holder.messageView.setText(commit.getCommitMessage());
-            holder.authorView.setText(formatAuthor(R.string.author_format, commit.getAuthor()));
+            CommitViewModel commit = commits.get(position);
+            holder.messageView.setText(commit.getMessage());
+            holder.authorView.setText(commit.getAuthor());
         }
 
         @Override
@@ -212,18 +179,12 @@ public class MainFragment extends BaseFragment<MainComponent> {
         }
     }
 
-    private String formatAuthor(@StringRes int authorFormatId, String author) {
-        return getString(authorFormatId, author);
-    }
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.message) TextView messageView;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.message)
-        TextView messageView;
+        @Bind(R.id.author) TextView authorView;
 
-        @Bind(R.id.author)
-        TextView authorView;
-
-        public ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }

@@ -6,7 +6,7 @@ import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.modules.CrashReporterModule;
 import com.mycompany.myapp.monitoring.LoggerModule;
 import com.mycompany.myapp.ui.main.MainComponent;
-import com.mycompany.myapp.ui.main.MainUIModule;
+import com.mycompany.myapp.ui.main.MainModule;
 
 import javax.inject.Singleton;
 
@@ -23,7 +23,7 @@ import dagger.Component;
 public interface ApplicationComponent {
     GitHubService gitHubService();
 
-    MainComponent plus(MainUIModule module);
+    MainComponent plus(MainModule module);
 
     void inject(MainApplication application);
 }
