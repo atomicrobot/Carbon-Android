@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mycompany.myapp.R;
+import com.mycompany.myapp.StatefulBundle;
 import com.mycompany.myapp.ui.main.MainPresenter.CommitViewModel;
 import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
 
@@ -26,7 +27,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-import pocketknife.PocketKnife;
+import hugo.weaving.DebugLog;
 
 public class MainFragment extends Fragment implements MainViewContract {
     public interface MainFragmentHost {
@@ -55,14 +56,17 @@ public class MainFragment extends Fragment implements MainViewContract {
         host = (MainFragmentHost) activity;
     }
 
+    @DebugLog
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         host.inject(this);
 
+        presenter.restoreState(new StatefulBundle<>(savedInstanceState));
         presenter.setView(this);
     }
 
+    @DebugLog
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
@@ -70,6 +74,9 @@ public class MainFragment extends Fragment implements MainViewContract {
 
         commitsView.setHasFixedSize(true);
         commitsView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        adapter = new CommitsAdapter();
+        commitsView.setAdapter(adapter);
 
         return view;
     }
@@ -81,18 +88,9 @@ public class MainFragment extends Fragment implements MainViewContract {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        PocketKnife.restoreInstanceState(this, savedInstanceState); // FIXME
-
-        adapter = new CommitsAdapter();
-        commitsView.setAdapter(adapter);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        PocketKnife.saveInstanceState(this, outState); // FIXME
+        presenter.saveState(new StatefulBundle<>(outState));
     }
 
     @Override

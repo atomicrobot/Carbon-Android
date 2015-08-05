@@ -1,12 +1,18 @@
 package com.mycompany.myapp.ui.main;
 
 import com.mycompany.myapp.BuildConfig;
+import com.mycompany.myapp.Presenter;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.model.Commit;
 import com.mycompany.myapp.ui.Resource;
+import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
+import com.mycompany.myapp.ui.main.MainPresenter.State;
 import com.mycompany.myapp.util.RxUtils;
+
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class MainPresenter {
+public class MainPresenter extends Presenter<MainViewContract, State> {
     public interface MainViewContract {
         void displayUsername(String username);
 
@@ -34,10 +40,12 @@ public class MainPresenter {
         void displayFingerprint(String fingerprint);
     }
 
+    @Parcel
     public static class CommitViewModel {
-        private final String message;
-        private final String author;
+        final String message;
+        final String author;
 
+        @ParcelConstructor
         public CommitViewModel(String message, String author) {
             this.message = message;
             this.author = author;
@@ -52,32 +60,27 @@ public class MainPresenter {
         }
     }
 
-    private class SavedState {
-        private String username = "madebyatomicrobot";
-        private String repository = "android-starter-project";
-        private List<CommitViewModel> commits = new ArrayList<>();
+    @Parcel
+    public static class State {
+        String username = "madebyatomicrobot";
+        String repository = "android-starter-project";
+        List<CommitViewModel> commits = new ArrayList<>();
     }
 
     private final GitHubService gitHubService;
-
     private final String authorFormat;
-
-    private SavedState savedState = new SavedState();
-
-    private MainViewContract view;
 
     private CompositeSubscription subscriptions;
 
     @Inject
     public MainPresenter(GitHubService gitHubService, @Resource(R.string.author_format) String authorFormat) {
+        super(new State());
+
         this.gitHubService = gitHubService;
         this.authorFormat = authorFormat;
     }
 
-    public void setView(MainViewContract view) {
-        this.view = view;
-    }
-
+    @Override
     public void onResume() {
         subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
 
@@ -90,6 +93,7 @@ public class MainPresenter {
         fetchCommits();
     }
 
+    @Override
     public void onPause() {
         RxUtils.unsubscribeIfNotNull(subscriptions);
     }
