@@ -1,8 +1,8 @@
-package com.mycompany.myapp;
+package com.mycompany.myapp.util.presenter;
 
 import android.support.annotation.NonNull;
 
-public interface Stateful<State> {
+public interface StateManager<State> {
     void save(@NonNull State state);
     @NonNull State restore(State defaultState);
 }

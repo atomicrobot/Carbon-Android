@@ -1,16 +1,16 @@
-package com.mycompany.myapp;
+package com.mycompany.myapp.util.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import org.parceler.Parcels;
 
-public class StatefulBundle<State> implements Stateful<State> {
+public class BundleStateManager<State> implements StateManager<State> {
     private static final String EXTRA_STATE = "state";
 
     private final Bundle bundle;
 
-    public StatefulBundle(Bundle bundle) {
+    public BundleStateManager(Bundle bundle) {
         this.bundle = bundle;
     }
 

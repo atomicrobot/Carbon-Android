@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mycompany.myapp.R;
-import com.mycompany.myapp.StatefulBundle;
+import com.mycompany.myapp.util.presenter.BundleStateManager;
 import com.mycompany.myapp.ui.main.MainPresenter.CommitViewModel;
 import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
 
@@ -62,7 +62,7 @@ public class MainFragment extends Fragment implements MainViewContract {
         super.onActivityCreated(savedInstanceState);
         host.inject(this);
 
-        presenter.restoreState(new StatefulBundle<>(savedInstanceState));
+        presenter.restoreState(new BundleStateManager<>(savedInstanceState));
         presenter.setView(this);
     }
 
@@ -90,7 +90,7 @@ public class MainFragment extends Fragment implements MainViewContract {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        presenter.saveState(new StatefulBundle<>(outState));
+        presenter.saveState(new BundleStateManager<>(outState));
     }
 
     @Override

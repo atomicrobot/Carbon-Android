@@ -1,7 +1,7 @@
 package com.mycompany.myapp.ui.main;
 
 import com.mycompany.myapp.BuildConfig;
-import com.mycompany.myapp.Presenter;
+import com.mycompany.myapp.util.presenter.Presenter;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;

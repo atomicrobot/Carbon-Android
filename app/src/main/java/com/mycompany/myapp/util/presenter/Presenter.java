@@ -1,4 +1,4 @@
-package com.mycompany.myapp;
+package com.mycompany.myapp.util.presenter;
 
 import android.support.annotation.NonNull;
 
@@ -15,12 +15,12 @@ public abstract class Presenter<ViewContract, SavedState> {
         this.view = view;
     }
 
-    public void saveState(Stateful<SavedState> stateful) {
-        stateful.save(savedState);
+    public void saveState(StateManager<SavedState> stateManager) {
+        stateManager.save(savedState);
     }
 
-    public void restoreState(Stateful<SavedState> stateful) {
-        savedState = stateful.restore(savedState);
+    public void restoreState(StateManager<SavedState> stateManager) {
+        savedState = stateManager.restore(savedState);
     }
 
     public abstract void onResume();
