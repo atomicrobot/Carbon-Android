@@ -82,3 +82,20 @@ ext {
     libraryGooglePlayServices = "com.google.android.gms:play-services-base:$playServicesVersion"
 }
 
+evaluationDependsOnChildren();
+task allChecks() {
+    def appProject = subprojects.find { project -> 'app' == project.name }
+
+    dependsOn appProject.getTasksByName('findbugs', true)
+    dependsOn appProject.getTasksByName('pmd', true)
+    dependsOn appProject.getTasksByName('lint', true)
+    dependsOn appProject.getTasksByName('testAppDebug', true)
+    dependsOn appProject.getTasksByName('spoonIntegrationDebugAndroidTest', true)
+}
+
+task continuousIntegration() {
+    def appProject = subprojects.find { project -> 'app' == project.name }
+
+    dependsOn allChecks
+    dependsOn appProject.getTasksByName('assembleAppRelease', true)
+}

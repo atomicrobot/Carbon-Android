@@ -4,7 +4,6 @@
 To register an app to an organization you will need to go to the Crashlytics web dashboard, go to
 the organization settings, and then get the keys and secrets it displays.
 - Update `app/src/main/AndroidManifest.xml` with the organization api key.
-- Update `app/crashlytics.properties` with the organization build secret.
 
 ### Signing configs
 *DO NOT* use the demo keystore in your apps.  Run `distribution/keys/generateKey.sh release` and update
@@ -12,32 +11,8 @@ the organization settings, and then get the keys and secrets it displays.
 
 ## Quality
 
-### Static Analysis
-- Lint - `./gradlew lint`
-- FindBugs - `./gradlew findbugs`
-- PMD - `./gradlew pmd`
-
-### Automated Tests
-- Unit tests - `./gradlew test`
-- Instrumentation tests - `./gradlew connectedCheck`
-
-## Build Server
-
-### Building the app
-This is approximately the gradle command to use for a TeamCity configuration:
-`app:assembleRelease -Pfingerprint=%build.vcs.number% -PbuildNumber=%build.number%`
-This will pull in the current Git SHA and auto incrementing build number as part of the build.
-
-### Build Chain
-Recommend setting up a three step build chain.
-
-1. Run the static analysis tools (see above)
-2. Run the automated tests (see above)
-3. Build the app (see above)
-4. Optional: have the build server automatically tag the build in version control
-
-### Performance gain
-Add `-PdisablePreDex` to all of the Gradle commands that would result in building the app module to eliminate some overhead.
+### Automated Checks
+- Unit tests - `./gradlew allChecks`
 
 ## Gradle and plugins
 
@@ -47,6 +22,34 @@ To see what the dependency tree currently looks like:
 To see what dependencies might be out of date:
 `./gradlew app:dependencyUpdates -Drevision=release`
 
+## Continuous Integration Setup
+
+These are written in the context of a TeamCity CI setup.
+
+### Gradle tasks
+This will pull in the current Git SHA and auto incrementing build number as part of the build.
+
+`continuousIntegration -Pfingerprint=%build.vcs.number% -PbuildNumber=%build.counter% -PdisablePreDex`
+
+Also make sure the CI server is set to use the Gradle wrapper.
+
+### Artifact Paths
+```
+app/build/outputs/apk/*-release.apk => apks
+app/build/outputs/lint-results.html => quality/lint
+app/build/outputs/lint-results_files => quality/lint/lint-results_files
+app/build/reports/findbugs/ => quality/findbugs
+app/build/reports/pmd/ => quality/pmd
+app/build/reports/tests/appDebug/ => quality/tests
+app/build/spoon-output/IntegrationDebugAndroidTest => quality/integrationTests
+```
+
+### Project Reports
+- "Lint" with a start page of `quality/lint/lint-results.html`
+- "Findbugs" `quality/findbugs/findbugs.html`
+- "PMD" with a start page of `quality/pmd/pmd.html`
+- "Unit Tests" with a start page of `quality/tests/index.html`
+- "Integration Tests" with a start page of `quality/integrationTests/index.html`
 
 License
 =======
