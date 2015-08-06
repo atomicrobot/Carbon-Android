@@ -59,7 +59,7 @@ public class MainActivityEspressoTest {
         when(gitHubService.loadCommits(any())).thenReturn(Observable.<LoadCommitsResponse>empty());
 
         MainActivity activity = activityRule.launchActivity(null);
-        onView(withId(R.id.fingerprint)).check(matches(withText("Fingerprint: DEV")));
+        onView(withId(R.id.fingerprint)).check(matches(withText("Fingerprint: INTEGRATION")));
     }
 
     @Test
