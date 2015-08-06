@@ -169,10 +169,6 @@ dependencies {
         exclude module: 'commons-logging'
     }
 
-    // Code generators - Icepick
-    compile 'com.vikingsen:pocketknife-core:3.0.0'
-    provided 'com.vikingsen:pocketknife-compiler:3.0.0'
-
     // Monitoring - Timber (logging)
     compile 'com.jakewharton.timber:timber:3.1.0'
 
