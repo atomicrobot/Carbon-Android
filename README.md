@@ -36,6 +36,7 @@ Also make sure the CI server is set to use the Gradle wrapper.
 ### Artifact Paths
 ```
 app/build/outputs/apk/*-release.apk => apks
+app/build/outputs/mapping/ => proguard
 app/build/outputs/lint-results.html => quality/lint
 app/build/outputs/lint-results_files => quality/lint/lint-results_files
 app/build/reports/findbugs/ => quality/findbugs
