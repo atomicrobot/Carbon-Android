@@ -103,9 +103,12 @@ task staticAnalysis {
 
 task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
+    
+    def unitTestTasks = appProject.getTasksByName('testAppDebug', true)
+    def integrationTestTasks = appProject.getTasksByName('spoonIntegrationDebugAndroidTest', true)
 
-    dependsOn appProject.getTasksByName('testAppDebug', true)
-    dependsOn appProject.getTasksByName('spoonIntegrationDebugAndroidTest', true)
+    dependsOn unitTestTasks
+    dependsOn integrationTestTasks
     
     // Run unit tests first
     integrationTestTasks.each { task -> task.mustRunAfter unitTestTasks }
@@ -114,7 +117,9 @@ task testing() {
 task release() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
-    dependsOn appProject.getTasksByName('assembleAppRelease', true)
+    def releaseTasks = appProject.getTasksByName('assembleAppRelease', true)
+
+    dependsOn releaseTasks
 }
 
 task continuousIntegration() {
