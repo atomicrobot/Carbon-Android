@@ -85,16 +85,19 @@ ext {
 evaluationDependsOnChildren();
 
 task initialCleanup() {
-    def uninstallTasks = getTasksByName('uninstallAll', true)
+    def cleanTasks = getProjectTask(this, 'clean')
+    def uninstallTasks = getProjectTask(this, 'uninstallAll')
+
+    dependsOn cleanTasks
     dependsOn uninstallTasks
 }
 
 task staticAnalysis {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
-    def findBugsTasks = appProject.getTasksByName('findbugs', true)
-    def pmdTasks = appProject.getTasksByName('pmd', true)
-    def lintTasks = appProject.getTasksByName('lint', true)
+    def findBugsTasks = getProjectTask(appProject, 'findbugs')
+    def pmdTasks = getProjectTask(appProject, 'pmd')
+    def lintTasks = getProjectTask(appProject, 'lint')
 
     dependsOn findBugsTasks
     dependsOn pmdTasks
@@ -103,9 +106,9 @@ task staticAnalysis {
 
 task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
-    
-    def unitTestTasks = appProject.getTasksByName('testAppDebug', true)
-    def integrationTestTasks = appProject.getTasksByName('spoonIntegrationDebugAndroidTest', true)
+
+    def unitTestTasks = getProjectTask(appProject, 'testAppDebugUnitTest')
+    def integrationTestTasks = getProjectTask(appProject, 'spoonIntegrationDebugAndroidTest')
 
     dependsOn unitTestTasks
     dependsOn integrationTestTasks
@@ -117,9 +120,17 @@ task testing() {
 task release() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
-    def releaseTasks = appProject.getTasksByName('assembleAppRelease', true)
+    def appTasks = getProjectTask(appProject, 'assembleAppRelease')
 
-    dependsOn releaseTasks
+    dependsOn appTasks
+}
+
+def getProjectTask(project, taskName) {
+    def tasks = project.getTasksByName(taskName, true)
+    if (tasks == null || tasks.empty) {
+        throw new IllegalArgumentException("Task " + taskName + " not found")
+    }
+    return tasks
 }
 
 task continuousIntegration() {
