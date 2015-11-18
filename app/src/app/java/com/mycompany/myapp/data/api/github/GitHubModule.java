@@ -3,17 +3,16 @@ package com.mycompany.myapp.data.api.github;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.myapp.data.api.Api;
+import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.Endpoints;
-import retrofit.RestAdapter;
-import retrofit.client.Client;
-import retrofit.converter.Converter;
-import retrofit.converter.JacksonConverter;
+import retrofit.Converter;
+import retrofit.JacksonConverterFactory;
+import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
 import timber.log.Timber.Tree;
 
 @Module
@@ -21,34 +20,38 @@ public class GitHubModule {
     @Singleton
     @Api("github")
     @Provides
-    Endpoint provideEndpoint() {
-        return Endpoints.newFixedEndpoint("https://api.github.com");
+    String provideBaseUrl() {
+        return "https://api.github.com";  // NON-NLS
     }
 
     @Singleton
     @Api("github")
     @Provides
-    Converter provideConverter() {
+    Converter.Factory provideConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return new JacksonConverter(objectMapper);
+        return JacksonConverterFactory.create(objectMapper);
     }
 
     @Singleton
     @Api("github")
     @Provides
-    RestAdapter provideRestAdapter(Client client, @Api("github") Endpoint endpoint, @Api("github") Converter converter) {
-        return new RestAdapter.Builder()
-                .setClient(client)
-                .setConverter(converter)
-                .setEndpoint(endpoint)
+    Retrofit provideRetrofit(
+            OkHttpClient client,
+            @Api("github") String baseUrl,
+            @Api("github") Converter.Factory converterFactory) {
+        return new Retrofit.Builder()
+                .client(client)
+                .baseUrl(baseUrl)
+                .addConverterFactory(converterFactory)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
 
     @Singleton
     @Provides
-    GitHubApiService provideGitHubService(@Api("github") RestAdapter restAdapter) {
-        return restAdapter.create(GitHubApiService.class);
+    GitHubApiService provideGitHubService(@Api("github") Retrofit retrofit) {
+        return retrofit.create(GitHubApiService.class);
     }
 
     @Singleton

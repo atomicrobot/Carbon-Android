@@ -2,8 +2,7 @@
 <lint>
     <!-- See: https://android-review.googlesource.com/#/c/93190/1 -->
     <issue id="InvalidPackage">
-        <ignore regexp="okio-1.4.0.jar" />
-        <ignore regexp="parceler-1.0.1.jar" />
-        <ignore regexp="clojure-1.6.0.jar" />
+        <ignore regexp="okio-1.6.0.jar" />
+        <ignore regexp="parceler-1.0.4.jar" />
     </issue>
 </lint>

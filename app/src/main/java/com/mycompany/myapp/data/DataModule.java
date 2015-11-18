@@ -11,8 +11,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.client.Client;
-import retrofit.client.OkClient;
 
 @Module
 public class DataModule {
@@ -29,11 +27,5 @@ public class DataModule {
         client.setCache(cache);
 
         return client;
-    }
-
-    @Singleton
-    @Provides
-    Client provideClient(OkHttpClient client) {
-        return new OkClient(client);
     }
 }

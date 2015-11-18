@@ -10,5 +10,7 @@ import rx.Observable;
 
 public interface GitHubApiService {
     @GET("/repos/{user}/{repository}/commits")
-    Observable<List<Commit>> listCommits(@Path("user") String user, @Path("repository") String repository);
+    Observable<List<Commit>> listCommits(
+            @Path("user") String user,
+            @Path("repository") String repository);
 }

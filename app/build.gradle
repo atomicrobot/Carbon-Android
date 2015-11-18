@@ -1,17 +1,17 @@
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
+        jcenter()
         maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+        classpath 'io.fabric.tools:gradle:1.20.1'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'de.felixschulze.gradle:gradle-spoon-plugin:2.3'
+        classpath 'de.felixschulze.gradle:gradle-spoon-plugin:2.6.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.0'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
     }
 }
 
@@ -31,9 +31,6 @@ apply plugin: 'pmd'
 repositories {
     // Crashlytics
     maven { url 'https://maven.fabric.io/public' }
-
-    // Icepick
-    maven {url "https://clojars.org/repo/"}
 }
 
 android {
@@ -75,7 +72,6 @@ android {
         proguardFile '../config/proguard/butterknife.pro'
         proguardFile '../config/proguard/crashlytics.pro'
         proguardFile '../config/proguard/google-play-services.pro'
-        proguardFile '../config/proguard/icepick.pro'
         proguardFile '../config/proguard/jackson.pro'
         proguardFile '../config/proguard/okhttp.pro'
         proguardFile '../config/proguard/okio.pro'
@@ -141,39 +137,41 @@ dependencies {
     compile rootProject.ext.libraryAndroidDesignSupport
 
     // Networking - HTTP
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
 
     // Networking - REST
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.squareup.retrofit:converter-jackson:1.9.0'
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
 
     // Networking - Encoding
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.3'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.3'
 
-    // App architecture - Otto
-    compile 'io.reactivex:rxandroid:0.25.0'
+    // App architecture - RxJava
+    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxandroid:1.0.1'
 
     // App architecture - Dagger 2
-    compile 'com.google.dagger:dagger:2.0.1'
-    apt 'com.google.dagger:dagger-compiler:2.0.1'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger:2.0.2'
+    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    provided 'javax.annotation:jsr250-api:1.0'
 
     // Code generators - Butterknife
     compile 'com.jakewharton:butterknife:7.0.1'
 
     // Code generators - Parceler
-    compile "org.parceler:parceler-api:1.0.1"
-    apt ("org.parceler:parceler:1.0.1") {
+    compile "org.parceler:parceler-api:1.0.4"
+    apt ("org.parceler:parceler:1.0.4") {
         exclude module: 'commons-logging'
     }
 
     // Monitoring - Timber (logging)
-    compile 'com.jakewharton.timber:timber:3.1.0'
+    compile 'com.jakewharton.timber:timber:4.1.0'
 
     // Monitoring - Crashlytics
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true
     }
 
@@ -187,24 +185,24 @@ dependencies {
     integrationCompile 'com.google.dexmaker:dexmaker:1.2'
 
     // Instrumentation test
-    androidTestCompile 'com.android.support.test:runner:0.3'
-    androidTestCompile 'com.android.support.test:rules:0.3'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2') {
-        exclude group: 'com.android.support', module: 'appcompat'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
-    }
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1')
 
-    // Test libraries are currently lagging behind
-    androidTestCompile rootProject.ext.libraryAndroidSupportAnnotations
-
-    androidTestCompile 'com.squareup.spoon:spoon-client:1.1.9'
+    androidTestCompile 'com.squareup.spoon:spoon-client:1.2.1'
 }
 
-// Hack due to mockito for integration tests and junit for unit test...
+configurations {
+    testCompile.exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestCompile.exclude group: 'com.android.support', module: 'support-v4'
+}
+
+// Due to incompatible version resolutions across build variants/configs/etc
 configurations.all {
-    resolutionStrategy.force 'org.hamcrest:hamcrest-core:1.3'
+    resolutionStrategy.force "org.hamcrest:hamcrest-core:1.3",
+            "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
 }
 
 task findbugs(type: FindBugs, dependsOn: assembleDebug) {

@@ -11,8 +11,8 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         mavenCentral()
+        jcenter()
     }
 
     // Automatically also pull down javadocs and sources (if available)
