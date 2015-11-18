@@ -1,9 +1,9 @@
 package com.mycompany.myapp.ui.main;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,9 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mycompany.myapp.R;
-import com.mycompany.myapp.util.presenter.BundleStateManager;
 import com.mycompany.myapp.ui.main.MainPresenter.CommitViewModel;
 import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
+import com.mycompany.myapp.util.presenter.BundleStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-import hugo.weaving.DebugLog;
 
 public class MainFragment extends Fragment implements MainViewContract {
     public interface MainFragmentHost {
@@ -37,13 +36,9 @@ public class MainFragment extends Fragment implements MainViewContract {
     @Inject MainPresenter presenter;
 
     @Bind(R.id.username) EditText userNameView;
-
     @Bind(R.id.repository) EditText repositoryView;
-
     @Bind(R.id.commits) RecyclerView commitsView;
-
     @Bind(R.id.version) TextView versionView;
-
     @Bind(R.id.fingerprint) TextView fingerprintView;
 
     private MainFragmentHost host;
@@ -51,12 +46,11 @@ public class MainFragment extends Fragment implements MainViewContract {
     private CommitsAdapter adapter;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        host = (MainFragmentHost) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        host = (MainFragmentHost) context;
     }
 
-    @DebugLog
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -66,7 +60,6 @@ public class MainFragment extends Fragment implements MainViewContract {
         presenter.setView(this);
     }
 
-    @DebugLog
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);

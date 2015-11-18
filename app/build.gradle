@@ -9,10 +9,16 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.20.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'de.felixschulze.gradle:gradle-spoon-plugin:2.6.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+
+        classpath 'de.felixschulze.gradle:gradle-spoon-plugin:2.6.1'
+        classpath 'com.squareup.spoon:spoon-runner:1.2.1'
+
         classpath 'me.tatarka:gradle-retrolambda:3.2.3'
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     }
+
+    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 apply plugin: 'com.github.ben-manes.versions'
@@ -60,9 +66,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-
-        resConfigs "en"
-        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"
 
         buildConfigField "String", "VERSION_FINGERPRINT", rootProject.ext.versionFingerprint
 
@@ -189,7 +192,11 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1')
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
 
     androidTestCompile 'com.squareup.spoon:spoon-client:1.2.1'
 }

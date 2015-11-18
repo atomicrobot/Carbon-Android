@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.3.1'
+        classpath 'com.android.tools.build:gradle:1.5.0'
     }
 }
 
@@ -108,7 +108,10 @@ task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
     def unitTestTasks = getProjectTask(appProject, 'testAppDebugUnitTest')
-    def integrationTestTasks = getProjectTask(appProject, 'spoonIntegrationDebugAndroidTest')
+    //def integrationTestTasks = getProjectTask(appProject, 'spoonIntegrationDebugAndroidTest')
+
+    // FIXME: Go back to using Spoon when https://github.com/square/spoon/issues/302 is correctly resolved
+    def integrationTestTasks = getProjectTask(appProject, 'connectedIntegrationDebugAndroidTest')
 
     dependsOn unitTestTasks
     dependsOn integrationTestTasks
