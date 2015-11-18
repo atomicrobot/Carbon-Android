@@ -122,7 +122,7 @@ android {
 
     lintOptions {
         abortOnError true
-        lintConfig file("${project.rootDir}/config/lint/lint.xml")
+        lintConfig file("lint.xml")
         htmlReport true
     }
 }
