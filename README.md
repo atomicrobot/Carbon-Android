@@ -1,5 +1,32 @@
 ## Project Setup
 
+### Git Setup
+1. Clone the project
+   
+   ```
+   $ git clone https://github.com/madebyatomicrobot/android-starter-project.git
+   ```
+1. Change the remote URL
+   
+   ```
+   $ git remote set-url origin <new git repo>
+   ```
+1. Commit to new repo
+   
+   ```
+   $ git add .
+   $ git commit
+   $ git push
+   ```
+1. Remove starter project history
+   
+   ```
+   $ git rebase --root -i
+   $ git commit --amend -m "Initial commit."
+   $ git push --force
+   $ git fetch --prune
+   ```
+
 ### Crashlytics
 To register an app to an organization you will need to go to the Crashlytics web dashboard, go to
 the organization settings, and then get the keys and secrets it displays.
