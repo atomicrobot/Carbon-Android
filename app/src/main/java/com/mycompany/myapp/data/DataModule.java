@@ -2,15 +2,14 @@ package com.mycompany.myapp.data;
 
 import android.app.Application;
 
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
-
 import java.io.File;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 
 @Module
 public class DataModule {
@@ -18,14 +17,16 @@ public class DataModule {
 
     @Singleton
     @Provides
-    OkHttpClient provideOkHttpClient(Application app) {
-        OkHttpClient client = new OkHttpClient();
-
-        // Install an HTTP cache in the application cache directory.
+    Cache provideCache(Application app) {
         File cacheDir = new File(app.getCacheDir(), "http");
-        Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
-        client.setCache(cache);
+        return new Cache(cacheDir, DISK_CACHE_SIZE);
+    }
 
-        return client;
+    @Singleton
+    @Provides
+    OkHttpClient provideOkHttpClient(Cache cache) {
+        return new OkHttpClient.Builder()
+                .cache(cache)
+                .build();
     }
 }

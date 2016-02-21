@@ -1,18 +1,17 @@
 package com.mycompany.myapp.data.api.github;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.mycompany.myapp.data.api.Api;
-import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Converter;
-import retrofit.JacksonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber.Tree;
 
 @Module
@@ -28,9 +27,8 @@ public class GitHubModule {
     @Api("github")
     @Provides
     Converter.Factory provideConverter() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return JacksonConverterFactory.create(objectMapper);
+        Gson gson = new Gson();
+        return GsonConverterFactory.create(gson);
     }
 
     @Singleton

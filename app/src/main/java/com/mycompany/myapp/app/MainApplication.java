@@ -3,7 +3,7 @@ package com.mycompany.myapp.app;
 import android.app.Application;
 import android.content.Intent;
 
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
 import com.google.android.gms.security.ProviderInstaller.ProviderInstallListener;
 
@@ -39,7 +39,7 @@ public class MainApplication extends Application implements HasComponent<Applica
 
             @Override
             public void onProviderInstallFailed(int errorCode, Intent recoveryIntent) {
-                GooglePlayServicesUtil.showErrorNotification(errorCode, MainApplication.this);
+                GoogleApiAvailability.getInstance().showErrorNotification(MainApplication.this, errorCode);
             }
         });
     }

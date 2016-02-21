@@ -1,6 +1,6 @@
 package com.mycompany.myapp.data.api.github.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import org.parceler.Parcel;
 
@@ -8,20 +8,20 @@ import org.parceler.Parcel;
 public class Commit {
     @Parcel
     public static class Author {
-        @JsonProperty("name")
+        @SerializedName("name")
         String name;
     }
 
     @Parcel
     public static class CommitDetails {
-        @JsonProperty("message")
+        @SerializedName("message")
         String message;
 
-        @JsonProperty("author")
+        @SerializedName("author")
         Author author;
     }
 
-    @JsonProperty("commit")
+    @SerializedName("commit")
     CommitDetails commit;
 
 

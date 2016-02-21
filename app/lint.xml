@@ -4,6 +4,6 @@
     <issue id="InvalidPackage">
         <ignore regexp="okio-1.6.0.jar" />
         <ignore regexp="parceler-1.0.4.jar" />
-        <ignore regexp="retrofit-2.0.0-beta2.jar" />
+        <ignore regexp="retrofit-2.0.0-beta4.jar" />
     </issue>
 </lint>
