@@ -1,5 +1,6 @@
 package com.mycompany.myapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.app.KeyguardManager;
@@ -121,8 +122,8 @@ public class EspressoTestRule<T extends Activity> extends ActivityTestRule<T> {
 
     // Inspired from https://gist.github.com/JakeWharton/f50f3b4d87e57d8e96e9
     @SuppressWarnings("deprecation")
+    @SuppressLint("MissingPermission")
     private void riseAndShine(Activity activity) {
-
         KeyguardManager keyguardManager = (KeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
         KeyguardLock keyguardLock = keyguardManager.newKeyguardLock(activity.getLocalClassName());
         keyguardLock.disableKeyguard();
