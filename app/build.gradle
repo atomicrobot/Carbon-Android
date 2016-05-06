@@ -65,6 +65,8 @@ android {
 
         buildConfigField "String", "VERSION_FINGERPRINT", rootProject.ext.versionFingerprint
 
+        multiDexEnabled true
+
         proguardFile getDefaultProguardFile('proguard-android.txt')
         proguardFile 'proguard-rules.pro'
         proguardFile '../config/proguard/android-support-v4.pro'
@@ -115,6 +117,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.android.support:multidex:1.0.1'
 
     // Android/Google libraries
     compile rootProject.ext.libraryAndroidSupport
