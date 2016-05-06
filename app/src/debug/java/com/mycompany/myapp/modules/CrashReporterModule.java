@@ -7,13 +7,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import hugo.weaving.DebugLog;
 
 @Module
 public class CrashReporterModule {
     @Singleton
     @Provides
-    CrashReporter crashReporter() {
+    public CrashReporter crashReporter() {
         return new LoggingOnlyCrashReporter();
     }
 }
