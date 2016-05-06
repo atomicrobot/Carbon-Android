@@ -1,31 +1,5 @@
 ## Project Setup
 
-### Git Setup
-1. Clone the project
-   
-   ```
-   $ git clone https://github.com/madebyatomicrobot/android-starter-project.git
-   ```
-1. Change the remote URL
-   
-   ```
-   $ git remote set-url origin <new git repo>
-   ```
-1. Commit to new repo
-   
-   ```
-   $ git add .
-   $ git commit
-   $ git push
-   ```
-1. Remove starter project history
-   
-   ```
-   $ git rebase --root -i
-   $ git commit --amend -m "Initial commit."
-   $ git push --force
-   $ git fetch --prune
-   ```
 
 ### Crashlytics
 To register an app to an organization you will need to go to the Crashlytics web dashboard, go to
@@ -63,13 +37,15 @@ Also make sure the CI server is set to use the Gradle wrapper.
 ### Artifact Paths
 ```
 app/build/outputs/apk/*-release.apk => apks
-app/build/outputs/mapping/ => proguard
-app/build/outputs/lint-results.html => quality/lint
-app/build/outputs/lint-results_files => quality/lint/lint-results_files
+app/build/outputs/mapping/release/mapping.txt => proguard/release/mapping.txt
+
+app/build/outputs/lint-results-debug.html => quality/lint
+app/build/outputs/lint-results-debug_files => quality/lint/lint-results-debug_files
 app/build/reports/findbugs/ => quality/findbugs
 app/build/reports/pmd/ => quality/pmd
-app/build/reports/tests/appDebug/ => quality/tests
-app/build/spoon-output/IntegrationDebugAndroidTest => quality/integrationTests
+
+app/build/reports/tests/dbug/ => quality/tests
+app/build/spoon/debug => quality/integrationTests
 ```
 
 ### Project Reports

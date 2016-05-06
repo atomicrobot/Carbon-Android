@@ -18,7 +18,7 @@ allprojects {
         maven { url "https://jitpack.io" }
     }
 
-    // Automatically also pull down javadocs and sources (if available)
+    // Automatically pull down javadocs and sources (if available)
     apply plugin: 'idea'
     idea {
         module {
@@ -46,6 +46,7 @@ subprojects {
 }
 
 // Prevent wildcard dependencies
+// https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
 allprojects {
     afterEvaluate { project ->
         project.configurations.all {
@@ -111,15 +112,11 @@ task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
     def unitTestTasks = getProjectTask(appProject, 'testDebugUnitTest')
-    //def integrationTestTasks = getProjectTask(appProject, 'spoonDebugAndroidTest')
-
-    // FIXME: Go back to using Spoon when https://github.com/square/spoon/issues/302 is correctly resolved
-    def integrationTestTasks = getProjectTask(appProject, 'connectedDebugAndroidTest')
+    def integrationTestTasks = getProjectTask(appProject, 'spoonDebugAndroidTest')
 
     dependsOn unitTestTasks
     dependsOn integrationTestTasks
-    
-    // Run unit tests first
+
     integrationTestTasks.each { task -> task.mustRunAfter unitTestTasks }
 }
 
