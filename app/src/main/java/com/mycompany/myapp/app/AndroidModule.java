@@ -1,6 +1,7 @@
 package com.mycompany.myapp.app;
 
 import android.app.Application;
+import android.content.Context;
 
 import javax.inject.Singleton;
 
@@ -17,7 +18,13 @@ public class AndroidModule {
 
     @Singleton
     @Provides
-    public Application application() {
+    public Context provideContext() {
+        return application;
+    }
+
+    @Singleton
+    @Provides
+    public Application provideApplication() {
         return application;
     }
 }

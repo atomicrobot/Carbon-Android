@@ -17,14 +17,14 @@ public class DataModule {
 
     @Singleton
     @Provides
-    Cache provideCache(Application app) {
+    public Cache provideCache(Application app) {
         File cacheDir = new File(app.getCacheDir(), "http");
         return new Cache(cacheDir, DISK_CACHE_SIZE);
     }
 
     @Singleton
     @Provides
-    OkHttpClient provideOkHttpClient(Cache cache) {
+    public OkHttpClient provideOkHttpClient(Cache cache) {
         return new OkHttpClient.Builder()
                 .cache(cache)
                 .build();

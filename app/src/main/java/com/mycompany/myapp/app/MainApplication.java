@@ -2,6 +2,7 @@ package com.mycompany.myapp.app;
 
 import android.app.Application;
 import android.content.Intent;
+import android.support.annotation.VisibleForTesting;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
@@ -9,25 +10,26 @@ import com.google.android.gms.security.ProviderInstaller.ProviderInstallListener
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
 import timber.log.Timber.Tree;
 
 public class MainApplication extends Application implements HasComponent<ApplicationComponent> {
-    @Inject
-    Tree logger;
-
     private ApplicationComponent component;
+
+    @Inject Tree logger;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        initApplicationComponent();
+        Timber.plant(logger);
+
         initApplication();
         upgradeSecurityProvider();
-        initApplicationComponent();
     }
 
     private void initApplication() {
         new BuildConfigApplicationInitialization(this).immediateInitialization();
-        new BuildFlavorApplicationInitialization(this).immediateInitialization();
     }
 
     private void upgradeSecurityProvider() {
@@ -54,5 +56,10 @@ public class MainApplication extends Application implements HasComponent<Applica
     @Override
     public ApplicationComponent getComponent() {
         return component;
+    }
+
+    @VisibleForTesting
+    public void setComponent(ApplicationComponent component) {
+        this.component = component;
     }
 }

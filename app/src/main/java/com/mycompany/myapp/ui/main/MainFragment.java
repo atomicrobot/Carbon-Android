@@ -172,7 +172,6 @@ public class MainFragment extends Fragment implements MainViewContract {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.message) TextView messageView;
-
         @Bind(R.id.author) TextView authorView;
 
         private ViewHolder(View view) {

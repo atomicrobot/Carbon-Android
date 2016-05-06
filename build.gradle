@@ -1,18 +1,21 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
     }
 }
 
 
 allprojects {
     repositories {
-        mavenCentral()
         jcenter()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 
     // Automatically also pull down javadocs and sources (if available)
@@ -70,7 +73,7 @@ ext {
     compileSdkVersion = 23
 
     // Libraries are are likely to be reused across different modules
-    supportVersion = '23.1.1'
+    supportVersion = '23.3.0'
     libraryAndroidSupport = "com.android.support:support-v4:$supportVersion"
     libraryAndroidAppCompat = "com.android.support:appcompat-v7:$supportVersion"
     libraryAndroidRecyclerView = "com.android.support:recyclerview-v7:$supportVersion"
@@ -107,11 +110,11 @@ task staticAnalysis {
 task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
-    def unitTestTasks = getProjectTask(appProject, 'testAppDebugUnitTest')
-    //def integrationTestTasks = getProjectTask(appProject, 'spoonIntegrationDebugAndroidTest')
+    def unitTestTasks = getProjectTask(appProject, 'testDebugUnitTest')
+    //def integrationTestTasks = getProjectTask(appProject, 'spoonDebugAndroidTest')
 
     // FIXME: Go back to using Spoon when https://github.com/square/spoon/issues/302 is correctly resolved
-    def integrationTestTasks = getProjectTask(appProject, 'connectedIntegrationDebugAndroidTest')
+    def integrationTestTasks = getProjectTask(appProject, 'connectedDebugAndroidTest')
 
     dependsOn unitTestTasks
     dependsOn integrationTestTasks
@@ -123,7 +126,7 @@ task testing() {
 task release() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
-    def appTasks = getProjectTask(appProject, 'assembleAppRelease')
+    def appTasks = getProjectTask(appProject, 'assembleRelease')
 
     dependsOn appTasks
 }

@@ -15,8 +15,9 @@ import org.parceler.Parcels;
 @RunWith(AndroidJUnit4.class)
 public class CommitTests {
     /**
-     * Verification that Parceler is working. The default configuration doesn't play well with other
-     * generators and the code gen task wasn't running (see: https://github.com/johncarl81/parceler/issues/24#issuecomment-37925333)
+     * Verification that Parceler is working. The default configuration doesn't play well with
+     * other generators and the code gen task wasn't running
+     * (see: https://github.com/johncarl81/parceler/issues/24#issuecomment-37925333)
      */
     @Test
     public void testWriteToParcel() {

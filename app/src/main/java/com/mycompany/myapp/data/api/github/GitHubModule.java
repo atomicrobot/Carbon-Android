@@ -12,21 +12,20 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import timber.log.Timber.Tree;
 
 @Module
 public class GitHubModule {
     @Singleton
     @Api("github")
     @Provides
-    String provideBaseUrl() {
+    public String provideBaseUrl() {
         return "https://api.github.com";  // NON-NLS
     }
 
     @Singleton
     @Api("github")
     @Provides
-    Converter.Factory provideConverter() {
+    public Converter.Factory provideConverter() {
         Gson gson = new Gson();
         return GsonConverterFactory.create(gson);
     }
@@ -34,7 +33,7 @@ public class GitHubModule {
     @Singleton
     @Api("github")
     @Provides
-    Retrofit provideRetrofit(
+    public Retrofit provideRetrofit(
             OkHttpClient client,
             @Api("github") String baseUrl,
             @Api("github") Converter.Factory converterFactory) {
@@ -48,13 +47,13 @@ public class GitHubModule {
 
     @Singleton
     @Provides
-    GitHubApiService provideGitHubService(@Api("github") Retrofit retrofit) {
+    public GitHubApiService provideGitHubApiService(@Api("github") Retrofit retrofit) {
         return retrofit.create(GitHubApiService.class);
     }
 
     @Singleton
     @Provides
-    GitHubService provideGitHubBusService(GitHubApiService api, Tree logger) {
-        return new GitHubService(api, logger);
+    public GitHubService provideGitHubService(GitHubApiService api) {
+        return new GitHubService(api);
     }
 }

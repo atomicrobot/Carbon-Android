@@ -1,23 +1,22 @@
 package com.mycompany.myapp.ui.main;
 
+import android.content.Context;
+
 import com.mycompany.myapp.BuildConfig;
-import com.mycompany.myapp.util.presenter.Presenter;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.model.Commit;
-import com.mycompany.myapp.ui.Resource;
 import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
 import com.mycompany.myapp.ui.main.MainPresenter.State;
 import com.mycompany.myapp.util.RxUtils;
+import com.mycompany.myapp.util.presenter.Presenter;
 
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscription;
@@ -67,17 +66,15 @@ public class MainPresenter extends Presenter<MainViewContract, State> {
         List<CommitViewModel> commits = new ArrayList<>();
     }
 
+    private final Context context;
     private final GitHubService gitHubService;
-    private final String authorFormat;
 
     private CompositeSubscription subscriptions;
 
-    @Inject
-    public MainPresenter(GitHubService gitHubService, @Resource(R.string.author_format) String authorFormat) {
+    public MainPresenter(Context context, GitHubService gitHubService) {
         super(new State());
-
+        this.context = context;
         this.gitHubService = gitHubService;
-        this.authorFormat = authorFormat;
     }
 
     @Override
@@ -126,7 +123,7 @@ public class MainPresenter extends Presenter<MainViewContract, State> {
 
     private CommitViewModel mapCommitToViewModel(Commit commit) {
         String message = commit.getCommitMessage();
-        String author = String.format(authorFormat, commit.getAuthor());
+        String author = context.getString(R.string.author_format, commit.getAuthor());
         return new CommitViewModel(message, author);
     }
 

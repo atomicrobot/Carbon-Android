@@ -5,15 +5,12 @@ import com.mycompany.myapp.data.api.github.model.Commit;
 import java.util.List;
 
 import rx.Observable;
-import timber.log.Timber.Tree;
 
 public class GitHubService {
     private final GitHubApiService api;
-    private final Tree logger;
 
-    public GitHubService(GitHubApiService api, Tree logger) {
+    public GitHubService(GitHubApiService api) {
         this.api = api;
-        this.logger = logger;
     }
 
     public static class LoadCommitsRequest {

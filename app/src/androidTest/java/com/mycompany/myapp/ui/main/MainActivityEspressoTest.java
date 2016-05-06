@@ -1,16 +1,10 @@
 package com.mycompany.myapp.ui.main;
 
-import android.app.Application;
-import android.app.Instrumentation;
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.MediumTest;
 
+import com.mycompany.myapp.EspressoTestRule;
+import com.mycompany.myapp.MainApplicationDaggerMockRule;
 import com.mycompany.myapp.R;
-import com.mycompany.myapp.app.ApplicationComponent;
-import com.mycompany.myapp.app.MainApplication;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
@@ -19,52 +13,40 @@ import com.squareup.spoon.Spoon;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.Espresso.*;
+import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static android.support.test.espresso.matcher.ViewMatchers.*;
+import static com.mycompany.myapp.RecyclerViewMatcher.withRecyclerView;
+import static org.mockito.Mockito.*;
 
-@RunWith(AndroidJUnit4.class)
 @MediumTest
 public class MainActivityEspressoTest {
 
-    @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class, true, false);
+    @Rule public MainApplicationDaggerMockRule mockitoRule = new MainApplicationDaggerMockRule();
 
-    private GitHubService getMockGitHubService() {
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        Context targetContext = instrumentation.getTargetContext();
-        Application application = (Application) targetContext.getApplicationContext();
+    @Rule public EspressoTestRule<MainActivity> activityRule = new EspressoTestRule<>(MainActivity.class, false, false);
 
-        MainApplication mainApplication = (MainApplication) application;
-        ApplicationComponent applicationComponent = mainApplication.getComponent();
-        return applicationComponent.gitHubService();
-    }
+    @Mock GitHubService gitHubService;
 
     @Test
     public void testBuildFingerprint() {
-        GitHubService gitHubService = getMockGitHubService();
         when(gitHubService.loadCommits(any())).thenReturn(Observable.<LoadCommitsResponse>empty());
 
-        MainActivity activity = activityRule.launchActivity(null);
-        onView(withId(R.id.fingerprint)).check(matches(withText("Fingerprint: INTEGRATION")));
+        activityRule.launchActivity(null);
+        onView(withId(R.id.fingerprint)).check(matches(withText("Fingerprint: DEV")));
     }
 
     @Test
     public void testFetchAndDisplayCommits() {
-        GitHubService gitHubService = getMockGitHubService();
         Observable<LoadCommitsResponse> response = buildMockLoadCommitsResponse();
         when(gitHubService.loadCommits(any())).thenReturn(response);
 
@@ -76,8 +58,12 @@ public class MainActivityEspressoTest {
 
         Spoon.screenshot(activity, "after_fetching_commits");
 
-        onView(withId(R.id.author)).check(matches(withText("Author: Test author")));
-        onView(withId(R.id.message)).check(matches(withText("Test commit message")));
+        onView(withRecyclerView(R.id.commits)
+                .atPositionOnView(0, R.id.author))
+                .check(matches(withText("Author: Test author")));
+        onView(withRecyclerView(R.id.commits)
+                .atPositionOnView(0, R.id.message))
+                .check(matches(withText("Test commit message")));
     }
 
     private Observable<LoadCommitsResponse> buildMockLoadCommitsResponse() {
