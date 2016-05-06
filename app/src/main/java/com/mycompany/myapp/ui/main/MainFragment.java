@@ -23,10 +23,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import butterknife.Unbinder;
 
 public class MainFragment extends Fragment implements MainViewContract {
     public interface MainFragmentHost {
@@ -35,13 +36,14 @@ public class MainFragment extends Fragment implements MainViewContract {
 
     @Inject MainPresenter presenter;
 
-    @Bind(R.id.username) EditText userNameView;
-    @Bind(R.id.repository) EditText repositoryView;
-    @Bind(R.id.commits) RecyclerView commitsView;
-    @Bind(R.id.version) TextView versionView;
-    @Bind(R.id.fingerprint) TextView fingerprintView;
+    @BindView(R.id.username) EditText userNameView;
+    @BindView(R.id.repository) EditText repositoryView;
+    @BindView(R.id.commits) RecyclerView commitsView;
+    @BindView(R.id.version) TextView versionView;
+    @BindView(R.id.fingerprint) TextView fingerprintView;
 
     private MainFragmentHost host;
+    private Unbinder unbinder;
 
     private CommitsAdapter adapter;
 
@@ -63,7 +65,7 @@ public class MainFragment extends Fragment implements MainViewContract {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         commitsView.setHasFixedSize(true);
         commitsView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -76,7 +78,7 @@ public class MainFragment extends Fragment implements MainViewContract {
 
     @Override
     public void onDestroyView() {
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         super.onDestroyView();
     }
 
@@ -171,8 +173,8 @@ public class MainFragment extends Fragment implements MainViewContract {
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.message) TextView messageView;
-        @Bind(R.id.author) TextView authorView;
+        @BindView(R.id.message) TextView messageView;
+        @BindView(R.id.author) TextView authorView;
 
         private ViewHolder(View view) {
             super(view);

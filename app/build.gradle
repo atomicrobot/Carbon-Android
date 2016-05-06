@@ -10,7 +10,7 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
 
-        classpath 'io.fabric.tools:gradle:1.21.4'
+        classpath 'io.fabric.tools:gradle:1.21.6'
 
         classpath 'com.squareup.spoon:spoon-runner:1.5.2'
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.1.0'
@@ -127,20 +127,20 @@ dependencies {
     compile rootProject.ext.libraryAndroidDesignSupport
 
     // Networking - HTTP
-    compile 'com.squareup.okhttp3:okhttp:3.1.2'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.1.2'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
 
     // Networking - REST
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
 
     // JSON
-    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.google.code.gson:gson:2.6.2'
 
     // App architecture - RxJava
-    compile 'io.reactivex:rxjava:1.1.1'
-    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.5'
+    compile 'io.reactivex:rxandroid:1.2.0'
 
     // App architecture - Dagger 2
     compile 'com.google.dagger:dagger:2.4'
@@ -148,16 +148,16 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.4'
 
     // Code generators - Butterknife
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton:butterknife:8.0.1'
 
     // Code generators - Parceler
-        compile "org.parceler:parceler-api:1.0.4"
-    apt ("org.parceler:parceler:1.0.4") {
+    compile "org.parceler:parceler-api:1.1.2"
+    apt ("org.parceler:parceler:1.1.2") {
         exclude module: 'commons-logging'
     }
 
     // Monitoring - Timber (logging)
-    compile 'com.jakewharton.timber:timber:4.1.1'
+    compile 'com.jakewharton.timber:timber:4.1.2'
 
     // Monitoring - Crashlytics
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
