@@ -11,12 +11,15 @@ import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
 import com.mycompany.myapp.data.api.github.model.Commit;
 import com.squareup.spoon.Spoon;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import rx.Observable;
 
@@ -42,7 +45,18 @@ public class MainActivityEspressoTest {
         when(gitHubService.loadCommits(any())).thenReturn(Observable.<LoadCommitsResponse>empty());
 
         activityRule.launchActivity(null);
-        onView(withId(R.id.fingerprint)).check(matches(withText("Fingerprint: DEV")));
+        onView(withId(R.id.fingerprint)).check(matches(withText(new BaseMatcher<String>() {
+            @Override
+            public boolean matches(Object item) {
+                Pattern pattern = Pattern.compile("Fingerprint: .+");
+                return pattern.matcher(item.toString()).matches();
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("regex 'Fingerprint: .+'");
+            }
+        })));
     }
 
     @Test
