@@ -95,6 +95,15 @@ android {
         }
     }
 
+    productFlavors {
+        dev {
+            applicationId = 'com.mycompany.myapp.dev'
+        }
+        prod {
+            applicationId = 'com.mycompany.myapp'
+        }
+    }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -212,7 +221,7 @@ configurations {
 
 task findbugs(type: FindBugs, dependsOn: assembleDebug) {
     excludeFilter file("${project.rootDir}/config/findbugs/exclude.xml")
-    classes = fileTree('build/intermediates/classes/debug/')
+    classes = fileTree('build/intermediates/classes/dev/debug/')
     source = fileTree('src/main/java/')
     classpath = files()
     effort = 'max'

@@ -111,8 +111,8 @@ task staticAnalysis {
 task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
-    def unitTestTasks = getProjectTask(appProject, 'testDebugUnitTest')
-    def integrationTestTasks = getProjectTask(appProject, 'spoonDebugAndroidTest')
+    def unitTestTasks = getProjectTask(appProject, 'testDevDebugUnitTest')
+    def integrationTestTasks = getProjectTask(appProject, 'spoonDevDebugAndroidTest')
 
     dependsOn unitTestTasks
     dependsOn integrationTestTasks

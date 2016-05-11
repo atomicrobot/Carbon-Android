@@ -37,19 +37,20 @@ Also make sure the CI server is set to use the Gradle wrapper.
 ### Artifact Paths
 ```
 app/build/outputs/apk/*-release.apk => apks
-app/build/outputs/mapping/release/mapping.txt => proguard/release/mapping.txt
+app/build/outputs/mapping/dev/release/mapping.txt => proguard/dev/release/mapping.txt
+app/build/outputs/mapping/prod/release/mapping.txt => proguard/prod/release/mapping.txt
 
-app/build/outputs/lint-results-debug.html => quality/lint
-app/build/outputs/lint-results-debug_files => quality/lint/lint-results-debug_files
+app/build/outputs/lint-results-devDebug.html => quality/lint/index.html
+app/build/outputs/lint-results-devDebug_files => quality/lint/lint-results-devDebug_files
 app/build/reports/findbugs/ => quality/findbugs
 app/build/reports/pmd/ => quality/pmd
 
-app/build/reports/tests/dbug/ => quality/tests
-app/build/spoon/debug => quality/integrationTests
+app/build/reports/tests/devDebug/ => quality/tests
+app/build/spoon/dev/debug => quality/integrationTests
 ```
 
 ### Project Reports
-- "Lint" with a start page of `quality/lint/lint-results.html`
+- "Lint" with a start page of `quality/lint/index.html`
 - "Findbugs" `quality/findbugs/findbugs.html`
 - "PMD" with a start page of `quality/pmd/pmd.html`
 - "Unit Tests" with a start page of `quality/tests/index.html`
@@ -58,7 +59,7 @@ app/build/spoon/debug => quality/integrationTests
 License
 =======
 
-    Copyright 2015 Atomic Robot, LLC
+    Copyright 2016 Atomic Robot, LLC
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
