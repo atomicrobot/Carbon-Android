@@ -1,0 +1,64 @@
+package {{package}}.ui.{{screenLowerCase}};
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+import javax.inject.Inject;
+
+import {{package}}.R;
+import {{package}}.app.MainApplication;
+import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Component.{{screenUpperCamel}}Module;
+import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Fragment.{{screenUpperCamel}}FragmentHost;
+import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Presenter.{{screenUpperCamel}}ViewContract;
+
+public class {{screenUpperCamel}}Activity extends AppCompatActivity implements {{screenUpperCamel}}ViewContract, {{screenUpperCamel}}FragmentHost {
+    public static Intent buildIntent(Context context) {
+        Intent intent = new Intent(context, {{screenUpperCamel}}Activity.class);
+        return intent;
+    }
+
+    private {{screenUpperCamel}}Component component;
+
+    @Inject {{screenUpperCamel}}Presenter presenter;
+
+    private {{screenUpperCamel}}Fragment fragment;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        component = ((MainApplication) getApplication()).getComponent()
+                .{{screenLowerCamel}}Component(new {{screenUpperCamel}}Module(this));
+        component.inject(this);
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_{{screenUnderscore}});
+        fragment = ({{screenUpperCamel}}Fragment) getSupportFragmentManager().findFragmentById(R.id.fragment_{{screenUnderscore}});
+
+        presenter.setView(this);
+        presenter.restoreState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.saveState(outState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        presenter.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void inject({{screenUpperCamel}}Fragment fragment) {
+        component.inject(fragment);
+    }
+}

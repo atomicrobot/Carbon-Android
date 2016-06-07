@@ -245,3 +245,5 @@ task pmd(type: Pmd, dependsOn: assembleDebug) {
 spoon {
 
 }
+
+apply from: 'generator.gradle'
