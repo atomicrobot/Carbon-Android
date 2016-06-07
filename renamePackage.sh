@@ -1,10 +1,9 @@
 #!/bin/sh
  
-# Usage renamePackage.sh project package
-# Ex: renamePackage.sh demo com.demo.mobile
+# Usage renamePackage.sh package
+# Ex: renamePackage.sh com.demo.mobile
 
-export project="$1"
-export new_package="$2"
+export new_package="$1"
 export original_package="com.mycompany.myapp"
  
 export new_package_directory="/"`echo $new_package | tr '.' '/'`"/"
@@ -29,7 +28,8 @@ update_filetypes() {
     find . -name "$1" -not -name "*.png" -not -path "gradle" \
     | xargs sed -i '' s/$original_package/$new_package/g 
 }
- 
+
+
 rm -rf .gradle
 rm -rf .git
 rm -rf .idea
