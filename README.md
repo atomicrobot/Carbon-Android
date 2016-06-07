@@ -1,5 +1,10 @@
 ## Project Setup
 
+### Setting up a new project
+- `./renamePackage com.demo.mobile`
+- (optional) Rename the project directory from `android-starter-project` to something meaningful.
+- (optional) Add a git remote to the project (a clean repository has been setup for you).
+- (optional) Adding a new activity: `./gradlew app:screen -Ppackage=com.demo.mobile -Pscreen=SignIn`
 
 ### Crashlytics
 To register an app to an organization you will need to go to the Crashlytics web dashboard, go to
