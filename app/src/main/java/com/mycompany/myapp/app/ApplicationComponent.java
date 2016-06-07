@@ -6,6 +6,7 @@ import com.mycompany.myapp.modules.CrashReporterModule;
 import com.mycompany.myapp.monitoring.LoggerModule;
 import com.mycompany.myapp.ui.main.MainComponent;
 import com.mycompany.myapp.ui.main.MainComponent.MainModule;
+// GENERATOR - MORE IMPORTS //
 
 import javax.inject.Singleton;
 
@@ -21,6 +22,7 @@ import dagger.Component;
 })
 public interface ApplicationComponent {
     MainComponent mainComponent(MainModule module);
+    // GENERATOR - MORE SUBCOMPONENTS //
 
     void inject(MainApplication application);
 }
