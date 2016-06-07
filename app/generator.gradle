@@ -1,3 +1,6 @@
+// Usage:
+// ./gradlew app:screen -Ppackage=com.mycompany.myapp -Pscreen=Login
+
 import com.github.mustachejava.DefaultMustacheFactory
 import com.google.common.base.CaseFormat
 
@@ -12,8 +15,6 @@ buildscript {
     }
 }
 
-// Usage:
-// ./gradlew app:screen -Ppackage=com.divineservices.mobile -Pscreen=Login
 task screen << {
     String argPackage = getProject().getProperty('package')
     String argPackageDirs = argPackage.replaceAll("\\.", File.separator);
