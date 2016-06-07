@@ -1,9 +1,10 @@
 #!/bin/sh
  
-# Usage renamePackage.sh [package]
-# Ex: renamePackage.sh com.atomicrobot.app
- 
-export new_package="$1"
+# Usage renamePackage.sh project package
+# Ex: renamePackage.sh demo com.demo.mobile
+
+export project="$1"
+export new_package="$2"
 export original_package="com.mycompany.myapp"
  
 export new_package_directory="/"`echo $new_package | tr '.' '/'`"/"
@@ -21,25 +22,28 @@ export -f parent_mv
  
 update_filetypes() {
     # Would be nice to externalize the regex
-    find . -name "$1" \
+    find . -name "$1" -not -name "*.png" -not -path "gradle" \
     | gawk -v replacement="\\\\1$new_package_directory\\\\2" '{ updated = gensub(/(.+)\/com\/mycompany\/myapp\/(.+)/, replacement, $0); print $0, updated; }' \
     | xargs -n 2 bash -c 'parent_mv "$@"'
  
-    find . -name "$1" \
+    find . -name "$1" -not -name "*.png" -not -path "gradle" \
     | xargs sed -i '' s/$original_package/$new_package/g 
 }
  
-echo
-echo "----------"
-echo "(Dev) Showing what things look like before:"
-find .
-echo
- 
+rm -rf .gradle
+rm -rf .git
+rm -rf .idea
+rm -rf build
+rm -rf app/build
+rm -r *.iml
+rm local.properties
+
 update_filetypes "*.java"
 update_filetypes "*.xml"
+update_filetypes "*.properties"
 update_filetypes "*.gradle"
 find . -depth -empty -delete
- 
-echo "(Dev) Showing what things look like after:"
-find .
-echo
+
+git init
+git add .
+git commit -q -m "Initial import"
