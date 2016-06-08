@@ -1,19 +1,20 @@
 package com.mycompany.myapp.ui.main;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mycompany.myapp.BuildConfig;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.model.Commit;
-import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
-import com.mycompany.myapp.ui.main.MainPresenter.State;
 import com.mycompany.myapp.util.RxUtils;
-import com.mycompany.myapp.util.presenter.Presenter;
 
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class MainPresenter extends Presenter<MainViewContract, State> {
+public class MainPresenter {
+    private static final String EXTRA_STATE = "MainPresenterState";
+
     public interface MainViewContract {
         void displayUsername(String username);
 
@@ -70,37 +73,53 @@ public class MainPresenter extends Presenter<MainViewContract, State> {
     private final GitHubService gitHubService;
 
     private CompositeSubscription subscriptions;
+    private MainViewContract view;
+    private State state;
 
     public MainPresenter(Context context, GitHubService gitHubService) {
-        super(new State());
         this.context = context;
         this.gitHubService = gitHubService;
     }
 
-    @Override
+    public void setView(MainViewContract viewContract) {
+        this.view = viewContract;
+    }
+
+    public void saveState(@NonNull  Bundle bundle) {
+        bundle.putParcelable(EXTRA_STATE, Parcels.wrap(state));
+    }
+
+    public void restoreState(@Nullable Bundle bundle) {
+        if (bundle != null && bundle.containsKey(EXTRA_STATE)) {
+            state = Parcels.unwrap(bundle.getParcelable(EXTRA_STATE));
+        }
+    }
+
     public void onResume() {
         subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
+        if (state == null) {
+            state = new State();
+        }
 
-        view.displayUsername(savedState.username);
-        view.displayRepository(savedState.repository);
-        view.displayCommits(savedState.commits);
+        view.displayUsername(state.username);
+        view.displayRepository(state.repository);
+        view.displayCommits(state.commits);
         view.displayVersion(String.format("Version: %s", BuildConfig.VERSION_NAME));
         view.displayFingerprint(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT));
 
         fetchCommits();
     }
 
-    @Override
     public void onPause() {
         RxUtils.unsubscribeIfNotNull(subscriptions);
     }
 
     public void setUsername(String username) {
-        savedState.username = username;
+        state.username = username;
     }
 
     public void setRepository(String repository) {
-        savedState.repository = repository;
+        state.repository = repository;
     }
 
     public void fetchCommits() {
@@ -108,7 +127,7 @@ public class MainPresenter extends Presenter<MainViewContract, State> {
     }
 
     private LoadCommitsRequest buildLoadCommitsRequest() {
-        return new LoadCommitsRequest(savedState.username, savedState.repository);
+        return new LoadCommitsRequest(state.username, state.repository);
     }
 
     private Subscription loadCommits(LoadCommitsRequest request) {
@@ -128,11 +147,12 @@ public class MainPresenter extends Presenter<MainViewContract, State> {
     }
 
     private void handleLoadCommitsResponse(List<CommitViewModel> commits) {
-        savedState.commits = commits;
+        state.commits = commits;
         view.displayCommits(commits);
     }
 
     private void handleError(Throwable throwable) {
-        view.displayError(throwable.getMessage());
+        String message = throwable.getMessage();
+        view.displayError(message);
     }
 }

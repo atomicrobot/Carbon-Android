@@ -36,9 +36,9 @@ public class {{screenUpperCamel}}Presenter {
 
     private final Context context;
 
-    private State state;
     private CompositeSubscription subscriptions;
     private {{screenUpperCamel}}ViewContract view;
+    private State state;
 
     public {{screenUpperCamel}}Presenter(Context context) {
         this.context = context;
@@ -59,11 +59,10 @@ public class {{screenUpperCamel}}Presenter {
     }
 
     public void onResume() {
+        subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
         if (state == null) {
             state = new State();
         }
-
-        subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
     }
 
     public void onPause() {

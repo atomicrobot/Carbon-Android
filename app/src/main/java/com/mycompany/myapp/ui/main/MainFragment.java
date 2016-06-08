@@ -11,17 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.ui.main.MainPresenter.CommitViewModel;
-import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
-import com.mycompany.myapp.util.presenter.BundleStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,12 +24,14 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
-public class MainFragment extends Fragment implements MainViewContract {
+public class MainFragment extends Fragment {
     public interface MainFragmentHost {
         void inject(MainFragment fragment);
-    }
 
-    @Inject MainPresenter presenter;
+        void setUsername(String username);
+        void setRepository(String repository);
+        void fetchCommits();
+    }
 
     @BindView(R.id.username) EditText userNameView;
     @BindView(R.id.repository) EditText repositoryView;
@@ -54,12 +51,15 @@ public class MainFragment extends Fragment implements MainViewContract {
     }
 
     @Override
+    public void onDetach() {
+        host = null;
+        super.onDetach();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         host.inject(this);
-
-        presenter.restoreState(new BundleStateManager<>(savedInstanceState));
-        presenter.setView(this);
     }
 
     @Override
@@ -82,67 +82,39 @@ public class MainFragment extends Fragment implements MainViewContract {
         super.onDestroyView();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        presenter.saveState(new BundleStateManager<>(outState));
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        presenter.onPause();
-        super.onPause();
-    }
-
-    @Override
     public void displayUsername(String username) {
         userNameView.setText(username);
     }
 
-    @Override
     public void displayRepository(String repository) {
         repositoryView.setText(repository);
     }
 
-    @Override
     public void displayCommits(List<CommitViewModel> commits) {
         adapter.setCommits(commits);
     }
 
-    @Override
-    public void displayError(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void displayVersion(String version) {
         versionView.setText(version);
     }
 
-    @Override
     public void displayFingerprint(String fingerprint) {
         fingerprintView.setText(fingerprint);
     }
 
     @OnTextChanged(R.id.username)
     void handleUsernameChanged(CharSequence username) {
-        presenter.setUsername(username.toString());
+        host.setUsername(username.toString());
     }
 
     @OnTextChanged(R.id.repository)
     void handleRepositoryChanged(CharSequence repository) {
-        presenter.setRepository(repository.toString());
+        host.setRepository(repository.toString());
     }
 
     @OnClick(R.id.fetch_commits)
     void handleFetchCommits() {
-        presenter.fetchCommits();
+        host.fetchCommits();
     }
 
     private static class CommitsAdapter extends RecyclerView.Adapter<ViewHolder> {

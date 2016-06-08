@@ -144,8 +144,8 @@ dependencies {
     compile rootProject.ext.libraryAndroidDesignSupport
 
     // Networking - HTTP
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.3.1'
 
     // Networking - REST
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
