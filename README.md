@@ -47,12 +47,12 @@ app/build/outputs/apk/*-release.apk => apks
 app/build/outputs/mapping/dev/release/mapping.txt => proguard/dev/release/mapping.txt
 app/build/outputs/mapping/prod/release/mapping.txt => proguard/prod/release/mapping.txt
 
-app/build/outputs/lint-results-devDebug.html => quality/lint/index.html
+app/build/outputs/lint-results-devDebug.html => quality/lint
 app/build/outputs/lint-results-devDebug_files => quality/lint/lint-results-devDebug_files
 app/build/reports/findbugs/ => quality/findbugs
 app/build/reports/pmd/ => quality/pmd
 
-app/build/reports/tests/devDebug/ => quality/tests
+app/build/reports/tests/devDebug => quality/tests
 app/build/spoon/dev/debug => quality/integrationTests
 ```
 
