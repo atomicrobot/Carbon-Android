@@ -84,10 +84,6 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
-    dexOptions {
-        javaMaxHeapSize "8g"
-    }
-
     signingConfigs {
         release {
             apply from: rootProject.file('distribution/keys/sample.gradle')
@@ -101,10 +97,10 @@ android {
 
     productFlavors {
         dev {
-            applicationId = 'com.mycompany.myapp.dev'
+            applicationId 'com.mycompany.myapp.dev'
         }
         prod {
-            applicationId = 'com.mycompany.myapp'
+            applicationId 'com.mycompany.myapp'
         }
     }
 

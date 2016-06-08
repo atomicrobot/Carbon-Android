@@ -5,21 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mycompany.myapp.BuildConfig;
-import com.mycompany.myapp.R;
 import com.mycompany.myapp.util.RxUtils;
 
 import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class DevSettingsPresenter {
