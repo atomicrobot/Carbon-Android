@@ -2,6 +2,7 @@ package com.mycompany.myapp.ui.main;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.app.MainApplication;
@@ -20,8 +21,15 @@ public class MainActivity extends AppCompatActivity implements MainFragmentHost 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         getSupportActionBar().setTitle("Home");
-        getSupportActionBar().setSubtitle("Hi, person");
+
+        /**
+         * Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+         * .setAction("Action", null).show();
+         */
     }
 
     @Override
