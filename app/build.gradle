@@ -84,6 +84,10 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
+    dexOptions {
+        javaMaxHeapSize "8g"
+    }
+
     signingConfigs {
         release {
             apply from: rootProject.file('distribution/keys/sample.gradle')
