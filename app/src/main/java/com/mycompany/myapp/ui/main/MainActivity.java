@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MainViewContract, MainFragmentHost {
     private MainComponent component;
+
     @Inject MainPresenter presenter;
 
     @BindView(R.id.root_layout) View rootLayout;
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity implements MainViewContract,
         component = ((MainApplication) getApplication()).getComponent()
                 .mainComponent(new MainModule(this));
         component.inject(this);
+
         presenter.setView(this);
+        presenter.restoreState(savedInstanceState);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -43,9 +46,6 @@ public class MainActivity extends AppCompatActivity implements MainViewContract,
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Home");
-
-        presenter.setView(this);
-        presenter.restoreState(savedInstanceState);
     }
 
     @Override

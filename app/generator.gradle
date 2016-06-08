@@ -38,6 +38,7 @@ task screen << {
     createFile(scopes, 'templates/screen/Presenter.java.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Presenter.java")
 
     createFile(scopes, 'templates/screen/activity.xml.mustache', "src/main/res/layout/activity_${screenFileName}.xml")
+    createFile(scopes, 'templates/screen/content.xml.mustache', "src/main/res/layout/content_${screenFileName}.xml")
     createFile(scopes, 'templates/screen/fragment.xml.mustache', "src/main/res/layout/fragment_${screenFileName}.xml")
 
     createFile(scopes, 'templates/screen/ActivityTests.java.mustache', "src/androidTest/java/$argPackageDirs/ui/$screenPackage/${argScreen}ActivityEspressoTests.java")

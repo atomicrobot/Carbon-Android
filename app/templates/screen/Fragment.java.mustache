@@ -28,6 +28,12 @@ public class {{screenUpperCamel}}Fragment extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        host = null;
+        super.onDetach();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         host.inject(this);

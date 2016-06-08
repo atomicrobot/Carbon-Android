@@ -23,6 +23,9 @@ public class {{screenUpperCamel}}Activity extends AppCompatActivity implements {
 
     @Inject {{screenUpperCamel}}Presenter presenter;
 
+    @BindView(R.id.root_layout) View rootLayout;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
     private {{screenUpperCamel}}Fragment fragment;
 
     @Override
@@ -31,12 +34,16 @@ public class {{screenUpperCamel}}Activity extends AppCompatActivity implements {
                 .{{screenLowerCamel}}Component(new {{screenUpperCamel}}Module(this));
         component.inject(this);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_{{screenUnderscore}});
-        fragment = ({{screenUpperCamel}}Fragment) getSupportFragmentManager().findFragmentById(R.id.fragment_{{screenUnderscore}});
-
         presenter.setView(this);
         presenter.restoreState(savedInstanceState);
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_{{screenUnderscore}});
+        ButterKnife.bind(this);
+        fragment = ({{screenUpperCamel}}Fragment) getSupportFragmentManager().findFragmentById(R.id.fragment_{{screenUnderscore}});
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("{{screenUpperCamel}}");
     }
 
     @Override
