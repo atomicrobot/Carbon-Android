@@ -70,6 +70,7 @@ android {
         proguardFile getDefaultProguardFile('proguard-android.txt')
         proguardFile 'proguard-rules.pro'
         proguardFile '../config/proguard/android-support-v4.pro'
+        proguardFile '../config/proguard/android-support-v7.pro'
         proguardFile '../config/proguard/butterknife.pro'
         proguardFile '../config/proguard/crashlytics.pro'
         proguardFile '../config/proguard/google-play-services.pro'
