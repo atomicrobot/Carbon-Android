@@ -147,3 +147,7 @@ task continuousIntegration() {
     testing.mustRunAfter staticAnalysis
     release.mustRunAfter testing
 }
+
+task ci() {
+    dependsOn continuousIntegration
+}
