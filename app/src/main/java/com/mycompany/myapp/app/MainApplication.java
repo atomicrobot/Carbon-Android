@@ -34,7 +34,6 @@ public class MainApplication extends Application implements HasComponent<Applica
         initApplicationComponent();
         Timber.plant(logger);
 
-        Timber.d("Test");
         initApplication();
         upgradeSecurityProvider();
     }
