@@ -1,0 +1,15 @@
+package com.mycompany.myapp.monitoring.model;
+
+import timber.log.Timber;
+
+public class NoOpTree extends Timber.Tree {
+    @Override
+    protected void log(int priority, String tag, String message, Throwable t) {
+        return;
+    }
+
+    @Override
+    protected boolean isLoggable(int priority) {
+        return false;
+    }
+}

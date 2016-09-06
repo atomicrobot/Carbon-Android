@@ -9,7 +9,6 @@ import android.support.multidex.MultiDex;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
 import com.google.android.gms.security.ProviderInstaller.ProviderInstallListener;
-import com.mycompany.myapp.BuildConfig;
 import com.squareup.leakcanary.LeakCanary;
 
 import javax.inject.Inject;
@@ -33,10 +32,9 @@ public class MainApplication extends Application implements HasComponent<Applica
         super.onCreate();
         LeakCanary.install(this);
         initApplicationComponent();
-        if (BuildConfig.DEBUG) {
-            Timber.plant(logger);
-        }
+        Timber.plant(logger);
 
+        Timber.d("Test");
         initApplication();
         upgradeSecurityProvider();
     }
