@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.2.0'
     }
 }
 
@@ -123,7 +123,7 @@ task testing() {
 task release() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
-    def appTasks = getProjectTask(appProject, 'assembleRelease')
+    def appTasks = getProjectTask(appProject, 'assemble')
 
     dependsOn appTasks
 }

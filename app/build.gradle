@@ -141,13 +141,13 @@ dependencies {
     compile rootProject.ext.libraryAndroidDesignSupport
 
     // Networking - HTTP
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.3.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.1'
 
     // Networking - REST
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
     // JSON
     compile 'com.google.code.gson:gson:2.6.2'
@@ -220,7 +220,7 @@ configurations {
     androidTestCompile.exclude group: 'com.android.support', module: 'design'
 }
 
-task findbugs(type: FindBugs, dependsOn: assembleDebug) {
+task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     excludeFilter file("${project.rootDir}/config/findbugs/exclude.xml")
     classes = fileTree('build/intermediates/classes/dev/debug/')
     source = fileTree('src/main/java/')
@@ -232,7 +232,7 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
     }
 }
 
-task pmd(type: Pmd, dependsOn: assembleDebug) {
+task pmd(type: Pmd, dependsOn: "assembleDebug") {
     ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
     ruleSets = [] // See http://sourceforge.net/p/pmd/discussion/188193/thread/6e9c6017/ for why this is needed...
     source = fileTree('src/main/java/')
