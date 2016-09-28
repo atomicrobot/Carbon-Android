@@ -28,6 +28,7 @@ apply plugin: 'io.fabric'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'spoon'
+apply plugin: 'checkstyle'
 apply plugin: 'com.github.ben-manes.versions'
 
 repositories {
@@ -240,6 +241,21 @@ task pmd(type: Pmd, dependsOn: "assembleDebug") {
         xml.enabled = false
         html.enabled = true
     }
+}
+
+task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
+    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**', '**/test/**', '**/androidTest/**'
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+    classpath = files(file("${project.rootDir}/app/build/intermediates/classes"))
+    configProperties = [
+            'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
+    ]
 }
 
 spoon {

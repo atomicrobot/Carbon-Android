@@ -16,7 +16,7 @@ public class DevSettingsPresenter {
     private static final String EXTRA_STATE = "DevSettingsPresenterState";
 
     public interface DevSettingsViewContract {
-        
+
     }
 
     @Parcel
@@ -38,7 +38,7 @@ public class DevSettingsPresenter {
         this.view = view;
     }
 
-    public void saveState(@NonNull  Bundle bundle) {
+    public void saveState(@NonNull Bundle bundle) {
         bundle.putParcelable(EXTRA_STATE, Parcels.wrap(state));
     }
 
