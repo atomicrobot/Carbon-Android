@@ -68,13 +68,13 @@ ext {
     versionName = "$appVersion b$versionCode"
 
     // Build settings that are likely to be reused across different modules
-    buildToolsVersion = "23.0.2"
+    buildToolsVersion = "24.0.2"
     minSdkVersion = 16
-    targetSdkVersion = 23
-    compileSdkVersion = 23
+    targetSdkVersion = 24
+    compileSdkVersion = 24
 
     // Libraries are are likely to be reused across different modules
-    supportVersion = '23.3.0'
+    supportVersion = '24.2.1'
     libraryAndroidSupport = "com.android.support:support-v4:$supportVersion"
     libraryAndroidAppCompat = "com.android.support:appcompat-v7:$supportVersion"
     libraryAndroidRecyclerView = "com.android.support:recyclerview-v7:$supportVersion"
@@ -82,7 +82,7 @@ ext {
     libraryAndroidSupportAnnotations = "com.android.support:support-annotations:$supportVersion"
     libraryAndroidDesignSupport = "com.android.support:design:$supportVersion"
 
-    playServicesVersion = '8.4.0'
+    playServicesVersion = '9.4.0'
     libraryGooglePlayServices = "com.google.android.gms:play-services-base:$playServicesVersion"
 }
 
