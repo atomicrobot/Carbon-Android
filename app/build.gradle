@@ -259,7 +259,7 @@ task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
 }
 
 spoon {
-
+    grantAllPermissions = true
 }
 
 apply from: 'generator.gradle'
