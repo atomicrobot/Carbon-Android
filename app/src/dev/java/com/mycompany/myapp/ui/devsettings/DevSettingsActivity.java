@@ -73,4 +73,19 @@ public class DevSettingsActivity extends AppCompatActivity implements DevSetting
     public void inject(DevSettingsFragment fragment) {
         component.inject(fragment);
     }
+
+    @Override
+    public void displayTrustAllSSL(boolean trustAllSSL) {
+        fragment.displayTrustAllSSL(trustAllSSL);
+    }
+
+    @Override
+    public void setTrustAllSSL(boolean trustAllSSL) {
+        presenter.setTrustAllSSL(trustAllSSL);
+    }
+
+    @Override
+    public void saveSettings() {
+        presenter.saveSettings();
+    }
 }
