@@ -1,7 +1,5 @@
 package com.mycompany.myapp.ui.main;
 
-import android.test.suitebuilder.annotation.MediumTest;
-
 import com.mycompany.myapp.EspressoTestRule;
 import com.mycompany.myapp.MainApplicationDaggerMockRule;
 import com.mycompany.myapp.R;
@@ -31,7 +29,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static com.mycompany.myapp.RecyclerViewMatcher.withRecyclerView;
 import static org.mockito.Mockito.*;
 
-@MediumTest
 public class MainActivityEspressoTest {
 
     @Rule public MainApplicationDaggerMockRule mockitoRule = new MainApplicationDaggerMockRule();
