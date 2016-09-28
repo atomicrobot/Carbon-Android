@@ -23,7 +23,7 @@ public class DevSettingsFragment extends Fragment {
 
         void setTrustAllSSL(boolean trustAllSSL);
 
-        void saveSettings();
+        void saveSettingsAndRestart();
     }
 
     private DevSettingsFragmentHost host;
@@ -72,8 +72,8 @@ public class DevSettingsFragment extends Fragment {
         host.setTrustAllSSL(trustAllSSL);
     }
 
-    @OnClick(R.id.save_settings)
-    public void handleSaveSettings() {
-        host.saveSettings();
+    @OnClick(R.id.save_settings_and_restart)
+    public void handleSaveSettingsAndRestart() {
+        host.saveSettingsAndRestart();
     }
 }

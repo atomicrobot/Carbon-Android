@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.jakewharton.processphoenix.ProcessPhoenix;
 import com.mycompany.myapp.app.Settings;
 import com.mycompany.myapp.util.RxUtils;
 
@@ -69,7 +70,9 @@ public class DevSettingsPresenter {
         state.trustAllSSL = trustAllSSL;
     }
 
-    public void saveSettings() {
+    public void saveSettingsAndRestart() {
         settings.setTrustAllSSL(state.trustAllSSL);
+
+        ProcessPhoenix.triggerRebirth(context);
     }
 }

@@ -12,10 +12,10 @@
         android:text="Trust all SSL connections"/>
 
     <Button
-        android:id="@+id/save_settings"
+        android:id="@+id/save_settings_and_restart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save Settings"/>
+        android:text="Save Settings and Restart App"/>
 
 </LinearLayout>
 

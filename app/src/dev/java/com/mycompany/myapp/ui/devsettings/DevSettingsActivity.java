@@ -85,7 +85,7 @@ public class DevSettingsActivity extends AppCompatActivity implements DevSetting
     }
 
     @Override
-    public void saveSettings() {
-        presenter.saveSettings();
+    public void saveSettingsAndRestart() {
+        presenter.saveSettingsAndRestart();
     }
 }

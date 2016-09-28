@@ -176,6 +176,8 @@ dependencies {
         transitive = true
     }
 
+    devCompile 'com.jakewharton:process-phoenix:1.1.0'
+
     // Monitoring - Leak Canary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
