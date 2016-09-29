@@ -1,7 +1,6 @@
 package com.mycompany.myapp.app;
 
 import com.mycompany.myapp.data.DataModule;
-import com.mycompany.myapp.data.api.github.GitHubModule;
 import com.mycompany.myapp.modules.CrashReporterModule;
 import com.mycompany.myapp.monitoring.LoggerModule;
 import com.mycompany.myapp.ui.main.MainComponent;
@@ -20,8 +19,7 @@ import dagger.Component;
         AppModule.class,
         LoggerModule.class,
         CrashReporterModule.class,
-        DataModule.class,
-        GitHubModule.class
+        DataModule.class
 })
 public interface ApplicationComponent extends VariantApplicationComponent {
     MainComponent mainComponent(MainModule module);
