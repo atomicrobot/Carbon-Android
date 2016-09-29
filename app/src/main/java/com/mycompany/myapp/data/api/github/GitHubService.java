@@ -51,6 +51,6 @@ public class GitHubService {
 
     public Observable<LoadCommitsResponse> loadCommits(final LoadCommitsRequest request) {
         return api.listCommits(request.user, request.repository)
-                .map(commits -> new LoadCommitsResponse(request, commits));
+                .map(commits -> new LoadCommitsResponse(request, commits.body()));
     }
 }
