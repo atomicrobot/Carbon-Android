@@ -18,11 +18,13 @@ public class DevSettingsPresenter {
     private static final String EXTRA_STATE = "DevSettingsPresenterState";
 
     public interface DevSettingsViewContract {
+        void displayBaseUrl(String baseUrl);
         void displayTrustAllSSL(boolean trustAllSSL);
     }
 
     @Parcel
     public static class State {
+        String baseUrl;
         boolean trustAllSSL;
     }
 
@@ -56,9 +58,11 @@ public class DevSettingsPresenter {
         subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
         if (state == null) {
             state = new State();
+            state.baseUrl = settings.getBaseUrl();
             state.trustAllSSL = settings.getTrustAllSSL();
         }
 
+        view.displayBaseUrl(state.baseUrl);
         view.displayTrustAllSSL(state.trustAllSSL);
     }
 
@@ -66,11 +70,16 @@ public class DevSettingsPresenter {
         RxUtils.unsubscribeIfNotNull(subscriptions);
     }
 
+    public void setBaseUrl(String baseUrl) {
+        state.baseUrl = baseUrl;
+    }
+
     public void setTrustAllSSL(boolean trustAllSSL) {
         state.trustAllSSL = trustAllSSL;
     }
 
     public void saveSettingsAndRestart() {
+        settings.setBaseUrl(state.baseUrl);
         settings.setTrustAllSSL(state.trustAllSSL);
 
         ProcessPhoenix.triggerRebirth(context);

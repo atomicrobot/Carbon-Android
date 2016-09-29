@@ -1,6 +1,7 @@
 package com.mycompany.myapp.data.api.github;
 
 import com.google.gson.Gson;
+import com.mycompany.myapp.app.Settings;
 import com.mycompany.myapp.data.api.Api;
 
 import javax.inject.Singleton;
@@ -18,8 +19,8 @@ public class GitHubModule {
     @Singleton
     @Api("github")
     @Provides
-    public String provideBaseUrl() {
-        return "https://api.github.com";  // NON-NLS
+    public String provideBaseUrl(Settings settings) {
+        return settings.getBaseUrl();
     }
 
     @Singleton

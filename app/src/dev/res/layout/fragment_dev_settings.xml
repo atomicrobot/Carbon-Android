@@ -5,6 +5,11 @@
               android:orientation="vertical"
               android:padding="16dp">
 
+    <EditText
+        android:id="@+id/base_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <CheckBox
         android:id="@+id/trust_all_ssl"
         android:layout_width="match_parent"

@@ -75,6 +75,16 @@ public class DevSettingsActivity extends AppCompatActivity implements DevSetting
     }
 
     @Override
+    public void displayBaseUrl(String baseUrl) {
+        fragment.displayBaseUrl(baseUrl);
+    }
+
+    @Override
+    public void setBaseUrl(String baseUrl) {
+        presenter.setBaseUrl(baseUrl);
+    }
+
+    @Override
     public void displayTrustAllSSL(boolean trustAllSSL) {
         fragment.displayTrustAllSSL(trustAllSSL);
     }
