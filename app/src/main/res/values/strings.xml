@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My App</string>
-    <string name="dev_settings">My App Dev Settings</string>
 
     <string name="author_format">Author: %s</string>
+
+    <string name="default_base_url">https://api.github.com</string>
 </resources>

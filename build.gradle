@@ -1,20 +1,26 @@
 buildscript {
     repositories {
         jcenter()
-        mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://maven.fabric.io/public' }  // Crashlytics
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
-    }
-}
+        classpath 'com.android.tools.build:gradle:2.2.2'
 
+        // Exclude the version of lombok that the android plugin depends on (not Java 8 aware).
+        // See https://github.com/evant/android-retrolambda-lombok for more info
+        // Also, see https://github.com/evant/android-retrolambda-lombok/issues/10 for why it is
+        // here and not in a project
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+    }
+
+    // See above note about me.tatarka.retrolambda.projectlombok:lombok.ast
+    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
+}
 
 allprojects {
     repositories {
         jcenter()
-        mavenCentral()
         maven { url "https://jitpack.io" }
     }
 
@@ -68,13 +74,13 @@ ext {
     versionName = "$appVersion b$versionCode"
 
     // Build settings that are likely to be reused across different modules
-    buildToolsVersion = "23.0.2"
+    buildToolsVersion = "25.0.0"
     minSdkVersion = 16
-    targetSdkVersion = 23
-    compileSdkVersion = 23
+    targetSdkVersion = 25
+    compileSdkVersion = 25
 
     // Libraries are are likely to be reused across different modules
-    supportVersion = '23.3.0'
+    supportVersion = '25.0.0'
     libraryAndroidSupport = "com.android.support:support-v4:$supportVersion"
     libraryAndroidAppCompat = "com.android.support:appcompat-v7:$supportVersion"
     libraryAndroidRecyclerView = "com.android.support:recyclerview-v7:$supportVersion"
@@ -82,7 +88,7 @@ ext {
     libraryAndroidSupportAnnotations = "com.android.support:support-annotations:$supportVersion"
     libraryAndroidDesignSupport = "com.android.support:design:$supportVersion"
 
-    playServicesVersion = '8.4.0'
+    playServicesVersion = '9.8.0'
     libraryGooglePlayServices = "com.google.android.gms:play-services-base:$playServicesVersion"
 }
 
@@ -102,10 +108,12 @@ task staticAnalysis {
     def findBugsTasks = getProjectTask(appProject, 'findbugs')
     def pmdTasks = getProjectTask(appProject, 'pmd')
     def lintTasks = getProjectTask(appProject, 'lint')
+    def checkstyleTasks = getProjectTask(appProject, 'checkstyle')
 
     dependsOn findBugsTasks
     dependsOn pmdTasks
     dependsOn lintTasks
+    dependsOn checkstyleTasks
 }
 
 task testing() {

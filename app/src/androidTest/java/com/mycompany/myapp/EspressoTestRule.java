@@ -3,8 +3,6 @@ package com.mycompany.myapp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Instrumentation;
-import android.app.KeyguardManager;
-import android.app.KeyguardManager.KeyguardLock;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
@@ -79,6 +77,7 @@ public class EspressoTestRule<T extends Activity> extends ActivityTestRule<T> {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void afterActivityLaunched() {
         super.afterActivityLaunched();
@@ -124,8 +123,8 @@ public class EspressoTestRule<T extends Activity> extends ActivityTestRule<T> {
     @SuppressWarnings("deprecation")
     @SuppressLint("MissingPermission")
     private void riseAndShine(Activity activity) {
-        KeyguardManager keyguardManager = (KeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
-        KeyguardLock keyguardLock = keyguardManager.newKeyguardLock(activity.getLocalClassName());
+        android.app.KeyguardManager keyguardManager = (android.app.KeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
+        android.app.KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock(activity.getLocalClassName());
         keyguardLock.disableKeyguard();
 
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);

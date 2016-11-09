@@ -7,19 +7,33 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 import com.mycompany.myapp.R;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
 public class DevSettingsFragment extends Fragment {
     public interface DevSettingsFragmentHost {
         void inject(DevSettingsFragment fragment);
+
+        void setBaseUrl(String baseUrl);
+        void setTrustAllSSL(boolean trustAllSSL);
+
+        void saveSettingsAndRestart();
     }
 
     private DevSettingsFragmentHost host;
     private Unbinder unbinder;
+
+    @BindView(R.id.base_url) EditText baseUrlView;
+    @BindView(R.id.trust_all_ssl) CheckBox trustAllSSLView;
 
     @Override
     public void onAttach(Context context) {
@@ -51,5 +65,28 @@ public class DevSettingsFragment extends Fragment {
     public void onDestroyView() {
         unbinder.unbind();
         super.onDestroyView();
+    }
+
+    public void displayBaseUrl(String baseUrl) {
+        baseUrlView.setText(baseUrl);
+    }
+
+    @OnTextChanged(R.id.base_url)
+    public void handleBaseUrlChanged(CharSequence text) {
+        host.setBaseUrl(text.toString());
+    }
+
+    public void displayTrustAllSSL(boolean trustAllSSL) {
+        trustAllSSLView.setChecked(trustAllSSL);
+    }
+
+    @OnCheckedChanged(R.id.trust_all_ssl)
+    public void handleOnTrustAllSSLChanged(boolean trustAllSSL) {
+        host.setTrustAllSSL(trustAllSSL);
+    }
+
+    @OnClick(R.id.save_settings_and_restart)
+    public void handleSaveSettingsAndRestart() {
+        host.saveSettingsAndRestart();
     }
 }

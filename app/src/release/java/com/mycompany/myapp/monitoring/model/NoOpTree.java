@@ -5,11 +5,11 @@ import timber.log.Timber;
 public class NoOpTree extends Timber.Tree {
     @Override
     protected void log(int priority, String tag, String message, Throwable t) {
-        return;
+
     }
 
     @Override
-    protected boolean isLoggable(int priority) {
+    protected boolean isLoggable(String tag, int priority) {
         return false;
     }
 }

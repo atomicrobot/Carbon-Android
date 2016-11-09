@@ -52,6 +52,7 @@ app/build/outputs/lint-results-devDebug.html => quality/lint
 app/build/outputs/lint-results-devDebug_files => quality/lint/lint-results-devDebug_files
 app/build/reports/findbugs/ => quality/findbugs
 app/build/reports/pmd/ => quality/pmd
+app/build/reports/checkstyle/ => quality/checkstyle
 
 app/build/reports/tests/devDebug => quality/tests
 app/build/spoon/dev/debug => quality/integrationTests

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:padding="16dp">
+
+    <EditText
+        android:id="@+id/base_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <CheckBox
+        android:id="@+id/trust_all_ssl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Trust all SSL connections"/>
+
+    <Button
+        android:id="@+id/save_settings_and_restart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Settings and Restart App"/>
+
+</LinearLayout>
+

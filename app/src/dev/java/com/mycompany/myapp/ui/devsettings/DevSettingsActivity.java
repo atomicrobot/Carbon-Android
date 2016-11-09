@@ -20,8 +20,7 @@ import butterknife.ButterKnife;
 
 public class DevSettingsActivity extends AppCompatActivity implements DevSettingsViewContract, DevSettingsFragmentHost {
     public static Intent buildIntent(Context context) {
-        Intent intent = new Intent(context, DevSettingsActivity.class);
-        return intent;
+        return new Intent(context, DevSettingsActivity.class);
     }
 
     private DevSettingsComponent component;
@@ -72,5 +71,30 @@ public class DevSettingsActivity extends AppCompatActivity implements DevSetting
     @Override
     public void inject(DevSettingsFragment fragment) {
         component.inject(fragment);
+    }
+
+    @Override
+    public void displayBaseUrl(String baseUrl) {
+        fragment.displayBaseUrl(baseUrl);
+    }
+
+    @Override
+    public void setBaseUrl(String baseUrl) {
+        presenter.setBaseUrl(baseUrl);
+    }
+
+    @Override
+    public void displayTrustAllSSL(boolean trustAllSSL) {
+        fragment.displayTrustAllSSL(trustAllSSL);
+    }
+
+    @Override
+    public void setTrustAllSSL(boolean trustAllSSL) {
+        presenter.setTrustAllSSL(trustAllSSL);
+    }
+
+    @Override
+    public void saveSettingsAndRestart() {
+        presenter.saveSettingsAndRestart();
     }
 }
