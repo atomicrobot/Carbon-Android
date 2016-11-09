@@ -20,8 +20,7 @@ import butterknife.ButterKnife;
 
 public class DevSettingsActivity extends AppCompatActivity implements DevSettingsViewContract, DevSettingsFragmentHost {
     public static Intent buildIntent(Context context) {
-        Intent intent = new Intent(context, DevSettingsActivity.class);
-        return intent;
+        return new Intent(context, DevSettingsActivity.class);
     }
 
     private DevSettingsComponent component;

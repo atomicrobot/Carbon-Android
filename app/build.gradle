@@ -6,7 +6,8 @@ buildscript {
 
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'  // Don't update to 3.3.0 due to https://github.com/evant/gradle-retrolambda/issues/210
+        classpath 'me.tatarka:gradle-retrolambda:3.3.1'
+
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
 
         classpath 'io.fabric.tools:gradle:1.22.0'
@@ -139,8 +140,8 @@ dependencies {
     compile rootProject.ext.libraryAndroidDesignSupport
 
     // Networking - HTTP
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.2'
 
     // Networking - REST
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -148,10 +149,10 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
     // JSON
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.0'
 
     // App architecture - RxJava
-    compile 'io.reactivex:rxjava:1.2.0'
+    compile 'io.reactivex:rxjava:1.2.2'
     compile 'io.reactivex:rxandroid:1.2.1'
 
     // App architecture - Dagger 2
@@ -163,8 +164,8 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
     // Code generators - Parceler
-    compile "org.parceler:parceler-api:1.1.5"
-    apt ("org.parceler:parceler:1.1.5") {
+    compile "org.parceler:parceler-api:1.1.6"
+    apt ("org.parceler:parceler:1.1.6") {
         exclude module: 'commons-logging'
     }
 
@@ -179,13 +180,13 @@ dependencies {
     devCompile 'com.jakewharton:process-phoenix:1.1.0'
 
     // Monitoring - Leak Canary
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
     // Unit test
     testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.1.2'
-    testCompile 'org.robolectric:shadows-support-v4:3.1.2'
+    testCompile 'org.robolectric:robolectric:3.1.4'
+    testCompile 'org.robolectric:shadows-support-v4:3.1.4'
     testCompile ('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support', module: 'support-annotations'
     }

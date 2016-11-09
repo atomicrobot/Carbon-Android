@@ -6,4 +6,9 @@
         <ignore regexp="parceler-1.1.2.jar" />
         <ignore regexp="retrofit-2.1.0.jar" />
     </issue>
+
+    <!-- See https://github.com/evant/android-retrolambda-lombok -->
+    <issue id="NewApi">
+        <ignore regexp="Try-with-resources requires API level 19"/>
+    </issue>
 </lint>

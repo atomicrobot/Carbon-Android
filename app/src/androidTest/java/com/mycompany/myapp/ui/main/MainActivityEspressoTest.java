@@ -39,7 +39,7 @@ public class MainActivityEspressoTest {
 
     @Test
     public void testBuildFingerprint() {
-        when(gitHubService.loadCommits(any())).thenReturn(Observable.<LoadCommitsResponse>empty());
+        when(gitHubService.loadCommits(any())).thenReturn(Observable.empty());
 
         activityRule.launchActivity(null);
         onView(withId(R.id.fingerprint)).check(matches(withText(new BaseMatcher<String>() {
