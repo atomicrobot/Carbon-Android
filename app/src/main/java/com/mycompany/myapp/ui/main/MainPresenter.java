@@ -127,6 +127,7 @@ public class MainPresenter {
 
         abstract String repository();
 
+        @Nullable
         abstract List<Commit> commits();
 
         abstract Builder toBuilder();
@@ -148,7 +149,8 @@ public class MainPresenter {
 
     private CompositeSubscription subscriptions;
     private MainViewContract view;
-    private BehaviorSubject<State> state;
+    private State state;
+    private BehaviorSubject<State> stateSubject;
 
     public MainPresenter(Context context, GitHubService gitHubService) {
         this.context = context;
@@ -172,10 +174,11 @@ public class MainPresenter {
     public void onResume() {
         subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
         if (state == null) {
-            state = BehaviorSubject.create(State.builder().build());
+            state = State.builder().build();
         }
 
-        subscriptions.add(state.distinctUntilChanged()
+        stateSubject = BehaviorSubject.create(state);
+        subscriptions.add(stateSubject.distinctUntilChanged()
                 .flatMap(MainPresenter::toViewModel)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -189,11 +192,11 @@ public class MainPresenter {
     }
 
     public void setUsername(String username) {
-        state.onNext(state.getValue().toBuilder().username(username).build());
+        state = state.toBuilder().username(username).build();
     }
 
     public void setRepository(String repository) {
-        state.onNext(state.getValue().toBuilder().repository(repository).build());
+        state = state.toBuilder().repository(repository).build();
     }
 
     public void fetchCommits() {
@@ -201,8 +204,7 @@ public class MainPresenter {
     }
 
     private LoadCommitsRequest buildLoadCommitsRequest() {
-        State currentState = state.getValue();
-        return new LoadCommitsRequest(currentState.username(), currentState.repository());
+        return new LoadCommitsRequest(state.username(), state.repository());
     }
 
     private Subscription loadCommits(LoadCommitsRequest request) {
@@ -213,10 +215,10 @@ public class MainPresenter {
     }
 
     private void handleLoadCommitsResponse(LoadCommitsResponse response) {
-        state.onNext(state.getValue()
-                .toBuilder()
+        state = state.toBuilder()
                 .commits(response.getCommits())
-                .build());
+                .build();
+        stateSubject.onNext(state);
     }
 
     private void handleError(Throwable throwable) {
