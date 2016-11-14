@@ -10,10 +10,8 @@ import com.mycompany.myapp.R;
 import com.mycompany.myapp.app.MainApplication;
 import com.mycompany.myapp.ui.main.MainComponent.MainModule;
 import com.mycompany.myapp.ui.main.MainFragment.MainFragmentHost;
-import com.mycompany.myapp.ui.main.MainPresenter.CommitViewModel;
 import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
-
-import java.util.List;
+import com.mycompany.myapp.ui.main.MainPresenter.State;
 
 import javax.inject.Inject;
 
@@ -87,18 +85,8 @@ public class MainActivity extends AppCompatActivity implements MainViewContract,
     }
 
     @Override
-    public void displayUsername(String username) {
-        fragment.displayUsername(username);
-    }
-
-    @Override
-    public void displayRepository(String repository) {
-        fragment.displayRepository(repository);
-    }
-
-    @Override
-    public void displayCommits(List<CommitViewModel> commits) {
-        fragment.displayCommits(commits);
+    public void render(State state) {
+        fragment.render(state);
     }
 
     @Override

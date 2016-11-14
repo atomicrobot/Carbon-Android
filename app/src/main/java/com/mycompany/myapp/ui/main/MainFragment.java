@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.ui.main.MainPresenter.CommitViewModel;
+import com.mycompany.myapp.ui.main.MainPresenter.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,9 @@ public class MainFragment extends Fragment {
         void inject(MainFragment fragment);
 
         void setUsername(String username);
+
         void setRepository(String repository);
+
         void fetchCommits();
     }
 
@@ -82,18 +85,6 @@ public class MainFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public void displayUsername(String username) {
-        userNameView.setText(username);
-    }
-
-    public void displayRepository(String repository) {
-        repositoryView.setText(repository);
-    }
-
-    public void displayCommits(List<CommitViewModel> commits) {
-        adapter.setCommits(commits);
-    }
-
     public void displayVersion(String version) {
         versionView.setText(version);
     }
@@ -101,6 +92,13 @@ public class MainFragment extends Fragment {
     public void displayFingerprint(String fingerprint) {
         fingerprintView.setText(fingerprint);
     }
+
+    public void render(State state) {
+        userNameView.setText(state.username());
+        repositoryView.setText(state.repository());
+        adapter.setCommits(state.commits());
+    }
+
 
     @OnTextChanged(R.id.username)
     void handleUsernameChanged(CharSequence username) {

@@ -31,17 +31,13 @@ public class MainPresenter {
     private static final String EXTRA_STATE = "MainPresenterState";
 
     public interface MainViewContract {
-        void displayUsername(String username);
-
-        void displayRepository(String repository);
-
-        void displayCommits(List<CommitViewModel> commits);
-
         void displayError(String message);
 
         void displayVersion(String version);
 
         void displayFingerprint(String fingerprint);
+
+        void render(State state);
     }
 
     @Parcel
@@ -140,7 +136,7 @@ public class MainPresenter {
     }
 
     private void onStateChanged(State state) {
-
+        view.render(state);
     }
 
     private void onStateError(Throwable throwable) {
@@ -152,11 +148,11 @@ public class MainPresenter {
     }
 
     public void setUsername(String username) {
-//        state.username = username;
+        state.onNext(state.getValue().toBuilder().username(username).build());
     }
 
     public void setRepository(String repository) {
-//        state.repository = repository;
+        state.onNext(state.getValue().toBuilder().repository(repository).build());
     }
 
     public void fetchCommits() {
@@ -164,8 +160,8 @@ public class MainPresenter {
     }
 
     private LoadCommitsRequest buildLoadCommitsRequest() {
-//        return new LoadCommitsRequest(state.username, state.repository);
-        return null;
+        State currentState = state.getValue();
+        return new LoadCommitsRequest(currentState.username(), currentState.repository());
     }
 
     private Subscription loadCommits(LoadCommitsRequest request) {
@@ -185,8 +181,7 @@ public class MainPresenter {
     }
 
     private void handleLoadCommitsResponse(List<CommitViewModel> commits) {
-//        state.commits = commits;
-        view.displayCommits(commits);
+        state.onNext(state.getValue().toBuilder().commits(commits).build());
     }
 
     private void handleError(Throwable throwable) {
