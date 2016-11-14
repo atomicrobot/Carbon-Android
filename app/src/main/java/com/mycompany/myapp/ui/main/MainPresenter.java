@@ -37,6 +37,14 @@ public class MainPresenter {
         void render(MainViewModel viewModel);
     }
 
+    private static MainViewModel toViewModel(State state) {
+        return MainViewModel.builder()
+                .username(state.username())
+                .repository(state.repository())
+                .commits(state.commits())
+                .build();
+    }
+
     @Parcel
     public static class CommitViewModel {
         final String message;
@@ -158,11 +166,7 @@ public class MainPresenter {
             state = BehaviorSubject.create(State.builder().build());
         }
 
-        subscriptions.add(state.map(state -> MainViewModel.builder()
-                .username(state.username())
-                .repository(state.repository())
-                .commits(state.commits())
-                .build())
+        subscriptions.add(state.map(MainPresenter::toViewModel)
                 .distinctUntilChanged()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
