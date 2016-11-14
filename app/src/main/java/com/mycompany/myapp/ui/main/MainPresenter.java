@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mycompany.myapp.BuildConfig;
-import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
+import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
 import com.mycompany.myapp.data.api.github.model.Commit;
 import com.mycompany.myapp.util.RxUtils;
 
@@ -37,12 +37,21 @@ public class MainPresenter {
         void render(MainViewModel viewModel);
     }
 
-    private static MainViewModel toViewModel(State state) {
-        return MainViewModel.builder()
-                .username(state.username())
-                .repository(state.repository())
-                .commits(state.commits())
-                .build();
+    private static CommitViewModel mapCommitToViewModel(Commit commit) {
+        String message = commit.getCommitMessage();
+        String author = commit.getAuthor();
+        return new CommitViewModel(message, author);
+    }
+
+    private static Observable<MainViewModel> toViewModel(State state) {
+        return Observable.from(state.commits())
+                .map(MainPresenter::mapCommitToViewModel)
+                .toList()
+                .map(commitViewModels -> MainViewModel.builder()
+                        .username(state.username())
+                        .repository(state.repository())
+                        .commits(commitViewModels)
+                        .build());
     }
 
     @Parcel
@@ -118,7 +127,7 @@ public class MainPresenter {
 
         abstract String repository();
 
-        abstract List<CommitViewModel> commits();
+        abstract List<Commit> commits();
 
         abstract Builder toBuilder();
 
@@ -128,7 +137,7 @@ public class MainPresenter {
 
             abstract Builder repository(String repository);
 
-            abstract Builder commits(List<CommitViewModel> commits);
+            abstract Builder commits(List<Commit> commits);
 
             abstract State build();
         }
@@ -166,17 +175,13 @@ public class MainPresenter {
             state = BehaviorSubject.create(State.builder().build());
         }
 
-        subscriptions.add(state.map(MainPresenter::toViewModel)
-                .distinctUntilChanged()
+        subscriptions.add(state.distinctUntilChanged()
+                .flatMap(MainPresenter::toViewModel)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view::render, this::onViewModelError));
+                .subscribe(view::render, this::handleError));
 
         fetchCommits();
-    }
-
-    private void onViewModelError(Throwable throwable) {
-        // TODO: Do something here
     }
 
     public void onPause() {
@@ -202,22 +207,16 @@ public class MainPresenter {
 
     private Subscription loadCommits(LoadCommitsRequest request) {
         return gitHubService.loadCommits(request)
-                .flatMap(response -> Observable.from(response.getCommits()))
-                .map(this::mapCommitToViewModel)
-                .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleLoadCommitsResponse, this::handleError);
     }
 
-    private CommitViewModel mapCommitToViewModel(Commit commit) {
-        String message = commit.getCommitMessage();
-        String author = context.getString(R.string.author_format, commit.getAuthor());
-        return new CommitViewModel(message, author);
-    }
-
-    private void handleLoadCommitsResponse(List<CommitViewModel> commits) {
-        state.onNext(state.getValue().toBuilder().commits(commits).build());
+    private void handleLoadCommitsResponse(LoadCommitsResponse response) {
+        state.onNext(state.getValue()
+                .toBuilder()
+                .commits(response.getCommits())
+                .build());
     }
 
     private void handleError(Throwable throwable) {

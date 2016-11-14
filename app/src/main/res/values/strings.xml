@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">My App</string>
 
-    <string name="author_format">Author: %s</string>
+    <string name="author_label">Author:</string>
 
     <string name="default_base_url">https://api.github.com</string>
 </resources>
