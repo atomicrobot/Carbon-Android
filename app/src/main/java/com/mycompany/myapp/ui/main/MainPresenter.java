@@ -2,10 +2,10 @@ package com.mycompany.myapp.ui.main;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mycompany.myapp.BuildConfig;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
@@ -16,13 +16,15 @@ import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import auto.parcelgson.AutoParcelGson;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
 public class MainPresenter {
@@ -62,11 +64,33 @@ public class MainPresenter {
         }
     }
 
-    @Parcel
-    public static class State {
-        String username = "madebyatomicrobot";
-        String repository = "android-starter-project";
-        List<CommitViewModel> commits = new ArrayList<>();
+    @AutoParcelGson
+    public abstract static class State implements Parcelable {
+        static Builder builder() {
+            return new AutoParcelGson_MainPresenter_State.Builder()
+                    .username("madebyatomicrobot")
+                    .repository("android-starter-project")
+                    .commits(Collections.emptyList());
+        }
+
+        abstract String username();
+
+        abstract String repository();
+
+        abstract List<CommitViewModel> commits();
+
+        abstract Builder toBuilder();
+
+        @AutoParcelGson.Builder
+        abstract static class Builder {
+            abstract Builder username(String username);
+
+            abstract Builder repository(String repository);
+
+            abstract Builder commits(List<CommitViewModel> commits);
+
+            abstract State build();
+        }
     }
 
     private final Context context;
@@ -74,7 +98,7 @@ public class MainPresenter {
 
     private CompositeSubscription subscriptions;
     private MainViewContract view;
-    private State state;
+    private BehaviorSubject<State> state;
 
     public MainPresenter(Context context, GitHubService gitHubService) {
         this.context = context;
@@ -85,7 +109,7 @@ public class MainPresenter {
         this.view = viewContract;
     }
 
-    public void saveState(@NonNull  Bundle bundle) {
+    public void saveState(@NonNull Bundle bundle) {
         bundle.putParcelable(EXTRA_STATE, Parcels.wrap(state));
     }
 
@@ -98,16 +122,29 @@ public class MainPresenter {
     public void onResume() {
         subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
         if (state == null) {
-            state = new State();
+            state = BehaviorSubject.create(State.builder().build());
         }
 
-        view.displayUsername(state.username);
-        view.displayRepository(state.repository);
-        view.displayCommits(state.commits);
-        view.displayVersion(String.format("Version: %s", BuildConfig.VERSION_NAME));
-        view.displayFingerprint(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT));
+        subscriptions.add(state.distinctUntilChanged()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onStateChanged, this::onStateError));
+
+//        view.displayUsername(state.username);
+//        view.displayRepository(state.repository);
+//        view.displayCommits(state.commits);
+//        view.displayVersion(String.format("Version: %s", BuildConfig.VERSION_NAME));
+//        view.displayFingerprint(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT));
 
         fetchCommits();
+    }
+
+    private void onStateChanged(State state) {
+
+    }
+
+    private void onStateError(Throwable throwable) {
+
     }
 
     public void onPause() {
@@ -115,11 +152,11 @@ public class MainPresenter {
     }
 
     public void setUsername(String username) {
-        state.username = username;
+//        state.username = username;
     }
 
     public void setRepository(String repository) {
-        state.repository = repository;
+//        state.repository = repository;
     }
 
     public void fetchCommits() {
@@ -127,7 +164,8 @@ public class MainPresenter {
     }
 
     private LoadCommitsRequest buildLoadCommitsRequest() {
-        return new LoadCommitsRequest(state.username, state.repository);
+//        return new LoadCommitsRequest(state.username, state.repository);
+        return null;
     }
 
     private Subscription loadCommits(LoadCommitsRequest request) {
@@ -147,7 +185,7 @@ public class MainPresenter {
     }
 
     private void handleLoadCommitsResponse(List<CommitViewModel> commits) {
-        state.commits = commits;
+//        state.commits = commits;
         view.displayCommits(commits);
     }
 
