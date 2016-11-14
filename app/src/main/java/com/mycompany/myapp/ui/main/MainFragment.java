@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.ui.main.MainPresenter.CommitViewModel;
-import com.mycompany.myapp.ui.main.MainPresenter.State;
+import com.mycompany.myapp.ui.main.MainPresenter.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,18 +85,12 @@ public class MainFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public void displayVersion(String version) {
-        versionView.setText(version);
-    }
-
-    public void displayFingerprint(String fingerprint) {
-        fingerprintView.setText(fingerprint);
-    }
-
-    public void render(State state) {
-        userNameView.setText(state.username());
-        repositoryView.setText(state.repository());
-        adapter.setCommits(state.commits());
+    public void render(MainViewModel viewModel) {
+        userNameView.setText(viewModel.username());
+        repositoryView.setText(viewModel.repository());
+        fingerprintView.setText(viewModel.fingerprint());
+        versionView.setText(viewModel.version());
+        adapter.setCommits(viewModel.commits());
     }
 
 

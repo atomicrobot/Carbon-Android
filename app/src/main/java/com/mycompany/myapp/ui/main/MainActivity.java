@@ -11,7 +11,7 @@ import com.mycompany.myapp.app.MainApplication;
 import com.mycompany.myapp.ui.main.MainComponent.MainModule;
 import com.mycompany.myapp.ui.main.MainFragment.MainFragmentHost;
 import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
-import com.mycompany.myapp.ui.main.MainPresenter.State;
+import com.mycompany.myapp.ui.main.MainPresenter.MainViewModel;
 
 import javax.inject.Inject;
 
@@ -85,22 +85,12 @@ public class MainActivity extends AppCompatActivity implements MainViewContract,
     }
 
     @Override
-    public void render(State state) {
-        fragment.render(state);
+    public void render(MainViewModel viewModel) {
+        fragment.render(viewModel);
     }
 
     @Override
     public void displayError(String message) {
         Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void displayVersion(String version) {
-        fragment.displayVersion(version);
-    }
-
-    @Override
-    public void displayFingerprint(String fingerprint) {
-        fragment.displayFingerprint(fingerprint);
     }
 }

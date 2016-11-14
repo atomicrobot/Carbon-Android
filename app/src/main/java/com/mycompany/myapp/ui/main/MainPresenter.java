@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.mycompany.myapp.BuildConfig;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
@@ -33,11 +34,7 @@ public class MainPresenter {
     public interface MainViewContract {
         void displayError(String message);
 
-        void displayVersion(String version);
-
-        void displayFingerprint(String fingerprint);
-
-        void render(State state);
+        void render(MainViewModel viewModel);
     }
 
     @Parcel
@@ -57,6 +54,46 @@ public class MainPresenter {
 
         public String getAuthor() {
             return author;
+        }
+    }
+
+    @AutoParcelGson
+    public abstract static class MainViewModel {
+        static Builder builder() {
+            return new AutoParcelGson_MainPresenter_MainViewModel.Builder()
+                    .username("")
+                    .repository("")
+                    .fingerprint(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT))
+                    .version(String.format("Version: %s", BuildConfig.VERSION_NAME))
+                    .commits(Collections.emptyList());
+
+        }
+
+        abstract String username();
+
+        abstract String repository();
+
+        abstract String fingerprint();
+
+        abstract String version();
+
+        abstract List<CommitViewModel> commits();
+
+        abstract Builder toBuilder();
+
+        @AutoParcelGson.Builder
+        abstract static class Builder {
+            abstract Builder username(String username);
+
+            abstract Builder repository(String repository);
+
+            abstract Builder fingerprint(String fingerprint);
+
+            abstract Builder version(String version);
+
+            abstract Builder commits(List<CommitViewModel> commits);
+
+            abstract MainViewModel build();
         }
     }
 
@@ -121,26 +158,21 @@ public class MainPresenter {
             state = BehaviorSubject.create(State.builder().build());
         }
 
-        subscriptions.add(state.distinctUntilChanged()
+        subscriptions.add(state.map(state -> MainViewModel.builder()
+                .username(state.username())
+                .repository(state.repository())
+                .commits(state.commits())
+                .build())
+                .distinctUntilChanged()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onStateChanged, this::onStateError));
-
-//        view.displayUsername(state.username);
-//        view.displayRepository(state.repository);
-//        view.displayCommits(state.commits);
-//        view.displayVersion(String.format("Version: %s", BuildConfig.VERSION_NAME));
-//        view.displayFingerprint(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT));
+                .subscribe(view::render, this::onViewModelError));
 
         fetchCommits();
     }
 
-    private void onStateChanged(State state) {
-        view.render(state);
-    }
-
-    private void onStateError(Throwable throwable) {
-
+    private void onViewModelError(Throwable throwable) {
+        // TODO: Do something here
     }
 
     public void onPause() {
