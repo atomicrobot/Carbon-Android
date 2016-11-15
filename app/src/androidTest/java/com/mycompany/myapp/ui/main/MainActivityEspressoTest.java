@@ -71,7 +71,7 @@ public class MainActivityEspressoTest {
 
         onView(withRecyclerView(R.id.commits)
                 .atPositionOnView(0, R.id.author))
-                .check(matches(withText("Author: Test author")));
+                .check(matches(withText("Test author")));
         onView(withRecyclerView(R.id.commits)
                 .atPositionOnView(0, R.id.message))
                 .check(matches(withText("Test commit message")));
