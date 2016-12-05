@@ -64,6 +64,7 @@ public class MainPresenter {
 
     @Parcel
     public static class State {
+        boolean initialized = false;
         String username = "madebyatomicrobot";
         String repository = "android-starter-project";
         List<CommitViewModel> commits = new ArrayList<>();
@@ -79,13 +80,14 @@ public class MainPresenter {
     public MainPresenter(Context context, GitHubService gitHubService) {
         this.context = context;
         this.gitHubService = gitHubService;
+        this.state = new State();
     }
 
     public void setView(MainViewContract viewContract) {
         this.view = viewContract;
     }
 
-    public void saveState(@NonNull  Bundle bundle) {
+    public void saveState(@NonNull Bundle bundle) {
         bundle.putParcelable(EXTRA_STATE, Parcels.wrap(state));
     }
 
@@ -97,8 +99,9 @@ public class MainPresenter {
 
     public void onResume() {
         subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
-        if (state == null) {
-            state = new State();
+        if (!state.initialized) {
+            // Do initial setup here
+            state.initialized = true;
         }
 
         view.displayUsername(state.username);
