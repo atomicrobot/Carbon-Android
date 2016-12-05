@@ -25,9 +25,9 @@ public class DevSettingsPresenter {
 
     @Parcel
     public static class State {
+        boolean initialized = false;
         String baseUrl;
         boolean trustAllSSL;
-        boolean initialized = false;
     }
 
     private final Context context;
