@@ -19,11 +19,13 @@ public class DevSettingsPresenter {
 
     public interface DevSettingsViewContract {
         void displayBaseUrl(String baseUrl);
+
         void displayTrustAllSSL(boolean trustAllSSL);
     }
 
     @Parcel
     public static class State {
+        boolean initialized = false;
         String baseUrl;
         boolean trustAllSSL;
     }
@@ -38,6 +40,7 @@ public class DevSettingsPresenter {
     public DevSettingsPresenter(Context context, Settings settings) {
         this.context = context;
         this.settings = settings;
+        this.state = new State();
     }
 
     public void setView(DevSettingsViewContract view) {
@@ -56,8 +59,9 @@ public class DevSettingsPresenter {
 
     public void onResume() {
         subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
-        if (state == null) {
-            state = new State();
+        if (!state.initialized) {
+            // Do initial setup here
+            state.initialized = true;
             state.baseUrl = settings.getBaseUrl();
             state.trustAllSSL = settings.getTrustAllSSL();
         }
