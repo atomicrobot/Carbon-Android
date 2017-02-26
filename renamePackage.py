@@ -8,6 +8,18 @@ import shutil
 import platform
 from functools import reduce
 
+stuffToRemove = [".gradle", ".git", ".idea", "build", "app/build", ".iml", "local.properties"]
+dirChar = '\\' if platform.system() == 'Windows' else '/'
+args = sys.argv
+if (len(args) != 2):
+	print("please enter a new package name")
+	exit()
+
+new_package = args[1]
+original_package = "com.mycompany.myapp"
+new_package_directory = dirChar + new_package.lower().replace('.', dirChar) + dirChar
+original_package_directory = dirChar + original_package.lower().replace('.', dirChar) + dirChar
+
 #deletes files and folders
 def nuke(folders):
 	for f in folders:
@@ -20,7 +32,7 @@ def nuke(folders):
 
 def refactorPackagenameInFile(file,oldPackageName, newPackageName):
 	#only refactor these files
-	if (file.endswith(".java") or file.endswith(".kt") or file.endswith(".xml") or file.endswith(".md") or file.endswith(".txt") or file.endswith(".gradle")):
+	if (file.endswith(".java") or file.endswith(".kt") or file.endswith(".xml") or file.endswith(".properties") or file.endswith(".txt") or file.endswith(".gradle")):
 		f = open(file, 'r')
 		contents = f.read()
 		f.close()
@@ -30,26 +42,8 @@ def refactorPackagenameInFile(file,oldPackageName, newPackageName):
 		f.write(refactored)
 	return
 
-stuffToRemove = [".gradle", ".git", ".idea", "build", "app/build", ".iml", "local.properties"]
-dirChar = '\\' if platform.system() == 'Windows' else '/'
-args = sys.argv
-if (len(args) != 2):
-	print("please enter a new package name")
-	exit()
-
-new_package = args[1]
-original_package = "com.mycompany.myapp"
-
-#fold left with lambda expressions! FTW! a is input (prev value), b is the next item in the list
-new_package_directory = dirChar + new_package.lower().replace('.', dirChar) + dirChar
-original_package_directory = dirChar + original_package.lower().replace('.', dirChar) + dirChar
-
-#original_package_directory = "/" + reduce((lambda a,b: a + '/' + b), original_package.split('.')) + "/"
-
-print(new_package_directory)
-print(original_package_directory)
-
-for root, dir, files in os.walk('app'):
+def refactorAllFolders():
+	for root, dir, files in os.walk('app'):
 	for f in files:
 		fpath = os.path.join(root, f)
 		if original_package_directory in fpath:
@@ -64,19 +58,18 @@ for root, dir, files in os.walk('app'):
 		else:
 			refactorPackagenameInFile(fpath, original_package, new_package)
 
-for root, dir, files in os.walk('app/src'):
-	#only use the first iteration, we just want the immidate children of this folder
-	for folder in dir:
-		folderpath = 'app' + dirChar + 'src' + dirChar + folder + dirChar + 'java' + dirChar + 'com' + dirChar + 'mycompany'
-		shutil.rmtree(folderpath)
-	break
+	for root, dir, files in os.walk('app/src'):
+		#only use the first iteration, we just want the immidate children of this folder
+		for folder in dir:
+			folderpath = 'app' + dirChar + 'src' + dirChar + folder + dirChar + 'java' + dirChar + 'com' + dirChar + 'mycompany'
+			shutil.rmtree(folderpath)
+		break
 
-	#if (len(files) > 0):
-	#	reduce ((lambda a,b: print(os.path.join(root, b)) if b.endswith('.java') else None), files)
+		#if (len(files) > 0):
+		#	reduce ((lambda a,b: print(os.path.join(root, b)) if b.endswith('.java') else None), files)
 
-
-#nuke(stuffToRemove)
-
-#os.system('git init')
-#os.system('git add .')
-#os.system('git commit -q -m "Initial import"')
+nuke(stuffToRemove)
+refactorAllFolders()
+os.system('git init')
+os.system('git add .')
+os.system('git commit -q -m "Initial import"')
