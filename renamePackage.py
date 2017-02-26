@@ -44,19 +44,19 @@ def refactorPackagenameInFile(file,oldPackageName, newPackageName):
 
 def refactorAllFolders():
 	for root, dir, files in os.walk('app'):
-	for f in files:
-		fpath = os.path.join(root, f)
-		if original_package_directory in fpath:
-			oldPath = fpath
-			newPath = fpath.replace(original_package_directory,new_package_directory)
-			try:#attempt to make the new package directory incase it doesn't exist
-				os.makedirs((root+dirChar).replace(original_package_directory, new_package_directory))
-			except:
-				None
-			shutil.copy(oldPath, newPath)#copy the file to the new path
-			refactorPackagenameInFile(newPath, original_package, new_package)
-		else:
-			refactorPackagenameInFile(fpath, original_package, new_package)
+		for f in files:
+			fpath = os.path.join(root, f)
+			if original_package_directory in fpath:
+				oldPath = fpath
+				newPath = fpath.replace(original_package_directory,new_package_directory)
+				try:#attempt to make the new package directory incase it doesn't exist
+					os.makedirs((root+dirChar).replace(original_package_directory, new_package_directory))
+				except:
+					None
+				shutil.copy(oldPath, newPath)#copy the file to the new path
+				refactorPackagenameInFile(newPath, original_package, new_package)
+			else:
+				refactorPackagenameInFile(fpath, original_package, new_package)
 
 	for root, dir, files in os.walk('app/src'):
 		#only use the first iteration, we just want the immidate children of this folder
@@ -69,7 +69,7 @@ def refactorAllFolders():
 		#	reduce ((lambda a,b: print(os.path.join(root, b)) if b.endswith('.java') else None), files)
 
 nuke(stuffToRemove)
-refactorAllFolders()
-os.system('git init')
-os.system('git add .')
-os.system('git commit -q -m "Initial import"')
+#refactorAllFolders()
+#os.system('git init')
+#os.system('git add .')
+#os.system('git commit -q -m "Initial import"')
