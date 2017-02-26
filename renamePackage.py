@@ -19,13 +19,15 @@ def nuke(folders):
 	return
 
 def refactorPackagenameInFile(file,oldPackageName, newPackageName):
-	f = open(file, 'r')
-	contents = f.read()
-	f.close()
+	#only refactor these files
+	if (file.endswith(".java") or file.endswith(".kt") or file.endswith(".xml") or file.endswith(".md") or file.endswith(".txt") or file.endswith(".gradle")):
+		f = open(file, 'r')
+		contents = f.read()
+		f.close()
 
-	refactored = contents.replace(oldPackageName, newPackageName)
-	f = open(file, 'w')
-	f.write(refactored)
+		refactored = contents.replace(oldPackageName, newPackageName)
+		f = open(file, 'w')
+		f.write(refactored)
 	return
 
 stuffToRemove = [".gradle", ".git", ".idea", "build", "app/build", ".iml", "local.properties"]
@@ -61,6 +63,13 @@ for root, dir, files in os.walk('app'):
 			refactorPackagenameInFile(newPath, original_package, new_package)
 		else:
 			refactorPackagenameInFile(fpath, original_package, new_package)
+
+for root, dir, files in os.walk('app/src'):
+	#only use the first iteration, we just want the immidate children of this folder
+	for folder in dir:
+		folderpath = 'app' + dirChar + 'src' + dirChar + folder + dirChar + 'java' + dirChar + 'com' + dirChar + 'mycompany'
+		shutil.rmtree(folderpath)
+	break
 
 	#if (len(files) > 0):
 	#	reduce ((lambda a,b: print(os.path.join(root, b)) if b.endswith('.java') else None), files)
