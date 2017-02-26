@@ -4,7 +4,7 @@
 - `git clone git@github.com:madebyatomicrobot/android-starter-project.git`
 - `cd android-starter-project`
 - `brew install gawk` (if not already installed)
-- `./renamePackage com.demo.mobile`
+- `python renamePackage.py com.demo.mobile`
 - (optional) Rename the project directory from `android-starter-project` to something meaningful.
 - (optional) Add a git remote to the project (a clean repository has been setup for you).
 - (optional) Adding a new activity: `./gradlew app:screen -Ppackage=com.demo.mobile -Pscreen=SignIn`
