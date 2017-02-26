@@ -25,8 +25,11 @@ def nuke(folders):
 	for f in folders:
 		try:
 			if (platform.system() == 'Windows'):
+				f = f.replace('/', '\\')
+				print('Removing ' + f)
 				os.system('rmdir /s /q ' + f)
 			else:
+				print('Removing ' + f)
 				os.system('rm -rf ' + f)
 		except:
 			None
