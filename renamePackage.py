@@ -24,7 +24,10 @@ original_package_directory = dirChar + original_package.lower().replace('.', dir
 def nuke(folders):
 	for f in folders:
 		try:
-			shutil.rmtree(f)
+			if (platform.system() == 'Windows'):
+				os.system('rmdir /s /q ' + f)
+			else:
+				os.system('rm -rf ' + f)
 		except:
 			None
 
