@@ -84,5 +84,5 @@ os.system('git commit -q -m "Initial import from github.com/madebyatomicrobot/an
 f = open('complete.txt', 'r')
 artwork = f.read()
 f.close()
-nuke('complete.txt')
+nuke(['complete.txt'])
 print(artwork)
