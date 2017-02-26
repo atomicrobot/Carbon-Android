@@ -72,7 +72,7 @@ def refactorAllFolders():
 		#	reduce ((lambda a,b: print(os.path.join(root, b)) if b.endswith('.java') else None), files)
 
 nuke(stuffToRemove)
-#refactorAllFolders()
-#os.system('git init')
-#os.system('git add .')
-#os.system('git commit -q -m "Initial import"')
+refactorAllFolders()
+os.system('git init')
+os.system('git add .')
+os.system('git commit -q -m "Initial import"')
