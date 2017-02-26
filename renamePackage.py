@@ -76,13 +76,15 @@ def refactorAllFolders():
 
 nuke(stuffToRemove)
 refactorAllFolders()
+
+f = open('complete.txt', 'r')
+artwork = f.read()
+f.close()
+nuke(['complete.txt'])
+
 os.system('git init')
 os.system('git add .')
 os.system('git commit -q -m "Initial import from github.com/madebyatomicrobot/android-starter-project"')
 
 #print artwork :)
-f = open('complete.txt', 'r')
-artwork = f.read()
-f.close()
-nuke(['complete.txt'])
 print(artwork)
