@@ -80,7 +80,7 @@ refactorAllFolders()
 f = open('complete.txt', 'r')
 artwork = f.read()
 f.close()
-nuke(['complete.txt'])
+os.remove('complete.txt')
 
 os.system('git init')
 os.system('git add .')
