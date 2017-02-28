@@ -88,3 +88,4 @@ os.system('git commit -q -m "Initial import from github.com/madebyatomicrobot/an
 
 #print artwork :)
 print(artwork)
+os.system('git log --oneline')
