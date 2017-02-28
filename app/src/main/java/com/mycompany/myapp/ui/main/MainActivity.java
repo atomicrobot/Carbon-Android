@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainViewContract,
         fragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setTitle(getApplicationContext().getPackageName());
     }
 
     @Override
