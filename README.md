@@ -65,6 +65,11 @@ app/build/spoon/dev/debug => quality/integrationTests
 - "Unit Tests" with a start page of `quality/tests/index.html`
 - "Integration Tests" with a start page of `quality/integrationTests/index.html`
 
+### (Optional) Kotlin Configuration
+- Open Action Menu in Android Studio (Cmd-Shift-A on Mac) (Ctrl-Shift-A on Windows/Linux)
+- Type Configure Kotlin in Project
+- Adding a new Kotlin activity: `./gradlew app:ktscreen -Ppackage=com.demo.mobile -Pscreen=SignIn`
+
 License
 =======
 

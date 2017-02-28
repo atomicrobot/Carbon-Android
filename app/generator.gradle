@@ -62,6 +62,53 @@ task screen << {
             "<!-- GENERATOR - MORE ACTIVITIES -->")
 }
 
+task ktscreen << {
+    String argPackage = getProject().getProperty('package')
+    String argPackageDirs = argPackage.replaceAll("\\.", File.separator);
+
+    String argScreen = getProject().getProperty('screen')
+    String screenPackage = argScreen.toLowerCase()
+    String screenName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, argScreen)
+    String screenFileName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, argScreen)
+
+    HashMap<String, Object> scopes = new HashMap<String, Object>()
+    scopes.put('package', argPackage)
+    scopes.put('screenLowerCase', screenPackage)
+    scopes.put('screenUpperCamel', argScreen)
+    scopes.put('screenLowerCamel', screenName)
+    scopes.put('screenUnderscore', screenFileName)
+
+    // New files
+    createFile(scopes, 'templates/screen/Activity.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Activity.kt")
+    createFile(scopes, 'templates/screen/Fragment.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Fragment.kt")
+    createFile(scopes, 'templates/screen/Component.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Component.kt")
+    createFile(scopes, 'templates/screen/Presenter.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Presenter.kt")
+
+    createFile(scopes, 'templates/screen/activity.xml.mustache', "src/main/res/layout/activity_${screenFileName}.xml")
+    createFile(scopes, 'templates/screen/content.xml.mustache', "src/main/res/layout/content_${screenFileName}.xml")
+    createFile(scopes, 'templates/screen/fragment.xml.mustache', "src/main/res/layout/fragment_${screenFileName}.xml")
+
+    createFile(scopes, 'templates/screen/ActivityTests.kt.mustache', "src/androidTest/java/$argPackageDirs/ui/$screenPackage/${argScreen}ActivityEspressoTests.kt")
+    createFile(scopes, 'templates/screen/PresenterTests.kt.mustache', "src/test/java/$argPackageDirs/ui/$screenPackage/${argScreen}PresenterTests.kt")
+
+    // Existing files
+    updateFile(
+            scopes,
+            'templates/screen/ApplicationComponent_ImportPartial.java.mustache',
+            "src/main/java/$argPackageDirs/app/ApplicationComponent.java",
+            "// GENERATOR - MORE IMPORTS //")
+    updateFile(
+            scopes,
+            'templates/screen/ApplicationComponent_SubcomponentPartial.java.mustache',
+            "src/main/java/$argPackageDirs/app/ApplicationComponent.java",
+            "// GENERATOR - MORE SUBCOMPONENTS //")
+    updateFile(
+            scopes,
+            'templates/screen/AndroidManifest_ActivityPartial.xml.mustache',
+            "src/main/AndroidManifest.xml",
+            "<!-- GENERATOR - MORE ACTIVITIES -->")
+}
+
 void createFile(scopes, String templateFile, String outputFile) {
     String template = file(templateFile).text
 
