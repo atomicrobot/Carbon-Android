@@ -23,13 +23,12 @@ original_package_directory = dirChar + original_package.lower().replace('.', dir
 #deletes files and folders
 def nuke(folders):
 	for f in folders:
+		f = f.replace('/', dirChar)#Make sure it has the correct dir separator
+		print('Removing ' + f)
 		try:
 			if (platform.system() == 'Windows'):
-				f = f.replace('/', '\\')
-				print('Removing ' + f)
 				os.system('rmdir /s /q ' + f)
 			else:
-				print('Removing ' + f)
 				os.system('rm -rf ' + f)
 		except:
 			None
@@ -70,9 +69,6 @@ def refactorAllFolders():
 			folderpath = 'app' + dirChar + 'src' + dirChar + folder + dirChar + 'java' + dirChar + 'com' + dirChar + 'mycompany'
 			shutil.rmtree(folderpath)
 		break
-
-		#if (len(files) > 0):
-		#	reduce ((lambda a,b: print(os.path.join(root, b)) if b.endswith('.java') else None), files)
 
 nuke(stuffToRemove)
 refactorAllFolders()
