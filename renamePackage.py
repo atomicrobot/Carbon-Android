@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-# Usage renamePackage.sh package
-# Ex: renamePackage.sh com.demo.mobile
+# Usage renamePackage.py package
+# Ex: renamePackage.py com.demo.mobile
 
 import os, sys
 import shutil
@@ -9,7 +9,7 @@ import platform
 from functools import reduce
 
 stuffToRemove = [".gradle", ".git", ".idea", "build", "app/build", ".iml", "local.properties"]
-dirChar = '\\' if platform.system() == 'Windows' else '/'
+dirChar = os.sep
 args = sys.argv
 if (len(args) != 2):
 	print("please enter a new package name")
