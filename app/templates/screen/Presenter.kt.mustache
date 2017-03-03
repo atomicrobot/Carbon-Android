@@ -18,7 +18,7 @@ class {{screenUpperCamel}}Presenter(private val context: Context) {
     }
 
     private lateinit var subscriptions: CompositeSubscription
-    private var view: {{screenUpperCamel}}ViewContract? = null
+    private lateinit var view: {{screenUpperCamel}}ViewContract
     private var state = State()
 
     fun setView(view: {{screenUpperCamel}}ViewContract) {
@@ -36,14 +36,14 @@ class {{screenUpperCamel}}Presenter(private val context: Context) {
     }
 
     fun onResume() {
-        subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions)
+        subscriptions = CompositeSubscription()
         if (!state.initialized) {
             state.initialized = true
         }
     }
 
     fun onPause() {
-        RxUtils.unsubscribeIfNotNull(subscriptions)
+        subscriptions.unsubscribe()
     }
 
     companion object {
