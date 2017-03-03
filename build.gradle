@@ -75,7 +75,7 @@ ext {
 
     // Build settings that are likely to be reused across different modules
     buildToolsVersion = "25.0.2"
-    minSdkVersion = 16
+    minSdkVersion = 19
     targetSdkVersion = 25
     compileSdkVersion = 25
 
