@@ -7,10 +7,9 @@ import com.mycompany.myapp.app.Settings;
 import com.mycompany.myapp.data.api.Api;
 import com.mycompany.myapp.data.api.github.GitHubApiService;
 import com.mycompany.myapp.data.api.github.GitHubService;
+import com.mycompany.myapp.ui.ActivityScope;
 
 import java.io.File;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,14 +24,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DataModule {
     private static final int DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
-    @Singleton
+    @ActivityScope
     @Provides
     public Cache provideCache(Application app) {
         File cacheDir = new File(app.getCacheDir(), "http");
         return new Cache(cacheDir, DISK_CACHE_SIZE);
     }
 
-    @Singleton
+    @ActivityScope
     @Provides
     public OkHttpClient provideOkHttpClient(Cache cache) {
         return new OkHttpClient.Builder()
@@ -40,14 +39,14 @@ public class DataModule {
                 .build();
     }
 
-    @Singleton
+    @ActivityScope
     @Api("github")
     @Provides
     public String provideBaseUrl(Settings settings) {
         return settings.getBaseUrl();
     }
 
-    @Singleton
+    @ActivityScope
     @Api("github")
     @Provides
     public Converter.Factory provideConverter() {
@@ -55,7 +54,7 @@ public class DataModule {
         return GsonConverterFactory.create(gson);
     }
 
-    @Singleton
+    @ActivityScope
     @Api("github")
     @Provides
     public Retrofit provideRetrofit(
@@ -70,13 +69,13 @@ public class DataModule {
                 .build();
     }
 
-    @Singleton
+    @ActivityScope
     @Provides
     public GitHubApiService provideGitHubApiService(@Api("github") Retrofit retrofit) {
         return retrofit.create(GitHubApiService.class);
     }
 
-    @Singleton
+    @ActivityScope
     @Provides
     public GitHubService provideGitHubService(GitHubApiService api) {
         return new GitHubService(api);

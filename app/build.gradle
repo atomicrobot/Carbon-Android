@@ -98,6 +98,9 @@ android {
     }
 
     productFlavors {
+        sample {
+            applicationId 'com.mycompany.myapp.sample'
+        }
         dev {
             applicationId 'com.mycompany.myapp.dev'
         }

@@ -1,6 +1,5 @@
 package com.mycompany.myapp.app;
 
-import com.mycompany.myapp.data.DataModule;
 import com.mycompany.myapp.modules.CrashReporterModule;
 import com.mycompany.myapp.monitoring.LoggerModule;
 import com.mycompany.myapp.ui.main.MainComponent;
@@ -18,8 +17,7 @@ import dagger.Component;
         AndroidModule.class,
         AppModule.class,
         LoggerModule.class,
-        CrashReporterModule.class,
-        DataModule.class
+        CrashReporterModule.class
 })
 public interface ApplicationComponent extends VariantApplicationComponent {
     MainComponent mainComponent(MainModule module);
