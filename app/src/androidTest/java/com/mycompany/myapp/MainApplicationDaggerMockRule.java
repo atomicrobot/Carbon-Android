@@ -4,7 +4,6 @@ import com.mycompany.myapp.app.AndroidModule;
 import com.mycompany.myapp.app.AppModule;
 import com.mycompany.myapp.app.ApplicationComponent;
 import com.mycompany.myapp.app.VariantModule;
-import com.mycompany.myapp.data.DataModule;
 import com.mycompany.myapp.modules.CrashReporterModule;
 import com.mycompany.myapp.monitoring.LoggerModule;
 
@@ -22,8 +21,7 @@ public class MainApplicationDaggerMockRule extends DaggerMockRule<ApplicationCom
                 new AndroidModule(getAppUnderTest()),
                 new AppModule(),
                 new LoggerModule(),
-                new CrashReporterModule(),
-                new DataModule());
+                new CrashReporterModule());
         set(component -> getAppUnderTest().setComponent(component));
     }
 }

@@ -42,7 +42,7 @@ public class SampleActivity extends AppCompatActivity implements MainViewContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
         ButterKnife.bind(this);
-        fragment = (SampleFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+        fragment = (SampleFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_sample);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getApplicationContext().getPackageName());
