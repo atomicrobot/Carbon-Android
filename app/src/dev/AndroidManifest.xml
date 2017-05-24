@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <application>
+    <application
+        android:allowBackup="false"
+        tools:replace="android:allowBackup">
         <activity
             android:name="com.mycompany.myapp.ui.devsettings.DevSettingsActivity"
             android:label="@string/dev_settings"
