@@ -4,6 +4,8 @@
 import com.github.mustachejava.DefaultMustacheFactory
 import com.google.common.base.CaseFormat
 
+import java.util.regex.Matcher
+
 buildscript {
     repositories {
         mavenCentral()
@@ -17,7 +19,7 @@ buildscript {
 
 task screen << {
     String argPackage = getProject().getProperty('package')
-    String argPackageDirs = argPackage.replaceAll("\\.", File.separator);
+    String argPackageDirs = argPackage.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
 
     String argScreen = getProject().getProperty('screen')
     String screenPackage = argScreen.toLowerCase()
@@ -64,7 +66,7 @@ task screen << {
 
 task ktscreen << {
     String argPackage = getProject().getProperty('package')
-    String argPackageDirs = argPackage.replaceAll("\\.", File.separator);
+    String argPackageDirs = argPackage.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
 
     String argScreen = getProject().getProperty('screen')
     String screenPackage = argScreen.toLowerCase()
