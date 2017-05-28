@@ -15,6 +15,11 @@
         </Not>
     </Match>
 
+    <!-- Do not check auto-generated classes from Dagger -->
+    <Match>
+        <Class name="~.*Dagger*.*"/>
+    </Match>
+
     <!-- Almost entirely always as a result of something with Java's crappy Date -->
     <Match>
         <Or>
