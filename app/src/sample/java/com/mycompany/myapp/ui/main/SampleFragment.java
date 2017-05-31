@@ -1,9 +1,11 @@
 package com.mycompany.myapp.ui.main;
 
+import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mycompany.myapp.R;
-import com.mycompany.myapp.ui.main.SamplePresenter.CommitViewModel;
+import com.mycompany.myapp.data.api.github.model.Commit;
+import com.mycompany.myapp.databinding.SampleBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +27,9 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
-public class SampleFragment extends Fragment {
+public class SampleFragment extends LifecycleFragment {
     public interface SampleFragmentHost {
         void inject(SampleFragment fragment);
-
-        void setUsername(String username);
-        void setRepository(String repository);
-        void fetchCommits();
     }
 
     @BindView(R.id.username) EditText userNameView;
@@ -43,6 +42,8 @@ public class SampleFragment extends Fragment {
     private Unbinder unbinder;
 
     private CommitsAdapter adapter;
+    private SampleViewModel viewModel;
+    private SampleFragmentState state = new SampleFragmentState();
 
     @Override
     public void onAttach(Context context) {
@@ -60,11 +61,17 @@ public class SampleFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         host.inject(this);
+        viewModel = ViewModelProviders.of(this).get(SampleViewModel.class);
+
+        viewModel.getViewState().observe(this, this::render);
+        viewModel.fetchCommits();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sample, container, false);
+        SampleBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sample, container, false);
+        binding.setState(state);
+        View view = binding.getRoot();
         unbinder = ButterKnife.bind(this, view);
 
         commitsView.setHasFixedSize(true);
@@ -76,51 +83,43 @@ public class SampleFragment extends Fragment {
         return view;
     }
 
+    public void render(SampleFragmentState viewState) {
+        this.state = viewState;
+        ((SampleBinding) DataBindingUtil.getBinding(getView())).setState(state);
+        if (this.state != null) {
+            displayCommits(state.getCommits());
+        }
+    }
+
     @Override
     public void onDestroyView() {
         unbinder.unbind();
         super.onDestroyView();
     }
 
-    public void displayUsername(String username) {
-        userNameView.setText(username);
-    }
-
-    public void displayRepository(String repository) {
-        repositoryView.setText(repository);
-    }
-
-    public void displayCommits(List<CommitViewModel> commits) {
+    public void displayCommits(List<Commit> commits) {
         adapter.setCommits(commits);
-    }
-
-    public void displayVersion(String version) {
-        versionView.setText(version);
-    }
-
-    public void displayFingerprint(String fingerprint) {
-        fingerprintView.setText(fingerprint);
     }
 
     @OnTextChanged(R.id.username)
     void handleUsernameChanged(CharSequence username) {
-        host.setUsername(username.toString());
+        viewModel.setUsername(username.toString());
     }
 
     @OnTextChanged(R.id.repository)
     void handleRepositoryChanged(CharSequence repository) {
-        host.setRepository(repository.toString());
+        viewModel.setRepository(repository.toString());
     }
 
     @OnClick(R.id.fetch_commits)
     void handleFetchCommits() {
-        host.fetchCommits();
+        viewModel.fetchCommits();
     }
 
     private static class CommitsAdapter extends RecyclerView.Adapter<ViewHolder> {
-        private List<CommitViewModel> commits = new ArrayList<>();
+        private List<Commit> commits = new ArrayList<>();
 
-        private void setCommits(List<CommitViewModel> commits) {
+        private void setCommits(List<Commit> commits) {
             this.commits = commits;
             notifyDataSetChanged();
         }
@@ -133,8 +132,8 @@ public class SampleFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            CommitViewModel commit = commits.get(position);
-            holder.messageView.setText(commit.getMessage());
+            Commit commit = commits.get(position);
+            holder.messageView.setText(commit.getCommitMessage());
             holder.authorView.setText(commit.getAuthor());
         }
 

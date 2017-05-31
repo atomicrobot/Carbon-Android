@@ -1,84 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="#DDD"
-        android:elevation="2dp"
-        android:orientation="vertical"
-        android:padding="16dp">
+    <data class="SampleBinding">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Username"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/repository"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Repository"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/fetch_commits"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fetch Commits"/>
-
-    </LinearLayout>
+        <variable
+            name="state"
+            type="com.mycompany.myapp.ui.main.SampleFragmentState"/>
+    </data>
 
     <RelativeLayout
-        android:id="@+id/footer"
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#DDD"
-        android:elevation="1dp"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/version"
-            style="?android:textAppearanceSmall"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="@string/placeholder_short"/>
+            android:layout_alignParentTop="true"
+            android:background="#DDD"
+            android:elevation="2dp"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/fingerprint"
-            style="?android:textAppearanceSmall"
-            android:layout_width="wrap_content"
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Username"
+                    android:text="@{state.username}"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/repository"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Repository"
+                    android:text="@{state.repository}"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/fetch_commits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fetch Commits"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="@string/placeholder_short"/>
+            android:layout_alignParentBottom="true"
+            android:background="#DDD"
+            android:elevation="1dp"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/version"
+                style="?android:textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@{state.versionCode}"/>
+
+            <TextView
+                android:id="@+id/fingerprint"
+                style="?android:textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@{state.versionFingerPrint}"/>
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/commits"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/footer"
+            android:layout_below="@id/header"
+            android:scrollbars="vertical"/>
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/commits"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/footer"
-        android:layout_below="@id/header"
-        android:scrollbars="vertical"/>
-
-</RelativeLayout>
+</layout>
