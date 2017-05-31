@@ -11,7 +11,8 @@ public class DevSettingsActivityEspressoTests {
 
     @Rule public MainApplicationDaggerMockRule mockitoRule = new MainApplicationDaggerMockRule();
 
-    @Rule public EspressoTestRule<DevSettingsActivity> activityRule = new EspressoTestRule<>(DevSettingsActivity.class, false, false);
+    @Rule public EspressoTestRule<DevSettingsActivity> activityRule =
+            new EspressoTestRule<>(DevSettingsActivity.class, false, false);
 
     @Test
     public void testLaunchActivity() {

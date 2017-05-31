@@ -1,8 +1,5 @@
 package com.mycompany.myapp.ui.main;
 
-import android.content.Context;
-
-import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.ui.ActivityScope;
 import com.mycompany.myapp.ui.main.MainComponent.MainModule;
 
@@ -24,8 +21,8 @@ public interface MainComponent {
 
         @ActivityScope
         @Provides
-        public MainPresenter providePresenter(Context context, GitHubService service) {
-            return new MainPresenter(context, service);
+        public MainPresenter providePresenter() {
+            return new MainPresenter();
         }
     }
 

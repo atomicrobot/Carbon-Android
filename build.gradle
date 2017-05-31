@@ -1,12 +1,15 @@
 buildscript {
+    ext.kotlin_version = '1.1.2-2'
+    ext.android_gradle_version = '2.3.0'
     repositories {
+        mavenCentral()
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }  // Crashlytics
+        maven { url 'https://maven.fabric.io/public' } // Crashlytics
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
-
+        classpath "com.android.tools.build:gradle:$android_gradle_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // Exclude the version of lombok that the android plugin depends on (not Java 8 aware).
         // See https://github.com/evant/android-retrolambda-lombok for more info
         // Also, see https://github.com/evant/android-retrolambda-lombok/issues/10 for why it is
@@ -22,6 +25,7 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url 'https://maven.google.com' }
     }
 
     // Automatically pull down javadocs and sources (if available)

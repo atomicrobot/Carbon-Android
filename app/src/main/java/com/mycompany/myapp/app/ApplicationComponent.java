@@ -5,6 +5,7 @@ import com.mycompany.myapp.modules.CrashReporterModule;
 import com.mycompany.myapp.monitoring.LoggerModule;
 import com.mycompany.myapp.ui.main.MainComponent;
 import com.mycompany.myapp.ui.main.MainComponent.MainModule;
+import com.mycompany.myapp.ui.main.SampleViewModel;
 
 import javax.inject.Singleton;
 
@@ -26,4 +27,6 @@ public interface ApplicationComponent extends VariantApplicationComponent {
     // GENERATOR - MORE SUBCOMPONENTS //
 
     void inject(MainApplication application);
+
+    void inject(SampleViewModel viewModel);
 }
