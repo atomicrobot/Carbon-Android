@@ -1,54 +1,43 @@
 package com.mycompany.myapp.ui.main;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
+import com.mycompany.myapp.BR;
 import com.mycompany.myapp.BuildConfig;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
-import com.mycompany.myapp.data.api.github.model.Commit;
-import com.mycompany.myapp.util.RxUtils;
+import com.mycompany.myapp.ui.BasePresenter;
+import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
+import com.mycompany.myapp.ui.main.MainPresenter.State;
 
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-public class MainPresenter {
-    private static final String EXTRA_STATE = "MainPresenterState";
+public class MainPresenter extends BasePresenter<MainViewContract, State> {
+    private static final String STATE_KEY = "MainPresenterState";  // NON-NLS
 
     public interface MainViewContract {
-        void displayUsername(String username);
-
-        void displayRepository(String repository);
-
-        void displayCommits(List<CommitViewModel> commits);
-
         void displayError(String message);
-
-        void displayVersion(String version);
-
-        void displayFingerprint(String fingerprint);
     }
 
     @Parcel
-    public static class CommitViewModel {
-        final String message;
-        final String author;
+    public static class CommitView {
+        String message;
+        String author;
 
         @ParcelConstructor
-        public CommitViewModel(String message, String author) {
+        public CommitView(String message, String author) {
             this.message = message;
             this.author = author;
         }
@@ -63,99 +52,95 @@ public class MainPresenter {
     }
 
     @Parcel
-    public static class State {
+    public static class State extends BaseObservable {
         boolean initialized = false;
+
         String username = "madebyatomicrobot";
         String repository = "android-starter-project";
-        List<CommitViewModel> commits = new ArrayList<>();
+        List<CommitView> commits = new ArrayList<>();
+
+        @Bindable
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+            notifyPropertyChanged(BR.username);
+        }
+
+        @Bindable
+        public String getRepository() {
+            return repository;
+        }
+
+        public void setRepository(String repository) {
+            this.repository = repository;
+            notifyPropertyChanged(BR.repository);
+        }
+
+        @Bindable
+        public List<CommitView> getCommits() {
+            return commits;
+        }
+
+        public void setCommits(List<CommitView> commits) {
+            this.commits = commits;
+            notifyPropertyChanged(BR.commits);
+        }
     }
 
     private final Context context;
     private final GitHubService gitHubService;
 
-    private CompositeSubscription subscriptions;
-    private MainViewContract view;
-    private State state;
-
     public MainPresenter(Context context, GitHubService gitHubService) {
+        super(STATE_KEY);
         this.context = context;
         this.gitHubService = gitHubService;
+
         this.state = new State();
     }
 
-    public void setView(MainViewContract viewContract) {
-        this.view = viewContract;
-    }
-
-    public void saveState(@NonNull Bundle bundle) {
-        bundle.putParcelable(EXTRA_STATE, Parcels.wrap(state));
-    }
-
-    public void restoreState(@Nullable Bundle bundle) {
-        if (bundle != null && bundle.containsKey(EXTRA_STATE)) {
-            state = Parcels.unwrap(bundle.getParcelable(EXTRA_STATE));
-        }
-    }
-
     public void onResume() {
-        subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
+        super.onResume();
         if (!state.initialized) {
-            // Do initial setup here
             state.initialized = true;
+            fetchCommits();
         }
-
-        view.displayUsername(state.username);
-        view.displayRepository(state.repository);
-        view.displayCommits(state.commits);
-        view.displayVersion(String.format("Version: %s", BuildConfig.VERSION_NAME));
-        view.displayFingerprint(String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT));
-
-        fetchCommits();
-    }
-
-    public void onPause() {
-        RxUtils.unsubscribeIfNotNull(subscriptions);
-    }
-
-    public void setUsername(String username) {
-        state.username = username;
-    }
-
-    public void setRepository(String repository) {
-        state.repository = repository;
     }
 
     public void fetchCommits() {
-        subscriptions.add(loadCommits(buildLoadCommitsRequest()));
+        disposables.add(loadCommits(new LoadCommitsRequest(
+                state.getUsername(),
+                state.getRepository())));
     }
 
-    private LoadCommitsRequest buildLoadCommitsRequest() {
-        return new LoadCommitsRequest(state.username, state.repository);
-    }
-
-    private Subscription loadCommits(LoadCommitsRequest request) {
+    private Disposable loadCommits(LoadCommitsRequest request) {
         return gitHubService.loadCommits(request)
-                .flatMap(response -> Observable.from(response.getCommits()))
-                .map(this::mapCommitToViewModel)
+                .flatMap(response -> Observable.fromIterable(response.getCommits()))
+                .map(commit -> new CommitView(
+                        commit.getCommitMessage(),
+                        context.getString(R.string.author_format, commit.getAuthor())))
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleLoadCommitsResponse, this::handleError);
     }
 
-    private CommitViewModel mapCommitToViewModel(Commit commit) {
-        String message = commit.getCommitMessage();
-        String author = context.getString(R.string.author_format, commit.getAuthor());
-        return new CommitViewModel(message, author);
-    }
-
-    private void handleLoadCommitsResponse(List<CommitViewModel> commits) {
-        state.commits = commits;
-        view.displayCommits(commits);
+    private void handleLoadCommitsResponse(List<CommitView> commits) {
+        state.setCommits(commits);
     }
 
     private void handleError(Throwable throwable) {
         String message = throwable.getMessage();
         view.displayError(message);
+    }
+
+    public String getVersion() {
+        return String.format("Version: %s", BuildConfig.VERSION_NAME);
+    }
+
+    public String getFingerprint() {
+        return String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT);
     }
 }

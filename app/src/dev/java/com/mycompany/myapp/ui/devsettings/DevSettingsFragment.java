@@ -1,44 +1,32 @@
 package com.mycompany.myapp.ui.devsettings;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText;
 
+import com.mycompany.myapp.DevSettingsFragmentBinding;
 import com.mycompany.myapp.R;
+import com.mycompany.myapp.ui.BaseFragment;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
-import butterknife.Unbinder;
+import javax.inject.Inject;
 
-public class DevSettingsFragment extends Fragment {
+public class DevSettingsFragment extends BaseFragment {
     public interface DevSettingsFragmentHost {
         void inject(DevSettingsFragment fragment);
-
-        void setBaseUrl(String baseUrl);
-        void setTrustAllSSL(boolean trustAllSSL);
-
-        void saveSettingsAndRestart();
     }
 
+    @Inject DevSettingsPresenter presenter;
+    private DevSettingsFragmentBinding binding;
     private DevSettingsFragmentHost host;
-    private Unbinder unbinder;
-
-    @BindView(R.id.base_url) EditText baseUrlView;
-    @BindView(R.id.trust_all_ssl) CheckBox trustAllSSLView;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         host = (DevSettingsFragmentHost) context;
+        host.inject(this);
     }
 
     @Override
@@ -48,45 +36,15 @@ public class DevSettingsFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        host.inject(this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dev_settings, container, false);
-        unbinder = ButterKnife.bind(this, view);
-
-        return view;
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dev_settings, container, false);
+        binding.setPresenter(presenter);
+        return binding.getRoot();
     }
 
     @Override
     public void onDestroyView() {
-        unbinder.unbind();
+        binding.unbind();
         super.onDestroyView();
-    }
-
-    public void displayBaseUrl(String baseUrl) {
-        baseUrlView.setText(baseUrl);
-    }
-
-    @OnTextChanged(R.id.base_url)
-    public void handleBaseUrlChanged(CharSequence text) {
-        host.setBaseUrl(text.toString());
-    }
-
-    public void displayTrustAllSSL(boolean trustAllSSL) {
-        trustAllSSLView.setChecked(trustAllSSL);
-    }
-
-    @OnCheckedChanged(R.id.trust_all_ssl)
-    public void handleOnTrustAllSSLChanged(boolean trustAllSSL) {
-        host.setTrustAllSSL(trustAllSSL);
-    }
-
-    @OnClick(R.id.save_settings_and_restart)
-    public void handleSaveSettingsAndRestart() {
-        host.saveSettingsAndRestart();
     }
 }

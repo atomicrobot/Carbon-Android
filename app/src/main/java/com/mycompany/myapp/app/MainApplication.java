@@ -1,10 +1,8 @@
 package com.mycompany.myapp.app;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.VisibleForTesting;
-import android.support.multidex.MultiDex;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
@@ -20,12 +18,6 @@ public class MainApplication extends Application implements HasComponent<Applica
     private ApplicationComponent component;
 
     @Inject Tree logger;
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
 
     @Override
     public void onCreate() {

@@ -7,7 +7,6 @@ import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
 import com.mycompany.myapp.data.api.github.model.Commit;
-import com.squareup.spoon.Spoon;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.action.ViewActions.*;
@@ -62,12 +61,12 @@ public class MainActivityEspressoTest {
         when(gitHubService.loadCommits(any())).thenReturn(response);
 
         MainActivity activity = activityRule.launchActivity(null);
-        Spoon.screenshot(activity, "before_fetching_commits");
+        //Spoon.screenshot(activity, "before_fetching_commits");
 
         onView(withId(R.id.fetch_commits)).perform(click());
         closeSoftKeyboard();
 
-        Spoon.screenshot(activity, "after_fetching_commits");
+        //Spoon.screenshot(activity, "after_fetching_commits");
 
         onView(withRecyclerView(R.id.commits)
                 .atPositionOnView(0, R.id.author))

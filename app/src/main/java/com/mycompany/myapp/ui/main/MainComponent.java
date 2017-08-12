@@ -18,18 +18,17 @@ public interface MainComponent {
     class MainModule {
         private final MainActivity activity;
 
-        public MainModule(MainActivity activity) {
+        MainModule(MainActivity activity) {
             this.activity = activity;
         }
 
         @ActivityScope
         @Provides
-        public MainPresenter providePresenter(Context context, GitHubService service) {
+        protected MainPresenter providePresenter(Context context, GitHubService service) {
             return new MainPresenter(context, service);
         }
     }
 
     void inject(MainActivity activity);
-
     void inject(MainFragment fragment);
 }

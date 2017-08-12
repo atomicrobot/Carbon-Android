@@ -1,8 +1,9 @@
 package com.mycompany.myapp;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
@@ -16,14 +17,12 @@ import android.support.test.runner.lifecycle.Stage;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.google.common.base.Throwables;
-import com.google.common.collect.Sets;
-
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
@@ -39,10 +38,11 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @param <T>
  */
+@SuppressWarnings("deprecated")
 public class EspressoTestRule<T extends Activity> extends ActivityTestRule<T> {
     private static final String TAG = EspressoTestRule.class.getSimpleName();
 
-    private static final String ANIMATION_PERMISSION = "android.permission.SET_ANIMATION_SCALE";
+    private static final String ANIMATION_PERMISSION = "android.permission.SET_ANIMATION_SCALE";  // NON-NLS
     private static final float ANIMATION_DISABLED = 0.0f;
     private static final float ANIMATION_DEFAULT = 1.0f;
 
@@ -77,7 +77,6 @@ public class EspressoTestRule<T extends Activity> extends ActivityTestRule<T> {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void afterActivityLaunched() {
         super.afterActivityLaunched();
@@ -121,10 +120,9 @@ public class EspressoTestRule<T extends Activity> extends ActivityTestRule<T> {
 
     // Inspired from https://gist.github.com/JakeWharton/f50f3b4d87e57d8e96e9
     @SuppressWarnings("deprecation")
-    @SuppressLint("MissingPermission")
     private void riseAndShine(Activity activity) {
-        android.app.KeyguardManager keyguardManager = (android.app.KeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
-        android.app.KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock(activity.getLocalClassName());
+        KeyguardManager keyguardManager = (KeyguardManager) activity.getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardLock keyguardLock = keyguardManager.newKeyguardLock(activity.getLocalClassName());
         keyguardLock.disableKeyguard();
 
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
@@ -238,14 +236,17 @@ public class EspressoTestRule<T extends Activity> extends ActivityTestRule<T> {
         });
         final Throwable exception = exceptionAtomic.get();
         if (exception != null) {
-            Throwables.propagateIfInstanceOf(exception, Exception.class);
-            Throwables.propagate(exception);
+            if (exception instanceof Exception) {
+                throw (Exception) exception;
+            }
+
+            throw new RuntimeException(exception);
         }
         return retAtomic.get();
     }
 
     public static Set<Activity> getActivitiesInStages(Stage... stages) {
-        final Set<Activity> activities = Sets.newHashSet();
+        final Set<Activity> activities = new HashSet<>();
         final ActivityLifecycleMonitor instance = ActivityLifecycleMonitorRegistry.getInstance();
         for (Stage stage : stages) {
             final Collection<Activity> activitiesInStage = instance.getActivitiesInStage(stage);
@@ -256,4 +257,3 @@ public class EspressoTestRule<T extends Activity> extends ActivityTestRule<T> {
         return activities;
     }
 }
-
