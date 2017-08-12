@@ -184,7 +184,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.5.1'
 
     // Monitoring - Crashlytics
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.4@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
 
@@ -217,9 +217,12 @@ dependencies {
 }
 
 configurations {
-    androidTestCompile.exclude group: 'com.android.support', module: 'support-annotations'
-    androidTestCompile.exclude group: 'com.android.support', module: 'appcompat-v7'
-    androidTestCompile.exclude group: 'com.android.support', module: 'design'
+    all {
+        resolutionStrategy {
+            force 'com.google.code.findbugs:jsr305:3.0.2'
+            force "$rootProject.ext.libraryAndroidSupportAnnotations"
+        }
+    }
 }
 
 task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
