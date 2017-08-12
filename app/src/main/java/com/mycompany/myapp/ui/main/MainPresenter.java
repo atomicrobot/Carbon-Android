@@ -19,11 +19,11 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainPresenter {
     private static final String EXTRA_STATE = "MainPresenterState";
@@ -73,7 +73,7 @@ public class MainPresenter {
     private final Context context;
     private final GitHubService gitHubService;
 
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable disposables;
     private MainViewContract view;
     private State state;
 
@@ -98,7 +98,7 @@ public class MainPresenter {
     }
 
     public void onResume() {
-        subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
+        disposables = RxUtils.getNewCompositeDisposableIfDisposed(disposables);
         if (!state.initialized) {
             // Do initial setup here
             state.initialized = true;
@@ -114,7 +114,7 @@ public class MainPresenter {
     }
 
     public void onPause() {
-        RxUtils.unsubscribeIfNotNull(subscriptions);
+        RxUtils.disposeIfNotNull(disposables);
     }
 
     public void setUsername(String username) {
@@ -126,16 +126,16 @@ public class MainPresenter {
     }
 
     public void fetchCommits() {
-        subscriptions.add(loadCommits(buildLoadCommitsRequest()));
+        disposables.add(loadCommits(buildLoadCommitsRequest()));
     }
 
     private LoadCommitsRequest buildLoadCommitsRequest() {
         return new LoadCommitsRequest(state.username, state.repository);
     }
 
-    private Subscription loadCommits(LoadCommitsRequest request) {
+    private Disposable loadCommits(LoadCommitsRequest request) {
         return gitHubService.loadCommits(request)
-                .flatMap(response -> Observable.from(response.getCommits()))
+                .flatMap(response -> Observable.fromIterable(response.getCommits()))
                 .map(this::mapCommitToViewModel)
                 .toList()
                 .subscribeOn(Schedulers.io())

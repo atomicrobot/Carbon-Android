@@ -12,7 +12,7 @@ import com.mycompany.myapp.util.RxUtils;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class DevSettingsPresenter {
     private static final String EXTRA_STATE = "DevSettingsPresenterState";
@@ -33,7 +33,7 @@ public class DevSettingsPresenter {
     private final Context context;
     private final Settings settings;
 
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable disposables;
     private DevSettingsViewContract view;
     private State state;
 
@@ -58,7 +58,7 @@ public class DevSettingsPresenter {
     }
 
     public void onResume() {
-        subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
+        disposables = RxUtils.getNewCompositeDisposableIfDisposed(disposables);
         if (!state.initialized) {
             // Do initial setup here
             state.initialized = true;
@@ -71,7 +71,7 @@ public class DevSettingsPresenter {
     }
 
     public void onPause() {
-        RxUtils.unsubscribeIfNotNull(subscriptions);
+        RxUtils.disposeIfNotNull(disposables);
     }
 
     public void setBaseUrl(String baseUrl) {
