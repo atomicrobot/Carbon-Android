@@ -1,25 +1,17 @@
 buildscript {
     repositories {
+        google()
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }  // Crashlytics
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
-
-        // Exclude the version of lombok that the android plugin depends on (not Java 8 aware).
-        // See https://github.com/evant/android-retrolambda-lombok for more info
-        // Also, see https://github.com/evant/android-retrolambda-lombok/issues/10 for why it is
-        // here and not in a project
-        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+        classpath 'com.android.tools.build:gradle:3.0.0-beta2'
     }
-
-    // See above note about me.tatarka.retrolambda.projectlombok:lombok.ast
-    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 allprojects {
     repositories {
+        google()
         jcenter()
         maven { url "https://jitpack.io" }
     }
@@ -74,13 +66,14 @@ ext {
     versionName = "$appVersion b$versionCode"
 
     // Build settings that are likely to be reused across different modules
-    buildToolsVersion = "25.0.2"
-    minSdkVersion = 19
+    buildToolsVersion = "26.0.1"
+    minSdkVersion = 21
     targetSdkVersion = 25
     compileSdkVersion = 25
 
     // Libraries are are likely to be reused across different modules
-    supportVersion = '25.2.0'
+    // TODO Don't update to 26.0.x until https://issuetracker.google.com/issues/64039135 is resolved (due to bug with lint errors)
+    supportVersion = "25.3.1"
     libraryAndroidSupport = "com.android.support:support-v4:$supportVersion"
     libraryAndroidAppCompat = "com.android.support:appcompat-v7:$supportVersion"
     libraryAndroidRecyclerView = "com.android.support:recyclerview-v7:$supportVersion"
@@ -88,11 +81,11 @@ ext {
     libraryAndroidSupportAnnotations = "com.android.support:support-annotations:$supportVersion"
     libraryAndroidDesignSupport = "com.android.support:design:$supportVersion"
 
-    playServicesVersion = '9.8.0'
+    playServicesVersion = "11.0.2"
     libraryGooglePlayServices = "com.google.android.gms:play-services-base:$playServicesVersion"
 }
 
-evaluationDependsOnChildren();
+evaluationDependsOnChildren()
 
 task initialCleanup() {
     def cleanTasks = getProjectTask(this, 'clean')
@@ -120,7 +113,9 @@ task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
     def unitTestTasks = getProjectTask(appProject, 'testDevDebugUnitTest')
-    def integrationTestTasks = getProjectTask(appProject, 'spoonDevDebugAndroidTest')
+    // TODO - Spoon isn't working with Gradle 4 per https://github.com/stanfy/spoon-gradle-plugin/issues/155
+    //def integrationTestTasks = getProjectTask(appProject, 'spoon')
+    def integrationTestTasks = getProjectTask(appProject, 'connectedDevDebugAndroidTest')
 
     dependsOn unitTestTasks
     dependsOn integrationTestTasks
@@ -136,7 +131,7 @@ task release() {
     dependsOn appTasks
 }
 
-def getProjectTask(project, taskName) {
+static def getProjectTask(project, taskName) {
     def tasks = project.getTasksByName(taskName, true)
     if (tasks == null || tasks.empty) {
         throw new IllegalArgumentException("Task " + taskName + " not found")
