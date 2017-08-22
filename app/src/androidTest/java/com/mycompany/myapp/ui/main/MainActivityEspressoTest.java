@@ -1,38 +1,38 @@
 package com.mycompany.myapp.ui.main;
 
-import com.mycompany.myapp.EspressoTestRule;
+import android.support.test.rule.ActivityTestRule;
 import com.mycompany.myapp.MainApplicationDaggerMockRule;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
 import com.mycompany.myapp.data.api.github.model.Commit;
-
+import io.reactivex.Observable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import io.reactivex.Observable;
-
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.action.ViewActions.*;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.*;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.mycompany.myapp.RecyclerViewMatcher.withRecyclerView;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MainActivityEspressoTest {
 
     @Rule public MainApplicationDaggerMockRule mockitoRule = new MainApplicationDaggerMockRule();
 
-    @Rule public EspressoTestRule<MainActivity> activityRule = new EspressoTestRule<>(MainActivity.class, false, false);
+    @Rule public ActivityTestRule<MainActivity> testRule = new ActivityTestRule<>(MainActivity.class, false, false);
 
     @Mock GitHubService gitHubService;
 
@@ -40,7 +40,7 @@ public class MainActivityEspressoTest {
     public void testBuildFingerprint() {
         when(gitHubService.loadCommits(any())).thenReturn(Observable.empty());
 
-        activityRule.launchActivity(null);
+        testRule.launchActivity(null);
         onView(withId(R.id.fingerprint)).check(matches(withText(new BaseMatcher<String>() {
             @Override
             public boolean matches(Object item) {
@@ -60,7 +60,7 @@ public class MainActivityEspressoTest {
         Observable<LoadCommitsResponse> response = buildMockLoadCommitsResponse();
         when(gitHubService.loadCommits(any())).thenReturn(response);
 
-        MainActivity activity = activityRule.launchActivity(null);
+        MainActivity activity = testRule.launchActivity(null);
         //Spoon.screenshot(activity, "before_fetching_commits");
 
         onView(withId(R.id.fetch_commits)).perform(click());
