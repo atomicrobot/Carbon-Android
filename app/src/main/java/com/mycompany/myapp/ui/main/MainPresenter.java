@@ -37,7 +37,7 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
         String author;
 
         @ParcelConstructor
-        public CommitView(String message, String author) {
+        CommitView(String message, String author) {
             this.message = message;
             this.author = author;
         }
@@ -75,8 +75,8 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
         super.onResume();
         if (!state.initialized) {
             state.initialized = true;
-            setUsername("madebyatomicrobot");
-            setRepository("android-starter-project");
+            setUsername("madebyatomicrobot");  // NON-NLS
+            setRepository("android-starter-project");  // NON-NLS
             setCommits(new ArrayList<>());
         }
 
@@ -140,10 +140,10 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
     }
 
     public String getVersion() {
-        return String.format("Version: %s", BuildConfig.VERSION_NAME);
+        return context.getString(R.string.version_format, BuildConfig.VERSION_NAME);
     }
 
     public String getFingerprint() {
-        return String.format("Fingerprint: %s", BuildConfig.VERSION_FINGERPRINT);
+        return context.getString(R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT);
     }
 }
