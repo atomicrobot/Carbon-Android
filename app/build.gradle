@@ -78,7 +78,7 @@ android {
         proguardFile '../config/proguard/retrolambda.pro'
         proguardFile '../config/proguard/rxjava.pro'
 
-        testInstrumentationRunner 'com.mycompany.myapp.TestButlerRunner'
+        testInstrumentationRunner 'com.mycompany.myapp.CustomAppTestRunner'
     }
 
     signingConfigs {
