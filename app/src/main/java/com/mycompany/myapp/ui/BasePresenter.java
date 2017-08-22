@@ -3,6 +3,7 @@ package com.mycompany.myapp.ui;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.databinding.BaseObservable;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
@@ -14,7 +15,7 @@ import org.parceler.Parcels;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public abstract class BasePresenter<ViewContract, State> implements LifecycleObserver {
+public abstract class BasePresenter<ViewContract, State> extends BaseObservable implements LifecycleObserver {
     private final String stateKey;
 
     protected CompositeDisposable disposables;

@@ -1,8 +1,8 @@
 package com.mycompany.myapp.ui.main;
 
 import android.content.Context;
-import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.text.TextUtils;
 
 import com.mycompany.myapp.BR;
 import com.mycompany.myapp.BuildConfig;
@@ -52,42 +52,12 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
     }
 
     @Parcel
-    public static class State extends BaseObservable {
+    public static class State {
         boolean initialized = false;
 
-        String username = "madebyatomicrobot";
-        String repository = "android-starter-project";
-        List<CommitView> commits = new ArrayList<>();
-
-        @Bindable
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-            notifyPropertyChanged(BR.username);
-        }
-
-        @Bindable
-        public String getRepository() {
-            return repository;
-        }
-
-        public void setRepository(String repository) {
-            this.repository = repository;
-            notifyPropertyChanged(BR.repository);
-        }
-
-        @Bindable
-        public List<CommitView> getCommits() {
-            return commits;
-        }
-
-        public void setCommits(List<CommitView> commits) {
-            this.commits = commits;
-            notifyPropertyChanged(BR.commits);
-        }
+        String username;
+        String repository;
+        List<CommitView> commits;
     }
 
     private final Context context;
@@ -105,14 +75,51 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
         super.onResume();
         if (!state.initialized) {
             state.initialized = true;
-            fetchCommits();
+            setUsername("madebyatomicrobot");
+            setRepository("android-starter-project");
+            setCommits(new ArrayList<>());
         }
+
+        fetchCommits();
+    }
+
+    @Bindable
+    public String getUsername() {
+        return state.username;
+    }
+
+    public void setUsername(String username) {
+        state.username = username;
+        notifyPropertyChanged(BR.username);
+    }
+
+    @Bindable
+    public String getRepository() {
+        return state.repository;
+    }
+
+    public void setRepository(String repository) {
+        state.repository = repository;
+        notifyPropertyChanged(BR.repository);
+    }
+
+    @Bindable
+    public List<CommitView> getCommits() {
+        return state.commits;
+    }
+
+    public void setCommits(List<CommitView> commits) {
+        state.commits = commits;
+        notifyPropertyChanged(BR.commits);
+    }
+
+    @Bindable({"username", "repository"})
+    public boolean isFetchCommitsEnabled() {
+        return !TextUtils.isEmpty(state.username) && !TextUtils.isEmpty(state.repository);
     }
 
     public void fetchCommits() {
-        disposables.add(loadCommits(new LoadCommitsRequest(
-                state.getUsername(),
-                state.getRepository())));
+        disposables.add(loadCommits(new LoadCommitsRequest(state.username, state.repository)));
     }
 
     private Disposable loadCommits(LoadCommitsRequest request) {
@@ -124,11 +131,7 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleLoadCommitsResponse, this::handleError);
-    }
-
-    private void handleLoadCommitsResponse(List<CommitView> commits) {
-        state.setCommits(commits);
+                .subscribe(this::setCommits, this::handleError);
     }
 
     private void handleError(Throwable throwable) {

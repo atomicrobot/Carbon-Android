@@ -1,6 +1,5 @@
 package com.mycompany.myapp.ui.devsettings;
 
-import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 import com.mycompany.myapp.BR;
@@ -19,31 +18,11 @@ public class DevSettingsPresenter extends BasePresenter<DevSettingsViewContract,
     }
 
     @Parcel
-    public static class State extends BaseObservable {
+    public static class State {
         boolean initialized = false;
 
         String baseUrl;
         boolean trustAllSSL;
-
-        @Bindable
-        public String getBaseUrl() {
-            return baseUrl;
-        }
-
-        public void setBaseUrl(String baseUrl) {
-            this.baseUrl = baseUrl;
-            notifyPropertyChanged(BR.baseUrl);
-        }
-
-        @Bindable
-        public boolean isTrustAllSSL() {
-            return trustAllSSL;
-        }
-
-        public void setTrustAllSSL(boolean trustAllSSL) {
-            this.trustAllSSL = trustAllSSL;
-            notifyPropertyChanged(BR.trustAllSSL);
-        }
     }
 
     private final Settings settings;
@@ -60,13 +39,33 @@ public class DevSettingsPresenter extends BasePresenter<DevSettingsViewContract,
         super.onResume();
         if (!state.initialized) {
             state.initialized = true;
-            state.setBaseUrl(settings.getBaseUrl());
-            state.setTrustAllSSL(settings.getTrustAllSSL());
+            setBaseUrl(settings.getBaseUrl());
+            setTrustAllSSL(settings.getTrustAllSSL());
         }
     }
 
+    @Bindable
+    public String getBaseUrl() {
+        return state.baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        state.baseUrl = baseUrl;
+        notifyPropertyChanged(BR.baseUrl);
+    }
+
+    @Bindable
+    public boolean isTrustAllSSL() {
+        return state.trustAllSSL;
+    }
+
+    public void setTrustAllSSL(boolean trustAllSSL) {
+        state.trustAllSSL = trustAllSSL;
+        notifyPropertyChanged(BR.trustAllSSL);
+    }
+
     public void saveSettingsAndRestart() {
-        settings.setBaseUrl(state.getBaseUrl());
-        settings.setTrustAllSSL(state.isTrustAllSSL());
+        settings.setBaseUrl(state.baseUrl);
+        settings.setTrustAllSSL(state.trustAllSSL);
     }
 }

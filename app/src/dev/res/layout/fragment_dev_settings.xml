@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Base URL"
-                android:text="@={presenter.state.baseUrl}"
+                android:text="@={presenter.baseUrl}"
                 android:inputType="textUri"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -42,7 +42,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:checked="@={presenter.state.trustAllSSL}"
+            android:checked="@={presenter.trustAllSSL}"
             android:text="Trust all SSL connections"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
