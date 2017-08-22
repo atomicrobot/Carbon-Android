@@ -23,7 +23,7 @@ class {{screenUpperCamel}}ActivityEspressoTests {
 
     @Rule val mockitoRule = MainApplicationDaggerMockRule()
 
-    @Rule val activityRule = EspressoTestRule<{{screenUpperCamel}}Activity>({{screenUpperCamel}}Activity::class.java, false, false)
+    @Rule val activityRule = ActivityTestRule<{{screenUpperCamel}}Activity>({{screenUpperCamel}}Activity::class.java, false, false)
 
     @Test
     fun testLaunchActivity() {

@@ -3,14 +3,11 @@ package com.mycompany.myapp.app;
 import android.app.Application;
 import android.content.Intent;
 import android.support.annotation.VisibleForTesting;
-
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
 import com.google.android.gms.security.ProviderInstaller.ProviderInstallListener;
 import com.squareup.leakcanary.LeakCanary;
-
 import javax.inject.Inject;
-
 import timber.log.Timber;
 import timber.log.Timber.Tree;
 
@@ -22,8 +19,12 @@ public class MainApplication extends Application implements HasComponent<Applica
     @Override
     public void onCreate() {
         super.onCreate();
-        LeakCanary.install(this);
         initApplicationComponent();
+        setupApplication();
+    }
+
+    protected void setupApplication() {
+        LeakCanary.install(this);
         Timber.plant(logger);
 
         initApplication();

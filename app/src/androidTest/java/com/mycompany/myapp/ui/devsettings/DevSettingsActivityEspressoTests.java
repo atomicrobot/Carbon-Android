@@ -1,8 +1,7 @@
 package com.mycompany.myapp.ui.devsettings;
 
-import com.mycompany.myapp.EspressoTestRule;
+import android.support.test.rule.ActivityTestRule;
 import com.mycompany.myapp.MainApplicationDaggerMockRule;
-
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -10,7 +9,7 @@ public class DevSettingsActivityEspressoTests {
 
     @Rule public MainApplicationDaggerMockRule mockitoRule = new MainApplicationDaggerMockRule();
 
-    @Rule public EspressoTestRule<DevSettingsActivity> activityRule = new EspressoTestRule<>(DevSettingsActivity.class, false, false);
+    @Rule public ActivityTestRule<DevSettingsActivity> activityRule = new ActivityTestRule<>(DevSettingsActivity.class, false, false);
 
     @Test
     public void testLaunchActivity() {

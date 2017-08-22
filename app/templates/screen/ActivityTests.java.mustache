@@ -20,7 +20,7 @@ public class {{screenUpperCamel}}ActivityEspressoTests {
 
     @Rule public MainApplicationDaggerMockRule mockitoRule = new MainApplicationDaggerMockRule();
 
-    @Rule public EspressoTestRule<{{screenUpperCamel}}Activity> activityRule = new EspressoTestRule<>({{screenUpperCamel}}Activity.class, false, false);
+    @Rule public ActivityTestRule<{{screenUpperCamel}}Activity> activityRule = new ActivityTestRule<>({{screenUpperCamel}}Activity.class, false, false);
 
     @Test
     public void testLaunchActivity() {
