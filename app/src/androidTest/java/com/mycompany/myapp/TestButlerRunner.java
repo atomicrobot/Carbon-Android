@@ -1,8 +1,10 @@
 package com.mycompany.myapp;
 
 import android.app.Application;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnitRunner;
 import com.linkedin.android.testbutler.TestButler;
@@ -11,6 +13,8 @@ public class TestButlerRunner extends AndroidJUnitRunner {
     @Override
     public void onStart() {
         TestButler.setup(InstrumentationRegistry.getTargetContext());
+        unlockScreen(InstrumentationRegistry.getTargetContext().getApplicationContext(), TestButler.class.getName());
+        keepSceenAwake(InstrumentationRegistry.getTargetContext().getApplicationContext(), TestButler.class.getName());
         super.onStart();
     }
 
@@ -24,5 +28,16 @@ public class TestButlerRunner extends AndroidJUnitRunner {
     public Application newApplication(ClassLoader cl, String className, Context context)
             throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         return super.newApplication(cl, TestMainApplication.class.getName(), context);
+    }
+
+    private void keepSceenAwake(Context app, String name) {
+        PowerManager power = (PowerManager) app.getSystemService(Context.POWER_SERVICE);
+        power.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, name)
+                .acquire();
+    }
+
+    private void unlockScreen(Context app, String name) {
+        KeyguardManager keyguard = (KeyguardManager) app.getSystemService(Context.KEYGUARD_SERVICE);
+        keyguard.newKeyguardLock(name).disableKeyguard();
     }
 }
