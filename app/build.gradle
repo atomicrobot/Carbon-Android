@@ -228,6 +228,7 @@ dependencies {
     // FIXME - This should be 3.4 when it is released...also look at android.enableAapt2 in gradle.properties
     // FIXME - Also, remove the snapshot repository
     testImplementation 'org.robolectric:shadows-support-v4:3.4-SNAPSHOT'
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
 
     // Android JUnit Runner, JUnit Rules, and Espresso
     // FIXME If you're updating these, also check to see if https://issuetracker.google.com/issues/64024656

@@ -48,18 +48,19 @@ Also make sure the CI server is set to use the Gradle wrapper.
 
 ### Artifact Paths
 ```
-app/build/outputs/apk/*-release.apk => apks
-app/build/outputs/mapping/dev/release/mapping.txt => proguard/dev/release/mapping.txt
-app/build/outputs/mapping/prod/release/mapping.txt => proguard/prod/release/mapping.txt
+app/build/outputs/apk/dev/release/*-release.apk => apks
+app/build/outputs/apk/prod/release/*-release.apk => apks
 
-app/build/outputs/lint-results-devDebug.html => quality/lint
-app/build/outputs/lint-results-devDebug_files => quality/lint/lint-results-devDebug_files
+app/build/outputs/mapping/dev/release/mapping.txt => proguard/dev/mapping.txt
+app/build/outputs/mapping/prod/release/mapping.txt => proguard/prod/mapping.txt
+
+app/build/reports/lint-results.html => quality/lint
 app/build/reports/findbugs/ => quality/findbugs
 app/build/reports/pmd/ => quality/pmd
 app/build/reports/checkstyle/ => quality/checkstyle
 
-app/build/reports/tests/devDebug => quality/tests
-app/build/spoon/dev/debug => quality/integrationTests
+app/build/reports/tests/testDevDebugUnitTest => quality/tests
+app/build/reports/androidTests/connected/flavors/DEV => quality/androidTests
 ```
 
 ### Project Reports

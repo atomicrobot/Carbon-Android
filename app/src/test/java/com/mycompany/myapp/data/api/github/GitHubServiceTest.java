@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
@@ -35,12 +36,13 @@ public class GitHubServiceTest {
     }
 
     @Test
-    public void testLoadCommits() {
+    public void testLoadCommits() throws Exception {
         Single<Response<List<Commit>>> mockResponse = Single.just(Response.success(asList(stubCommit("test name", "test message"))));
         when(api.listCommits(eq("user"), eq("repo"))).thenReturn(mockResponse);
 
         TestObserver<LoadCommitsResponse> subscriber = new TestObserver<>();
         service.loadCommits(new LoadCommitsRequest("user", "repo")).subscribeWith(subscriber);
+        subscriber.await(1, TimeUnit.SECONDS);
 
         subscriber.assertValueCount(1);
         subscriber.assertNoErrors();
