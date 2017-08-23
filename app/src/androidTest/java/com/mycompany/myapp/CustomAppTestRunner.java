@@ -32,7 +32,7 @@ public class CustomAppTestRunner extends AndroidJUnitRunner {
 
     private void keepScreenAwake(Context app, String name) {
         PowerManager power = (PowerManager) app.getSystemService(Context.POWER_SERVICE);
-        power.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, name)
+        power.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, name)
                 .acquire(10*60*1000L /*10 minutes*/);
     }
 

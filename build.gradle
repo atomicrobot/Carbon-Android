@@ -10,6 +10,8 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$android_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
     }
 }
 
@@ -105,8 +107,6 @@ task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
     def unitTestTasks = getProjectTask(appProject, 'testDevDebugUnitTest')
-    // TODO - Spoon isn't working with Gradle 4 per https://github.com/stanfy/spoon-gradle-plugin/issues/155
-    //def integrationTestTasks = getProjectTask(appProject, 'spoon')
     def integrationTestTasks = getProjectTask(appProject, 'connectedDevDebugAndroidTest')
 
     dependsOn unitTestTasks
