@@ -6,9 +6,12 @@ import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.ui.ActivityScope;
 import com.mycompany.myapp.ui.main.MainComponent.MainModule;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 import dagger.Subcomponent;
+import io.reactivex.Scheduler;
 
 @ActivityScope
 @Subcomponent(modules = MainModule.class)
@@ -24,8 +27,12 @@ public interface MainComponent {
 
         @ActivityScope
         @Provides
-        protected MainPresenter providePresenter(Context context, GitHubService service) {
-            return new MainPresenter(context, service);
+        protected MainPresenter providePresenter(
+                Context context,
+                GitHubService service,
+                @Named("io") Scheduler ioScheduler,
+                @Named("main") Scheduler mainScheduler) {
+            return new MainPresenter(context, service, ioScheduler, mainScheduler);
         }
     }
 

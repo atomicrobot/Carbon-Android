@@ -24,6 +24,7 @@ public abstract class BasePresenter<ViewContract, State> extends BaseObservable 
 
     public BasePresenter(String stateKey) {
         this.stateKey = stateKey;
+        disposables = new CompositeDisposable();
     }
 
     public void setView(ViewContract viewContract) {

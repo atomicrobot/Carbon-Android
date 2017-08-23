@@ -20,9 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainPresenter extends BasePresenter<MainViewContract, State> {
     private static final String STATE_KEY = "MainPresenterState";  // NON-NLS
@@ -62,11 +61,19 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
 
     private final Context context;
     private final GitHubService gitHubService;
+    private final Scheduler ioScheduler;
+    private final Scheduler mainScheduler;
 
-    public MainPresenter(Context context, GitHubService gitHubService) {
+    public MainPresenter(
+            Context context,
+            GitHubService gitHubService,
+            Scheduler ioScheduler,
+            Scheduler mainScheduler) {
         super(STATE_KEY);
         this.context = context;
         this.gitHubService = gitHubService;
+        this.ioScheduler = ioScheduler;
+        this.mainScheduler = mainScheduler;
 
         this.state = new State();
     }
@@ -129,8 +136,8 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
                         commit.getCommitMessage(),
                         context.getString(R.string.author_format, commit.getAuthor())))
                 .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .subscribe(this::setCommits, this::handleError);
     }
 

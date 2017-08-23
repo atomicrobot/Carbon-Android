@@ -3,6 +3,10 @@ package com.mycompany.myapp.ui.main;
 import android.content.Context;
 
 import com.mycompany.myapp.data.api.github.GitHubService;
+import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
+import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
+import com.mycompany.myapp.data.api.github.model.Commit;
+import com.mycompany.myapp.ui.main.MainPresenter.CommitView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +16,17 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
+import java.util.Collections;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class MainPresenterTest {
@@ -27,7 +40,11 @@ public class MainPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         Context context = RuntimeEnvironment.application;
-        presenter = new MainPresenter(context, githubService);
+        presenter = new MainPresenter(
+                context,
+                githubService,
+                Schedulers.trampoline(),
+                Schedulers.trampoline());
     }
 
     @Test
@@ -75,5 +92,27 @@ public class MainPresenterTest {
         presenter.setUsername("test");
         presenter.setRepository("test");
         assertTrue(presenter.isFetchCommitsEnabled());
+    }
+
+    @Test
+    public void testFetchCommits() {
+        Commit commit = mock(Commit.class);
+        when(commit.getAuthor()).thenReturn("test");
+        when(commit.getCommitMessage()).thenReturn("test message");
+        List<Commit> commits = Collections.singletonList(commit);
+        LoadCommitsResponse response = mock(LoadCommitsResponse.class);
+        when(response.getCommits()).thenReturn(commits);
+        Observable<LoadCommitsResponse> observable = Observable.fromArray(response);
+        when(githubService.loadCommits(any(LoadCommitsRequest.class))).thenReturn(observable);
+
+        presenter.setUsername("test");
+        presenter.setRepository("test");
+        presenter.setCommits(Collections.emptyList());
+        presenter.fetchCommits();
+
+        assertEquals(1, presenter.getState().commits.size());
+        CommitView commitView = presenter.getState().commits.get(0);
+        assertEquals("Author: test", commitView.getAuthor());
+        assertEquals("test message", commitView.getMessage());
     }
 }
