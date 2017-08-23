@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -33,13 +32,18 @@ public class MainPresenterTest {
 
     @Test
     public void testGetVersion() {
-        // CI systems can change the build number
-        assertTrue(presenter.getVersion().matches("Version: 1.0 b[0-9]+"));
+        // CI systems can change the build number so we are a little more flexible on what to expect
+        final String expectedPattern = "Version: 1.0 b[1-9][0-9]*";
+        assertTrue("Version: 1.0 b123".matches(expectedPattern));
+        assertTrue(presenter.getVersion().matches(expectedPattern));
     }
 
     @Test
     public void testGetFingerprint() {
-        assertEquals("Fingerprint: DEV", presenter.getFingerprint());
+        // CI systems can change the build number so we are a little more flexible on what to expect
+        final String expectedPattern = "Fingerprint: [a-zA-Z0-9]+";
+        assertTrue("Fingerprint: 0569b5cd8".matches(expectedPattern));
+        assertTrue(presenter.getFingerprint().matches(expectedPattern));
     }
 
     @Test
