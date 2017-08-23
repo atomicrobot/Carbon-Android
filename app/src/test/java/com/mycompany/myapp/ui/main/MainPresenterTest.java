@@ -33,7 +33,8 @@ public class MainPresenterTest {
 
     @Test
     public void testGetVersion() {
-        assertEquals("Version: 1.0 b1", presenter.getVersion());
+        // CI systems can change the build number
+        assertTrue(presenter.getVersion().matches("Version: 1.0 b[0-9]+"));
     }
 
     @Test
