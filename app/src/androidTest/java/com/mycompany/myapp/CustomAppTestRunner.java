@@ -11,6 +11,14 @@ import com.linkedin.android.testbutler.TestButler;
 
 public class CustomAppTestRunner extends AndroidJUnitRunner {
     @Override
+    public void onCreate(Bundle arguments) {
+        // This can be removed when https://issuetracker.google.com/issues/64024656 is resolved.
+        arguments.putString("package", "com.mycompany.myapp");
+
+        super.onCreate(arguments);
+    }
+
+    @Override
     public void onStart() {
         TestButler.setup(InstrumentationRegistry.getTargetContext());
         unlockScreen(InstrumentationRegistry.getTargetContext().getApplicationContext(), TestButler.class.getName());
