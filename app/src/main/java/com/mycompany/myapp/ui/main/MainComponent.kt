@@ -9,6 +9,8 @@ import com.mycompany.myapp.ui.main.MainComponent.MainModule
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
+import io.reactivex.Scheduler
+import javax.inject.Named
 
 @ActivityScope
 @Subcomponent(modules = arrayOf(MainModule::class))
@@ -19,8 +21,16 @@ interface MainComponent {
 
         @ActivityScope
         @Provides
-        fun providePresenter(context: Context, service: GitHubService): MainPresenter {
-            return MainPresenter(context, service)
+        fun providePresenter(
+                context: Context, service:
+                GitHubService,
+                @Named("io") ioScheduler: Scheduler,
+                @Named("main") mainScheduler: Scheduler): MainPresenter {
+            return MainPresenter(
+                    context,
+                    service,
+                    ioScheduler,
+                    mainScheduler)
         }
     }
 

@@ -12,14 +12,15 @@ import com.mycompany.myapp.databinding.ReadWriteBinding
 import com.mycompany.myapp.ui.BasePresenter
 import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.parceler.Parcel
 
 class MainPresenter(
         private val context: Context,
-        private val gitHubService: GitHubService)
+        private val gitHubService: GitHubService,
+        private val ioScheduler: Scheduler,
+        private val mainScheduler: Scheduler)
     : BasePresenter<MainViewContract, MainPresenter.State>(STATE_KEY, State()) {
 
     interface MainViewContract {
@@ -71,8 +72,8 @@ class MainPresenter(
                 .flatMap<Commit> { response -> Observable.fromIterable<Commit>(response.commits) }
                 .map(this::toCommitView)
                 .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .subscribe({ commits = it }, { handleError(it) })
     }
 

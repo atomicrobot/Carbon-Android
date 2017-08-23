@@ -1,6 +1,7 @@
 package com.mycompany.myapp.ui.main
 
 import com.mycompany.myapp.data.api.github.GitHubService
+import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -22,7 +23,7 @@ class MainPresenterTest {
         MockitoAnnotations.initMocks(this)
 
         val context = RuntimeEnvironment.application
-        presenter = MainPresenter(context, githubService)
+        presenter = MainPresenter(context, githubService, Schedulers.trampoline(), Schedulers.trampoline())
     }
 
     @Test
