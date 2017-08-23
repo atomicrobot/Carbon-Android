@@ -236,6 +236,7 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:$androidTestSupportVersion"
     androidTestImplementation "com.android.support.test:rules:$androidTestSupportVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$espressoVersion"
 
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.7.0'

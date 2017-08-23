@@ -2,6 +2,7 @@ package com.mycompany.myapp.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
 
 import javax.inject.Named;
 
@@ -14,6 +15,19 @@ import timber.log.Timber.Tree;
 
 @Module
 public class AppModule {
+    private static final long LOADING_DELAY_MS = 500;
+
+    private final long loadingDelayMs;
+
+    public AppModule() {
+        this(LOADING_DELAY_MS);
+    }
+
+    @VisibleForTesting
+    public AppModule(long loadingDelayMs) {
+        this.loadingDelayMs = loadingDelayMs;
+    }
+
     @Provides
     public MainApplicationInitializer provideMainApplicationInitializer(
             Application application,
@@ -36,5 +50,11 @@ public class AppModule {
     @Named("main")
     public Scheduler mainThreadScheduler() {
         return AndroidSchedulers.mainThread();
+    }
+
+    @Provides
+    @Named("loading_delay_ms")
+    public long loadingDelayMs() {
+        return loadingDelayMs;
     }
 }

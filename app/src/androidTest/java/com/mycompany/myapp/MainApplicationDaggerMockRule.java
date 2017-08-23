@@ -20,7 +20,7 @@ public class MainApplicationDaggerMockRule extends DaggerMockRule<ApplicationCom
         super(ApplicationComponent.class,
                 new VariantModule(),
                 new AndroidModule(getAppUnderTest()),
-                new AppModule(),
+                new AppModule(0),
                 new LoggerModule(),
                 new CrashReporterModule(),
                 new DataModule());
