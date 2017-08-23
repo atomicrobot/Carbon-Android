@@ -20,11 +20,19 @@ public class CustomAppTestRunner extends AndroidJUnitRunner {
 
     @Override
     public void onStart() {
-        TestButler.setup(InstrumentationRegistry.getTargetContext());
-        unlockScreen(InstrumentationRegistry.getTargetContext().getApplicationContext(), TestButler.class.getName());
-        keepScreenAwake(InstrumentationRegistry.getTargetContext().getApplicationContext(), TestButler.class.getName());
+        runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                Context context = InstrumentationRegistry.getTargetContext();
+                TestButler.setup(context);
+                unlockScreen(context, CustomAppTestRunner.class.getName());
+                keepScreenAwake(context, CustomAppTestRunner.class.getName());
+            }
+        });
+
         super.onStart();
     }
+
 
     @Override
     public void finish(int resultCode, Bundle results) {
