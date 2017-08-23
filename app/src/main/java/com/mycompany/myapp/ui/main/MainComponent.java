@@ -31,8 +31,9 @@ public interface MainComponent {
                 Context context,
                 GitHubService service,
                 @Named("io") Scheduler ioScheduler,
-                @Named("main") Scheduler mainScheduler) {
-            return new MainPresenter(context, service, ioScheduler, mainScheduler);
+                @Named("main") Scheduler mainScheduler,
+                @Named("loading_delay_ms") long loadingDelayMs) {
+            return new MainPresenter(context, service, ioScheduler, mainScheduler, loadingDelayMs);
         }
     }
 

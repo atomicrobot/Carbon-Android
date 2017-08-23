@@ -18,6 +18,7 @@ import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -50,6 +51,8 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
 
         String username;
         String repository;
+
+        boolean loadingCommits;
         List<CommitView> commits;
     }
 
@@ -57,17 +60,20 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
     private final GitHubService gitHubService;
     private final Scheduler ioScheduler;
     private final Scheduler mainScheduler;
+    private final long loadingDelayMs;
 
     public MainPresenter(
             Context context,
             GitHubService gitHubService,
             Scheduler ioScheduler,
-            Scheduler mainScheduler) {
+            Scheduler mainScheduler,
+            long loadingDelayMs) {
         super(STATE_KEY, new State());
         this.context = context;
         this.gitHubService = gitHubService;
         this.ioScheduler = ioScheduler;
         this.mainScheduler = mainScheduler;
+        this.loadingDelayMs = loadingDelayMs;
     }
 
     public void onResume() {
@@ -112,6 +118,16 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
         notifyPropertyChanged(BR.commits);
     }
 
+    @Bindable
+    public boolean isLoadingCommits() {
+        return state.loadingCommits;
+    }
+
+    public void setLoadingCommits(boolean loadingCommits) {
+        state.loadingCommits = loadingCommits;
+        notifyPropertyChanged(BR.loadingCommits);
+    }
+
     @Bindable({"username", "repository"})
     public boolean isFetchCommitsEnabled() {
         return !TextUtils.isEmpty(state.username) && !TextUtils.isEmpty(state.repository);
@@ -122,13 +138,20 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
     }
 
     private Disposable loadCommits(LoadCommitsRequest request) {
-        return gitHubService.loadCommits(request)
+        return delayAtLeast(gitHubService.loadCommits(request), loadingDelayMs)
+                .doOnSubscribe(disposable -> setLoadingCommits(true))
                 .flatMap(response -> Observable.fromIterable(response.getCommits()))
                 .map(this::toCommitView)
                 .toList()
+                .doFinally(() -> setLoadingCommits(false))
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribe(this::setCommits, this::handleError);
+    }
+
+    private <T> Observable<T> delayAtLeast(Observable<T> observable, long delayMs) {
+        Observable<Long> timer = Observable.timer(delayMs, TimeUnit.MILLISECONDS);
+        return Observable.combineLatest(timer, observable, (ignore, response) -> response);
     }
 
     private CommitView toCommitView(Commit commit) {

@@ -7,17 +7,10 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnitRunner;
+
 import com.linkedin.android.testbutler.TestButler;
 
 public class CustomAppTestRunner extends AndroidJUnitRunner {
-    @Override
-    public void onCreate(Bundle arguments) {
-        // This can be removed when https://issuetracker.google.com/issues/64024656 is resolved.
-        arguments.putString("package", "com.mycompany.myapp");
-
-        super.onCreate(arguments);
-    }
-
     @Override
     public void onStart() {
         runOnMainSync(new Runnable() {

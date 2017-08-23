@@ -12,7 +12,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
         <LinearLayout
             android:id="@+id/header"
@@ -117,7 +118,19 @@
             app:layout_constraintBottom_toTopOf="@+id/footer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header"/>
+            app:layout_constraintTop_toBottomOf="@+id/header"
+            app:visible="@{!presenter.loadingCommits}"/>
+
+        <ProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/footer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header"
+            app:visible="@{presenter.loadingCommits}"/>
 
     </android.support.constraint.ConstraintLayout>
 

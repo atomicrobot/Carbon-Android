@@ -44,7 +44,8 @@ public class MainPresenterTest {
                 context,
                 githubService,
                 Schedulers.trampoline(),
-                Schedulers.trampoline());
+                Schedulers.trampoline(),
+                0);
     }
 
     @Test
