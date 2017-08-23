@@ -59,7 +59,7 @@ app/build/reports/findbugs/ => quality/findbugs
 app/build/reports/pmd/ => quality/pmd
 app/build/reports/checkstyle/ => quality/checkstyle
 
-app/build/reports/tests/devDebugUnitTest => quality/tests
+app/build/reports/tests/testDevDebugUnitTest => quality/tests
 app/build/reports/androidTests/connected/flavors/DEV => quality/androidTests
 ```
 
