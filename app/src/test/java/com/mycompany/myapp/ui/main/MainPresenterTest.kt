@@ -23,7 +23,7 @@ class MainPresenterTest {
         MockitoAnnotations.initMocks(this)
 
         val context = RuntimeEnvironment.application
-        presenter = MainPresenter(context, githubService, Schedulers.trampoline(), Schedulers.trampoline())
+        presenter = MainPresenter(context, githubService, Schedulers.trampoline(), Schedulers.trampoline(), 0)
     }
 
     @Test

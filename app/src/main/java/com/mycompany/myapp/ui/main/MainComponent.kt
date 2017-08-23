@@ -25,12 +25,14 @@ interface MainComponent {
                 context: Context, service:
                 GitHubService,
                 @Named("io") ioScheduler: Scheduler,
-                @Named("main") mainScheduler: Scheduler): MainPresenter {
+                @Named("main") mainScheduler: Scheduler,
+                @Named("loading_delay_ms") loadingDelayMs: Long): MainPresenter {
             return MainPresenter(
                     context,
                     service,
                     ioScheduler,
-                    mainScheduler)
+                    mainScheduler,
+                    loadingDelayMs)
         }
     }
 

@@ -14,13 +14,16 @@ import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import org.parceler.Parcel
+import java.util.concurrent.TimeUnit
 
 class MainPresenter(
         private val context: Context,
         private val gitHubService: GitHubService,
         private val ioScheduler: Scheduler,
-        private val mainScheduler: Scheduler)
+        private val mainScheduler: Scheduler,
+        private val loadingDelayMs: Long)
     : BasePresenter<MainViewContract, MainPresenter.State>(STATE_KEY, State()) {
 
     interface MainViewContract {
@@ -37,6 +40,7 @@ class MainPresenter(
             var initialized: Boolean = false,
             var username: String? = null,
             var repository: String? = null,
+            var loadingCommits: Boolean = false,
             var commits: List<CommitView>? = null)
 
     override fun onResume() {
@@ -53,6 +57,7 @@ class MainPresenter(
 
     @get:Bindable var username: String? by ReadWriteBinding(BR.username) { state::username }
     @get:Bindable var repository: String? by ReadWriteBinding(BR.repository) { state::repository }
+    @get:Bindable var loadingCommits: Boolean by ReadWriteBinding(BR.loadingCommits) { state::loadingCommits }
     @get:Bindable var commits: List<CommitView>? by ReadWriteBinding(BR.commits) { state::commits }
 
     @Bindable("username", "repository") fun isFetchCommitsEnabled(): Boolean {
@@ -68,13 +73,18 @@ class MainPresenter(
     }
 
     private fun loadCommits(request: LoadCommitsRequest): Disposable {
-        return gitHubService.loadCommits(request)
+        return delayAtLeast(gitHubService.loadCommits(request), loadingDelayMs)
                 .flatMap<Commit> { response -> Observable.fromIterable<Commit>(response.commits) }
                 .map(this::toCommitView)
                 .toList()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribe({ commits = it }, { handleError(it) })
+    }
+
+    private fun <T> delayAtLeast(observable: Observable<T>, delayMs: Long): Observable<T> {
+        val timer = Observable.timer(delayMs, TimeUnit.MILLISECONDS)
+        return Observable.combineLatest<Long, T, T>(timer, observable, BiFunction { _, response -> response })
     }
 
     private fun toCommitView(commit: Commit): CommitView {
