@@ -18,13 +18,14 @@ import io.reactivex.disposables.CompositeDisposable;
 public abstract class BasePresenter<ViewContract, State> extends BaseObservable implements LifecycleObserver {
     private final String stateKey;
 
-    protected CompositeDisposable disposables;
-    protected ViewContract view;
     protected State state;
+    protected ViewContract view;
 
-    public BasePresenter(String stateKey) {
+    protected CompositeDisposable disposables = new CompositeDisposable();
+
+    public BasePresenter(String stateKey, State initialState) {
         this.stateKey = stateKey;
-        disposables = new CompositeDisposable();
+        this.state = initialState;
     }
 
     public void setView(ViewContract viewContract) {

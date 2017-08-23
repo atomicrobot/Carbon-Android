@@ -9,12 +9,12 @@ import com.mycompany.myapp.BuildConfig;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
+import com.mycompany.myapp.data.api.github.model.Commit;
 import com.mycompany.myapp.ui.BasePresenter;
 import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract;
 import com.mycompany.myapp.ui.main.MainPresenter.State;
 
 import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +34,6 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
     public static class CommitView {
         String message;
         String author;
-
-        @ParcelConstructor
-        CommitView(String message, String author) {
-            this.message = message;
-            this.author = author;
-        }
 
         public String getMessage() {
             return message;
@@ -69,13 +63,11 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
             GitHubService gitHubService,
             Scheduler ioScheduler,
             Scheduler mainScheduler) {
-        super(STATE_KEY);
+        super(STATE_KEY, new State());
         this.context = context;
         this.gitHubService = gitHubService;
         this.ioScheduler = ioScheduler;
         this.mainScheduler = mainScheduler;
-
-        this.state = new State();
     }
 
     public void onResume() {
@@ -132,13 +124,18 @@ public class MainPresenter extends BasePresenter<MainViewContract, State> {
     private Disposable loadCommits(LoadCommitsRequest request) {
         return gitHubService.loadCommits(request)
                 .flatMap(response -> Observable.fromIterable(response.getCommits()))
-                .map(commit -> new CommitView(
-                        commit.getCommitMessage(),
-                        context.getString(R.string.author_format, commit.getAuthor())))
+                .map(this::toCommitView)
                 .toList()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribe(this::setCommits, this::handleError);
+    }
+
+    private CommitView toCommitView(Commit commit) {
+        CommitView commitView = new CommitView();
+        commitView.message = commit.getCommitMessage();
+        commitView.author = context.getString(R.string.author_format, commit.getAuthor());
+        return commitView;
     }
 
     private void handleError(Throwable throwable) {

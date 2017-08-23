@@ -28,10 +28,8 @@ public class DevSettingsPresenter extends BasePresenter<DevSettingsViewContract,
     private final Settings settings;
 
     public DevSettingsPresenter(Settings settings) {
-        super(STATE_KEY);
+        super(STATE_KEY, new State());
         this.settings = settings;
-
-        this.state = new State();
     }
 
     @Override
