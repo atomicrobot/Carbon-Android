@@ -4,7 +4,8 @@ import com.mycompany.myapp.app.MainApplication;
 
 public class TestMainApplication extends MainApplication {
 
-    @Override protected void setupApplication() {
-        // Don't set up Application
+    @Override
+    protected void initializeApplication() {
+        // Don't initialize the application
     }
 }

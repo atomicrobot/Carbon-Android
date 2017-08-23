@@ -1,5 +1,6 @@
 package com.mycompany.myapp.app;
 
+import android.app.Application;
 import android.content.Context;
 
 import javax.inject.Named;
@@ -9,9 +10,17 @@ import dagger.Provides;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber.Tree;
 
 @Module
 public class AppModule {
+    @Provides
+    public MainApplicationInitializer provideMainApplicationInitializer(
+            Application application,
+            Tree logger) {
+        return new MainApplicationInitializer(application, logger);
+    }
+
     @Provides
     public Settings provideSettings(Context context) {
         return new Settings(context);
