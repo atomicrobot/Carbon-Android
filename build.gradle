@@ -100,7 +100,8 @@ task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
     def unitTestTasks = getProjectTask(appProject, 'testDevDebugUnitTest')
-    // TODO - Spoon isn't working with Gradle 4 per https://github.com/stanfy/spoon-gradle-plugin/issues/155
+    // FIXME - Spoon isn't working with Gradle 4 per https://github.com/stanfy/spoon-gradle-plugin/issues/155
+    // When we turn it on, make sure to fix the artifact paths in the README and any CI systems.
     //def integrationTestTasks = getProjectTask(appProject, 'spoon')
     def integrationTestTasks = getProjectTask(appProject, 'connectedDevDebugAndroidTest')
 
