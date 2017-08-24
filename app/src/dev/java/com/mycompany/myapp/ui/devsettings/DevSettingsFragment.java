@@ -3,16 +3,16 @@ package com.mycompany.myapp.ui.devsettings;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mycompany.myapp.R;
-import com.mycompany.myapp.ui.BaseFragment;
 
 import javax.inject.Inject;
 
-public class DevSettingsFragment extends BaseFragment {
+public class DevSettingsFragment extends Fragment {
     public interface DevSettingsFragmentHost {
         void inject(DevSettingsFragment fragment);
     }

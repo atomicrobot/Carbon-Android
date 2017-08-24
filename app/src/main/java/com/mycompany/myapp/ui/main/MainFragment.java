@@ -3,6 +3,7 @@ package com.mycompany.myapp.ui.main;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,13 +12,12 @@ import android.view.ViewGroup;
 
 import com.mycompany.myapp.CommitItemBinding;
 import com.mycompany.myapp.R;
-import com.mycompany.myapp.ui.BaseFragment;
 import com.mycompany.myapp.ui.main.MainPresenter.CommitView;
 import com.mycompany.myapp.util.recyclerview.ArrayAdapter;
 
 import javax.inject.Inject;
 
-public class MainFragment extends BaseFragment {
+public class MainFragment extends Fragment {
     public interface MainFragmentHost {
         void inject(MainFragment fragment);
     }
