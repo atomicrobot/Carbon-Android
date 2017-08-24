@@ -10,8 +10,8 @@ buildscript {
     }
 
     dependencies {
-        classpath group: 'com.github.spullara.mustache.java', name: 'compiler', version: '0.9.1'
-        classpath 'com.google.guava:guava:22.0'
+        classpath group: 'com.github.spullara.mustache.java', name: 'compiler', version: '0.9.5'
+        classpath 'com.google.guava:guava:23.0'
     }
 }
 

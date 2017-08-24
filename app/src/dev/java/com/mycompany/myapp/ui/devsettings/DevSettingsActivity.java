@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 
-import com.mycompany.myapp.DevSettingsActivityBinding;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.app.MainApplication;
 import com.mycompany.myapp.ui.BaseActivity;
@@ -40,6 +39,7 @@ public class DevSettingsActivity extends BaseActivity implements DevSettingsView
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dev_settings);
         binding.setPresenter(presenter);
+        binding.executePendingBindings();
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("Dev Settings");

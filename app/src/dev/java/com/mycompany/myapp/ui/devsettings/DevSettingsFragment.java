@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mycompany.myapp.DevSettingsFragmentBinding;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.ui.BaseFragment;
 
@@ -39,6 +38,7 @@ public class DevSettingsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dev_settings, container, false);
         binding.setPresenter(presenter);
+
         return binding.getRoot();
     }
 

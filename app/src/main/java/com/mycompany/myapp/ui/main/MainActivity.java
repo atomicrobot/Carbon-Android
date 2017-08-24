@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 
-import com.mycompany.myapp.MainActivityBinding;
 import com.mycompany.myapp.R;
 import com.mycompany.myapp.app.MainApplication;
 import com.mycompany.myapp.ui.BaseActivity;
@@ -35,6 +34,7 @@ public class MainActivity extends BaseActivity implements MainViewContract, Main
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setPresenter(presenter);
+        binding.executePendingBindings();
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle(getApplicationContext().getPackageName());
