@@ -5,7 +5,6 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 
-import com.mycompany.myapp.DevSettingsActivityBinding
 import com.mycompany.myapp.R
 import com.mycompany.myapp.app.MainApplication
 import com.mycompany.myapp.ui.BaseActivity

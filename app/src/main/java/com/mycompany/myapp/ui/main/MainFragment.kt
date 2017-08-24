@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.mycompany.myapp.CommitItemBinding
-import com.mycompany.myapp.MainFragmentBinding
 import com.mycompany.myapp.R
 import com.mycompany.myapp.ui.BaseFragment
 import com.mycompany.myapp.ui.main.MainPresenter.CommitView

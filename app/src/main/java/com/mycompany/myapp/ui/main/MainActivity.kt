@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 
-import com.mycompany.myapp.MainActivityBinding
 import com.mycompany.myapp.R
 import com.mycompany.myapp.app.MainApplication
 import com.mycompany.myapp.ui.BaseActivity

@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import com.mycompany.myapp.DevSettingsFragmentBinding
 import com.mycompany.myapp.R
 import com.mycompany.myapp.ui.BaseFragment
 
