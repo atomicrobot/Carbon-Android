@@ -4,7 +4,7 @@ import com.mycompany.myapp.data.api.github.model.Commit;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class GitHubService {
     private final GitHubApiService api;
@@ -51,6 +51,7 @@ public class GitHubService {
 
     public Observable<LoadCommitsResponse> loadCommits(final LoadCommitsRequest request) {
         return api.listCommits(request.user, request.repository)
+                .toObservable()
                 .map(commits -> new LoadCommitsResponse(request, commits.body()));
     }
 }

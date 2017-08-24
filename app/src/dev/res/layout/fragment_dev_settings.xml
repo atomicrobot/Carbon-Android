@@ -1,26 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical"
-              android:padding="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <EditText
-        android:id="@+id/base_url"
+    <data class="com.mycompany.myapp.ui.devsettings.DevSettingsFragmentBinding">
+
+        <variable
+            name="presenter"
+            type="com.mycompany.myapp.ui.devsettings.DevSettingsPresenter"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
 
-    <CheckBox
-        android:id="@+id/trust_all_ssl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Trust all SSL connections"/>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/save_settings_and_restart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Settings and Restart App"/>
+            <EditText
+                android:id="@+id/base_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Base URL"
+                android:text="@={presenter.baseUrl}"
+                android:inputType="textUri"/>
 
-</LinearLayout>
+        </android.support.design.widget.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/trust_all_ssl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:checked="@={presenter.trustAllSSL}"
+            android:text="Trust all SSL connections"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout"/>
+
+        <Button
+            android:id="@+id/save_settings_and_restart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:onClick="@{() -> presenter.saveSettingsAndRestart()}"
+            android:text="Save Settings and Restart App"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trust_all_ssl"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

@@ -3,6 +3,8 @@
     <string name="app_name">My App</string>
 
     <string name="author_format">Author: %s</string>
+    <string name="version_format">Version: %s</string>
+    <string name="fingerprint_format">Fingerprint: %s</string>
 
     <string name="default_base_url">https://api.github.com</string>
 </resources>

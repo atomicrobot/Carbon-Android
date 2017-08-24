@@ -1,19 +1,25 @@
 package com.mycompany.myapp.app;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Application.ActivityLifecycleCallbacks;
 import android.os.Bundle;
 
 import com.mycompany.myapp.ui.RiseAndShine;
 
-public class BuildConfigApplicationInitialization {
-    private final MainApplication application;
+import timber.log.Timber.Tree;
 
-    public BuildConfigApplicationInitialization(MainApplication application) {
-        this.application = application;
+/**
+ * Specific to the debug variant.
+ */
+public class MainApplicationInitializer extends BaseApplicationInitializer {
+    public MainApplicationInitializer(Application application, Tree logger) {
+        super(application, logger);
     }
 
-    public void immediateInitialization() {
+    @Override
+    public void initialize() {
+        super.initialize();
         application.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

@@ -1,7 +1,5 @@
 package com.mycompany.myapp.ui.devsettings;
 
-import android.content.Context;
-
 import com.mycompany.myapp.app.Settings;
 import com.mycompany.myapp.ui.ActivityScope;
 import com.mycompany.myapp.ui.devsettings.DevSettingsComponent.DevSettingsModule;
@@ -18,14 +16,14 @@ public interface DevSettingsComponent {
     class DevSettingsModule {
         private final DevSettingsActivity activity;
 
-        public DevSettingsModule(DevSettingsActivity activity) {
+        DevSettingsModule(DevSettingsActivity activity) {
             this.activity = activity;
         }
 
         @ActivityScope
         @Provides
-        public DevSettingsPresenter providePresenter(Context context, Settings settings) {
-            return new DevSettingsPresenter(context, settings);
+        protected DevSettingsPresenter providePresenter(Settings settings) {
+            return new DevSettingsPresenter(settings);
         }
     }
 

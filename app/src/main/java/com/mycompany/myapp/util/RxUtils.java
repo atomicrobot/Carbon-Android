@@ -1,21 +1,21 @@
 package com.mycompany.myapp.util;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class RxUtils {
 
-    public static void unsubscribeIfNotNull(Subscription subscription) {
-        if (subscription != null) {
-            subscription.unsubscribe();
+    public static void disposeIfNotNull(Disposable disposable) {
+        if (disposable != null) {
+            disposable.dispose();
         }
     }
 
-    public static CompositeSubscription getNewCompositeSubIfUnsubscribed(CompositeSubscription subscription) {
-        if (subscription == null || subscription.isUnsubscribed()) {
-            return new CompositeSubscription();
+    public static CompositeDisposable getNewCompositeDisposableIfDisposed(CompositeDisposable disposable) {
+        if (disposable == null || disposable.isDisposed()) {
+            return new CompositeDisposable();
         }
 
-        return subscription;
+        return disposable;
     }
 }

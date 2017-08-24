@@ -1,91 +1,69 @@
 package com.mycompany.myapp.ui.devsettings;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.databinding.Bindable;
 
-import com.jakewharton.processphoenix.ProcessPhoenix;
+import com.mycompany.myapp.BR;
 import com.mycompany.myapp.app.Settings;
-import com.mycompany.myapp.util.RxUtils;
+import com.mycompany.myapp.ui.BasePresenter;
+import com.mycompany.myapp.ui.devsettings.DevSettingsPresenter.DevSettingsViewContract;
+import com.mycompany.myapp.ui.devsettings.DevSettingsPresenter.State;
 
 import org.parceler.Parcel;
-import org.parceler.Parcels;
 
-import rx.subscriptions.CompositeSubscription;
-
-public class DevSettingsPresenter {
-    private static final String EXTRA_STATE = "DevSettingsPresenterState";
+public class DevSettingsPresenter extends BasePresenter<DevSettingsViewContract, State> {
+    private static final String STATE_KEY = "DevSettingsPresenterState";  // NON-NLS
 
     public interface DevSettingsViewContract {
-        void displayBaseUrl(String baseUrl);
 
-        void displayTrustAllSSL(boolean trustAllSSL);
     }
 
     @Parcel
     public static class State {
         boolean initialized = false;
+
         String baseUrl;
         boolean trustAllSSL;
     }
 
-    private final Context context;
     private final Settings settings;
 
-    private CompositeSubscription subscriptions;
-    private DevSettingsViewContract view;
-    private State state;
-
-    public DevSettingsPresenter(Context context, Settings settings) {
-        this.context = context;
+    public DevSettingsPresenter(Settings settings) {
+        super(STATE_KEY, new State());
         this.settings = settings;
-        this.state = new State();
     }
 
-    public void setView(DevSettingsViewContract view) {
-        this.view = view;
-    }
-
-    public void saveState(@NonNull Bundle bundle) {
-        bundle.putParcelable(EXTRA_STATE, Parcels.wrap(state));
-    }
-
-    public void restoreState(@Nullable Bundle bundle) {
-        if (bundle != null && bundle.containsKey(EXTRA_STATE)) {
-            state = Parcels.unwrap(bundle.getParcelable(EXTRA_STATE));
-        }
-    }
-
+    @Override
     public void onResume() {
-        subscriptions = RxUtils.getNewCompositeSubIfUnsubscribed(subscriptions);
+        super.onResume();
         if (!state.initialized) {
-            // Do initial setup here
             state.initialized = true;
-            state.baseUrl = settings.getBaseUrl();
-            state.trustAllSSL = settings.getTrustAllSSL();
+            setBaseUrl(settings.getBaseUrl());
+            setTrustAllSSL(settings.getTrustAllSSL());
         }
-
-        view.displayBaseUrl(state.baseUrl);
-        view.displayTrustAllSSL(state.trustAllSSL);
     }
 
-    public void onPause() {
-        RxUtils.unsubscribeIfNotNull(subscriptions);
+    @Bindable
+    public String getBaseUrl() {
+        return state.baseUrl;
     }
 
     public void setBaseUrl(String baseUrl) {
         state.baseUrl = baseUrl;
+        notifyPropertyChanged(BR.baseUrl);
+    }
+
+    @Bindable
+    public boolean isTrustAllSSL() {
+        return state.trustAllSSL;
     }
 
     public void setTrustAllSSL(boolean trustAllSSL) {
         state.trustAllSSL = trustAllSSL;
+        notifyPropertyChanged(BR.trustAllSSL);
     }
 
     public void saveSettingsAndRestart() {
         settings.setBaseUrl(state.baseUrl);
         settings.setTrustAllSSL(state.trustAllSSL);
-
-        ProcessPhoenix.triggerRebirth(context);
     }
 }
