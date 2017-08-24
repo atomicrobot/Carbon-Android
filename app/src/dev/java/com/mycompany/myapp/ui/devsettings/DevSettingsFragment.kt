@@ -1,5 +1,6 @@
 package com.mycompany.myapp.ui.devsettings
 
+import android.app.Fragment
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -8,11 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.mycompany.myapp.R
-import com.mycompany.myapp.ui.BaseFragment
 
 import javax.inject.Inject
 
-class DevSettingsFragment : BaseFragment() {
+class DevSettingsFragment : Fragment() {
     interface DevSettingsFragmentHost {
         fun inject(fragment: DevSettingsFragment)
     }

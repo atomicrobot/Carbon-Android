@@ -1,9 +1,31 @@
-package {{package}}.ui.{{screenLowerCase}};
+package {{package}}.ui.{{screenLowerCase}}
 
-import junit.framework.Assert;
+import android.content.Context
 
-import org.junit.Test;
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.MockitoAnnotations
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 
+@RunWith(RobolectricTestRunner::class)
 class {{screenUpperCamel}}PresenterTests {
 
+    private lateinit var presenter: {{screenUpperCamel}}Presenter
+
+    @Before
+    fun setup() {
+        MockitoAnnotations.initMocks(this)
+
+        val context = RuntimeEnvironment.application
+        presenter = {{screenUpperCamel}}Presenter(context)
+    }
+
+    @Test
+    fun testTrueIsTrue() {
+        // This is lame...replace with something useful!
+        Assert.assertTrue(true)
+    }
 }

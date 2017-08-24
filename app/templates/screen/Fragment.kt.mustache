@@ -1,26 +1,30 @@
 package {{package}}.ui.{{screenLowerCase}}
 
 import android.content.Context
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.ButterKnife
-import butterknife.Unbinder
+
 import {{package}}.R
+
+import javax.inject.Inject;
 
 class {{screenUpperCamel}}Fragment : Fragment() {
     interface {{screenUpperCamel}}FragmentHost {
         fun inject(fragment: {{screenUpperCamel}}Fragment)
     }
 
+    @Inject lateinit var presenter: {{screenUpperCamel}}Presenter
+    private lateinit var binding: {{screenUpperCamel}}FragmentBinding
     private var host: {{screenUpperCamel}}FragmentHost? = null
-    private lateinit var unbinder: Unbinder
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         host = context as {{screenUpperCamel}}FragmentHost
+        host!!.inject(this)
     }
 
     override fun onDetach() {
@@ -28,20 +32,15 @@ class {{screenUpperCamel}}Fragment : Fragment() {
         super.onDetach()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        host?.inject(this)
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_{{screenUnderscore}}, container, false)
-        unbinder = ButterKnife.bind(this, view)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_{{screenUnderscore}}, container, false)
+        binding.setPresenter(presenter)
 
-        return view
+        return binding.getRoot()
     }
 
     override fun onDestroyView() {
-        unbinder.unbind()
+        binding.unbind()
         super.onDestroyView()
     }
 }
