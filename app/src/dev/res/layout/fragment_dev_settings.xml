@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <data class=".DevSettingsFragmentBinding">
+    <data class="com.mycompany.myapp.ui.devsettings.DevSettingsFragmentBinding">
 
         <variable
             name="presenter"

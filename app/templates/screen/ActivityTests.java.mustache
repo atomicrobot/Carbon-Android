@@ -1,20 +1,11 @@
 package {{package}}.ui.{{screenLowerCase}};
 
-import {{package}}.EspressoTestRule;
-import {{package}}.MainApplicationDaggerMockRule;
-import {{package}}.R;
-import com.squareup.spoon.Spoon;
+import android.support.test.rule.ActivityTestRule;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
+import {{package}}.MainApplicationDaggerMockRule;
+
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import rx.Observable;
 
 public class {{screenUpperCamel}}ActivityEspressoTests {
 
@@ -25,6 +16,6 @@ public class {{screenUpperCamel}}ActivityEspressoTests {
     @Test
     public void testLaunchActivity() {
         {{screenUpperCamel}}Activity activity = activityRule.launchActivity(null);
-        Spoon.screenshot(activity, "launch_activity");
+        //Spoon.screenshot(activity, "launch_activity");
     }
 }
