@@ -1,52 +1,26 @@
 package {{package}}.ui.{{screenLowerCase}}
 
 import android.content.Context
-import android.os.Bundle
-import android.os.Parcelable
-import {{package}}.util.RxUtils
+import {{package}}.ui.BasePresenter
+import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Presenter.{{screenUpperCamel}}ViewContract
 import org.parceler.Parcel
-import org.parceler.Parcels
-import rx.subscriptions.CompositeSubscription
 
-class {{screenUpperCamel}}Presenter(private val context: Context) {
+class {{screenUpperCamel}}Presenter(private val context: Context)
+    : BasePresenter<{{screenUpperCamel}}ViewContract, {{screenUpperCamel}}Presenter.State>(STATE_KEY, State()) {
 
     interface {{screenUpperCamel}}ViewContract
 
     @Parcel(Parcel.Serialization.BEAN)
-    class State {
-        var initialized = false
-    }
+    data class State(
+        var initialized: Boolean = false)
 
-    private lateinit var subscriptions: CompositeSubscription
-    private lateinit var view: {{screenUpperCamel}}ViewContract
-    private var state = State()
-
-    fun setView(view: {{screenUpperCamel}}ViewContract) {
-        this.view = view
-    }
-
-    fun saveState(bundle: Bundle) {
-        bundle.putParcelable(EXTRA_STATE, Parcels.wrap<State>(state))
-    }
-
-    fun restoreState(bundle: Bundle?) {
-        if (bundle != null && bundle.containsKey(EXTRA_STATE)) {
-            state = Parcels.unwrap<State>(bundle.getParcelable<Parcelable>(EXTRA_STATE))
-        }
-    }
-
-    fun onResume() {
-        subscriptions = CompositeSubscription()
+    override fun onResume() {
+        super.onResume()
         if (!state.initialized) {
             state.initialized = true
         }
     }
-
-    fun onPause() {
-        subscriptions.unsubscribe()
-    }
-
     companion object {
-        private val EXTRA_STATE = "{{screenUpperCamel}}PresenterState"
+        private const val STATE_KEY = "{{screenUpperCamel}}PresenterState"  // NON-NLS
     }
 }
