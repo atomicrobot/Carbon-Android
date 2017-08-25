@@ -86,7 +86,7 @@ public class GitHubApiServiceTest {
 
     @Test
     public void testListCommitsNetworkError() throws Exception {
-        GitHubApiService api = buildApi("http://bad_url");
+        GitHubApiService api = buildApi("http://bad_url/");
         TestObserver<Response<List<Commit>>> subscriber = new TestObserver<>();
         api.listCommits("test_user", "test_repository").subscribe(subscriber);
         subscriber.await(1, TimeUnit.SECONDS);
