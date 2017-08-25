@@ -10,7 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface GitHubApiService {
-    @GET("/repos/{user}/{repository}/commits")
+    @GET("repos/{user}/{repository}/commits")
     Single<Response<List<Commit>>> listCommits(
             @Path("user") String user,
             @Path("repository") String repository);
