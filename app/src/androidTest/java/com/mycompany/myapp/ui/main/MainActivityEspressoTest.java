@@ -8,7 +8,9 @@ import com.mycompany.myapp.R;
 import com.mycompany.myapp.data.api.github.GitHubService;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest;
 import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse;
+import com.mycompany.myapp.data.api.github.model.Author;
 import com.mycompany.myapp.data.api.github.model.Commit;
+import com.mycompany.myapp.data.api.github.model.CommitDetails;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -82,9 +84,9 @@ public class MainActivityEspressoTest {
     }
 
     private Observable<LoadCommitsResponse> buildMockLoadCommitsResponse() {
-        Commit commit = mock(Commit.class);
-        when(commit.getAuthor()).thenReturn("Test author");
-        when(commit.getCommitMessage()).thenReturn("Test commit message");
+        Commit commit = new Commit(new CommitDetails(
+                "Test commit message",
+                new Author("Test author")));
 
         List<Commit> commits = new ArrayList<>();
         commits.add(commit);
