@@ -1,2 +1,2 @@
-# Retrolambda
--dontwarn java.lang.invoke.*
+# Kotlin Parcelize will throw Proguard warnings without this
+-dontwarn **.*$Creator
