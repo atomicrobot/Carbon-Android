@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-    <!-- See: https://android-review.googlesource.com/#/c/93190/1 -->
-    <issue id="InvalidPackage">
-        <ignore regexp="okio-1.9.0.jar" />
-        <ignore regexp="parceler-1.1.2.jar" />
-        <ignore regexp="retrofit-2.1.0.jar" />
-    </issue>
-
     <!-- See https://youtrack.jetbrains.com/issue/KT-19300 -->
     <issue id="ParcelCreator" severity="ignore" />
 </lint>
