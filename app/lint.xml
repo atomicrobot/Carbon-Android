@@ -7,8 +7,6 @@
         <ignore regexp="retrofit-2.1.0.jar" />
     </issue>
 
-    <!-- See https://github.com/evant/android-retrolambda-lombok -->
-    <issue id="NewApi">
-        <ignore regexp="Try-with-resources requires API level 19"/>
-    </issue>
+    <!-- See https://youtrack.jetbrains.com/issue/KT-19300 -->
+    <issue id="ParcelCreator" severity="ignore" />
 </lint>

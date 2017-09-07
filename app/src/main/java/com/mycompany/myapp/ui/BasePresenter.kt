@@ -9,9 +9,8 @@ import android.os.Parcelable
 import android.support.annotation.CallSuper
 import com.mycompany.myapp.util.RxUtils
 import io.reactivex.disposables.CompositeDisposable
-import org.parceler.Parcels
 
-abstract class BasePresenter<ViewContract : Any, State : Any>(
+abstract class BasePresenter<ViewContract : Any, State : Parcelable>(
         private val stateKey: String,
         protected var state: State)
     : BaseObservable(), LifecycleObserver {
@@ -20,12 +19,12 @@ abstract class BasePresenter<ViewContract : Any, State : Any>(
     protected var disposables: CompositeDisposable = CompositeDisposable()
 
     fun saveState(bundle: Bundle) {
-        bundle.putParcelable(stateKey, Parcels.wrap(state))
+        bundle.putParcelable(stateKey, state)
     }
 
     fun restoreState(bundle: Bundle?) {
         if (bundle != null && bundle.containsKey(stateKey)) {
-            state = Parcels.unwrap(bundle.getParcelable<Parcelable>(stateKey))
+            state = bundle.getParcelable(stateKey)
             notifyChange()
         }
     }

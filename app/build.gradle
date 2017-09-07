@@ -77,7 +77,6 @@ android {
         proguardFile '../config/proguard/gson.pro'
         proguardFile '../config/proguard/okhttp3.pro'
         proguardFile '../config/proguard/okio.pro'
-        proguardFile '../config/proguard/parceler.pro'
         proguardFile '../config/proguard/retrofit2.pro'
         proguardFile '../config/proguard/rxjava.pro'
 
@@ -153,7 +152,6 @@ ext {
     daggerVersion = '2.11'
     retrofitVersion = '2.3.0'
     okHttpVersion = '3.8.1'
-    parcelerVersion = '1.1.6'
     leakcanaryVersion = '1.5.1'  // FIXME 1.5.2 is broken per https://github.com/square/leakcanary/issues/815
 
     // Test dependency versions
@@ -200,14 +198,6 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-
-    // Code generators - Parceler
-    // TODO - Remove in favor of Kotlin
-    // After: https://youtrack.jetbrains.com/issue/KT-19680
-    implementation "org.parceler:parceler-api:$parcelerVersion"
-    kapt("org.parceler:parceler:$parcelerVersion") {
-        exclude module: 'commons-logging'
-    }
 
     // Monitoring - Timber (logging)
     implementation 'com.jakewharton.timber:timber:4.5.1'

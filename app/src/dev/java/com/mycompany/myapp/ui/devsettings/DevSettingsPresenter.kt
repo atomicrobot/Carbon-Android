@@ -1,12 +1,14 @@
 package com.mycompany.myapp.ui.devsettings
 
+import android.annotation.SuppressLint
 import android.databinding.Bindable
+import android.os.Parcelable
 import com.mycompany.myapp.BR
 import com.mycompany.myapp.app.Settings
 import com.mycompany.myapp.databinding.ReadWriteBinding
 import com.mycompany.myapp.ui.BasePresenter
 import com.mycompany.myapp.ui.devsettings.DevSettingsPresenter.DevSettingsViewContract
-import org.parceler.Parcel
+import kotlinx.android.parcel.Parcelize
 
 class DevSettingsPresenter(
         private val settings: Settings)
@@ -14,11 +16,11 @@ class DevSettingsPresenter(
 
     interface DevSettingsViewContract
 
-    @Parcel(Parcel.Serialization.BEAN)
+    @Parcelize
     data class State(
             var initialized: Boolean = false,
             var baseUrl: String? = null,
-            var trustAllSSL: Boolean = false)
+            var trustAllSSL: Boolean = false) : Parcelable
 
     override fun onResume() {
         super.onResume()

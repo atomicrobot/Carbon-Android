@@ -2,6 +2,7 @@ package com.mycompany.myapp.ui.main
 
 import android.content.Context
 import android.databinding.Bindable
+import android.os.Parcelable
 import com.mycompany.myapp.BR
 import com.mycompany.myapp.BuildConfig
 import com.mycompany.myapp.R
@@ -15,7 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
-import org.parceler.Parcel
+import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
 
 class MainPresenter(
@@ -30,18 +31,18 @@ class MainPresenter(
         fun displayError(message: String)
     }
 
-    @Parcel(Parcel.Serialization.BEAN)
+    @Parcelize
     data class CommitView(
             val message: String = "",
-            val author: String = "")
+            val author: String = "") : Parcelable
 
-    @Parcel(Parcel.Serialization.BEAN)
+    @Parcelize
     data class State(
             var initialized: Boolean = false,
             var username: String? = null,
             var repository: String? = null,
             var loadingCommits: Boolean = false,
-            var commits: List<CommitView>? = null)
+            var commits: List<CommitView>? = null) : Parcelable
 
     override fun onResume() {
         super.onResume()
