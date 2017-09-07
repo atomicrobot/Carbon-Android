@@ -26,7 +26,6 @@ public class CustomAppTestRunner extends AndroidJUnitRunner {
         super.onStart();
     }
 
-
     @Override
     public void finish(int resultCode, Bundle results) {
         TestButler.teardown(InstrumentationRegistry.getTargetContext());
