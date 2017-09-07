@@ -26,7 +26,7 @@ class DevSettingsActivity : BaseActivity(), DevSettingsViewContract, DevSettings
         component.inject(this)
 
         presenter.view = this
-        lifecycleRegistry.addObserver(presenter)
+        lifecycle.addObserver(presenter)
         presenter.restoreState(savedInstanceState)
 
         super.onCreate(savedInstanceState)

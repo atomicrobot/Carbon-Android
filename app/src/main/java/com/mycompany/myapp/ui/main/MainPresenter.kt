@@ -17,6 +17,7 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.parcel.Parcelize
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class MainPresenter(
@@ -97,9 +98,11 @@ class MainPresenter(
     private fun handleError(throwable: Throwable) {
         val message = throwable.message!!
         view.displayError(message)
+
+        Timber.e(throwable)
     }
 
     companion object {
-        private val STATE_KEY = "MainPresenterState"  // NON-NLS
+        private const val STATE_KEY = "MainPresenterState"  // NON-NLS
     }
 }

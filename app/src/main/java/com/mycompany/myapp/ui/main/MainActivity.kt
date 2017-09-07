@@ -24,7 +24,7 @@ class MainActivity : BaseActivity(), MainViewContract, MainFragmentHost {
         component.inject(this)
 
         presenter.view = this
-        lifecycleRegistry.addObserver(presenter)
+        lifecycle.addObserver(presenter)
         presenter.restoreState(savedInstanceState)
 
         super.onCreate(savedInstanceState)

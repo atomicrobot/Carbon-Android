@@ -1,6 +1,5 @@
 package com.mycompany.myapp.ui.devsettings
 
-import android.annotation.SuppressLint
 import android.databinding.Bindable
 import android.os.Parcelable
 import com.mycompany.myapp.BR

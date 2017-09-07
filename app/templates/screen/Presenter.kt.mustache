@@ -1,18 +1,19 @@
 package {{package}}.ui.{{screenLowerCase}}
 
 import android.content.Context
+import android.os.Parcelable
 import {{package}}.ui.BasePresenter
 import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Presenter.{{screenUpperCamel}}ViewContract
-import org.parceler.Parcel
+import kotlinx.android.parcel.Parcelize
 
 class {{screenUpperCamel}}Presenter(private val context: Context)
     : BasePresenter<{{screenUpperCamel}}ViewContract, {{screenUpperCamel}}Presenter.State>(STATE_KEY, State()) {
 
     interface {{screenUpperCamel}}ViewContract
 
-    @Parcel(Parcel.Serialization.BEAN)
+    @Parcelize
     data class State(
-        var initialized: Boolean = false)
+        var initialized: Boolean = false) : Parcelable
 
     override fun onResume() {
         super.onResume()
