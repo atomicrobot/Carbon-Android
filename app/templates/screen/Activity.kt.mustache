@@ -7,7 +7,7 @@ import android.os.Bundle
 
 import {{package}}.R
 import {{package}}.app.MainApplication
-import {{package}}.ui.BaseActivity;
+import {{package}}.ui.BaseActivity
 import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Component.{{screenUpperCamel}}Module
 import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Fragment.{{screenUpperCamel}}FragmentHost
 import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Presenter.{{screenUpperCamel}}ViewContract
@@ -34,11 +34,11 @@ class {{screenUpperCamel}}Activity : BaseActivity(), {{screenUpperCamel}}ViewCon
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_{{screenUnderscore}})
-        binding.setPresenter(presenter)
+        binding.presenter = presenter
         binding.executePendingBindings()
 
-        setSupportActionBar(binding.toolbar);
-        supportActionBar!!.title = "{{screenUpperCamel}}";
+        setSupportActionBar(binding.toolbar)
+        supportActionBar!!.title = "{{screenUpperCamel}}"
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

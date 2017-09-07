@@ -10,7 +10,7 @@ import android.view.ViewGroup
 
 import {{package}}.R
 
-import javax.inject.Inject;
+import javax.inject.Inject
 
 class {{screenUpperCamel}}Fragment : Fragment() {
     interface {{screenUpperCamel}}FragmentHost {
@@ -34,9 +34,9 @@ class {{screenUpperCamel}}Fragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_{{screenUnderscore}}, container, false)
-        binding.setPresenter(presenter)
+        binding.presenter = presenter
 
-        return binding.getRoot()
+        return binding.root
     }
 
     override fun onDestroyView() {
