@@ -17,7 +17,6 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.parcel.Parcelize
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class MainPresenter(
@@ -40,10 +39,10 @@ class MainPresenter(
     @Parcelize
     data class State(
             var initialized: Boolean = false,
-            var username: String? = null,
-            var repository: String? = null,
+            var username: String = "",
+            var repository: String = "",
             var loadingCommits: Boolean = false,
-            var commits: List<CommitView>? = null) : Parcelable
+            var commits: List<CommitView> = emptyList()) : Parcelable
 
     override fun onResume() {
         super.onResume()
@@ -57,13 +56,13 @@ class MainPresenter(
         fetchCommits()
     }
 
-    @get:Bindable var username: String? by ReadWriteBinding(BR.username) { state::username }
-    @get:Bindable var repository: String? by ReadWriteBinding(BR.repository) { state::repository }
+    @get:Bindable var username: String by ReadWriteBinding(BR.username) { state::username }
+    @get:Bindable var repository: String by ReadWriteBinding(BR.repository) { state::repository }
     @get:Bindable var loadingCommits: Boolean by ReadWriteBinding(BR.loadingCommits) { state::loadingCommits }
-    @get:Bindable var commits: List<CommitView>? by ReadWriteBinding(BR.commits) { state::commits }
+    @get:Bindable var commits: List<CommitView> by ReadWriteBinding(BR.commits) { state::commits }
 
     @Bindable("username", "repository") fun isFetchCommitsEnabled(): Boolean {
-        return !state.username.isNullOrEmpty() && !state.repository.isNullOrEmpty()
+        return !state.username.isEmpty() && !state.repository.isEmpty()
     }
 
     fun getVersion(): String = context.getString(R.string.version_format, BuildConfig.VERSION_NAME)
@@ -96,10 +95,7 @@ class MainPresenter(
     }
 
     private fun handleError(throwable: Throwable) {
-        val message = throwable.message!!
-        view.displayError(message)
-
-        Timber.e(throwable)
+        view.displayError(throwable.message ?: context.getString(R.string.error_unexpected))
     }
 
     companion object {

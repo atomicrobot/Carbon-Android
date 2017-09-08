@@ -16,6 +16,7 @@ import org.robolectric.RuntimeEnvironment
 class MainPresenterTest {
 
     @Mock private lateinit var githubService: GitHubService
+
     private lateinit var presenter: MainPresenter
 
     @Before
@@ -44,15 +45,11 @@ class MainPresenterTest {
 
     @Test
     fun testFetchCommitsEnabled() {
-        presenter.username = null
-        presenter.repository = null
-        assertFalse(presenter.isFetchCommitsEnabled())
-
         presenter.username = "test"
-        presenter.repository = null
+        presenter.repository = ""
         assertFalse(presenter.isFetchCommitsEnabled())
 
-        presenter.username = null
+        presenter.username = ""
         presenter.repository = "test"
         assertFalse(presenter.isFetchCommitsEnabled())
 

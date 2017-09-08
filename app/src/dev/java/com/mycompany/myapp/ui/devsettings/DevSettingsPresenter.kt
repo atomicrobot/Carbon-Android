@@ -18,7 +18,7 @@ class DevSettingsPresenter(
     @Parcelize
     data class State(
             var initialized: Boolean = false,
-            var baseUrl: String? = null,
+            var baseUrl: String = "",
             var trustAllSSL: Boolean = false) : Parcelable
 
     override fun onResume() {
@@ -30,7 +30,7 @@ class DevSettingsPresenter(
         }
     }
 
-    @get:Bindable var baseUrl: String? by ReadWriteBinding(BR.baseUrl) { state::baseUrl }
+    @get:Bindable var baseUrl: String by ReadWriteBinding(BR.baseUrl) { state::baseUrl }
     @get:Bindable var isTrustAllSSL: Boolean by ReadWriteBinding(BR.trustAllSSL) { state::trustAllSSL }
 
     fun saveSettingsAndRestart() {

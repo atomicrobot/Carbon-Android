@@ -32,12 +32,12 @@ abstract class BasePresenter<ViewContract : Any, State : Parcelable>(
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     @CallSuper
     open fun onResume() {
-        disposables = RxUtils.getNewCompositeDisposableIfDisposed(disposables)
+        disposables = RxUtils.getSafeCompositeDisposable(disposables)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     @CallSuper
     open fun onPause() {
-        RxUtils.disposeIfNotNull(disposables)
+        disposables.dispose()
     }
 }
