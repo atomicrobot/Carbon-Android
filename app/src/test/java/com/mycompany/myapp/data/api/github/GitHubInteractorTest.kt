@@ -1,7 +1,7 @@
 package com.mycompany.myapp.data.api.github
 
-import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest
-import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse
+import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsRequest
+import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsResponse
 import com.mycompany.myapp.data.api.github.model.CommitTestHelper.stubCommit
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
@@ -20,18 +20,18 @@ import java.util.Arrays.asList
 import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
-class GitHubServiceTest {
+class GitHubInteractorTest {
 
     @Mock lateinit var api: GitHubApiService
 
-    private lateinit var service: GitHubService
+    private lateinit var interactor: GitHubInteractor
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
 
         val context = RuntimeEnvironment.application
-        service = GitHubService(context, api)
+        interactor = GitHubInteractor(context, api)
     }
 
     @Test
@@ -41,7 +41,7 @@ class GitHubServiceTest {
         whenever(api.listCommits(anyString(), anyString())).thenReturn(mockResponse)
 
         val subscriber = TestObserver<LoadCommitsResponse>()
-        service.loadCommits(LoadCommitsRequest("user", "repo")).subscribeWith(subscriber)
+        interactor.loadCommits(LoadCommitsRequest("user", "repo")).subscribeWith(subscriber)
         subscriber.await(1, TimeUnit.SECONDS)
 
         subscriber.assertValueCount(1)

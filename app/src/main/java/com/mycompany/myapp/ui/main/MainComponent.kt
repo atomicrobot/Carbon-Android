@@ -2,7 +2,7 @@ package com.mycompany.myapp.ui.main
 
 import android.content.Context
 
-import com.mycompany.myapp.data.api.github.GitHubService
+import com.mycompany.myapp.data.api.github.GitHubInteractor
 import com.mycompany.myapp.ui.ActivityScope
 import com.mycompany.myapp.ui.main.MainComponent.MainModule
 
@@ -22,14 +22,14 @@ interface MainComponent {
         @ActivityScope
         @Provides
         fun providePresenter(
-                context: Context, service:
-                GitHubService,
+                context: Context, interactor:
+                GitHubInteractor,
                 @Named("io") ioScheduler: Scheduler,
                 @Named("main") mainScheduler: Scheduler,
                 @Named("loading_delay_ms") loadingDelayMs: Long): MainPresenter {
             return MainPresenter(
                     context,
-                    service,
+                    interactor,
                     ioScheduler,
                     mainScheduler,
                     loadingDelayMs)

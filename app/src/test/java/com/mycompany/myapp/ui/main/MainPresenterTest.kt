@@ -1,6 +1,6 @@
 package com.mycompany.myapp.ui.main
 
-import com.mycompany.myapp.data.api.github.GitHubService
+import com.mycompany.myapp.data.api.github.GitHubInteractor
 import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -15,7 +15,7 @@ import org.robolectric.RuntimeEnvironment
 @RunWith(RobolectricTestRunner::class)
 class MainPresenterTest {
 
-    @Mock private lateinit var githubService: GitHubService
+    @Mock private lateinit var githubInteractor: GitHubInteractor
 
     private lateinit var presenter: MainPresenter
 
@@ -24,7 +24,7 @@ class MainPresenterTest {
         MockitoAnnotations.initMocks(this)
 
         val context = RuntimeEnvironment.application
-        presenter = MainPresenter(context, githubService, Schedulers.trampoline(), Schedulers.trampoline(), 0)
+        presenter = MainPresenter(context, githubInteractor, Schedulers.trampoline(), Schedulers.trampoline(), 0)
     }
 
     @Test

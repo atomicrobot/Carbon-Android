@@ -8,9 +8,9 @@ import android.support.test.rule.ActivityTestRule
 import com.mycompany.myapp.EspressoMatchers.regex
 import com.mycompany.myapp.MainApplicationDaggerMockRule
 import com.mycompany.myapp.R
-import com.mycompany.myapp.data.api.github.GitHubService
-import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest
-import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsResponse
+import com.mycompany.myapp.data.api.github.GitHubInteractor
+import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsRequest
+import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsResponse
 import com.mycompany.myapp.data.api.github.model.Author
 import com.mycompany.myapp.data.api.github.model.Commit
 import com.mycompany.myapp.data.api.github.model.CommitDetails
@@ -29,11 +29,11 @@ class MainActivityEspressoTest {
 
     @JvmField @Rule var testRule = ActivityTestRule(MainActivity::class.java, false, false)
 
-    @Mock lateinit var gitHubService: GitHubService
+    @Mock lateinit var gitHubInteractor: GitHubInteractor
 
     @Test
     fun testBuildFingerprint() {
-        whenever(gitHubService.loadCommits(any())).thenReturn(Observable.empty())
+        whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.empty())
 
         testRule.launchActivity(null)
         onView(withId(R.id.fingerprint)).check(matches(withText(regex("Fingerprint: .+"))))
@@ -41,7 +41,7 @@ class MainActivityEspressoTest {
 
     @Test
     fun testFetchCommitsEnabledState() {
-        whenever(gitHubService.loadCommits(any())).thenReturn(Observable.empty())
+        whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.empty())
 
         testRule.launchActivity(null)
         onView(withId(R.id.fetch_commits)).check(matches(isEnabled()))
@@ -59,7 +59,7 @@ class MainActivityEspressoTest {
     @Test
     fun testFetchAndDisplayCommits() {
         val response = buildMockLoadCommitsResponse()
-        whenever(gitHubService.loadCommits(any())).thenReturn(response)
+        whenever(gitHubInteractor.loadCommits(any())).thenReturn(response)
 
         val activity = testRule.launchActivity(null)
         //Spoon.screenshot(activity, "before_fetching_commits");

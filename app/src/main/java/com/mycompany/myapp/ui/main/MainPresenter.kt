@@ -6,8 +6,8 @@ import android.os.Parcelable
 import com.mycompany.myapp.BR
 import com.mycompany.myapp.BuildConfig
 import com.mycompany.myapp.R
-import com.mycompany.myapp.data.api.github.GitHubService
-import com.mycompany.myapp.data.api.github.GitHubService.LoadCommitsRequest
+import com.mycompany.myapp.data.api.github.GitHubInteractor
+import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.mycompany.myapp.data.api.github.model.Commit
 import com.mycompany.myapp.databinding.ReadWriteBinding
 import com.mycompany.myapp.ui.BasePresenter
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 
 class MainPresenter(
         private val context: Context,
-        private val gitHubService: GitHubService,
+        private val gitHubInteractor: GitHubInteractor,
         private val ioScheduler: Scheduler,
         private val mainScheduler: Scheduler,
         private val loadingDelayMs: Long)
@@ -74,7 +74,7 @@ class MainPresenter(
     }
 
     private fun loadCommits(request: LoadCommitsRequest): Disposable {
-        return delayAtLeast(gitHubService.loadCommits(request), loadingDelayMs)
+        return delayAtLeast(gitHubInteractor.loadCommits(request), loadingDelayMs)
                 .flatMap<Commit> { response -> Observable.fromIterable<Commit>(response.commits) }
                 .map(this::toCommitView)
                 .toList()

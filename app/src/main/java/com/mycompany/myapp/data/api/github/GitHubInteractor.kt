@@ -10,7 +10,7 @@ import retrofit2.Response
 import timber.log.Timber
 
 @Mockable
-class GitHubService(
+class GitHubInteractor(
         private val context: Context,
         private val api: GitHubApiService) {
 

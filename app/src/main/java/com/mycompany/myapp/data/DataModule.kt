@@ -5,7 +5,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.mycompany.myapp.app.Settings
 import com.mycompany.myapp.data.api.github.GitHubApiService
-import com.mycompany.myapp.data.api.github.GitHubService
+import com.mycompany.myapp.data.api.github.GitHubInteractor
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -72,8 +72,8 @@ class DataModule {
     @Provides
     fun provideGitHubService(
             context: Context,
-            api: GitHubApiService): GitHubService {
-        return GitHubService(context, api)
+            api: GitHubApiService): GitHubInteractor {
+        return GitHubInteractor(context, api)
     }
 
     companion object {
