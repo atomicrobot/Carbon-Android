@@ -19,42 +19,6 @@ task screen {
     doLast {
         generate {
             // New files
-            createFile(scopes, 'templates/screen/Activity.java.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Activity.java")
-            createFile(scopes, 'templates/screen/Fragment.java.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Fragment.java")
-            createFile(scopes, 'templates/screen/Component.java.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Component.java")
-            createFile(scopes, 'templates/screen/Presenter.java.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Presenter.java")
-
-            createFile(scopes, 'templates/screen/activity.xml.mustache', "src/main/res/layout/activity_${screenFileName}.xml")
-            createFile(scopes, 'templates/screen/content.xml.mustache', "src/main/res/layout/content_${screenFileName}.xml")
-            createFile(scopes, 'templates/screen/fragment.xml.mustache', "src/main/res/layout/fragment_${screenFileName}.xml")
-
-            createFile(scopes, 'templates/screen/ActivityTests.java.mustache', "src/androidTest/java/$argPackageDirs/ui/$screenPackage/${argScreen}ActivityEspressoTests.java")
-            createFile(scopes, 'templates/screen/PresenterTests.java.mustache', "src/test/java/$argPackageDirs/ui/$screenPackage/${argScreen}PresenterTests.java")
-
-            // Existing files
-            updateFile(
-                    scopes,
-                    'templates/screen/ApplicationComponent_ImportPartial.java.mustache',
-                    "src/main/java/$argPackageDirs/app/ApplicationComponent.java",
-                    "// GENERATOR - MORE IMPORTS //")
-            updateFile(
-                    scopes,
-                    'templates/screen/ApplicationComponent_SubcomponentPartial.java.mustache',
-                    "src/main/java/$argPackageDirs/app/ApplicationComponent.java",
-                    "// GENERATOR - MORE SUBCOMPONENTS //")
-            updateFile(
-                    scopes,
-                    'templates/screen/AndroidManifest_ActivityPartial.xml.mustache',
-                    "src/main/AndroidManifest.xml",
-                    "<!-- GENERATOR - MORE ACTIVITIES -->")
-        }
-    }
-}
-
-task ktscreen {
-    doLast {
-        generate {
-            // New files
             createFile(scopes, 'templates/screen/Activity.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Activity.kt")
             createFile(scopes, 'templates/screen/Fragment.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Fragment.kt")
             createFile(scopes, 'templates/screen/Component.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Component.kt")
@@ -70,13 +34,13 @@ task ktscreen {
             // Existing files
             updateFile(
                     scopes,
-                    'templates/screen/ApplicationComponent_ImportPartial.java.mustache',
-                    "src/main/java/$argPackageDirs/app/ApplicationComponent.java",
+                    'templates/screen/ApplicationComponent_ImportPartial.kt.mustache',
+                    "src/main/java/$argPackageDirs/app/ApplicationComponent.kt",
                     "// GENERATOR - MORE IMPORTS //")
             updateFile(
                     scopes,
-                    'templates/screen/ApplicationComponent_SubcomponentPartial.java.mustache',
-                    "src/main/java/$argPackageDirs/app/ApplicationComponent.java",
+                    'templates/screen/ApplicationComponent_SubcomponentPartial.kt.mustache',
+                    "src/main/java/$argPackageDirs/app/ApplicationComponent.kt",
                     "// GENERATOR - MORE SUBCOMPONENTS //")
             updateFile(
                     scopes,

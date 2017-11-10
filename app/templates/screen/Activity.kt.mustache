@@ -23,8 +23,7 @@ class {{screenUpperCamel}}Activity : BaseActivity(), {{screenUpperCamel}}ViewCon
     private lateinit var binding: {{screenUpperCamel}}ActivityBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        component = (application as MainApplication)
-                .component.{{screenLowerCamel}}Component({{screenUpperCamel}}Module(this))
+        component = appComponent.{{screenLowerCamel}}Component({{screenUpperCamel}}Module(this))
         component.inject(this)
 
         presenter.view = this
@@ -46,9 +45,7 @@ class {{screenUpperCamel}}Activity : BaseActivity(), {{screenUpperCamel}}ViewCon
         presenter.saveState(outState)
     }
 
-    override fun inject(fragment: {{screenUpperCamel}}Fragment) {
-        component.inject(fragment)
-    }
+    override fun inject(fragment: {{screenUpperCamel}}Fragment) = component.inject(fragment)
 
     companion object {
         fun buildIntent(context: Context): Intent {

@@ -37,8 +37,8 @@ class MainFragment : Fragment() {
         super.onDetach()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater!!, R.layout.fragment_main, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         binding.presenter = presenter
 
         binding.commits.layoutManager = LinearLayoutManager(activity)

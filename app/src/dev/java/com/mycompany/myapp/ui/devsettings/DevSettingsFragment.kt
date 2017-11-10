@@ -32,8 +32,8 @@ class DevSettingsFragment : Fragment() {
         super.onDetach()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater!!, R.layout.fragment_dev_settings, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dev_settings, container, false)
         binding.presenter = presenter
         return binding.root
     }

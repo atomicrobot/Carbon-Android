@@ -1,7 +1,3 @@
-## Things to do...
-- Need to turn Spoon back on. Screenshots in tests are commented out because they require a permission
-  that the Spoon runner grants for us automatically.
-
 ## Project Setup
 
 ### Setting up a new project

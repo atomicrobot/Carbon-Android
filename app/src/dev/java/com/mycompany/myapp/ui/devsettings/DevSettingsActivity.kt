@@ -4,14 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-
 import com.mycompany.myapp.R
-import com.mycompany.myapp.app.MainApplication
 import com.mycompany.myapp.ui.BaseActivity
 import com.mycompany.myapp.ui.devsettings.DevSettingsComponent.DevSettingsModule
 import com.mycompany.myapp.ui.devsettings.DevSettingsFragment.DevSettingsFragmentHost
 import com.mycompany.myapp.ui.devsettings.DevSettingsPresenter.DevSettingsViewContract
-
 import javax.inject.Inject
 
 class DevSettingsActivity : BaseActivity(), DevSettingsViewContract, DevSettingsFragmentHost {
@@ -21,8 +18,7 @@ class DevSettingsActivity : BaseActivity(), DevSettingsViewContract, DevSettings
     private lateinit var binding: DevSettingsActivityBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        component = (application as MainApplication).component
-                .devSettingsComponent(DevSettingsModule(this))
+        component = appComponent.devSettingsComponent(DevSettingsModule(this))
         component.inject(this)
 
         presenter.view = this
@@ -44,9 +40,7 @@ class DevSettingsActivity : BaseActivity(), DevSettingsViewContract, DevSettings
         presenter.saveState(outState)
     }
 
-    override fun inject(fragment: DevSettingsFragment) {
-        component.inject(fragment)
-    }
+    override fun inject(fragment: DevSettingsFragment) = component.inject(fragment)
 
     companion object {
         fun buildIntent(context: Context): Intent {

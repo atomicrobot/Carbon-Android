@@ -32,7 +32,7 @@ class {{screenUpperCamel}}Fragment : Fragment() {
         super.onDetach()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_{{screenUnderscore}}, container, false)
         binding.presenter = presenter
 

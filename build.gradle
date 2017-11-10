@@ -1,6 +1,6 @@
 buildscript {
-    ext.android_plugin_version = '3.0.0-beta6'
-    ext.kotlin_version = '1.1.4-3'
+    ext.android_plugin_version = '3.0.0'
+    ext.kotlin_version = '1.1.51'
 
     repositories {
         google()
@@ -72,7 +72,6 @@ ext {
     versionName = "$appVersion b$versionCode"
 
     // Build settings that are likely to be reused across different modules
-    buildToolsVersion = "26.0.1"
     minSdkVersion = 21
     targetSdkVersion = 26
     compileSdkVersion = 26
@@ -106,9 +105,6 @@ task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
     def unitTestTasks = getProjectTask(appProject, 'testDevDebugUnitTest')
-    // FIXME - Spoon isn't working with Gradle 4 per https://github.com/stanfy/spoon-gradle-plugin/issues/155
-    // When we turn it on, make sure to fix the artifact paths in the README and any CI systems.
-    //def integrationTestTasks = getProjectTask(appProject, 'spoon')
     def integrationTestTasks = getProjectTask(appProject, 'connectedDevDebugAndroidTest')
 
     dependsOn unitTestTasks

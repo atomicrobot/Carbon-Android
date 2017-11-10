@@ -2,20 +2,18 @@ package {{package}}.ui.{{screenLowerCase}}
 
 import android.support.test.rule.ActivityTestRule
 import {{package}}.MainApplicationDaggerMockRule
-import com.squareup.spoon.Spoon
 
 import org.junit.Rule
 import org.junit.Test
 
 class {{screenUpperCamel}}ActivityEspressoTests {
 
-    @Rule val mockitoRule = MainApplicationDaggerMockRule()
+    @JvmField @Rule val mockitoRule = MainApplicationDaggerMockRule()
 
-    @Rule val activityRule = ActivityTestRule<{{screenUpperCamel}}Activity>({{screenUpperCamel}}Activity::class.java, false, false)
+    @JvmField @Rule val activityRule = ActivityTestRule<{{screenUpperCamel}}Activity>({{screenUpperCamel}}Activity::class.java, false, false)
 
     @Test
     fun testLaunchActivity() {
-        val activity = activityRule.launchActivity(null)
-        Spoon.screenshot(activity, "launch_activity")
+        activityRule.launchActivity(null)
     }
 }

@@ -61,11 +61,8 @@ class MainActivityEspressoTest {
         val response = buildMockLoadCommitsResponse()
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(response)
 
-        val activity = testRule.launchActivity(null)
-        //Spoon.screenshot(activity, "before_fetching_commits");
+        testRule.launchActivity(null)
         closeSoftKeyboard()
-
-        //Spoon.screenshot(activity, "after_fetching_commits");
 
         onView(withRecyclerView(R.id.commits)
                 .atPositionOnView(0, R.id.author))
