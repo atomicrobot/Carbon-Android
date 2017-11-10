@@ -15,8 +15,11 @@ the organization settings, and then get the keys and secrets it displays.
 - Update `app/src/main/AndroidManifest.xml` with the organization api key.
 
 ### Signing configs
-*DO NOT* use the demo keystore in your apps.  Run `distribution/keys/generateKey.sh release` and update
-`app/build.gradle` signing configs appropriately.
+*DO NOT* use the demo keystore in your apps.
+
+Note: If you are creating signing keys, consider setting up Google Play App Signing (https://developer.android.com/studio/publish/app-signing.html#google-play-app-signing)
+
+Run `distribution/keys/generateKey.sh release` and update `app/build.gradle` signing configs appropriately.
 
 ## Quality
 
