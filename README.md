@@ -66,12 +66,6 @@ app/build/reports/androidTests/connected/flavors/DEV => quality/androidTests
 - "Unit Tests" with a start page of `quality/tests/index.html`
 - "Integration Tests" with a start page of `quality/integrationTests/index.html`
 
-### (Optional) Kotlin Configuration
-- Open Action Menu in Android Studio (Cmd-Shift-A on Mac) (Ctrl-Shift-A on Windows/Linux)
-- Type Configure Kotlin in Project
-- Adding a new Kotlin activity: `./gradlew app:ktscreen -Ppackage=com.demo.mobile -Pscreen=SignIn`
-- Replace `apt` with `kapt` in build.gradle
-
 License
 =======
 
