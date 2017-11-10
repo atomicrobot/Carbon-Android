@@ -17,9 +17,8 @@ the organization settings, and then get the keys and secrets it displays.
 ### Signing configs
 *DO NOT* use the demo keystore in your apps.
 
-Note: If you are creating signing keys, consider setting up Google Play App Signing (https://developer.android.com/studio/publish/app-signing.html#google-play-app-signing)
-
-Run `distribution/keys/generateKey.sh release` and update `app/build.gradle` signing configs appropriately.
+- Note: If you are creating signing keys, consider setting up Google Play App Signing (https://developer.android.com/studio/publish/app-signing.html#google-play-app-signing)
+- Run `distribution/keys/generateKey.sh release` and update `app/build.gradle` signing configs appropriately.
 
 ## Quality
 
@@ -29,10 +28,11 @@ Run `distribution/keys/generateKey.sh release` and update `app/build.gradle` sig
 ## Gradle and plugins
 
 To see what the dependency tree currently looks like:
-`./gradlew app:dependencies`
+- `./gradlew app:dependencies`
 
 To see what dependencies might be out of date:
-`./gradlew app:dependencyUpdates -Drevision=release`
+- `./gradlew app:dependencyUpdates -Drevision=release`
+- Note: This has been hit and miss lately. You can also check Lint for obsolete dependency warnings.
 
 ## Continuous Integration Setup
 
