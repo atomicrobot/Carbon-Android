@@ -1,3 +1,0 @@
--keep class com.crashlytics.** { *; }
--keepattributes SourceFile,LineNumberTable
--keep public class * extends java.lang.Exception
