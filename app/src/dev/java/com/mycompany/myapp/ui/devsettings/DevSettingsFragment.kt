@@ -8,12 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.mycompany.myapp.R
 import com.mycompany.myapp.ui.BaseFragment
-import javax.inject.Inject
 
 class DevSettingsFragment : BaseFragment() {
     interface DevSettingsFragmentHost
 
-    @Inject lateinit var viewModel: DevSettingsViewModel
+    private lateinit var viewModel: DevSettingsViewModel
     private lateinit var binding: DevSettingsFragmentBinding
     private var host: DevSettingsFragmentHost? = null
 

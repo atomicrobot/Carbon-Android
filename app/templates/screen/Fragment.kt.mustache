@@ -10,12 +10,10 @@ import com.mycompany.myapp.ui.BaseFragment
 
 import {{package}}.R
 
-import javax.inject.Inject
-
 class {{screenUpperCamel}}Fragment : BaseFragment() {
     interface {{screenUpperCamel}}FragmentHost
 
-    @Inject lateinit var viewModel: {{screenUpperCamel}}ViewModel
+    private lateinit var viewModel: {{screenUpperCamel}}ViewModel
     private lateinit var binding: {{screenUpperCamel}}FragmentBinding
     private var host: {{screenUpperCamel}}FragmentHost? = null
 
