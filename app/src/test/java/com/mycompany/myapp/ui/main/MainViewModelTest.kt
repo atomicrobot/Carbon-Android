@@ -13,18 +13,23 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
-class MainPresenterTest {
+class MainViewModelTest {
 
     @Mock private lateinit var githubInteractor: GitHubInteractor
 
-    private lateinit var presenter: MainPresenter
+    private lateinit var viewModel: MainViewModel
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
 
         val context = RuntimeEnvironment.application
-        presenter = MainPresenter(context, githubInteractor, Schedulers.trampoline(), Schedulers.trampoline(), 0)
+        viewModel = MainViewModel(
+                context,
+                githubInteractor,
+                Schedulers.trampoline(),
+                Schedulers.trampoline(),
+                0)
     }
 
     @Test
@@ -32,7 +37,7 @@ class MainPresenterTest {
         // CI systems can change the build number so we are a little more flexible on what to expect
         val expectedPattern = "Version: 1.0 b[1-9][0-9]*".toRegex()
         assertTrue("Version: 1.0 b123".matches(expectedPattern))
-        assertTrue(presenter.getVersion().matches(expectedPattern))
+        assertTrue(viewModel.getVersion().matches(expectedPattern))
     }
 
     @Test
@@ -40,33 +45,33 @@ class MainPresenterTest {
         // CI systems can change the build number so we are a little more flexible on what to expect
         val expectedPattern = "Fingerprint: [a-zA-Z0-9]+".toRegex()
         assertTrue("Fingerprint: 0569b5cd8".matches(expectedPattern))
-        assertTrue(presenter.getFingerprint().matches(expectedPattern))
+        assertTrue(viewModel.getFingerprint().matches(expectedPattern))
     }
 
     @Test
     fun testFetchCommitsEnabled() {
-        presenter.username = "test"
-        presenter.repository = ""
-        assertFalse(presenter.isFetchCommitsEnabled())
+        viewModel.username = "test"
+        viewModel.repository = ""
+        assertFalse(viewModel.isFetchCommitsEnabled())
 
-        presenter.username = ""
-        presenter.repository = "test"
-        assertFalse(presenter.isFetchCommitsEnabled())
+        viewModel.username = ""
+        viewModel.repository = "test"
+        assertFalse(viewModel.isFetchCommitsEnabled())
 
-        presenter.username = ""
-        presenter.repository = ""
-        assertFalse(presenter.isFetchCommitsEnabled())
+        viewModel.username = ""
+        viewModel.repository = ""
+        assertFalse(viewModel.isFetchCommitsEnabled())
 
-        presenter.username = "test"
-        presenter.repository = ""
-        assertFalse(presenter.isFetchCommitsEnabled())
+        viewModel.username = "test"
+        viewModel.repository = ""
+        assertFalse(viewModel.isFetchCommitsEnabled())
 
-        presenter.username = ""
-        presenter.repository = "test"
-        assertFalse(presenter.isFetchCommitsEnabled())
+        viewModel.username = ""
+        viewModel.repository = "test"
+        assertFalse(viewModel.isFetchCommitsEnabled())
 
-        presenter.username = "test"
-        presenter.repository = "test"
-        assertTrue(presenter.isFetchCommitsEnabled())
+        viewModel.username = "test"
+        viewModel.repository = "test"
+        assertTrue(viewModel.isFetchCommitsEnabled())
     }
 }

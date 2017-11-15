@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.mycompany.myapp.ui.main.MainPresenter.CommitView"/>
+            type="com.mycompany.myapp.ui.main.MainViewModel.CommitView"/>
     </data>
 
     <android.support.v7.widget.CardView

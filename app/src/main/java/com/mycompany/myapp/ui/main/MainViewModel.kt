@@ -1,6 +1,6 @@
 package com.mycompany.myapp.ui.main
 
-import android.content.Context
+import android.app.Application
 import android.databinding.Bindable
 import android.os.Parcelable
 import com.mycompany.myapp.BR
@@ -9,27 +9,24 @@ import com.mycompany.myapp.R
 import com.mycompany.myapp.data.api.github.GitHubInteractor
 import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.mycompany.myapp.data.api.github.model.Commit
-import com.mycompany.myapp.databinding.ReadWriteBinding
-import com.mycompany.myapp.ui.BasePresenter
-import com.mycompany.myapp.ui.main.MainPresenter.MainViewContract
+import com.mycompany.myapp.ui.BaseViewModel
+import com.mycompany.myapp.ui.SimpleSnackbarMessage
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Named
 
-class MainPresenter(
-        private val context: Context,
+class MainViewModel @Inject constructor(
+        private val app: Application,
         private val gitHubInteractor: GitHubInteractor,
-        private val ioScheduler: Scheduler,
-        private val mainScheduler: Scheduler,
-        private val loadingDelayMs: Long)
-    : BasePresenter<MainViewContract, MainPresenter.State>(STATE_KEY, State()) {
-
-    interface MainViewContract {
-        fun displayError(message: String)
-    }
+        @Named("io") private val ioScheduler: Scheduler,
+        @Named("main") private val mainScheduler: Scheduler,
+        @Named("loading_delay_ms") private val loadingDelayMs: Long)
+    : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
     @Parcelize
     data class CommitView(
@@ -40,34 +37,55 @@ class MainPresenter(
     data class State(
             var initialized: Boolean = false,
             var username: String = "",
-            var repository: String = "",
-            var loadingCommits: Boolean = false,
-            var commits: List<CommitView> = emptyList()) : Parcelable
+            var repository: String = "") : Parcelable
 
-    override fun onResume() {
-        super.onResume()
+    fun onResume() {
         if (!state.initialized) {
             state.initialized = true
             username = "madebyatomicrobot"  // NON-NLS
             repository = "android-starter-project"  // NON-NLS
-            commits = ArrayList()
-        }
 
-        fetchCommits()
+            fetchCommits()
+        }
     }
 
-    @get:Bindable var username: String by ReadWriteBinding(BR.username) { state::username }
-    @get:Bindable var repository: String by ReadWriteBinding(BR.repository) { state::repository }
-    @get:Bindable var loadingCommits: Boolean by ReadWriteBinding(BR.loadingCommits) { state::loadingCommits }
-    @get:Bindable var commits: List<CommitView> by ReadWriteBinding(BR.commits) { state::commits }
+    var snackbarMessage = SimpleSnackbarMessage()
+
+    var username: String
+        @Bindable get() = state.username
+        set(value) {
+            state.username = value
+            notifyPropertyChanged(BR.username)
+        }
+
+    var repository: String
+        @Bindable get() = state.repository
+        set(value) {
+            state.repository = value
+            notifyPropertyChanged(BR.repository)
+        }
+
+    var loadingCommits: Boolean = false
+        @Bindable get
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.loadingCommits)
+        }
+
+    var commits: List<CommitView> = emptyList()
+        @Bindable get
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.commits)
+        }
 
     @Bindable("username", "repository") fun isFetchCommitsEnabled(): Boolean {
         return !state.username.isEmpty() && !state.repository.isEmpty()
     }
 
-    fun getVersion(): String = context.getString(R.string.version_format, BuildConfig.VERSION_NAME)
+    fun getVersion(): String = app.getString(R.string.version_format, BuildConfig.VERSION_NAME)
 
-    fun getFingerprint(): String = context.getString(R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT)
+    fun getFingerprint(): String = app.getString(R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT)
 
     fun fetchCommits() {
         disposables.add(loadCommits(LoadCommitsRequest(state.username, state.repository)))
@@ -91,14 +109,15 @@ class MainPresenter(
     private fun toCommitView(commit: Commit): CommitView {
         return CommitView(
                 message = commit.commitMessage,
-                author = context.getString(R.string.author_format, commit.author))
+                author = app.getString(R.string.author_format, commit.author))
     }
 
     private fun handleError(throwable: Throwable) {
-        view.displayError(throwable.message ?: context.getString(R.string.error_unexpected))
+        commits = emptyList()
+        snackbarMessage.value = throwable.message ?: app.getString(R.string.error_unexpected)
     }
 
     companion object {
-        private const val STATE_KEY = "MainPresenterState"  // NON-NLS
+        private const val STATE_KEY = "MainViewModelState"  // NON-NLS
     }
 }

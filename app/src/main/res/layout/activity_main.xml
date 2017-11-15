@@ -4,8 +4,8 @@
 
     <data class="com.mycompany.myapp.ui.main.MainActivityBinding">
         <variable
-            name="presenter"
-            type="com.mycompany.myapp.ui.main.MainPresenter"/>
+            name="vm"
+            type="com.mycompany.myapp.ui.main.MainViewModel"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
