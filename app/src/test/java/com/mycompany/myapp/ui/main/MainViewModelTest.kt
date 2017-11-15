@@ -23,9 +23,9 @@ class MainViewModelTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        val context = RuntimeEnvironment.application
+        val app = RuntimeEnvironment.application
         viewModel = MainViewModel(
-                context,
+                app,
                 githubInteractor,
                 Schedulers.trampoline(),
                 Schedulers.trampoline(),

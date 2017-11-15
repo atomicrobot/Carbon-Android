@@ -21,17 +21,26 @@ task screen {
             // New files
             createFile(scopes, 'templates/screen/Activity.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Activity.kt")
             createFile(scopes, 'templates/screen/Fragment.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Fragment.kt")
-            createFile(scopes, 'templates/screen/Component.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Component.kt")
-            createFile(scopes, 'templates/screen/Presenter.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}Presenter.kt")
+            createFile(scopes, 'templates/screen/ViewModel.kt.mustache', "src/main/java/$argPackageDirs/ui/$screenPackage/${argScreen}ViewModel.kt")
 
             createFile(scopes, 'templates/screen/activity.xml.mustache', "src/main/res/layout/activity_${screenFileName}.xml")
             createFile(scopes, 'templates/screen/content.xml.mustache', "src/main/res/layout/content_${screenFileName}.xml")
             createFile(scopes, 'templates/screen/fragment.xml.mustache', "src/main/res/layout/fragment_${screenFileName}.xml")
 
             createFile(scopes, 'templates/screen/ActivityTests.kt.mustache', "src/androidTest/java/$argPackageDirs/ui/$screenPackage/${argScreen}ActivityEspressoTests.kt")
-            createFile(scopes, 'templates/screen/PresenterTests.kt.mustache', "src/test/java/$argPackageDirs/ui/$screenPackage/${argScreen}PresenterTests.kt")
+            createFile(scopes, 'templates/screen/ViewModelTests.kt.mustache', "src/test/java/$argPackageDirs/ui/$screenPackage/${argScreen}ViewModelTests.kt")
 
             // Existing files
+            updateFile(
+                    scopes,
+                    'templates/screen/ViewModelFactoryModule_ImportPartial.kt.mustache',
+                    "src/main/java/$argPackageDirs/ui/ViewModelFactoryModule.kt",
+                    "// GENERATOR - MORE IMPORTS //")
+            updateFile(
+                    scopes,
+                    'templates/screen/ViewModelFactoryModule_ViewModel.kt.mustache',
+                    "src/main/java/$argPackageDirs/ui/ViewModelFactoryModule.kt",
+                    "// GENERATOR - MORE VIEW MODELS //")
             updateFile(
                     scopes,
                     'templates/screen/ApplicationComponent_ImportPartial.kt.mustache',
@@ -39,9 +48,9 @@ task screen {
                     "// GENERATOR - MORE IMPORTS //")
             updateFile(
                     scopes,
-                    'templates/screen/ApplicationComponent_SubcomponentPartial.kt.mustache',
+                    'templates/screen/ApplicationComponent_ActivityPartial.kt.mustache',
                     "src/main/java/$argPackageDirs/app/ApplicationComponent.kt",
-                    "// GENERATOR - MORE SUBCOMPONENTS //")
+                    "// GENERATOR - MORE ACTIVITIES //")
             updateFile(
                     scopes,
                     'templates/screen/AndroidManifest_ActivityPartial.xml.mustache',

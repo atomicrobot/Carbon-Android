@@ -8,32 +8,23 @@ import android.os.Bundle
 import {{package}}.R
 import {{package}}.app.MainApplication
 import {{package}}.ui.BaseActivity
-import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Component.{{screenUpperCamel}}Module
 import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Fragment.{{screenUpperCamel}}FragmentHost
-import {{package}}.ui.{{screenLowerCase}}.{{screenUpperCamel}}Presenter.{{screenUpperCamel}}ViewContract
 
 import javax.inject.Inject
 
-class {{screenUpperCamel}}Activity : BaseActivity(), {{screenUpperCamel}}ViewContract, {{screenUpperCamel}}FragmentHost {
-
-    private lateinit var component: {{screenUpperCamel}}Component
-
-    @Inject lateinit var presenter: {{screenUpperCamel}}Presenter
-
+class {{screenUpperCamel}}Activity : BaseActivity(), {{screenUpperCamel}}FragmentHost {
+    @Inject lateinit var viewModel: {{screenUpperCamel}}ViewModel
     private lateinit var binding: {{screenUpperCamel}}ActivityBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        component = appComponent.{{screenLowerCamel}}Component({{screenUpperCamel}}Module(this))
-        component.inject(this)
-
-        presenter.view = this
-        lifecycle.addObserver(presenter)
-        presenter.restoreState(savedInstanceState)
-
+        appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
+        viewModel = getViewModel({{screenUpperCamel}}ViewModel::class)
+        viewModel.restoreState(savedInstanceState)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_{{screenUnderscore}})
-        binding.presenter = presenter
+        binding.vm = viewModel
         binding.executePendingBindings()
 
         setSupportActionBar(binding.toolbar)
@@ -42,10 +33,13 @@ class {{screenUpperCamel}}Activity : BaseActivity(), {{screenUpperCamel}}ViewCon
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter.saveState(outState)
+        viewModel.saveState(outState)
     }
 
-    override fun inject(fragment: {{screenUpperCamel}}Fragment) = component.inject(fragment)
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
 
     companion object {
         fun buildIntent(context: Context): Intent {

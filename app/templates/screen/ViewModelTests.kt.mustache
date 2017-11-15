@@ -9,16 +9,16 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
-class {{screenUpperCamel}}PresenterTests {
+class {{screenUpperCamel}}ViewModelTests {
 
-    private lateinit var presenter: {{screenUpperCamel}}Presenter
+    private lateinit var viewModel: {{screenUpperCamel}}ViewModel
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        val context = RuntimeEnvironment.application
-        presenter = {{screenUpperCamel}}Presenter(context)
+        val app = RuntimeEnvironment.application
+        viewModel = {{screenUpperCamel}}ViewModel(app)
     }
 
     @Test

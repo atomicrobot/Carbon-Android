@@ -5,8 +5,8 @@
     <data class="com.mycompany.myapp.ui.devsettings.DevSettingsActivityBinding">
 
         <variable
-            name="presenter"
-            type="com.mycompany.myapp.ui.devsettings.DevSettingsPresenter"/>
+            name="vm"
+            type="com.mycompany.myapp.ui.devsettings.DevSettingsViewModel"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
