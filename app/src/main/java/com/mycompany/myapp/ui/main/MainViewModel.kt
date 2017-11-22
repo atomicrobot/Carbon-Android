@@ -28,20 +28,16 @@ class MainViewModel @Inject constructor(
         @Named("loading_delay_ms") private val loadingDelayMs: Long)
     : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
-    @Parcelize
-    data class CommitView(
-            val message: String = "",
-            val author: String = "") : Parcelable
+    private var viewModelInitialized: Boolean = false
 
     @Parcelize
     data class State(
-            var initialized: Boolean = false,
             var username: String = "",
             var repository: String = "") : Parcelable
 
     fun onResume() {
-        if (!state.initialized) {
-            state.initialized = true
+        if (!viewModelInitialized) {
+            viewModelInitialized = true
             username = "madebyatomicrobot"  // NON-NLS
             repository = "android-starter-project"  // NON-NLS
 
@@ -78,6 +74,10 @@ class MainViewModel @Inject constructor(
             field = value
             notifyPropertyChanged(BR.commits)
         }
+
+    data class CommitView(
+            val message: String = "",
+            val author: String = "")
 
     @Bindable("username", "repository") fun isFetchCommitsEnabled(): Boolean {
         return !state.username.isEmpty() && !state.repository.isEmpty()

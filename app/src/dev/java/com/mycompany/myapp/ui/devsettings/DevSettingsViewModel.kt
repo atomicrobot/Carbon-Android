@@ -14,15 +14,16 @@ class DevSettingsViewModel @Inject constructor(
         private val settings: Settings)
     : BaseViewModel<DevSettingsViewModel.State>(app, STATE_KEY, State()) {
 
+    private var viewModelInitialized: Boolean = false
+
     @Parcelize
     data class State(
-            var initialized: Boolean = false,
             var baseUrl: String = "",
             var trustAllSSL: Boolean = false) : Parcelable
 
     fun onResume() {
-        if (!state.initialized) {
-            state.initialized = true
+        if (!viewModelInitialized) {
+            viewModelInitialized = true
             baseUrl = settings.baseUrl
             trustAllSSL = settings.trustAllSSL
         }
