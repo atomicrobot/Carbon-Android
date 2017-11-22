@@ -51,8 +51,8 @@ class MainFragment : BaseFragment() {
     private class CommitsAdapter : ArrayAdapter<CommitView, CommitViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommitViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            val commitItemBinding = CommitItemBinding.inflate(layoutInflater, parent, false)
-            return CommitViewHolder(commitItemBinding)
+            val binding: CommitItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_commit_summary, parent, false)
+            return CommitViewHolder(binding)
         }
 
         override fun onBindViewHolder(holder: CommitViewHolder, position: Int) {
