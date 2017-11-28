@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(
 
     private var viewModelInitialized: Boolean = false
 
-    private var snackbarMessage = SimpleSnackbarMessage()
+    var snackbarMessage = SimpleSnackbarMessage()
 
     @Parcelize
     data class State(
