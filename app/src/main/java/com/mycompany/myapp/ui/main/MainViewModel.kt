@@ -11,12 +11,10 @@ import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.mycompany.myapp.data.api.github.model.Commit
 import com.mycompany.myapp.ui.BaseViewModel
 import com.mycompany.myapp.ui.SimpleSnackbarMessage
+import com.mycompany.myapp.util.RxUtils.delayAtLeast
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import kotlinx.android.parcel.Parcelize
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,6 +27,10 @@ class MainViewModel @Inject constructor(
     : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
     private var viewModelInitialized: Boolean = false
+
+    data class CommitView(
+            val message: String = "",
+            val author: String = "")
 
     @Parcelize
     data class State(
@@ -75,35 +77,28 @@ class MainViewModel @Inject constructor(
             notifyPropertyChanged(BR.commits)
         }
 
-    data class CommitView(
-            val message: String = "",
-            val author: String = "")
-
-    @Bindable("username", "repository") fun isFetchCommitsEnabled(): Boolean {
-        return !state.username.isEmpty() && !state.repository.isEmpty()
-    }
+    @Bindable("username", "repository")
+    fun isFetchCommitsEnabled(): Boolean = !username.isEmpty() && !repository.isEmpty()
 
     fun getVersion(): String = app.getString(R.string.version_format, BuildConfig.VERSION_NAME)
 
     fun getFingerprint(): String = app.getString(R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT)
 
     fun fetchCommits() {
-        disposables.add(loadCommits(LoadCommitsRequest(state.username, state.repository)))
+        loadingCommits = true
+        disposables.add(
+                delayAtLeast(loadCommits(state.username, state.repository), loadingDelayMs)
+                        .map { commits -> commits.map { toCommitView(it) } }
+                        .doFinally({ loadingCommits = false })
+                        .subscribeOn(ioScheduler)
+                        .observeOn(mainScheduler)
+                        .subscribe({ commits = it }, { handleError(it) }))
     }
 
-    private fun loadCommits(request: LoadCommitsRequest): Disposable {
-        return delayAtLeast(gitHubInteractor.loadCommits(request), loadingDelayMs)
-                .flatMap<Commit> { response -> Observable.fromIterable<Commit>(response.commits) }
-                .map(this::toCommitView)
-                .toList()
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribe({ commits = it }, { handleError(it) })
-    }
-
-    private fun <T> delayAtLeast(observable: Observable<T>, delayMs: Long): Observable<T> {
-        val timer = Observable.timer(delayMs, TimeUnit.MILLISECONDS)
-        return Observable.combineLatest<Long, T, T>(timer, observable, BiFunction { _, response -> response })
+    private fun loadCommits(username: String, repository: String): Observable<List<Commit>> {
+        val request = LoadCommitsRequest(username, repository)
+        return gitHubInteractor.loadCommits(request)
+                .map { it.commits }
     }
 
     private fun toCommitView(commit: Commit): CommitView {
