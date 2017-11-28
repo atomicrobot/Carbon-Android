@@ -1,6 +1,6 @@
 buildscript {
-    ext.android_plugin_version = '3.0.0'
-    ext.kotlin_version = '1.1.51'
+    ext.android_plugin_version = '3.0.1'
+    ext.kotlin_version = '1.1.61'
 
     repositories {
         google()
