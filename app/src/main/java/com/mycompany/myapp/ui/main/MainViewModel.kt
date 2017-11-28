@@ -39,13 +39,13 @@ class MainViewModel @Inject constructor(
             val message: String = "",
             val author: String = "")
 
-    sealed class UIState {
-        class Loading : UIState()
-        class Commits(val commits: List<CommitView>) : UIState()
-        class Error(val message: String) : UIState()
+    sealed class Results {
+        class Loading : Results()
+        class Commits(val commits: List<CommitView>) : Results()
+        class Error(val message: String) : Results()
     }
 
-    private var uiState: UIState = UIState.Loading()
+    private var results: Results = Results.Loading()
         set(value) {
             field = value
 
@@ -54,7 +54,7 @@ class MainViewModel @Inject constructor(
             notifyPropertyChanged(BR.fetchCommitsEnabled)
 
             when (value) {
-                is UIState.Error -> snackbarMessage.value = value.message
+                is Results.Error -> snackbarMessage.value = value.message
             }
         }
 
@@ -83,13 +83,13 @@ class MainViewModel @Inject constructor(
         }
 
     @Bindable("username", "repository")
-    fun isFetchCommitsEnabled(): Boolean = uiState !is UIState.Loading && !username.isEmpty() && !repository.isEmpty()
+    fun isFetchCommitsEnabled(): Boolean = results !is Results.Loading && !username.isEmpty() && !repository.isEmpty()
 
-    @Bindable fun isLoadingCommits(): Boolean = uiState is UIState.Loading
+    @Bindable fun isLoadingCommits(): Boolean = results is Results.Loading
 
-    @Bindable fun getCommits() = uiState.let {
+    @Bindable fun getCommits() = results.let {
         when (it) {
-            is UIState.Commits -> it.commits
+            is Results.Commits -> it.commits
             else -> emptyList()
         }
     }
@@ -99,15 +99,15 @@ class MainViewModel @Inject constructor(
     fun getFingerprint(): String = app.getString(R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT)
 
     fun fetchCommits() {
-        uiState = UIState.Loading()
+        results = Results.Loading()
         disposables.add(
                 delayAtLeast(loadCommits(state.username, state.repository), loadingDelayMs)
                         .map { commits -> commits.map { toCommitView(it) } }
                         .subscribeOn(ioScheduler)
                         .observeOn(mainScheduler)
                         .subscribe(
-                                { commits -> uiState = UIState.Commits(commits) },
-                                { error -> uiState = UIState.Error(error.message ?: app.getString(R.string.error_unexpected)) }))
+                                { commits -> results = Results.Commits(commits) },
+                                { error -> results = Results.Error(error.message ?: app.getString(R.string.error_unexpected)) }))
     }
 
     private fun loadCommits(username: String, repository: String): Observable<List<Commit>> {
