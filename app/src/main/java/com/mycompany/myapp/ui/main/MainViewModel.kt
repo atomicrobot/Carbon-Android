@@ -28,14 +28,35 @@ class MainViewModel @Inject constructor(
 
     private var viewModelInitialized: Boolean = false
 
-    data class CommitView(
-            val message: String = "",
-            val author: String = "")
+    private var snackbarMessage = SimpleSnackbarMessage()
 
     @Parcelize
     data class State(
             var username: String = "",
             var repository: String = "") : Parcelable
+
+    data class CommitView(
+            val message: String = "",
+            val author: String = "")
+
+    sealed class UIState {
+        class Loading : UIState()
+        class Commits(val commits: List<CommitView>) : UIState()
+        class Error(val message: String) : UIState()
+    }
+
+    private var uiState: UIState = UIState.Loading()
+        set(value) {
+            field = value
+
+            notifyPropertyChanged(BR.loadingCommits)
+            notifyPropertyChanged(BR.commits)
+            notifyPropertyChanged(BR.fetchCommitsEnabled)
+
+            when (value) {
+                is UIState.Error -> snackbarMessage.value = value.message
+            }
+        }
 
     fun onResume() {
         if (!viewModelInitialized) {
@@ -46,8 +67,6 @@ class MainViewModel @Inject constructor(
             fetchCommits()
         }
     }
-
-    var snackbarMessage = SimpleSnackbarMessage()
 
     var username: String
         @Bindable get() = state.username
@@ -63,41 +82,36 @@ class MainViewModel @Inject constructor(
             notifyPropertyChanged(BR.repository)
         }
 
-    var loadingCommits: Boolean = false
-        @Bindable get
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.loadingCommits)
-        }
-
-    var commits: List<CommitView> = emptyList()
-        @Bindable get
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.commits)
-        }
-
     @Bindable("username", "repository")
-    fun isFetchCommitsEnabled(): Boolean = !username.isEmpty() && !repository.isEmpty()
+    fun isFetchCommitsEnabled(): Boolean = uiState !is UIState.Loading && !username.isEmpty() && !repository.isEmpty()
+
+    @Bindable fun isLoadingCommits(): Boolean = uiState is UIState.Loading
+
+    @Bindable fun getCommits() = uiState.let {
+        when (it) {
+            is UIState.Commits -> it.commits
+            else -> emptyList()
+        }
+    }
 
     fun getVersion(): String = app.getString(R.string.version_format, BuildConfig.VERSION_NAME)
 
     fun getFingerprint(): String = app.getString(R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT)
 
     fun fetchCommits() {
-        loadingCommits = true
+        uiState = UIState.Loading()
         disposables.add(
                 delayAtLeast(loadCommits(state.username, state.repository), loadingDelayMs)
                         .map { commits -> commits.map { toCommitView(it) } }
-                        .doFinally({ loadingCommits = false })
                         .subscribeOn(ioScheduler)
                         .observeOn(mainScheduler)
-                        .subscribe({ commits = it }, { handleError(it) }))
+                        .subscribe(
+                                { commits -> uiState = UIState.Commits(commits) },
+                                { error -> uiState = UIState.Error(error.message ?: app.getString(R.string.error_unexpected)) }))
     }
 
     private fun loadCommits(username: String, repository: String): Observable<List<Commit>> {
-        val request = LoadCommitsRequest(username, repository)
-        return gitHubInteractor.loadCommits(request)
+        return gitHubInteractor.loadCommits(LoadCommitsRequest(username, repository))
                 .map { it.commits }
     }
 
@@ -105,11 +119,6 @@ class MainViewModel @Inject constructor(
         return CommitView(
                 message = commit.commitMessage,
                 author = app.getString(R.string.author_format, commit.author))
-    }
-
-    private fun handleError(throwable: Throwable) {
-        commits = emptyList()
-        snackbarMessage.value = throwable.message ?: app.getString(R.string.error_unexpected)
     }
 
     companion object {
