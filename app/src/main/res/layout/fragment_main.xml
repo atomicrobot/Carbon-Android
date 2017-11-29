@@ -65,8 +65,8 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
-                android:onClick="@{() -> vm.fetchCommits()}"
                 android:enabled="@{vm.fetchCommitsEnabled}"
+                android:onClick="@{() -> vm.fetchCommits()}"
                 android:text="Fetch Commits"/>
 
         </LinearLayout>
@@ -120,7 +120,7 @@
             app:layout_constraintTop_toBottomOf="@+id/header"
             app:visible="@{!vm.loading}"/>
 
-        <ProgressBar
+        <com.mycompany.myapp.util.progress.TestableProgressBar
             android:id="@+id/loading"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"

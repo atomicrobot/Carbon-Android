@@ -29,4 +29,6 @@ open class MainApplication : Application() {
     protected open fun initializeApplication() {
         initializer.initialize()
     }
+
+    open fun isTesting() = false
 }
