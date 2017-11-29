@@ -12,7 +12,8 @@ import com.mycompany.myapp.data.api.github.model.Commit
 import com.mycompany.myapp.ui.BaseViewModel
 import com.mycompany.myapp.ui.SimpleSnackbarMessage
 import com.mycompany.myapp.util.RxUtils.delayAtLeast
-import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
 import javax.inject.Inject
 import javax.inject.Named
@@ -20,8 +21,6 @@ import javax.inject.Named
 class MainViewModel @Inject constructor(
         private val app: Application,
         private val gitHubInteractor: GitHubInteractor,
-        @Named("io") private val ioScheduler: Scheduler,
-        @Named("main") private val mainScheduler: Scheduler,
         @Named("loading_delay_ms") private val loadingDelayMs: Long)
     : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
@@ -43,7 +42,7 @@ class MainViewModel @Inject constructor(
         fetchCommits()
     }
 
-    private var commits: Commits = Commits.Result(emptyList())
+    internal var commits: Commits = Commits.Result(emptyList())
         set(value) {
             field = value
 
@@ -75,9 +74,11 @@ class MainViewModel @Inject constructor(
     @Bindable("username", "repository")
     fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && !username.isEmpty() && !repository.isEmpty()
 
-    @Bindable fun isLoading(): Boolean = commits is Commits.Loading
+    @Bindable
+    fun isLoading(): Boolean = commits is Commits.Loading
 
-    @Bindable fun getCommits() = commits.let {
+    @Bindable
+    fun getCommits() = commits.let {
         when (it) {
             is Commits.Result -> it.commits
             else -> emptyList()
@@ -92,8 +93,8 @@ class MainViewModel @Inject constructor(
         commits = Commits.Loading()
         disposables.add(delayAtLeast(gitHubInteractor.loadCommits(LoadCommitsRequest(username, repository)), loadingDelayMs)
                 .map { it.commits }  // Pull the commits out of the response
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { commits = Commits.Result(it) },
                         { commits = Commits.Error(it.message ?: app.getString(R.string.error_unexpected)) }))
