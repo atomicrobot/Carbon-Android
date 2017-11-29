@@ -5,6 +5,6 @@ import com.mycompany.myapp.app.MainApplication
 class TestMainApplication : MainApplication() {
 
     override fun initializeApplication() {
-        // Don't initialize the application
+        // Don't setupViewModel the application
     }
 }

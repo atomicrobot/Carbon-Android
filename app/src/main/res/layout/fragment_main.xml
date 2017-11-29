@@ -91,7 +91,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@{vm.version}"/>
+                android:text="@{@string/version_format(vm.version)}"/>
 
             <TextView
                 android:id="@+id/fingerprint"
@@ -103,7 +103,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@{vm.fingerprint}"/>
+                android:text="@{@string/fingerprint_format(vm.fingerprint)}"/>
 
         </RelativeLayout>
 
@@ -118,7 +118,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header"
-            app:visible="@{!vm.loadingCommits}"/>
+            app:visible="@{!vm.loading}"/>
 
         <ProgressBar
             android:id="@+id/loading"
@@ -129,7 +129,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header"
-            app:visible="@{vm.loadingCommits}"/>
+            app:visible="@{vm.loading}"/>
 
     </android.support.constraint.ConstraintLayout>
 

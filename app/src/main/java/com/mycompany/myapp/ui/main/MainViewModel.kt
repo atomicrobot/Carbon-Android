@@ -12,7 +12,6 @@ import com.mycompany.myapp.data.api.github.model.Commit
 import com.mycompany.myapp.ui.BaseViewModel
 import com.mycompany.myapp.ui.SimpleSnackbarMessage
 import com.mycompany.myapp.util.RxUtils.delayAtLeast
-import io.reactivex.Observable
 import io.reactivex.Scheduler
 import kotlinx.android.parcel.Parcelize
 import javax.inject.Inject
@@ -26,47 +25,38 @@ class MainViewModel @Inject constructor(
         @Named("loading_delay_ms") private val loadingDelayMs: Long)
     : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
-    private var viewModelInitialized: Boolean = false
-
-    var snackbarMessage = SimpleSnackbarMessage()
-
     @Parcelize
     data class State(
             var username: String = "",
             var repository: String = "") : Parcelable
 
-    data class CommitView(
-            val message: String = "",
-            val author: String = "")
-
-    sealed class Results {
-        class Loading : Results()
-        class Commits(val commits: List<CommitView>) : Results()
-        class Error(val message: String) : Results()
+    sealed class Commits {
+        class Loading : Commits()
+        class Result(val commits: List<Commit>) : Commits()
+        class Error(val message: String) : Commits()
     }
 
-    private var results: Results = Results.Loading()
+    override fun setupViewModel() {
+        username = "madebyatomicrobot"  // NON-NLS
+        repository = "android-starter-project"  // NON-NLS
+
+        fetchCommits()
+    }
+
+    private var commits: Commits = Commits.Result(emptyList())
         set(value) {
             field = value
 
-            notifyPropertyChanged(BR.loadingCommits)
+            notifyPropertyChanged(BR.loading)
             notifyPropertyChanged(BR.commits)
             notifyPropertyChanged(BR.fetchCommitsEnabled)
 
             when (value) {
-                is Results.Error -> snackbarMessage.value = value.message
+                is Commits.Error -> snackbarMessage.value = value.message
             }
         }
 
-    fun onResume() {
-        if (!viewModelInitialized) {
-            viewModelInitialized = true
-            username = "madebyatomicrobot"  // NON-NLS
-            repository = "android-starter-project"  // NON-NLS
-
-            fetchCommits()
-        }
-    }
+    val snackbarMessage = SimpleSnackbarMessage()
 
     var username: String
         @Bindable get() = state.username
@@ -83,42 +73,30 @@ class MainViewModel @Inject constructor(
         }
 
     @Bindable("username", "repository")
-    fun isFetchCommitsEnabled(): Boolean = results !is Results.Loading && !username.isEmpty() && !repository.isEmpty()
+    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && !username.isEmpty() && !repository.isEmpty()
 
-    @Bindable fun isLoadingCommits(): Boolean = results is Results.Loading
+    @Bindable fun isLoading(): Boolean = commits is Commits.Loading
 
-    @Bindable fun getCommits() = results.let {
+    @Bindable fun getCommits() = commits.let {
         when (it) {
-            is Results.Commits -> it.commits
+            is Commits.Result -> it.commits
             else -> emptyList()
         }
     }
 
-    fun getVersion(): String = app.getString(R.string.version_format, BuildConfig.VERSION_NAME)
+    fun getVersion(): String = BuildConfig.VERSION_NAME
 
-    fun getFingerprint(): String = app.getString(R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT)
+    fun getFingerprint(): String = BuildConfig.VERSION_FINGERPRINT
 
     fun fetchCommits() {
-        results = Results.Loading()
-        disposables.add(
-                delayAtLeast(loadCommits(state.username, state.repository), loadingDelayMs)
-                        .map { commits -> commits.map { toCommitView(it) } }
-                        .subscribeOn(ioScheduler)
-                        .observeOn(mainScheduler)
-                        .subscribe(
-                                { commits -> results = Results.Commits(commits) },
-                                { error -> results = Results.Error(error.message ?: app.getString(R.string.error_unexpected)) }))
-    }
-
-    private fun loadCommits(username: String, repository: String): Observable<List<Commit>> {
-        return gitHubInteractor.loadCommits(LoadCommitsRequest(username, repository))
-                .map { it.commits }
-    }
-
-    private fun toCommitView(commit: Commit): CommitView {
-        return CommitView(
-                message = commit.commitMessage,
-                author = app.getString(R.string.author_format, commit.author))
+        commits = Commits.Loading()
+        disposables.add(delayAtLeast(gitHubInteractor.loadCommits(LoadCommitsRequest(username, repository)), loadingDelayMs)
+                .map { it.commits }  // Pull the commits out of the response
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribe(
+                        { commits = Commits.Result(it) },
+                        { commits = Commits.Error(it.message ?: app.getString(R.string.error_unexpected)) }))
     }
 
     companion object {

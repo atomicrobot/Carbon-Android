@@ -15,7 +15,7 @@ abstract class BaseViewModel<State : Parcelable>(
         protected val disposables: CompositeDisposable = CompositeDisposable())
     : AndroidViewModel(app), Observable {
 
-    @Transient private var databindingCallbacks: PropertyChangeRegistry? = null
+    private var viewModelInitialized: Boolean = false
 
     fun saveState(bundle: Bundle) {
         bundle.putParcelable(stateKey, state)
@@ -27,10 +27,23 @@ abstract class BaseViewModel<State : Parcelable>(
         }
     }
 
+    fun onResume() {
+        if (!viewModelInitialized) {
+            viewModelInitialized = true
+            setupViewModel()
+        }
+    }
+
+    abstract fun setupViewModel()
+
     override fun onCleared() {
         disposables.dispose()
         super.onCleared()
     }
+
+    /* Start of databinding behavior pillaged from BaseObservable */
+
+    @Transient private var databindingCallbacks: PropertyChangeRegistry? = null
 
     override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
         synchronized(this) {
@@ -71,4 +84,6 @@ abstract class BaseViewModel<State : Parcelable>(
 
         databindingCallbacks!!.notifyCallbacks(this, fieldId, null)
     }
+
+    /* End of databinding behavior pillaged from BaseObservable */
 }

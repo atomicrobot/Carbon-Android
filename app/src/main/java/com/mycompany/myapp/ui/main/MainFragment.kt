@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.mycompany.myapp.CommitItemBinding
 import com.mycompany.myapp.R
+import com.mycompany.myapp.data.api.github.model.Commit
 import com.mycompany.myapp.ui.BaseFragment
-import com.mycompany.myapp.ui.main.MainViewModel.CommitView
 import com.mycompany.myapp.util.recyclerview.ArrayAdapter
 
 class MainFragment : BaseFragment() {
@@ -48,7 +48,7 @@ class MainFragment : BaseFragment() {
         super.onDestroyView()
     }
 
-    private class CommitsAdapter : ArrayAdapter<CommitView, CommitViewHolder>() {
+    private class CommitsAdapter : ArrayAdapter<Commit, CommitViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommitViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding: CommitItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_commit_summary, parent, false)
@@ -61,11 +61,11 @@ class MainFragment : BaseFragment() {
         }
     }
 
-    internal class CommitViewHolder(
+    private class CommitViewHolder(
             private val binding: CommitItemBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CommitView) {
+        fun bind(item: Commit) {
             binding.item = item
             binding.executePendingBindings()
         }

@@ -35,16 +35,16 @@ class MainViewModelTest {
     @Test
     fun testGetVersion() {
         // CI systems can change the build number so we are a little more flexible on what to expect
-        val expectedPattern = "Version: 1.0 b[1-9][0-9]*".toRegex()
-        assertTrue("Version: 1.0 b123".matches(expectedPattern))
+        val expectedPattern = "1.0 b[1-9][0-9]*".toRegex()
+        assertTrue("1.0 b123".matches(expectedPattern))
         assertTrue(viewModel.getVersion().matches(expectedPattern))
     }
 
     @Test
     fun testGetFingerprint() {
         // CI systems can change the build number so we are a little more flexible on what to expect
-        val expectedPattern = "Fingerprint: [a-zA-Z0-9]+".toRegex()
-        assertTrue("Fingerprint: 0569b5cd8".matches(expectedPattern))
+        val expectedPattern = "[a-zA-Z0-9]+".toRegex()
+        assertTrue("0569b5cd8".matches(expectedPattern))
         assertTrue(viewModel.getFingerprint().matches(expectedPattern))
     }
 
