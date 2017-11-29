@@ -26,7 +26,7 @@ class MainViewModel @Inject constructor(
     : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
     @Parcelize
-    data class State(
+    class State(
             var username: String = "",
             var repository: String = "") : Parcelable
 

@@ -11,14 +11,12 @@ class {{screenUpperCamel}}ViewModel @Inject constructor(
     : BaseViewModel<{{screenUpperCamel}}ViewModel.State>(app, STATE_KEY, State()) {
 
     @Parcelize
-    data class State(
-        var initialized: Boolean = false) : Parcelable
+    class State() : Parcelable
 
-    fun onResume() {
-        if (!state.initialized) {
-            state.initialized = true
-        }
+    override fun setupViewModel() {
+
     }
+
     companion object {
         private const val STATE_KEY = "{{screenUpperCamel}}ViewModelState"  // NON-NLS
     }
