@@ -3,6 +3,7 @@ package com.mycompany.myapp.ui.main
 import android.app.Application
 import android.databinding.Bindable
 import android.os.Parcelable
+import android.support.annotation.VisibleForTesting
 import com.mycompany.myapp.BR
 import com.mycompany.myapp.BuildConfig
 import com.mycompany.myapp.R
@@ -42,6 +43,7 @@ class MainViewModel @Inject constructor(
         fetchCommits()
     }
 
+    @VisibleForTesting
     internal var commits: Commits = Commits.Result(emptyList())
         set(value) {
             field = value
