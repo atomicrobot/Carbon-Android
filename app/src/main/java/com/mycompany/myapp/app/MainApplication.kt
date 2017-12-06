@@ -22,11 +22,13 @@ open class MainApplication : Application() {
     }
 
     /**
-     * For Espresso tests we *do not* want to initialize the full application and instead will
+     * For Espresso tests we *do not* want to setupViewModel the full application and instead will
      * favor mocking out non-ui dependencies. This should be overridden to a no-op if initialization
      * should not occur.
      */
     protected open fun initializeApplication() {
         initializer.initialize()
     }
+
+    open fun isTesting() = false
 }

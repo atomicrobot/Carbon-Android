@@ -123,8 +123,8 @@ androidExtensions {
 
 ext {
     // App dependency versions
-    supportVersion = '27.0.0'
-    playServicesVersion = '11.6.0'
+    supportVersion = '27.0.2'
+    playServicesVersion = '11.6.2'
     daggerVersion = '2.13'
     retrofitVersion = '2.3.0'
     okHttpVersion = '3.9.0'
@@ -179,7 +179,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.6.0'
 
     // Monitoring - Crashlytics
-    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }
 

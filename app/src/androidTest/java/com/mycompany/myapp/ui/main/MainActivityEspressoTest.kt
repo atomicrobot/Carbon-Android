@@ -41,7 +41,10 @@ class MainActivityEspressoTest {
 
     @Test
     fun testFetchCommitsEnabledState() {
-        whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.empty())
+        val response = LoadCommitsResponse(
+                LoadCommitsRequest("username", "repository"),
+                emptyList())
+        whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.just(response))
 
         testRule.launchActivity(null)
         onView(withId(R.id.fetch_commits)).check(matches(isEnabled()))

@@ -4,8 +4,6 @@ import android.app.Application
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber.Tree
 import javax.inject.Named
 
@@ -19,14 +17,6 @@ class AppModule(private val loadingDelayMs: Long = LOADING_DELAY_MS) {
 
     @Provides
     fun provideSettings(context: Context) = Settings(context)
-
-    @Provides
-    @Named("io")
-    fun ioScheduler() = Schedulers.io()
-
-    @Provides
-    @Named("main")
-    fun mainThreadScheduler() = AndroidSchedulers.mainThread()
 
     @Provides
     @Named("loading_delay_ms")

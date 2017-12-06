@@ -5,7 +5,7 @@
 }
 
 # Kotlin Parcelize will throw Proguard warnings without this
--dontwarn **.*$Creator
+-dontwarn kotlin.internal.annotations.AvoidUninitializedObjectCopyingCheck
 
 # OkHttp3
 # A resource is loaded with a relative path so the package of this class must be preserved.

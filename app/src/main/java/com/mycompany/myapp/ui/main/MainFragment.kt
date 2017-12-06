@@ -3,33 +3,27 @@ package com.mycompany.myapp.ui.main
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.mycompany.myapp.CommitItemBinding
 import com.mycompany.myapp.R
-import com.mycompany.myapp.ui.main.MainPresenter.CommitView
+import com.mycompany.myapp.data.api.github.model.Commit
+import com.mycompany.myapp.ui.BaseFragment
 import com.mycompany.myapp.util.recyclerview.ArrayAdapter
 
-import javax.inject.Inject
+class MainFragment : BaseFragment() {
+    interface MainFragmentHost
 
-class MainFragment : Fragment() {
-    interface MainFragmentHost {
-        fun inject(fragment: MainFragment)
-    }
-
-    @Inject lateinit var presenter: MainPresenter
+    private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
     private var host: MainFragmentHost? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         host = context as MainFragmentHost
-        host!!.inject(this)
     }
 
     override fun onDetach() {
@@ -38,8 +32,10 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        viewModel = getViewModel(MainViewModel::class)
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
-        binding.presenter = presenter
+        binding.vm = viewModel
 
         binding.commits.layoutManager = LinearLayoutManager(activity)
         binding.commits.adapter = CommitsAdapter()
@@ -52,11 +48,11 @@ class MainFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private class CommitsAdapter : ArrayAdapter<CommitView, CommitViewHolder>() {
+    private class CommitsAdapter : ArrayAdapter<Commit, CommitViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommitViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            val commitItemBinding = CommitItemBinding.inflate(layoutInflater, parent, false)
-            return CommitViewHolder(commitItemBinding)
+            val binding: CommitItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_commit_summary, parent, false)
+            return CommitViewHolder(binding)
         }
 
         override fun onBindViewHolder(holder: CommitViewHolder, position: Int) {
@@ -65,11 +61,11 @@ class MainFragment : Fragment() {
         }
     }
 
-    internal class CommitViewHolder constructor(
+    private class CommitViewHolder(
             private val binding: CommitItemBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CommitView) {
+        fun bind(item: Commit) {
             binding.item = item
             binding.executePendingBindings()
         }
