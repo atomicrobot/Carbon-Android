@@ -4,6 +4,7 @@ import com.mycompany.myapp.data.DataModule
 import com.mycompany.myapp.data.api.github.model.Commit
 import com.mycompany.myapp.loadResourceAsString
 import io.reactivex.observers.TestObserver
+import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -99,7 +100,7 @@ class GitHubApiServiceTest {
     @Throws(Exception::class)
     private fun buildApi(baseUrl: String): GitHubApiService {
         val module = DataModule()
-        val client = module.provideOkHttpClient(null)
+        val client = OkHttpClient.Builder().build()
         val converterFactory = module.provideConverter()
         val retrofit = module.provideRetrofit(client, baseUrl, converterFactory)
         return module.provideGitHubApiService(retrofit)
