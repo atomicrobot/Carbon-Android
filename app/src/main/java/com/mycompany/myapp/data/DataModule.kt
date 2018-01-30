@@ -17,6 +17,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import javax.inject.Singleton
 
+interface OkHttpSecurityModifier {
+    fun apply(builder: OkHttpClient.Builder)
+}
+
 @Module
 class DataModule {
 
@@ -29,10 +33,11 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(cache: Cache?): OkHttpClient {
-        return OkHttpClient.Builder()
-                .cache(cache)
-                .build()
+    fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+        builder.cache(cache)
+        securityModifier.apply(builder)
+        return builder.build()
     }
 
     @Singleton

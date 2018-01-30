@@ -1,27 +1,19 @@
 package com.mycompany.myapp.app
 
-import android.support.annotation.Nullable
+import com.mycompany.myapp.data.OkHttpSecurityModifier
 import dagger.Module
 import dagger.Provides
-import javax.net.ssl.HostnameVerifier
-import javax.net.ssl.SSLContext
-import javax.net.ssl.X509TrustManager
+import okhttp3.OkHttpClient
 
 @Module
 class VariantModule {
 
-    // No custom implementation needed in non-dev app
-    @Nullable
     @Provides
-    fun provideCustomHostnameVerifier(): HostnameVerifier? = null
-
-    // No custom implementation needed in non-dev app
-    @Nullable
-    @Provides
-    fun provideSSLContext(): SSLContext? = null
-
-    // No custom implementation needed in non-dev app
-    @Nullable
-    @Provides
-    fun buildTrustAllTrustManager(): X509TrustManager? = null
+    fun provideOkHttpClientTrustAllBinding(settings: Settings): OkHttpSecurityModifier {
+        return object: OkHttpSecurityModifier {
+            override fun apply(builder: OkHttpClient.Builder) {
+                /* No op */
+            }
+        }
+    }
 }
