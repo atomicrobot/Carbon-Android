@@ -8,6 +8,10 @@
 
     <string name="default_base_url">https://api.github.com/</string>
 
+    <string name="username">Username</string>
+    <string name="repository">Repository</string>
+    <string name="fetch_commits">Fetch Commits</string>
+
     <string name="error_unexpected">We encountered an unexpected error. Please try again.</string>
     <string name="error_get_commits_error">Could not find the requested commits</string>
 </resources>

@@ -36,7 +36,7 @@
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Username"
+                    android:hint="@string/username"
                     android:text="@={vm.username}"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -52,7 +52,7 @@
                     android:id="@+id/repository"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Repository"
+                    android:hint="@string/repository"
                     android:text="@={vm.repository}"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -67,7 +67,7 @@
                 android:layout_marginTop="8dp"
                 android:enabled="@{vm.fetchCommitsEnabled}"
                 android:onClick="@{() -> vm.fetchCommits()}"
-                android:text="Fetch Commits"/>
+                android:text="@string/fetch_commits"/>
 
         </LinearLayout>
 
