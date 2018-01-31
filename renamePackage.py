@@ -80,7 +80,7 @@ os.remove('complete.txt')
 
 os.system('git init')
 os.system('git add .')
-os.system('git commit -q -m "Initial import from github.com/madebyatomicrobot/android-starter-project"')
+os.system('git commit -q -m "Initial import from github.com/atomicrobot/android-starter-project"')
 
 #print artwork :)
 print(artwork)
