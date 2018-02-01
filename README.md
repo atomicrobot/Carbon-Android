@@ -9,6 +9,9 @@
 - (optional) Add a git remote to the project (a clean repository has been setup for you).
 - (optional) Adding a new activity: `./gradlew app:screen -Ppackage=com.demo.mobile -Pscreen=SignIn`
 
+### First Run
+- When you open up a project for the first time, if you get a "Please specify Android SDK" message when trying to run the app then you need to run a Gradle Sync from Android Studio.
+
 ### Crashlytics
 To register an app to an organization you will need to go to the Crashlytics web dashboard, go to
 the organization settings, and then get the keys and secrets it displays.
