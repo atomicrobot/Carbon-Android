@@ -45,6 +45,7 @@ def refactorPackagenameInFile(file,oldPackageName, newPackageName):
 		refactored = contents.replace(oldPackageName, newPackageName)
 		f = open(file, 'w')
 		f.write(refactored)
+		f.close()
 	return
 
 def refactorAllFolders():
