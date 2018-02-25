@@ -5,10 +5,6 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:navigationBarColor">?android:attr/navigationBarColor</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <!--<item name="android:windowTranslucentNavigation">true</item>-->
-        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
