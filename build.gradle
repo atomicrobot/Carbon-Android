@@ -60,6 +60,11 @@ allprojects {
                     throw new GradleException("Wildcard dependency forbidden: ${requested.group}:${requested.name}:${requested.version}")
                 }
             }
+            //Fix for showing 100+ errors from javac when using Android Databinding
+            //https://github.com/google/dagger/issues/306
+            tasks.withType(JavaCompile) {
+                options.compilerArgs << "-Xmaxerrs" << "500" // or whatever number you want
+            }
         }
     }
 }
