@@ -49,11 +49,11 @@ subprojects {
     }
 }
 
-// Prevent wildcard dependencies
-// https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
 allprojects {
     afterEvaluate { project ->
         project.configurations.all {
+            // Prevent wildcard dependencies
+            // https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
             resolutionStrategy.eachDependency { DependencyResolveDetails details ->
                 def requested = details.requested
                 if (requested.version.contains('+')) {
