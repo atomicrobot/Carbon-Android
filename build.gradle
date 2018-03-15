@@ -52,9 +52,9 @@ subprojects {
 allprojects {
     afterEvaluate { project ->
         project.configurations.all {
-            // Prevent wildcard dependencies
-            // https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
             resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+                // Prevent wildcard dependencies
+                // https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
                 def requested = details.requested
                 if (requested.version.contains('+')) {
                     throw new GradleException("Wildcard dependency forbidden: ${requested.group}:${requested.name}:${requested.version}")
