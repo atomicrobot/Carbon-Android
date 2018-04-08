@@ -75,7 +75,7 @@ app/build/reports/androidTests/connected/flavors/DEV => quality/androidTests
 License
 =======
 
-    Copyright 2018 Atomic Robot, LLC
+    Copyright 2014-2018 Atomic Robot, LLC
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
