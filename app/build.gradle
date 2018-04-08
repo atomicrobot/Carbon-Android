@@ -132,7 +132,7 @@ ext {
 
     // Test dependency versions
     mockitoVersion = '2.13.0'
-    robolectricVersion = '3.6.1'
+    robolectricVersion = '3.7.1'
     androidTestSupportVersion = '1.0.1'
     espressoVersion = '3.0.1'
 }

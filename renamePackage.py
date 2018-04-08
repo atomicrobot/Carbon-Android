@@ -45,6 +45,7 @@ def refactorPackagenameInFile(file,oldPackageName, newPackageName):
 		refactored = contents.replace(oldPackageName, newPackageName)
 		f = open(file, 'w')
 		f.write(refactored)
+		f.close()
 	return
 
 def refactorAllFolders():
@@ -83,5 +84,5 @@ os.system('git add .')
 os.system('git commit -q -m "Initial import from github.com/atomicrobot/android-starter-project"')
 
 #print artwork :)
-print(artwork)
+print('\033[92m'+ artwork + '\033[0m')
 os.system('git log --oneline')
