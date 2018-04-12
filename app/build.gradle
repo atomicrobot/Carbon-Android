@@ -10,6 +10,8 @@ buildscript {
 
         classpath 'io.fabric.tools:gradle:1.25.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+        classpath 'org.jacoco:org.jacoco.core:0.8.0'
+
     }
 }
 
@@ -29,8 +31,17 @@ apply plugin: 'io.fabric'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
 
 apply plugin: 'com.github.ben-manes.versions'
+
+jacoco {
+    toolVersion = '0.8.0'//this version needs to match the jacoco version in the root build.gradle
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
 
 android {
     compileOptions {
@@ -87,6 +98,7 @@ android {
         debug {
             minifyEnabled false
             shrinkResources false
+            testCoverageEnabled true
         }
 
         release {
@@ -107,6 +119,9 @@ android {
     }
 
     testOptions {
+        execution 'ANDROID_TEST_ORCHESTRATOR'
+        animationsDisabled true
+
         unitTests {
             includeAndroidResources = true
         }
@@ -243,6 +258,30 @@ task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
     configProperties = [
             'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
     ]
+}
+
+    // Our merge report task
+    // Borrowed from:
+    // https://proandroiddev.com/unified-code-coverage-for-android-revisited-44789c9b722f
+    // https://gist.github.com/rafaeltoledo/f3bc7f33ca5baa5f58d21579299ce46a/
+
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'createDevDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDevDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    ])
 }
 
 // Kotlin plugin for testing
