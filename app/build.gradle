@@ -97,6 +97,7 @@ android {
         debug {
             minifyEnabled false
             shrinkResources false
+            testCoverageEnabled true
         }
 
         release {
@@ -117,6 +118,9 @@ android {
     }
 
     testOptions {
+
+        animationsDisabled true
+
         unitTests {
             includeAndroidResources = true
         }
@@ -253,6 +257,25 @@ task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
     configProperties = [
             'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
     ]
+}
+
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    ])
 }
 
 // Kotlin plugin for testing
