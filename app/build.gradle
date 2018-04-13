@@ -263,6 +263,7 @@ task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'createDevDebugCoverageReport']) {
+    //Jacoco test report task added from: https://proandroiddev.com/unified-code-coverage-for-android-revisited-44789c9b722f
 
     reports {
         xml.enabled = true
