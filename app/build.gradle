@@ -6,10 +6,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+        classpath "com.jakewharton.hugo:hugo-plugin:$hugoVersion"
 
-        classpath 'io.fabric.tools:gradle:1.25.1'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+        classpath "io.fabric.tools:gradle:$fabricToolsVersion"
+        classpath "com.github.ben-manes:gradle-versions-plugin:$gradleVersionsPluginVersion"
     }
 }
 
@@ -121,28 +121,11 @@ androidExtensions {
     defaultCacheImplementation = "none"
 }
 
-ext {
-    // App dependency versions
-    supportVersion = '27.0.2'
-    playServicesVersion = '11.8.0'
-    daggerVersion = '2.14.1'
-    retrofitVersion = '2.3.0'
-    okHttpVersion = '3.9.1'
-    leakcanaryVersion = '1.5.4'
-
-    // Test dependency versions
-    mockitoVersion = '2.13.0'
-    robolectricVersion = '3.7.1'
-    androidTestSupportVersion = '1.0.1'
-    espressoVersion = '3.0.1'
-}
-
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    kapt "com.android.databinding:compiler:$rootProject.ext.android_plugin_version"  // Need this because of Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     // Android/Google libraries
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation "com.android.support:recyclerview-v7:$supportVersion"
     implementation "com.android.support:cardview-v7:$supportVersion"
@@ -151,20 +134,20 @@ dependencies {
 
     implementation "com.google.android.gms:play-services-base:$playServicesVersion"
 
-    implementation "android.arch.lifecycle:runtime:1.1.0"
-    implementation "android.arch.lifecycle:extensions:1.1.0"
-    kapt "android.arch.lifecycle:compiler:1.1.0"
+    implementation "android.arch.lifecycle:runtime:$androidLifecycleVersion"
+    implementation "android.arch.lifecycle:extensions:$androidLifecycleVersion"
+    kapt "android.arch.lifecycle:compiler:$androidLifecycleVersion"
 
     // App architecture - Dagger 2
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // App architecture - RxJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.8'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
 
     // JSON
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation "com.google.code.gson:gson:$gsonVersion"
 
     // Networking - HTTP
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
@@ -172,11 +155,11 @@ dependencies {
 
     // Networking - REST
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitRxAdapterVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 
     // Monitoring - Timber (logging)
-    implementation 'com.jakewharton.timber:timber:4.6.0'
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 
     // Monitoring - Crashlytics
     implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
@@ -188,9 +171,9 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
 
     // Unit test
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$junitVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    testImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
+    testImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
     testImplementation "org.robolectric:shadows-supportv4:$robolectricVersion"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
@@ -202,9 +185,9 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$espressoVersion"
 
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
-    androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
-    androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.4'
-    androidTestImplementation 'com.linkedin.testbutler:test-butler-library:1.3.1'
+    androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
+    androidTestImplementation "com.github.fabioCollini:DaggerMock:$daggerMockVersion"
+    androidTestImplementation "com.linkedin.testbutler:test-butler-library:$testButlerVersion"
 }
 
 task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
