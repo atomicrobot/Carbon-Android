@@ -1,6 +1,7 @@
 buildscript {
-    ext.android_plugin_version = '3.0.1'
-    ext.kotlin_version = '1.2.21'
+    ext.android_plugin_version = '3.1.2'
+    ext.kotlin_version = '1.2.41'
+    ext.jacoco_version = '0.8.1'
 
     repositories {
         google()
@@ -11,7 +12,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:$android_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
-        classpath 'org.jacoco:org.jacoco.core:0.8.0'
+        classpath "org.jacoco:org.jacoco.core:$jacoco_version"
     }
 }
 
@@ -106,7 +107,7 @@ task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
     def unitTestTasks = getProjectTask(appProject, 'testDevDebugUnitTest')
-    def integrationTestTasks = getProjectTask(appProject, 'connectedDevDebugAndroidTest')
+    def integrationTestTasks = getProjectTask(appProject, 'jacocoTestReport')
 
     dependsOn unitTestTasks
     dependsOn integrationTestTasks

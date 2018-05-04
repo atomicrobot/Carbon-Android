@@ -5,6 +5,7 @@ import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
 import com.mycompany.myapp.EspressoMatchers.regex
 import com.mycompany.myapp.MainApplicationDaggerMockRule
 import com.mycompany.myapp.R
@@ -21,8 +22,10 @@ import io.reactivex.Observable
 import org.hamcrest.Matchers.not
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mock
 
+@RunWith(AndroidJUnit4::class)
 class MainActivityEspressoTest {
 
     @JvmField @Rule var mockitoRule = MainApplicationDaggerMockRule()

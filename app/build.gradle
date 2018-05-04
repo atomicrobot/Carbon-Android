@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
 
-        classpath 'io.fabric.tools:gradle:1.25.1'
+        classpath 'io.fabric.tools:gradle:1.25.2'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     }
 }
@@ -29,18 +29,9 @@ apply plugin: 'io.fabric'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'checkstyle'
-
-apply plugin: 'com.github.ben-manes.versions'
-
 apply plugin: 'jacoco'
 
-jacoco {
-    toolVersion = '0.8.0'
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}
+apply plugin: 'com.github.ben-manes.versions'
 
 android {
     compileOptions {
@@ -118,7 +109,6 @@ android {
     }
 
     testOptions {
-        execution 'ANDROID_TEST_ORCHESTRATOR'
         animationsDisabled true
 
         unitTests {
@@ -137,8 +127,8 @@ androidExtensions {
 
 ext {
     // App dependency versions
-    supportVersion = '27.0.2'
-    playServicesVersion = '11.8.0'
+    supportVersion = '27.1.1'
+    playServicesVersion = '15.0.1'
     daggerVersion = '2.14.1'
     retrofitVersion = '2.3.0'
     okHttpVersion = '3.9.1'
@@ -148,15 +138,16 @@ ext {
     mockitoVersion = '2.13.0'
     robolectricVersion = '3.7.1'
     androidTestSupportVersion = '1.0.1'
-    espressoVersion = '3.0.1'
+    espressoVersion = '3.0.2'
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     kapt "com.android.databinding:compiler:$rootProject.ext.android_plugin_version"  // Need this because of Kotlin
 
     // Android/Google libraries
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'androidx.core:core-ktx:0.3'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation "com.android.support:recyclerview-v7:$supportVersion"
     implementation "com.android.support:cardview-v7:$supportVersion"
@@ -165,17 +156,17 @@ dependencies {
 
     implementation "com.google.android.gms:play-services-base:$playServicesVersion"
 
-    implementation "android.arch.lifecycle:runtime:1.1.0"
-    implementation "android.arch.lifecycle:extensions:1.1.0"
-    kapt "android.arch.lifecycle:compiler:1.1.0"
+    implementation "android.arch.lifecycle:runtime:1.1.1"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    kapt "android.arch.lifecycle:compiler:1.1.1"
 
     // App architecture - Dagger 2
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // App architecture - RxJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.8'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.12'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
     // JSON
     implementation 'com.google.code.gson:gson:2.8.2'
@@ -190,10 +181,10 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 
     // Monitoring - Timber (logging)
-    implementation 'com.jakewharton.timber:timber:4.6.0'
+    implementation 'com.jakewharton.timber:timber:4.7.0'
 
     // Monitoring - Crashlytics
-    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
         transitive = true
     }
 
@@ -218,10 +209,6 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
     androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.4'
-    androidTestImplementation 'com.linkedin.testbutler:test-butler-library:1.3.1'
-
-    androidTestUtil 'com.android.support.test:orchestrator:1.0.2-alpha1'
-
 }
 
 task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
@@ -262,22 +249,50 @@ task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
     ]
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'createDevDebugCoverageReport']) {
-    //Jacoco test report task added from: https://proandroiddev.com/unified-code-coverage-for-android-revisited-44789c9b722f
+jacoco {
+    toolVersion = rootProject.ext.jacoco_version
+}
 
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'createDevDebugCoverageReport']) {
     reports {
         xml.enabled = true
         html.enabled = true
     }
 
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/java"
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            'android/**/*.*',
+            /* Parcelize */
+            '**/*Creator.*',
+            /* Data binding */
+            '**/*Binding*.*',
+            '**/BR.**',
+            /* Dagger */
+            '**/*_MembersInjector.*',
+            '**/*_Factory.*',
+            '**/*_*Factory.*',
+            '**/Dagger*Component*.*',
+            '**/Dagger*Subcomponent*.*',
+            '**/devsettings/**/*.*'
+    ]
 
-    sourceDirectories = files([mainSrc])
-    classDirectories = files([debugTree])
+    def mainTree = fileTree(dir: "$project.projectDir/src/main/java", excludes: fileFilter)
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/dev/debug", excludes: fileFilter)
+    def kotlinDebugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/devDebug", excludes: fileFilter)
+
+    sourceDirectories = files([mainTree])
+    classDirectories = files([debugTree], [kotlinDebugTree])
     executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDevDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+            'jacoco/testDevDebugUnitTest.exec',
+            'outputs/code-coverage/connected/**/*coverage.ec'
     ])
 }
 

@@ -3,28 +3,19 @@ package com.mycompany.myapp
 import android.app.Application
 import android.app.KeyguardManager
 import android.content.Context
-import android.os.Bundle
 import android.os.PowerManager
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnitRunner
-
-import com.linkedin.android.testbutler.TestButler
 
 class CustomAppTestRunner : AndroidJUnitRunner() {
     override fun onStart() {
         runOnMainSync {
             val context = InstrumentationRegistry.getTargetContext()
-            TestButler.setup(context)
             unlockScreen(context, CustomAppTestRunner::class.java.name)
             keepScreenAwake(context, CustomAppTestRunner::class.java.name)
         }
 
         super.onStart()
-    }
-
-    override fun finish(resultCode: Int, results: Bundle) {
-        TestButler.teardown(InstrumentationRegistry.getTargetContext())
-        super.finish(resultCode, results)
     }
 
     @Throws(InstantiationException::class, IllegalAccessException::class, ClassNotFoundException::class)
