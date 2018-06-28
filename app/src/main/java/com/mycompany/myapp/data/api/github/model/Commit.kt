@@ -1,16 +1,20 @@
 package com.mycompany.myapp.data.api.github.model
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Author(
-        @SerializedName("name") val name: String)
+        @Json(name = "name") val name: String)
 
+@JsonClass(generateAdapter = true)
 data class CommitDetails(
-        @SerializedName("message") val message: String,
-        @SerializedName("author") val author: Author)
+        @Json(name = "message") val message: String,
+        @Json(name = "author") val author: Author)
 
+@JsonClass(generateAdapter = true)
 data class Commit(
-        @SerializedName("commit") val commit: CommitDetails) {
+        @Json(name = "commit") val commit: CommitDetails) {
 
     val commitMessage: String
         get() = commit.message

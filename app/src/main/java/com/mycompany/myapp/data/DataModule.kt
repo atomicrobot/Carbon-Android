@@ -2,10 +2,10 @@ package com.mycompany.myapp.data
 
 import android.app.Application
 import android.content.Context
-import com.google.gson.Gson
 import com.mycompany.myapp.app.Settings
 import com.mycompany.myapp.data.api.github.GitHubApiService
 import com.mycompany.myapp.data.api.github.GitHubInteractor
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -13,7 +13,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 import javax.inject.Singleton
 
@@ -49,8 +49,8 @@ class DataModule {
     @Singleton
     @Provides
     fun provideConverter(): Converter.Factory {
-        val gson = Gson()
-        return GsonConverterFactory.create(gson)
+        val moshi = Moshi.Builder().build()
+        return MoshiConverterFactory.create(moshi)
     }
 
     @Singleton
