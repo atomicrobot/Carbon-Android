@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="placeholder_short">Lorem ipsum</string>
-    <string name="placeholder_sentence">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
-    <string name="placeholder_paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim eros ex, non rhoncus felis laoreet et. Mauris et vulputate ipsum. Sed diam purus, elementum varius consequat in, mattis eu elit. Vivamus euismod est lacus, in scelerisque augue varius et. Quisque dapibus interdum felis, a ultricies nisi. Etiam ornare lacus in leo imperdiet iaculis. Sed purus mi, ultrices consectetur congue at, cursus blandit nibh. Vivamus et lorem in metus eleifend viverra non id metus.</string>
-</resources>
