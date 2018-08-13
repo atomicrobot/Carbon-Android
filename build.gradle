@@ -75,8 +75,8 @@ ext {
 
     // Build settings that are likely to be reused across different modules
     minSdkVersion = 21
-    targetSdkVersion = 27
-    compileSdkVersion = 27
+    targetSdkVersion = 28
+    compileSdkVersion = 28
 }
 
 evaluationDependsOnChildren()
