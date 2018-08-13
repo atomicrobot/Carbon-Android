@@ -23,7 +23,7 @@ object RiseAndShine {
         val powerManager = activity.getSystemService(Context.POWER_SERVICE) as PowerManager
         val lock = powerManager.newWakeLock(LOCK_FLAGS, "wakeup!")
 
-        lock.acquire()
+        lock.acquire(1000)
         lock.release()
     }
 }
