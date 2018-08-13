@@ -93,6 +93,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_toStartOf="@id/fingerprint"
                 android:text="@{@string/version_format(vm.version)}"/>
 
             <TextView
@@ -105,6 +106,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/version"
                 android:text="@{@string/fingerprint_format(vm.fingerprint)}"/>
 
         </RelativeLayout>
