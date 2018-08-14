@@ -29,7 +29,7 @@
                 android:id="@+id/base_url"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Base URL"
+                android:hint="@string/base_url"
                 android:text="@={vm.baseUrl}"
                 android:inputType="textUri"/>
 
@@ -43,7 +43,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:checked="@={vm.trustAllSSL}"
-            android:text="Trust all SSL connections"
+            android:text="@string/trust_all_SSL"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout"/>
@@ -56,7 +56,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:onClick="@{() -> vm.saveSettings()}"
-            android:text="Save Settings"
+            android:text="@string/save_settings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/trust_all_ssl"/>

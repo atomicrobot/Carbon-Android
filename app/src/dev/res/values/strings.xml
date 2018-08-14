@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dev_settings">My App Dev Settings</string>
+    <string name="base_url">Base URL</string>
+    <string name="trust_all_SSL">Trust all SSL connections</string>
+    <string name="save_settings">Save settings</string>
 </resources>
