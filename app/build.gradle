@@ -222,6 +222,7 @@ task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     reports {
         xml.enabled = false
         html.enabled = true
+        html.stylesheet resources.text.fromFile("${project.rootDir}/config/findbugs/customizations.xsl")
     }
 }
 
