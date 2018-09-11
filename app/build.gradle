@@ -143,7 +143,6 @@ ext {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    kapt "com.android.databinding:compiler:$rootProject.ext.android_plugin_version"
     // Need this because of Kotlin
 
     // Android/Google libraries
