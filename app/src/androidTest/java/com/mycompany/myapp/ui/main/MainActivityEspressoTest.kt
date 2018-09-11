@@ -16,8 +16,8 @@ import com.mycompany.myapp.data.api.github.model.Author
 import com.mycompany.myapp.data.api.github.model.Commit
 import com.mycompany.myapp.data.api.github.model.CommitDetails
 import com.mycompany.myapp.withRecyclerView
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.hamcrest.Matchers.not
 import org.junit.Rule

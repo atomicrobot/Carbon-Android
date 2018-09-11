@@ -3,7 +3,7 @@ package com.mycompany.myapp.data.api.github
 import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsResponse
 import com.mycompany.myapp.data.api.github.model.CommitTestHelper.stubCommit
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals

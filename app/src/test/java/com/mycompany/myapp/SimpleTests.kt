@@ -1,7 +1,7 @@
 package com.mycompany.myapp
 
 import android.os.Bundle
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
