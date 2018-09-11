@@ -127,7 +127,7 @@ androidExtensions {
 
 ext {
     // App dependency versions
-    supportVersion = '27.1.1'
+    androidXVersion = '1.0.0-rc02'
     playServicesVersion = '15.0.1'
     daggerVersion = '2.14.1'
     retrofitVersion = '2.3.0'
@@ -146,13 +146,13 @@ dependencies {
     // Need this because of Kotlin
 
     // Android/Google libraries
-    implementation 'androidx.core:core-ktx:1.0.0-rc02'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'androidx.appcompat:appcompat:1.0.0-rc02'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0-rc02'
-    implementation 'androidx.cardview:cardview:1.0.0-rc02'
-    implementation 'androidx.annotation:annotation:1.0.0-rc02'
-    implementation 'com.google.android.material:material:1.0.0-rc02'
+    implementation "androidx.core:core-ktx:$androidXVersion"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
+    implementation "androidx.appcompat:appcompat:$androidXVersion"
+    implementation "androidx.recyclerview:recyclerview:$androidXVersion"
+    implementation "androidx.cardview:cardview:$androidXVersion"
+    implementation "androidx.annotation:annotation:$androidXVersion"
+    implementation "com.google.android.material:material:$androidXVersion"
 
     implementation "com.google.android.gms:play-services-base:$playServicesVersion"
 
