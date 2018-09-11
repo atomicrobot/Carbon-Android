@@ -4,8 +4,8 @@ import android.app.Application
 import android.app.KeyguardManager
 import android.content.Context
 import android.os.PowerManager
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnitRunner
+import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnitRunner
 
 class CustomAppTestRunner : AndroidJUnitRunner() {
     override fun onStart() {

@@ -1,7 +1,7 @@
 package com.mycompany.myapp
 
 import android.content.res.Resources
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 import org.hamcrest.Description
