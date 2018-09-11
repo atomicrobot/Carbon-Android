@@ -129,13 +129,14 @@ ext {
     // App dependency versions
     androidXVersion = '1.0.0-rc02'
     playServicesVersion = '15.0.1'
-    daggerVersion = '2.14.1'
+    daggerVersion = '2.17'
     retrofitVersion = '2.4.0'
     okHttpVersion = '3.11.0'
     leakcanaryVersion = '1.5.4'
 
     // Test dependency versions
-    mockitoVersion = '2.13.0'
+    mockitoVersion = '2.22.0'
+    mockitoKotlinVersion = '2.0.0-RC2'
     robolectricVersion = '3.7.1'
     androidTestSupportVersion = '1.0.1'
     espressoVersion = '3.0.2'
@@ -196,7 +197,7 @@ dependencies {
     // Unit test
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    testImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
     testImplementation "org.robolectric:shadows-supportv4:$robolectricVersion"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
@@ -208,7 +209,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0-alpha4'
 
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
-    androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
+    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.4'
 }
 
