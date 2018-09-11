@@ -130,8 +130,8 @@ ext {
     androidXVersion = '1.0.0-rc02'
     playServicesVersion = '15.0.1'
     daggerVersion = '2.14.1'
-    retrofitVersion = '2.3.0'
-    okHttpVersion = '3.9.1'
+    retrofitVersion = '2.4.0'
+    okHttpVersion = '3.11.0'
     leakcanaryVersion = '1.5.4'
 
     // Test dependency versions
@@ -178,7 +178,7 @@ dependencies {
 
     // Networking - REST
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
 
     // Monitoring - Timber (logging)
