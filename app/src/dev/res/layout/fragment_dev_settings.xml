@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data class="com.mycompany.myapp.ui.devsettings.DevSettingsFragmentBinding">
 
@@ -31,7 +30,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/base_url"
                 android:text="@={vm.baseUrl}"
-                android:inputType="textUri"/>
+                android:inputType="textUri"
+                android:autofillHints="" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

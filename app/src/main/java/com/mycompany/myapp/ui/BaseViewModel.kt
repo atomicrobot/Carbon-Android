@@ -23,7 +23,7 @@ abstract class BaseViewModel<State : Parcelable>(
 
     fun restoreState(bundle: Bundle?) {
         if (bundle != null && bundle.containsKey(stateKey)) {
-            state = bundle.getParcelable(stateKey)
+            state = bundle.getParcelable(stateKey)!!
         }
     }
 

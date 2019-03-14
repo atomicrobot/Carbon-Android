@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mycompany.myapp">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mycompany.myapp">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".app.MainApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".app.MainApplication"
         android:theme="@style/AppTheme"
-        android:fullBackupContent="@xml/backup_rules">
+        tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:label="@string/app_name"
             android:name=".ui.main.MainActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <!-- GENERATOR - MORE ACTIVITIES -->
 
         <activity-alias
             android:name=".Launcher"
-            android:targetActivity=".ui.main.MainActivity"/>
+            android:targetActivity=".ui.main.MainActivity" />
 
         <meta-data
             android:name="com.crashlytics.ApiKey"
-            android:value="731470e0695708deebc77da163f2c2ef0cc7dc29"/>
+            android:value="731470e0695708deebc77da163f2c2ef0cc7dc29" />
 
     </application>
 

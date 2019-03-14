@@ -1,5 +1,8 @@
 package com.mycompany.myapp.data.api.github
 
+import android.app.Application
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsResponse
 import com.mycompany.myapp.data.api.github.model.CommitTestHelper.stubCommit
@@ -13,13 +16,11 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import retrofit2.Response
 import java.util.Arrays.asList
 import java.util.concurrent.TimeUnit
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class GitHubInteractorTest {
 
     @Mock lateinit var api: GitHubApiService
@@ -30,7 +31,7 @@ class GitHubInteractorTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        val context = RuntimeEnvironment.application
+        val context = ApplicationProvider.getApplicationContext<Application>()
         interactor = GitHubInteractor(context, api)
     }
 

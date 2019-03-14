@@ -4,13 +4,14 @@ import android.app.Application
 import android.app.KeyguardManager
 import android.content.Context
 import android.os.PowerManager
-import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
+
 import androidx.test.runner.AndroidJUnitRunner
 
 class CustomAppTestRunner : AndroidJUnitRunner() {
     override fun onStart() {
         runOnMainSync {
-            val context = InstrumentationRegistry.getTargetContext()
+            val context = InstrumentationRegistry.getInstrumentation().targetContext
             unlockScreen(context, CustomAppTestRunner::class.java.name)
             keepScreenAwake(context, CustomAppTestRunner::class.java.name)
         }

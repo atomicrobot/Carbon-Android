@@ -42,7 +42,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId 'com.demo.mobile'
+        applicationId 'com.mycompany.myapp'
 
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -56,7 +56,7 @@ android {
         proguardFile getDefaultProguardFile('proguard-android.txt')
         proguardFile 'proguard-rules.pro'
 
-        testInstrumentationRunner 'com.demo.mobile.CustomAppTestRunner'
+        testInstrumentationRunner 'com.mycompany.myapp.CustomAppTestRunner'
     }
 
     signingConfigs {
@@ -76,11 +76,11 @@ android {
     productFlavors {
         dev {
             dimension "app"
-            applicationId 'com.demo.mobile.dev'
+            applicationId 'com.mycompany.myapp.dev'
         }
         prod {
             dimension "app"
-            applicationId 'com.demo.mobile'
+            applicationId 'com.mycompany.myapp'
         }
     }
 
@@ -137,7 +137,7 @@ ext {
     // Test dependency versions
     mockitoVersion = '2.25.0'
     robolectricVersion = '4.2'
-    androidTestSupportVersion = '1.1.0-alpha4'
+    androidTestSupportVersion = '1.1.0'
     espressoVersion = '3.1.0-alpha4'
 }
 
@@ -193,19 +193,24 @@ dependencies {
 
     // Monitoring - Leak Canary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion"
+    debugImplementation 'androidx.fragment:fragment-testing:1.1.0-alpha04'
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
 
     // Unit test
     testImplementation 'junit:junit:4.12'
+    testImplementation "androidx.test:rules:$androidTestSupportVersion"
+    testImplementation "androidx.test:core:$androidTestSupportVersion"
+    testImplementation "androidx.test.ext:junit:$androidTestSupportVersion"
+    testImplementation 'org.robolectric:robolectric:4.2'
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
-    testImplementation "org.robolectric:robolectric:$robolectricVersion"
-    testImplementation "org.robolectric:shadows-supportv4:$robolectricVersion"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
 
     // Android JUnit Runner, JUnit Rules, and Espresso
     androidTestImplementation "androidx.test:runner:$androidTestSupportVersion"
     androidTestImplementation "androidx.test:rules:$androidTestSupportVersion"
+    androidTestImplementation "androidx.test:core:$androidTestSupportVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidTestSupportVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
 
@@ -216,7 +221,7 @@ dependencies {
 
 task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     excludeFilter file("${project.rootDir}/config/findbugs/exclude.xml")
-    classes = fileTree('build/intermediates/classes/dev/debug/')
+    classes = fileTree('build/intermediates/javac/devDebug/compileDevDebugJavaWithJavac/classes/')
     source = fileTree('src/main/java/')
     classpath = files()
     effort = 'max'
@@ -304,7 +309,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
 // Kotlin plugin for testing
 allOpen {
     annotation('dagger.Module')
-    annotation("com.demo.mobile.Mockable")
+    annotation("com.mycompany.myapp.Mockable")
 }
 
 apply from: 'generator.gradle'

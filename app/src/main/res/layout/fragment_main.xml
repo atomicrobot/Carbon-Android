@@ -37,15 +37,16 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
                     android:text="@={vm.username}"
-                    android:inputType="text"/>
+                    android:inputType="text"
+                    android:autofillHints="@string/username" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp">
 
                 <EditText
@@ -54,7 +55,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/repository"
                     android:text="@={vm.repository}"
-                    android:inputType="text"/>
+                    android:inputType="text"
+                    android:autofillHints="@string/repository" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -63,8 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp"
                 android:enabled="@{vm.fetchCommitsEnabled}"
                 android:onClick="@{() -> vm.fetchCommits()}"
