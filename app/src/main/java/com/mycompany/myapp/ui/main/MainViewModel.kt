@@ -1,9 +1,9 @@
 package com.mycompany.myapp.ui.main
 
 import android.app.Application
-import android.databinding.Bindable
+import androidx.databinding.Bindable
 import android.os.Parcelable
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import com.mycompany.myapp.BR
 import com.mycompany.myapp.BuildConfig
 import com.mycompany.myapp.R

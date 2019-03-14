@@ -1,9 +1,9 @@
 package com.mycompany.myapp.ui
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.databinding.Observable
-import android.databinding.PropertyChangeRegistry
+import androidx.lifecycle.AndroidViewModel
+import androidx.databinding.Observable
+import androidx.databinding.PropertyChangeRegistry
 import android.os.Bundle
 import android.os.Parcelable
 import io.reactivex.disposables.CompositeDisposable

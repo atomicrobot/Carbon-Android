@@ -1,7 +1,7 @@
 package com.mycompany.myapp.ui
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 
 /**
  * A SingleLiveEvent used for Snackbar messages. Like a [SingleLiveEvent] but also prevents

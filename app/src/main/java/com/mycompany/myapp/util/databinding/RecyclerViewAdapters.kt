@@ -1,7 +1,7 @@
 package com.mycompany.myapp.util.databinding
 
-import android.databinding.BindingAdapter
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 
 import com.mycompany.myapp.util.recyclerview.ArrayAdapter
 
@@ -13,9 +13,9 @@ object RecyclerViewAdapters {
      */
     @JvmStatic
     @BindingAdapter("items")
-    fun setItems(view: RecyclerView, items: List<Any>) {
+    fun setItems(view: androidx.recyclerview.widget.RecyclerView, items: List<Any>) {
         @Suppress("UNCHECKED_CAST")
-        val arrayAdapter = view.adapter as ArrayAdapter<Any, RecyclerView.ViewHolder>
+        val arrayAdapter = view.adapter as ArrayAdapter<Any, androidx.recyclerview.widget.RecyclerView.ViewHolder>
         arrayAdapter.setItems(items)
     }
 }
