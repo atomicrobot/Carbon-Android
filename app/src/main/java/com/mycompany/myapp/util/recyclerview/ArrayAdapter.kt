@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import java.util.*
 
-abstract class ArrayAdapter<Item, ItemViewHolder : ViewHolder> : androidx.recyclerview.widget.RecyclerView.Adapter<ItemViewHolder>() {
+abstract class ArrayAdapter<Item, ItemViewHolder : ViewHolder> : RecyclerView.Adapter<ItemViewHolder>() {
 
     private var items: List<Item> = ArrayList()
 

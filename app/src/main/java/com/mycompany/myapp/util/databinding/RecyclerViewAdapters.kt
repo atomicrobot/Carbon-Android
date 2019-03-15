@@ -13,9 +13,9 @@ object RecyclerViewAdapters {
      */
     @JvmStatic
     @BindingAdapter("items")
-    fun setItems(view: androidx.recyclerview.widget.RecyclerView, items: List<Any>) {
+    fun setItems(view: RecyclerView, items: List<Any>) {
         @Suppress("UNCHECKED_CAST")
-        val arrayAdapter = view.adapter as ArrayAdapter<Any, androidx.recyclerview.widget.RecyclerView.ViewHolder>
+        val arrayAdapter = view.adapter as ArrayAdapter<Any, RecyclerView.ViewHolder>
         arrayAdapter.setItems(items)
     }
 }

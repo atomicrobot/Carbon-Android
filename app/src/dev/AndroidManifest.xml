@@ -4,8 +4,7 @@
 
     <application
         android:allowBackup="false"
-        tools:replace="android:allowBackup"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:replace="android:allowBackup">
         <activity
             android:name="com.mycompany.myapp.ui.devsettings.DevSettingsActivity"
             android:label="@string/dev_settings"

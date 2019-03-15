@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.mycompany.myapp.CommitItemBinding
 import com.mycompany.myapp.R
 import com.mycompany.myapp.data.api.github.model.Commit
@@ -37,7 +37,7 @@ class MainFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         binding.vm = viewModel
 
-        binding.commits.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        binding.commits.layoutManager = LinearLayoutManager(activity)
         binding.commits.adapter = CommitsAdapter()
 
         return binding.root
@@ -63,7 +63,7 @@ class MainFragment : BaseFragment() {
 
     private class CommitViewHolder(
             private val binding: CommitItemBinding)
-        : androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
+        : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Commit) {
             binding.item = item
