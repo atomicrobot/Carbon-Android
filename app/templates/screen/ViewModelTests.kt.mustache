@@ -1,14 +1,15 @@
 package {{package}}.ui.{{screenLowerCase}}
 
+import android.app.Application
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.MockitoAnnotations
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class {{screenUpperCamel}}ViewModelTests {
 
     private lateinit var viewModel: {{screenUpperCamel}}ViewModel
@@ -17,7 +18,7 @@ class {{screenUpperCamel}}ViewModelTests {
     fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        val app = RuntimeEnvironment.application
+        val app = ApplicationProvider.getApplicationContext<Application>()
         viewModel = {{screenUpperCamel}}ViewModel(app)
     }
 
