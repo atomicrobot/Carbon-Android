@@ -1,6 +1,6 @@
 package com.mycompany.myapp.ui
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.mycompany.myapp.ui.devsettings.DevSettingsViewModel
 import dagger.Binds
 import dagger.Module

@@ -10,7 +10,7 @@ open class VariantSettings(private val context: Context) {
     private val preferences = context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE)
 
     var baseUrl: String
-        get() = preferences.getString(PREF_BASE_URL, context.getString(R.string.default_base_url))
+        get() = preferences.getString(PREF_BASE_URL, context.getString(R.string.default_base_url))!!
         set(baseUrl) = preferences.putOrClearPreference(PREF_BASE_URL, !TextUtils.isEmpty(baseUrl), baseUrl)
 
     var trustAllSSL: Boolean

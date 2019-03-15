@@ -21,7 +21,7 @@ object RiseAndShine {
         activity.window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
 
         val powerManager = activity.getSystemService(Context.POWER_SERVICE) as PowerManager
-        val lock = powerManager.newWakeLock(LOCK_FLAGS, "wakeup!")
+        val lock = powerManager.newWakeLock(LOCK_FLAGS, "myapp:riseandshine")
 
         lock.acquire(1000)
         lock.release()

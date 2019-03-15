@@ -1,6 +1,6 @@
 package com.mycompany.myapp
 
-import android.support.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import com.mycompany.myapp.app.MainApplication
 
 object TestUtils {

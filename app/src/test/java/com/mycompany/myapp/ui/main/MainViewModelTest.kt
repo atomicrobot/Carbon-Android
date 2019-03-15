@@ -1,5 +1,8 @@
 package com.mycompany.myapp.ui.main
 
+import android.app.Application
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mycompany.myapp.TrampolineSchedulerRule
 import com.mycompany.myapp.data.api.github.GitHubInteractor
 import com.mycompany.myapp.data.api.github.model.Commit
@@ -15,11 +18,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 
-
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class MainViewModelTest {
 
     @JvmField @Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
@@ -32,7 +32,7 @@ class MainViewModelTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        val app = RuntimeEnvironment.application
+        val app = ApplicationProvider.getApplicationContext<Application>()
         viewModel = MainViewModel(
                 app,
                 githubInteractor,

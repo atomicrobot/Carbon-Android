@@ -1,9 +1,9 @@
 package com.mycompany.myapp.ui
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
-import android.support.v7.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.appcompat.app.AppCompatActivity
 import com.mycompany.myapp.app.ApplicationComponent
 import com.mycompany.myapp.app.MainApplication
 import javax.inject.Inject
