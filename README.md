@@ -1,11 +1,11 @@
 ## Project Setup
 
 ### Setting up a new project
-- `git clone git@github.com:madebyatomicrobot/android-starter-project.git`
-- `cd android-starter-project`
+- `git clone git@github.com:atomicrobot/Carbon-Android.git`
+- `cd Carbon-Android`
 - Download Python if needed https://www.python.org/downloads/
 - `python renamePackage.py com.demo.mobile`
-- (optional) Rename the project directory from `android-starter-project` to something meaningful.
+- (optional) Rename the project directory from `Carbon-Android` to something meaningful.
 - (optional) Add a git remote to the project (a clean repository has been setup for you).
 - (optional) Adding a new activity: `./gradlew app:screen -Ppackage=com.demo.mobile -Pscreen=SignIn`
 
@@ -73,7 +73,7 @@ app/build/reports/coverage/dev/debug/ => quality/coverage
 License
 =======
 
-    Copyright 2014-2018 Atomic Robot, LLC
+    Copyright 2014-2019 Atomic Robot, LLC
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
