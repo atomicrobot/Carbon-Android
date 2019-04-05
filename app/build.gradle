@@ -311,5 +311,3 @@ allOpen {
     annotation('dagger.Module')
     annotation("com.mycompany.myapp.Mockable")
 }
-
-apply from: 'generator.gradle'
