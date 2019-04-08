@@ -98,7 +98,7 @@ def _createFile(params, templateFile, destinationFile):
     destination = Template(destinationFile).substitute(**params)
     print(f'Creating {destination}')
     with open(templateFile, 'r') as tf:
-        rendered = pystache.render(tf.read, params)
+        rendered = pystache.render(tf.read(), params)
         with createAndOpen(os.getcwd() + os.sep + destination, 'w') as df:
             df.write(rendered)
 
