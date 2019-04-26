@@ -1,24 +1,27 @@
 package com.mycompany.myapp.ui.main
 
 import android.content.Context
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.mycompany.myapp.CommitItemBinding
-import com.mycompany.myapp.R
 import com.mycompany.myapp.data.api.github.model.Commit
+import com.mycompany.myapp.databinding.ActivityMainBinding
+import com.mycompany.myapp.databinding.FragmentMainBinding
 import com.mycompany.myapp.ui.BaseFragment
+import com.mycompany.myapp.ui.SimpleSnackbarMessage
 import com.mycompany.myapp.util.recyclerview.ArrayAdapter
+import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : BaseFragment() {
     interface MainFragmentHost
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var binding: MainFragmentBinding
+    private lateinit var binding: FragmentMainBinding
     private var host: MainFragmentHost? = null
 
     override fun onAttach(context: Context) {
@@ -34,8 +37,14 @@ class MainFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = getViewModel(MainViewModel::class)
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.vm = viewModel
+
+        viewModel.snackbarMessage.observe(this, object : SimpleSnackbarMessage.SnackbarObserver {
+            override fun onNewMessage(message: String) {
+                Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
+            }
+        })
 
         binding.commits.layoutManager = LinearLayoutManager(activity)
         binding.commits.adapter = CommitsAdapter()
@@ -51,7 +60,7 @@ class MainFragment : BaseFragment() {
     private class CommitsAdapter : ArrayAdapter<Commit, CommitViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommitViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            val binding: CommitItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_commit_summary, parent, false)
+            val binding = CommitItemBinding.inflate(layoutInflater, parent, false)
             return CommitViewHolder(binding)
         }
 

@@ -2,8 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data class="com.mycompany.myapp.ui.main.MainFragmentBinding">
-
+    <data>
         <variable
             name="vm"
             type="com.mycompany.myapp.ui.main.MainViewModel"/>

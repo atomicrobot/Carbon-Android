@@ -1,16 +1,17 @@
 package com.mycompany.myapp.ui.main
 
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
 import com.mycompany.myapp.R
+import com.mycompany.myapp.databinding.ActivityMainBinding
 import com.mycompany.myapp.ui.BaseActivity
 import com.mycompany.myapp.ui.SimpleSnackbarMessage
 import com.mycompany.myapp.ui.main.MainFragment.MainFragmentHost
 
 class MainActivity : BaseActivity(), MainFragmentHost {
     private lateinit var viewModel: MainViewModel
-    private lateinit var binding: MainActivityBinding
+    private lateinit var binding: ActivityMainBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
