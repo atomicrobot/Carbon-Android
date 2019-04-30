@@ -8,5 +8,8 @@
 - item
 - item
 
+### Special requirements for running/deploying this code:
+- note any changed environment variables, updated SDKs, operating system differences, etc...
+
 ### Who should review this PR?
   @someone
