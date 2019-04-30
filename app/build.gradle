@@ -220,6 +220,8 @@ dependencies {
     androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.4'
 }
 
+//TODO Replace FindBugs with SpotBugs
+//https://docs.gradle.org/current/userguide/findbugs_plugin.html
 task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     excludeFilter file("${project.rootDir}/config/findbugs/exclude.xml")
     classes = fileTree('build/intermediates/javac/devDebug/compileDevDebugJavaWithJavac/classes/')
