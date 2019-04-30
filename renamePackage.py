@@ -81,7 +81,7 @@ os.remove('complete.txt')
 
 os.system('git init')
 os.system('git add .')
-os.system('git commit -q -m "Initial import from github.com/atomicrobot/android-starter-project"')
+os.system('git commit -q -m "Initial import from github.com/atomicrobot/Carbon-Android"')
 
 #print artwork :)
 print('\033[92m'+ artwork + '\033[0m')
