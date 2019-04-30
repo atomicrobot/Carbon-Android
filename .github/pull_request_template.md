@@ -1,4 +1,4 @@
-## Subject Here    <Insert GitHub Issue Number>
+## Re: <Insert GitHub Issue Number>
 
 ### Is there test coverage for your changes?
   Yes/No
