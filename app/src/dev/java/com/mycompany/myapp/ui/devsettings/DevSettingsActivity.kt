@@ -2,8 +2,8 @@ package com.mycompany.myapp.ui.devsettings
 
 import android.content.Context
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
 import com.mycompany.myapp.R
 import com.mycompany.myapp.ui.BaseActivity
 import com.mycompany.myapp.ui.devsettings.DevSettingsFragment.DevSettingsFragmentHost
