@@ -127,6 +127,7 @@ androidExtensions {
 
 ext {
     // App dependency versions
+    appCompatVersion = '1.0.2'
     supportVersion = '1.0.0'
     playServicesVersion = '16.1.0'
     daggerVersion = '2.20'
@@ -149,7 +150,7 @@ dependencies {
     // Android/Google libraries
     implementation 'androidx.core:core-ktx:1.0.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation "androidx.appcompat:appcompat:$supportVersion"
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.recyclerview:recyclerview:$supportVersion"
     implementation "androidx.cardview:cardview:$supportVersion"
     implementation "androidx.annotation:annotation:$supportVersion"
@@ -167,7 +168,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // App architecture - RxJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // JSON
@@ -219,6 +220,9 @@ dependencies {
     androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.4'
 }
 
+//TODO Replace FindBugs with SpotBugs
+//https://docs.gradle.org/current/userguide/findbugs_plugin.html
+//https://github.com/atomicrobot/Carbon-Android/issues/87
 task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     excludeFilter file("${project.rootDir}/config/findbugs/exclude.xml")
     classes = fileTree('build/intermediates/javac/devDebug/compileDevDebugJavaWithJavac/classes/')

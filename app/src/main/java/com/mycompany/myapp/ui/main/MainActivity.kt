@@ -1,7 +1,7 @@
 package com.mycompany.myapp.ui.main
 
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
 import com.mycompany.myapp.R
 import com.mycompany.myapp.ui.BaseActivity

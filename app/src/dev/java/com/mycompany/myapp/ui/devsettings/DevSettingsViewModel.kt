@@ -1,8 +1,8 @@
 package com.mycompany.myapp.ui.devsettings
 
 import android.app.Application
-import androidx.databinding.Bindable
 import android.os.Parcelable
+import androidx.databinding.Bindable
 import com.mycompany.myapp.BR
 import com.mycompany.myapp.app.Settings
 import com.mycompany.myapp.ui.BaseViewModel

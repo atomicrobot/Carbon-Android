@@ -1,8 +1,8 @@
 package com.mycompany.myapp.ui
 
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import androidx.fragment.app.Fragment
 import kotlin.reflect.KClass
 
 abstract class BaseFragment: Fragment() {

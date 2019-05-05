@@ -1,10 +1,9 @@
 package com.mycompany.myapp.ui
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.annotation.MainThread
-import android.util.Log
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
