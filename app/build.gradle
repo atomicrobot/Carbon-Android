@@ -276,7 +276,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
         html.enabled = true
     }
 
-    def fileFilter = [
+    def excludes = [
             '**/R.class',
             '**/R$*.class',
             '**/BuildConfig.*',
@@ -297,16 +297,25 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
             '**/devsettings/**/*.*'
     ]
 
-    def mainTree = fileTree(dir: "$project.projectDir/src/main/java", excludes: fileFilter)
-    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/dev/debug", excludes: fileFilter)
-    def kotlinDebugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/devDebug", excludes: fileFilter)
+    getClassDirectories().setFrom(fileTree(
+            // Java generated classes on Android project (debug build)
+            dir: "$buildDir/intermediates/classes/dev/debug",
+            excludes: excludes
+    ) + fileTree(
+            // Kotlin generated classes on Android project (debug build)
+            dir: "$buildDir/tmp/kotlin-classes/devDebug",
+            excludes: excludes
+    ))
 
-    sourceDirectories = files([mainTree])
-    classDirectories = files([debugTree], [kotlinDebugTree])
-    executionData = fileTree(dir: project.buildDir, includes: [
+    getSourceDirectories().setFrom(files([
+            "src/main/java",
+            "src/main/kotlin"
+    ]))
+
+    getExecutionData().setFrom(fileTree(dir: project.buildDir, includes: [
             'jacoco/testDevDebugUnitTest.exec',
             'outputs/code-coverage/connected/**/*coverage.ec'
-    ])
+    ]))
 }
 
 // Kotlin plugin for testing
