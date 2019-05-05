@@ -41,6 +41,10 @@ To see what dependencies might be out of date:
 
 These are written in the context of a TeamCity CI setup.
 
+## Jacoco Test Report
+  - `./gradlew clean jacocoTestReport`
+  - To view report go to <ProjectDir>/build/reports/jacoco/jacocoTestReport/html/index.html
+
 ### Gradle tasks
 This will pull in the current Git SHA and auto incrementing build number as part of the build.
 
