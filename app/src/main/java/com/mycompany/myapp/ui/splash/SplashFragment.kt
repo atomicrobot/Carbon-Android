@@ -13,6 +13,7 @@ import com.mycompany.myapp.ui.NavigationEvent
 class SplashFragment : BaseFragment() {
 
     private lateinit var viewModel: SplashViewModel
+    private lateinit var binding: FragmentSplashBinding
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -32,14 +33,24 @@ class SplashFragment : BaseFragment() {
                     }
                 })
 
-        val binding = FragmentSplashBinding.inflate(inflater, container, false)
+        binding = FragmentSplashBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.saveState(outState)
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.onResume()
+    }
+
+    override fun onDestroyView() {
+        binding.unbind()
+        super.onDestroyView()
     }
 
     private fun navigateFirstTime() {

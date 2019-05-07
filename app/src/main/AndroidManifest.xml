@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".StartActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">
@@ -30,7 +30,7 @@
 
         <activity-alias
             android:name=".Launcher"
-            android:targetActivity=".ui.main.MainActivity" />
+            android:targetActivity=".StartActivity" />
 
         <meta-data
             android:name="com.crashlytics.ApiKey"

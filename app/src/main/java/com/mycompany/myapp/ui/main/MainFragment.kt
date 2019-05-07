@@ -1,38 +1,24 @@
 package com.mycompany.myapp.ui.main
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.mycompany.myapp.CommitItemBinding
 import com.mycompany.myapp.data.api.github.model.Commit
-import com.mycompany.myapp.databinding.ActivityMainBinding
 import com.mycompany.myapp.databinding.FragmentMainBinding
 import com.mycompany.myapp.ui.BaseFragment
 import com.mycompany.myapp.ui.SimpleSnackbarMessage
 import com.mycompany.myapp.util.recyclerview.ArrayAdapter
-import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : BaseFragment() {
-    interface MainFragmentHost
-
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: FragmentMainBinding
-    private var host: MainFragmentHost? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        host = context as MainFragmentHost
-    }
-
-    override fun onDetach() {
-        host = null
-        super.onDetach()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = getViewModel(MainViewModel::class)
@@ -46,10 +32,25 @@ class MainFragment : BaseFragment() {
             }
         })
 
+        (activity as AppCompatActivity).let {
+            it.setSupportActionBar(binding.toolbar)
+            binding.toolbar.title = it.packageName
+        }
+
         binding.commits.layoutManager = LinearLayoutManager(activity)
         binding.commits.adapter = CommitsAdapter()
 
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.saveState(outState)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
     }
 
     override fun onDestroyView() {

@@ -31,7 +31,7 @@ class MainViewModel @Inject constructor(
             var repository: String = "") : Parcelable
 
     sealed class Commits {
-        class Loading : Commits()
+        object Loading : Commits()
         class Result(val commits: List<Commit>) : Commits()
         class Error(val message: String) : Commits()
     }
@@ -92,7 +92,7 @@ class MainViewModel @Inject constructor(
     fun getFingerprint(): String = BuildConfig.VERSION_FINGERPRINT
 
     fun fetchCommits() {
-        commits = Commits.Loading()
+        commits = Commits.Loading
         disposables.add(delayAtLeast(gitHubInteractor.loadCommits(LoadCommitsRequest(username, repository)), loadingDelayMs)
                 .map { it.commits }  // Pull the commits out of the response
                 .subscribeOn(Schedulers.io())
