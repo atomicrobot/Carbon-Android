@@ -1,9 +1,9 @@
 package com.mycompany.myapp.ui
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import com.mycompany.myapp.R
 import com.mycompany.myapp.app.ApplicationComponent

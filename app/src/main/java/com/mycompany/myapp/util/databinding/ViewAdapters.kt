@@ -1,7 +1,7 @@
 package com.mycompany.myapp.util.databinding
 
-import androidx.databinding.BindingAdapter
 import android.view.View
+import androidx.databinding.BindingAdapter
 
 object ViewAdapters {
     @JvmStatic

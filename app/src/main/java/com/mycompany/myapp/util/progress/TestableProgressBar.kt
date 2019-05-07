@@ -2,10 +2,10 @@ package com.mycompany.myapp.util.progress
 
 import android.content.Context
 import android.os.Build.VERSION_CODES
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.widget.ProgressBar
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import com.mycompany.myapp.R
 import com.mycompany.myapp.app.MainApplication
 
