@@ -156,7 +156,6 @@ dependencies {
     implementation "androidx.annotation:annotation:$supportVersion"
     implementation "com.google.android.material:material:$supportVersion"
 
-
     implementation "com.google.android.gms:play-services-base:$playServicesVersion"
 
     implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
@@ -174,6 +173,10 @@ dependencies {
     // JSON
     implementation 'com.squareup.moshi:moshi:1.6.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.6.0'
+
+    // Navigation
+    implementation "android.arch.navigation:navigation-fragment-ktx:${navigation_version}"
+    implementation "android.arch.navigation:navigation-ui-ktx:${navigation_version}"
 
     // Networking - HTTP
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"

@@ -9,6 +9,7 @@ import androidx.test.rule.ActivityTestRule
 import com.mycompany.myapp.EspressoMatchers.regex
 import com.mycompany.myapp.MainApplicationDaggerMockRule
 import com.mycompany.myapp.R
+import com.mycompany.myapp.StartActivity
 import com.mycompany.myapp.data.api.github.GitHubInteractor
 import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.mycompany.myapp.data.api.github.GitHubInteractor.LoadCommitsResponse
@@ -26,11 +27,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 
 @RunWith(AndroidJUnit4::class)
-class MainActivityEspressoTest {
+class StartActivityEspressoTest {
 
     @JvmField @Rule var mockitoRule = MainApplicationDaggerMockRule()
 
-    @JvmField @Rule var testRule = ActivityTestRule(MainActivity::class.java, false, false)
+    @JvmField @Rule var testRule = ActivityTestRule(StartActivity::class.java, false, false)
 
     @Mock lateinit var gitHubInteractor: GitHubInteractor
 

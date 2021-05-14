@@ -3,6 +3,7 @@ package com.mycompany.myapp.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mycompany.myapp.ui.main.MainViewModel
+import com.mycompany.myapp.ui.splash.SplashViewModel
 // GENERATOR - MORE IMPORTS //
 import dagger.Binds
 import dagger.Module
@@ -16,6 +17,11 @@ abstract class ViewModelFactoryModule: VariantViewModelFactoryModule() {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun bindsMainViewModel(mainViewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SplashViewModel::class)
+    abstract fun bindsSplashViewModel(splashViewModel: SplashViewModel): ViewModel
 
     // GENERATOR - MORE VIEW MODELS //
 }
