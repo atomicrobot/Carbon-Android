@@ -25,7 +25,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.google.firebase.crashlytics'
 
-//apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
@@ -147,14 +146,14 @@ ext {
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:28.0.0')
+    implementation platform("com.google.firebase:firebase-bom:$rootProject.ext.firebase_bom_version")
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:18.0.0'
+    implementation "com.google.firebase:firebase-crashlytics:$rootProject.ext.firebase_crashlytics_version"
 
     // Recommended: Add the Google Analytics SDK.
-    implementation 'com.google.firebase:firebase-analytics:19.0.0'
+    implementation "com.google.firebase:firebase-analytics:$rootProject.ext.firebase_analytics_version"
 
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -232,21 +231,6 @@ dependencies {
     androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.4'
 }
 
-//TODO Replace FindBugs with SpotBugs
-//https://docs.gradle.org/current/userguide/findbugs_plugin.html
-//https://github.com/atomicrobot/Carbon-Android/issues/87
-//task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
-//    excludeFilter file("${project.rootDir}/config/findbugs/exclude.xml")
-//    classes = fileTree('build/intermediates/javac/devDebug/compileDevDebugJavaWithJavac/classes/')
-//    source = fileTree('src/main/java/')
-//    classpath = files()
-//    effort = 'max'
-//    reports {
-//        xml.enabled = false
-//        html.enabled = true
-//        html.stylesheet resources.text.fromFile("${project.rootDir}/config/findbugs/customizations.xsl")
-//    }
-//}
 
 task pmd(type: Pmd, dependsOn: "assembleDebug") {
     ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
