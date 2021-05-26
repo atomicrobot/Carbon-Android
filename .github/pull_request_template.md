@@ -1,15 +1,16 @@
-## Re: <Insert GitHub Issue Number>
+# Changelog
+Your description here.
 
-### Is there test coverage for your changes?
+## Added
+-
+
+## Changed
+-
+
+## Removed
+-
+
+## Is there test coverage for your changes?
   Yes/No
 
-### Major changes included in this PR:
-- item
-- item
-- item
-
-### Special requirements for running/deploying this code:
-- note any changed environment variables, updated SDKs, operating system differences, etc...
-
-### Who should review this PR?
-  @someone
+## Screenshots
