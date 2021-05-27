@@ -5,12 +5,12 @@
     <data>
         <variable
             name="viewModel"
-            type="com.mycompany.myapp.ui.splash.SplashViewModel"/>
+            type="com.atomicrobot.carbon.ui.splash.SplashViewModel"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".StartActivity">
+        tools:context="com.atomicrobot.carbon.StartActivity">
 
         <ImageView
             android:layout_width="wrap_content"

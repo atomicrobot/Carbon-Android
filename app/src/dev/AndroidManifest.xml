@@ -6,10 +6,10 @@
         android:allowBackup="false"
         tools:replace="android:allowBackup">
         <activity
-            android:name="com.mycompany.myapp.ui.devsettings.DevSettingsActivity"
+            android:name="com.atomicrobot.carbon.ui.devsettings.DevSettingsActivity"
             android:label="@string/dev_settings"
             android:theme="@style/AppTheme.NoActionBar"
-            android:taskAffinity="com.mycompany.myapp.dev_settings">
+            android:taskAffinity="com.atomicrobot.carbon.dev_settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

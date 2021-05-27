@@ -6,7 +6,7 @@
             app:startDestination="@id/splashFragment">
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.mycompany.myapp.ui.splash.SplashFragment"
+        android:name="com.atomicrobot.carbon.ui.splash.SplashFragment"
         android:label="SplashFragment"
         tools:layout="@layout/fragment_splash">
         <action
@@ -18,7 +18,7 @@
 
     <fragment
       android:id="@+id/mainFragment"
-      android:name="com.mycompany.myapp.ui.main.MainFragment"
+      android:name="com.atomicrobot.carbon.ui.main.MainFragment"
       android:label="MainFragment"
       tools:layout="@layout/fragment_main">
     </fragment>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Usage
-# ./generator.py --package com.mycompany.myapp --screen PurchaseConfirmation
+# ./generator.py --package com.atomicrobot.carbon --screen PurchaseConfirmation
 
 import os
 import argparse

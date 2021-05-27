@@ -1,8 +1,13 @@
 buildscript {
-    ext.android_plugin_version = '3.4.0'
+    ext.android_plugin_version = '4.1.2'
     ext.kotlin_version = '1.3.31'
     ext.jacoco_version = '0.8.1'
     ext.navigation_version = '1.0.0'
+    ext.firebase_bom_version = '28.0.0'
+    ext.firebase_crashlytics_version = '18.0.0'
+    ext.firebase_analytics_version = '19.0.0'
+    ext.google_services_version = '4.3.8'
+    ext.firebase_crashlytics_gradle_version = '2.6.1'
 
     repositories {
         google()
@@ -10,11 +15,14 @@ buildscript {
     }
 
     dependencies {
+        classpath "com.google.gms:google-services:$google_services_version"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:$firebase_crashlytics_gradle_version"
         classpath "com.android.tools.build:gradle:$android_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath "org.jacoco:org.jacoco.core:$jacoco_version"
+
     }
 }
 
@@ -94,12 +102,10 @@ task initialCleanup() {
 task staticAnalysis {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
-    def findBugsTasks = getProjectTask(appProject, 'findbugs')
     def pmdTasks = getProjectTask(appProject, 'pmd')
     def lintTasks = getProjectTask(appProject, 'lint')
     def checkstyleTasks = getProjectTask(appProject, 'checkstyle')
 
-    dependsOn findBugsTasks
     dependsOn pmdTasks
     dependsOn lintTasks
     dependsOn checkstyleTasks

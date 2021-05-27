@@ -5,7 +5,7 @@
     <data>
         <variable
             name="vm"
-            type="com.mycompany.myapp.ui.main.MainViewModel"/>
+            type="com.atomicrobot.carbon.ui.main.MainViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,7 +144,7 @@
             app:layout_constraintTop_toBottomOf="@+id/header"
             app:visible="@{!vm.loading}"/>
 
-        <com.mycompany.myapp.util.progress.TestableProgressBar
+        <com.atomicrobot.carbon.util.progress.TestableProgressBar
             android:id="@+id/loading"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"

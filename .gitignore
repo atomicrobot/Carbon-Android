@@ -7,4 +7,3 @@ build/
 *.swp
 com_crashlytics_export_strings.xml
 crashlytics-build.properties
-fabric.properties

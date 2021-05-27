@@ -2,31 +2,29 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-
-        classpath 'io.fabric.tools:gradle:1.26.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     }
 }
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
+
 }
 
+
 apply plugin: 'com.android.application'
+
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'com.jakewharton.hugo'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 
-apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
@@ -46,7 +44,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId 'com.mycompany.myapp'
+        applicationId 'com.atomicrobot.carbon'
 
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -60,7 +58,7 @@ android {
         proguardFile getDefaultProguardFile('proguard-android.txt')
         proguardFile 'proguard-rules.pro'
 
-        testInstrumentationRunner 'com.mycompany.myapp.CustomAppTestRunner'
+        testInstrumentationRunner 'com.atomicrobot.carbon.CustomAppTestRunner'
     }
 
     signingConfigs {
@@ -80,11 +78,11 @@ android {
     productFlavors {
         dev {
             dimension "app"
-            applicationId 'com.mycompany.myapp.dev'
+            applicationId 'com.atomicrobot.carbon.dev'
         }
         prod {
             dimension "app"
-            applicationId 'com.mycompany.myapp'
+            applicationId 'com.atomicrobot.carbon'
         }
     }
 
@@ -148,6 +146,16 @@ ext {
 }
 
 dependencies {
+    implementation platform("com.google.firebase:firebase-bom:$rootProject.ext.firebase_bom_version")
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // Add the Firebase Crashlytics SDK.
+    implementation "com.google.firebase:firebase-crashlytics:$rootProject.ext.firebase_crashlytics_version"
+
+    // Recommended: Add the Google Analytics SDK.
+    implementation "com.google.firebase:firebase-analytics:$rootProject.ext.firebase_analytics_version"
+
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     kapt "androidx.databinding:databinding-compiler:$rootProject.ext.android_plugin_version"
     // Need this because of Kotlin
@@ -195,11 +203,6 @@ dependencies {
     // Monitoring - Timber (logging)
     implementation 'com.jakewharton.timber:timber:4.7.0'
 
-    // Monitoring - Crashlytics
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
-        transitive = true
-    }
-
     // Monitoring - Leak Canary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
@@ -228,21 +231,6 @@ dependencies {
     androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.4'
 }
 
-//TODO Replace FindBugs with SpotBugs
-//https://docs.gradle.org/current/userguide/findbugs_plugin.html
-//https://github.com/atomicrobot/Carbon-Android/issues/87
-task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
-    excludeFilter file("${project.rootDir}/config/findbugs/exclude.xml")
-    classes = fileTree('build/intermediates/javac/devDebug/compileDevDebugJavaWithJavac/classes/')
-    source = fileTree('src/main/java/')
-    classpath = files()
-    effort = 'max'
-    reports {
-        xml.enabled = false
-        html.enabled = true
-        html.stylesheet resources.text.fromFile("${project.rootDir}/config/findbugs/customizations.xsl")
-    }
-}
 
 task pmd(type: Pmd, dependsOn: "assembleDebug") {
     ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
@@ -330,5 +318,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
 // Kotlin plugin for testing
 allOpen {
     annotation('dagger.Module')
-    annotation("com.mycompany.myapp.Mockable")
+    annotation("com.atomicrobot.carbon.Mockable")
 }
+
+apply plugin: 'com.google.gms.google-services'

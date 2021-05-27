@@ -16,7 +16,7 @@ if (len(args) != 2):
 	exit()
 
 new_package = args[1]
-original_package = "com.mycompany.myapp"
+original_package = "com.atomicrobot.carbon"
 new_package_directory = dirChar + new_package.lower().replace('.', dirChar) + dirChar
 original_package_directory = dirChar + original_package.lower().replace('.', dirChar) + dirChar
 
@@ -67,7 +67,7 @@ def refactorAllFolders():
 	for root, dir, files in os.walk('app/src'):
 		#only use the first iteration, we just want the immidate children of this folder
 		for folder in dir:
-			folderpath = 'app' + dirChar + 'src' + dirChar + folder + dirChar + 'java' + dirChar + 'com' + dirChar + 'mycompany'
+			folderpath = 'app' + dirChar + 'src' + dirChar + folder + dirChar + 'java' + dirChar + 'com' + dirChar + 'atomicrobot'
 			shutil.rmtree(folderpath)
 		break
 

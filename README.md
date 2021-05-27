@@ -58,7 +58,6 @@ app/build/outputs/apk/**/*-release.apk => apks
 app/build/outputs/mapping/**/release/mapping.txt => proguard
 
 app/build/reports/lint-results.html => quality/lint
-app/build/reports/findbugs/ => quality/findbugs
 app/build/reports/pmd/ => quality/pmd
 app/build/reports/checkstyle/ => quality/checkstyle
 
@@ -69,7 +68,6 @@ app/build/reports/coverage/dev/debug/ => quality/coverage
 
 ### Project Reports
 - "Lint" with a start page of `quality/lint/index.html`
-- "Findbugs" `quality/findbugs/findbugs.html`
 - "PMD" with a start page of `quality/pmd/pmd.html`
 - "Unit Tests" with a start page of `quality/tests/index.html`
 - "Integration Tests" with a start page of `quality/integrationTests/index.html`

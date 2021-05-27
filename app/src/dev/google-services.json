@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "542450510948",
+    "project_id": "carbon-622cf",
+    "storage_bucket": "carbon-622cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542450510948:android:24f99c77ea690b74ac8371",
+        "android_client_info": {
+          "package_name": "com.atomicrobot.carbon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542450510948-mpqi42i1dnsk88j6t9qgv1e1lnnsg3hc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNZr1_ram8K4V0r32-SsRPNrQjOyp0SC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542450510948-mpqi42i1dnsk88j6t9qgv1e1lnnsg3hc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542450510948:android:46f00365f3f342b1ac8371",
+        "android_client_info": {
+          "package_name": "com.atomicrobot.carbon.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542450510948-mpqi42i1dnsk88j6t9qgv1e1lnnsg3hc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNZr1_ram8K4V0r32-SsRPNrQjOyp0SC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542450510948-mpqi42i1dnsk88j6t9qgv1e1lnnsg3hc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
