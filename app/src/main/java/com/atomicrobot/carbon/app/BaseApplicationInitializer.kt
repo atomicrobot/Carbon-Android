@@ -10,8 +10,9 @@ import com.squareup.leakcanary.LeakCanary
 
 import timber.log.Timber
 import timber.log.Timber.Tree
+import javax.inject.Inject
 
-abstract class BaseApplicationInitializer(
+abstract class BaseApplicationInitializer @Inject constructor(
         protected val application: Application,
         private val logger: Tree) {
 

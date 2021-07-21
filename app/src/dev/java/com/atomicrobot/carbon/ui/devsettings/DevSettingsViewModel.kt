@@ -6,10 +6,10 @@ import androidx.databinding.Bindable
 import com.atomicrobot.carbon.BR
 import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.ui.BaseViewModel
+import androidx.hilt.lifecycle.ViewModelInject
 import kotlinx.android.parcel.Parcelize
-import javax.inject.Inject
 
-class DevSettingsViewModel @Inject constructor(
+class DevSettingsViewModel @ViewModelInject constructor(
         private val app: Application,
         private val settings: Settings)
     : BaseViewModel<DevSettingsViewModel.State>(app, STATE_KEY, State()) {

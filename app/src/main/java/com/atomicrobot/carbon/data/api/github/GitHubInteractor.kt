@@ -6,6 +6,7 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 
 import io.reactivex.Observable
+import kotlinx.coroutines.CoroutineDispatcher
 import retrofit2.Response
 import timber.log.Timber
 
@@ -19,11 +20,11 @@ class GitHubInteractor(
 
     fun loadCommits(request: LoadCommitsRequest): Observable<LoadCommitsResponse> {
         return api.listCommits(request.user, request.repository)
-                .toObservable()
-                .map { response -> checkResponse(response, context.getString(R.string.error_get_commits_error)) }
-                .map { response -> response.body() ?: emptyList() }
-                .map { commits -> LoadCommitsResponse(request, commits) }
-                .doOnError { error -> Timber.e(error) }
+            .toObservable()
+            .map { response -> checkResponse(response, context.getString(R.string.error_get_commits_error)) }
+            .map { response -> response.body() ?: emptyList() }
+            .map { commits -> LoadCommitsResponse(request, commits) }
+            .doOnError { error -> Timber.e(error) }
     }
 
     private fun <T> checkResponse(response: Response<T>, message: String): Response<T> {

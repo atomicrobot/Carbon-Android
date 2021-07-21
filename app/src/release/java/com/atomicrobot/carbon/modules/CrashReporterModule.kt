@@ -6,6 +6,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
+@InstallIn(Singleton::class)
 class CrashReporterModule {
     @Singleton
     @Provides

@@ -7,6 +7,7 @@ import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
+@InstallIn(Singleton::class)
 class LoggerModule {
     @Singleton
     @Provides

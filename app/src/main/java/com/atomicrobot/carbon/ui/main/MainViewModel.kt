@@ -2,10 +2,8 @@ package com.atomicrobot.carbon.ui.main
 
 import android.app.Application
 import android.os.Parcelable
-import androidx.annotation.VisibleForTesting
 import androidx.databinding.Bindable
 import com.atomicrobot.carbon.BR
-import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsRequest
@@ -13,13 +11,18 @@ import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.ui.SimpleSnackbarMessage
 import com.atomicrobot.carbon.util.RxUtils.delayAtLeast
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.viewModelScope
+import com.google.android.gms.common.util.VisibleForTesting
+import com.mycompany.myapp.BuildConfig
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
-import javax.inject.Inject
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Named
 
-class MainViewModel @Inject constructor(
+class MainViewModel @ViewModelInject constructor(
         private val app: Application,
         private val gitHubInteractor: GitHubInteractor,
         @Named("loading_delay_ms") private val loadingDelayMs: Long)
@@ -74,7 +77,7 @@ class MainViewModel @Inject constructor(
         }
 
     @Bindable("username", "repository")
-    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && !username.isEmpty() && !repository.isEmpty()
+    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && !username.isNotBlank() && !repository.isNotBlank()
 
     @Bindable
     fun isLoading(): Boolean = commits is Commits.Loading
@@ -94,14 +97,14 @@ class MainViewModel @Inject constructor(
     fun fetchCommits() {
         commits = Commits.Loading
         disposables.add(delayAtLeast(gitHubInteractor.loadCommits(LoadCommitsRequest(username, repository)), loadingDelayMs)
-                .map { it.commits }  // Pull the commits out of the response
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { commits = Commits.Result(it) },
-                        { commits = Commits.Error(it.message
-                                ?: app.getString(R.string.error_unexpected))
-                        }))
+            .map { it.commits }  // Pull the commits out of the response
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { commits = Commits.Result(it) },
+                { commits = Commits.Error(it.message
+                    ?: app.getString(R.string.error_unexpected))
+                }))
     }
 
     companion object {

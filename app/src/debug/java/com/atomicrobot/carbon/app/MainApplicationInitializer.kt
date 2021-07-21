@@ -9,11 +9,12 @@ import com.atomicrobot.carbon.app.BaseApplicationInitializer
 import com.atomicrobot.carbon.ui.RiseAndShine
 
 import timber.log.Timber.Tree
+import javax.inject.Inject
 
 /**
  * Specific to the debug variant.
  */
-class MainApplicationInitializer(
+class MainApplicationInitializer @Inject constructor(
         application: Application,
         logger: Tree)
     : BaseApplicationInitializer(application, logger) {

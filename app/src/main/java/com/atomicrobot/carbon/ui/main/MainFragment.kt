@@ -14,14 +14,16 @@ import com.atomicrobot.carbon.databinding.FragmentMainBinding
 import com.atomicrobot.carbon.ui.BaseFragment
 import com.atomicrobot.carbon.ui.SimpleSnackbarMessage
 import com.atomicrobot.carbon.util.recyclerview.ArrayAdapter
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainFragment : BaseFragment() {
-    private lateinit var viewModel: MainViewModel
+
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewModel = getViewModel(MainViewModel::class)
-
         binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.vm = viewModel
 

@@ -22,6 +22,7 @@ buildscript {
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath "org.jacoco:org.jacoco.core:$jacoco_version"
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.28-alpha'
 
     }
 }
@@ -101,7 +102,7 @@ task initialCleanup() {
 
 task staticAnalysis {
     def appProject = subprojects.find { project -> 'app' == project.name }
-
+    
     def pmdTasks = getProjectTask(appProject, 'pmd')
     def lintTasks = getProjectTask(appProject, 'lint')
     def checkstyleTasks = getProjectTask(appProject, 'checkstyle')

@@ -21,6 +21,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'dagger.hilt.android.plugin'
 
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -143,6 +144,9 @@ ext {
     robolectricVersion = '4.2'
     androidTestSupportVersion = '1.1.0'
     espressoVersion = '3.1.0-alpha4'
+
+    daggerHiltVersion = "1.0.0-alpha02"
+    daggerHiltCoreVersion = "2.29.1-alpha"
 }
 
 dependencies {
@@ -161,23 +165,29 @@ dependencies {
     // Need this because of Kotlin
 
     // Android/Google libraries
-    implementation 'androidx.core:core-ktx:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.recyclerview:recyclerview:$supportVersion"
     implementation "androidx.cardview:cardview:$supportVersion"
     implementation "androidx.annotation:annotation:$supportVersion"
     implementation "com.google.android.material:material:$supportVersion"
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     implementation "com.google.android.gms:play-services-base:$playServicesVersion"
 
-    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
 
-    // App architecture - Dagger 2
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    // hilt DI
+    implementation "com.google.dagger:hilt-android:${daggerHiltCoreVersion}"
+    implementation "androidx.hilt:hilt-common:${daggerHiltVersion}"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:${daggerHiltVersion}"
+    kapt "androidx.hilt:hilt-compiler:${daggerHiltVersion}"
+    kapt "com.google.dagger:hilt-android-compiler:${daggerHiltCoreVersion}"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:${daggerHiltCoreVersion}"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:${daggerHiltCoreVersion}"
 
     // App architecture - RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
@@ -201,7 +211,12 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
 
     // Monitoring - Timber (logging)
-    implementation 'com.jakewharton.timber:timber:4.7.0'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // Monitoring - Crashlytics
+//    implementation('com.crashlytics.sdk.android:crashlytics:17.2.2@aar') {
+//        transitive = true
+//    }
 
     // Monitoring - Leak Canary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion"
@@ -230,7 +245,6 @@ dependencies {
     androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
     androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.4'
 }
-
 
 task pmd(type: Pmd, dependsOn: "assembleDebug") {
     ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")

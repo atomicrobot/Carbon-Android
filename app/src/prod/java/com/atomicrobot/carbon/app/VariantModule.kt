@@ -6,6 +6,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 
 @Module
+@InstallIn(SingletonComponent::class)
 class VariantModule {
 
     @Provides
