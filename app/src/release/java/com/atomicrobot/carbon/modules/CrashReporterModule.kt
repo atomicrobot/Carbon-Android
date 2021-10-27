@@ -1,13 +1,11 @@
 package com.atomicrobot.carbon.modules
 
+import com.atomicrobot.carbon.monitoring.CrashReporter
 import com.atomicrobot.carbon.monitoring.CrashlyticsCrashReporter
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import org.koin.dsl.module
 
-@Module
-class CrashReporterModule {
-    @Singleton
-    @Provides
-    fun provideCrashReporter() = CrashlyticsCrashReporter()
+val crashReporterModule = module {
+    single<CrashReporter> {
+        CrashlyticsCrashReporter()
+    }
 }
