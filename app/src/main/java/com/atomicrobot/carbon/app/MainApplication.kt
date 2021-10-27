@@ -1,23 +1,33 @@
 package com.atomicrobot.carbon.app
 
 import android.app.Application
-import androidx.annotation.VisibleForTesting
-import com.atomicrobot.carbon.app.MainApplicationInitializer
-
-import javax.inject.Inject
+import com.atomicrobot.carbon.data.DataModule
+import com.atomicrobot.carbon.modules.crashReporterModule
+import com.atomicrobot.carbon.util.AppLogger
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 open class MainApplication : Application() {
-    lateinit var component: ApplicationComponent
-    @set:VisibleForTesting
-
-    @Inject lateinit var initializer: MainApplicationInitializer
+    private lateinit var initializer: MainApplicationInitializer
 
     override fun onCreate() {
         super.onCreate()
-        component = DaggerApplicationComponent.builder()
-                .androidModule(AndroidModule(this))
-                .build()
-        component.inject(this)
+        startKoin {
+            androidContext(this@MainApplication)
+
+            AppLogger()
+
+            modules(
+                listOf(
+                    crashReporterModule,
+                    AppModule().appModule,
+                    variantModule,
+                    DataModule().dataModule
+                )
+            )
+        }
+
+        initializer = MainApplicationInitializer(this)
 
         initializeApplication()
     }

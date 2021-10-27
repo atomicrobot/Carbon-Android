@@ -8,17 +8,16 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.BaseActivity
 import com.atomicrobot.carbon.ui.devsettings.DevSettingsFragment.DevSettingsFragmentHost
 import com.atomicrobot.carbon.ui.devsettings.DevSettingsActivityBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import javax.inject.Inject
 
 class DevSettingsActivity : BaseActivity(), DevSettingsFragmentHost {
-    @Inject lateinit var viewModel: DevSettingsViewModel
+    val viewModel: DevSettingsViewModel by viewModel()
     private lateinit var binding: DevSettingsActivityBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
-        viewModel = getViewModel(DevSettingsViewModel::class)
         viewModel.restoreState(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dev_settings)

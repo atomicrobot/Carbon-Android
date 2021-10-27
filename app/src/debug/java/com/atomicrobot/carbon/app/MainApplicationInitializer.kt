@@ -4,19 +4,14 @@ import android.app.Activity
 import android.app.Application
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
-import com.atomicrobot.carbon.app.BaseApplicationInitializer
-
 import com.atomicrobot.carbon.ui.RiseAndShine
-
-import timber.log.Timber.Tree
+import timber.log.Timber
 
 /**
  * Specific to the debug variant.
  */
-class MainApplicationInitializer(
-        application: Application,
-        logger: Tree)
-    : BaseApplicationInitializer(application, logger) {
+class MainApplicationInitializer(application: Application) :
+    BaseApplicationInitializer(application, Timber.DebugTree()) {
 
     override fun initialize() {
         super.initialize()
