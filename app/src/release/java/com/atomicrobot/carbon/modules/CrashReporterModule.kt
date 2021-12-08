@@ -5,7 +5,7 @@ import com.atomicrobot.carbon.monitoring.CrashlyticsCrashReporter
 import org.koin.dsl.module
 
 val crashReporterModule = module {
-    single<CrashReporter> {
+    single {
         CrashlyticsCrashReporter()
     }
 }
