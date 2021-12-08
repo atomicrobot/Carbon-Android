@@ -6,7 +6,7 @@ import org.koin.dsl.module
 
 val variantModule = module {
     single {
-        NoOpSecurityModifier()
+        NoOpSecurityModifier() as OkHttpSecurityModifier
     }
 }
 

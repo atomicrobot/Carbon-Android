@@ -48,7 +48,7 @@ class DataModule {
 
         single {
             val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-            MoshiConverterFactory.create(moshi)
+            MoshiConverterFactory.create(moshi) as Converter.Factory
         }
 
         single {
