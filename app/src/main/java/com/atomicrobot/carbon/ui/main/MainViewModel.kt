@@ -19,10 +19,10 @@ import kotlinx.android.parcel.Parcelize
 import javax.inject.Inject
 import javax.inject.Named
 
-class MainViewModel @Inject constructor(
+class MainViewModel(
         private val app: Application,
         private val gitHubInteractor: GitHubInteractor,
-        @Named("loading_delay_ms") private val loadingDelayMs: Long)
+        private val loadingDelayMs: Long)
     : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
     @Parcelize

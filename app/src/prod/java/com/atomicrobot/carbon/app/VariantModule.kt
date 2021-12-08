@@ -1,19 +1,17 @@
 package com.atomicrobot.carbon.app
 
 import com.atomicrobot.carbon.data.OkHttpSecurityModifier
-import dagger.Module
-import dagger.Provides
 import okhttp3.OkHttpClient
+import org.koin.dsl.module
 
-@Module
-class VariantModule {
+val variantModule = module {
+    single {
+        NoOpSecurityModifier()
+    }
+}
 
-    @Provides
-    fun provideOkHttpClientTrustAllBinding(settings: Settings): OkHttpSecurityModifier {
-        return object: OkHttpSecurityModifier {
-            override fun apply(builder: OkHttpClient.Builder) {
-                /* No op */
-            }
-        }
+class NoOpSecurityModifier : OkHttpSecurityModifier {
+    override fun apply(builder: OkHttpClient.Builder) {
+        /* No op */
     }
 }

@@ -9,11 +9,12 @@ import androidx.databinding.DataBindingUtil
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.BaseFragment
 import com.atomicrobot.carbon.ui.devsettings.DevSettingsFragmentBinding
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class DevSettingsFragment : BaseFragment() {
     interface DevSettingsFragmentHost
 
-    private lateinit var viewModel: DevSettingsViewModel
+    private val viewModel: DevSettingsViewModel by sharedViewModel()
     private lateinit var binding: DevSettingsFragmentBinding
     private var host: DevSettingsFragmentHost? = null
 
@@ -28,8 +29,6 @@ class DevSettingsFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewModel = getViewModel(DevSettingsViewModel::class)
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dev_settings, container, false)
         binding.vm = viewModel
 

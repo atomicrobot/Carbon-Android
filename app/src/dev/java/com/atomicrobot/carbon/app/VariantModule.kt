@@ -1,22 +1,31 @@
 package com.atomicrobot.carbon.app
 
-import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.OkHttpSecurityModifier
-import dagger.Module
-import dagger.Provides
+import com.atomicrobot.carbon.ui.devsettings.DevSettingsViewModel
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidApplication
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
-@Module
-class VariantModule {
+val variantModule = module {
+    single {
+        DevSecurityModifier(
+            settings = get()
+        )
+    }
 
-    @Provides
-    fun provideOkHttpClientTrustAllBinding(settings: Settings): OkHttpSecurityModifier {
-        return object: OkHttpSecurityModifier {
-            override fun apply(builder: OkHttpClient.Builder) {
-                if (settings.trustAllSSL) {
-                    SSLDevelopmentHelper.applyTrustAllSettings(builder)
-                }
-            }
+    viewModel {
+        DevSettingsViewModel(
+            app = androidApplication(),
+            settings = get()
+        )
+    }
+}
+
+class DevSecurityModifier(val settings: Settings) : OkHttpSecurityModifier {
+    override fun apply(builder: OkHttpClient.Builder) {
+        if (settings.trustAllSSL) {
+            SSLDevelopmentHelper.applyTrustAllSettings(builder)
         }
     }
 }

@@ -9,29 +9,27 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.databinding.FragmentSplashBinding
 import com.atomicrobot.carbon.ui.BaseFragment
 import com.atomicrobot.carbon.ui.NavigationEvent
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SplashFragment : BaseFragment() {
 
-    private lateinit var viewModel: SplashViewModel
+    private val viewModel: SplashViewModel by viewModel()
     private lateinit var binding: FragmentSplashBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-
-        viewModel = getViewModel(SplashViewModel::class)
-
         viewModel.navigationEvent.observe(
-                this,
-                object : NavigationEvent.NavigationObserver<SplashViewModel.ViewNavigation> {
-                    override fun onNavigationEvent(event: SplashViewModel.ViewNavigation) {
-                        when (event) {
-                            SplashViewModel.ViewNavigation.FirstTime -> navigateFirstTime()
-                        }.let { /* exhaustive */ }
-                    }
-                })
+            this,
+            object : NavigationEvent.NavigationObserver<SplashViewModel.ViewNavigation> {
+                override fun onNavigationEvent(event: SplashViewModel.ViewNavigation) {
+                    when (event) {
+                        SplashViewModel.ViewNavigation.FirstTime -> navigateFirstTime()
+                    }.let { /* exhaustive */ }
+                }
+            })
 
         binding = FragmentSplashBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
