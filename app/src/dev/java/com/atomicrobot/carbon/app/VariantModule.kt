@@ -9,11 +9,16 @@ import org.koin.dsl.module
 
 val variantModule = module {
     single<OkHttpSecurityModifier> {
-        DevSecurityModifier(get())
+        DevSecurityModifier(
+            settings = get()
+        )
     }
 
     viewModel {
-        DevSettingsViewModel(androidApplication(), get())
+        DevSettingsViewModel(
+            app = androidApplication(),
+            settings = get()
+        )
     }
 }
 

@@ -34,11 +34,16 @@ class DataModule {
         }
 
         single {
-            provideOkHttpClient(get(), get())
+            provideOkHttpClient(
+                cache = get(),
+                securityModifier = get()
+            )
         }
 
         single(named(BASE_URL)) {
-            provideBaseUrl(get())
+            provideBaseUrl(
+                settings = get()
+            )
         }
 
         single<Converter.Factory> {
@@ -47,27 +52,37 @@ class DataModule {
         }
 
         single {
-            provideRetrofit(get(), get(qualifier = named(BASE_URL)), get())
+            provideRetrofit(
+                client = get(),
+                baseUrl = get(qualifier = named(BASE_URL)),
+                converterFactory = get())
         }
 
         single {
-            provideGitHubApiService(get())
+            provideGitHubApiService(
+                retrofit = get()
+            )
         }
 
         single {
-            provideGitHubService(androidContext(), get())
-        }
-
-        viewModel {
-            MainViewModel(
-                androidApplication(),
-                get(),
-                get(qualifier = named("loading_delay_ms"))
+            provideGitHubService(
+                context = androidContext(),
+                api = get()
             )
         }
 
         viewModel {
-            SplashViewModel(androidApplication())
+            MainViewModel(
+                app = androidApplication(),
+                gitHubInteractor =  get(),
+                loadingDelayMs = get(qualifier = named("loading_delay_ms"))
+            )
+        }
+
+        viewModel {
+            SplashViewModel(
+                app = androidApplication()
+            )
         }
     }
 

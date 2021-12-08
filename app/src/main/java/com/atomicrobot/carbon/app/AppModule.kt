@@ -8,7 +8,7 @@ class AppModule(private val loadingDelayMs: Long = LOADING_DELAY_MS) {
 
     val appModule = module {
         single {
-            Settings(androidContext())
+            Settings(context = androidContext())
         }
 
         single(named("loading_delay_ms")) {
