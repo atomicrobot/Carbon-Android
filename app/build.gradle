@@ -133,7 +133,6 @@ ext {
     supportVersion = '1.0.0'
     playServicesVersion = '17.1.0'
     lifecycleVersion = '2.0.0'
-    daggerVersion = '2.20'
     koinVersion = '3.1.2'
     retrofitVersion = '2.4.0'
     okHttpVersion = '3.11.0'
