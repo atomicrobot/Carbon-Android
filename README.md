@@ -33,10 +33,6 @@ the organization settings, and then get the keys and secrets it displays.
 To see what the dependency tree currently looks like:
 - `./gradlew app:dependencies`
 
-To see what dependencies might be out of date:
-- `./gradlew app:dependencyUpdates -Drevision=release`
-- Note: This has been hit and miss lately. You can also check Lint for obsolete dependency warnings.
-
 ## Continuous Integration Setup
 
 These are written in the context of a TeamCity CI setup.

@@ -1,17 +1,17 @@
 buildscript {
     ext.android_plugin_version = '4.2.1'
-    ext.kotlin_version = '1.5.10'
-    ext.jacoco_version = '0.8.1'
+    ext.kotlin_version = '1.5.31'
+    ext.jacoco_version = '0.8.6'
     ext.navigation_version = '1.0.0'
     ext.firebase_bom_version = '28.0.0'
-    ext.firebase_crashlytics_version = '18.0.0'
-    ext.firebase_analytics_version = '19.0.0'
+    ext.firebase_crashlytics_version = '18.2.5'
+    ext.firebase_analytics_version = '20.0.0'
     ext.google_services_version = '4.3.8'
     ext.firebase_crashlytics_gradle_version = '2.6.1'
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -29,7 +29,6 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
         maven { url "https://jitpack.io" }
     }
@@ -85,8 +84,8 @@ ext {
 
     // Build settings that are likely to be reused across different modules
     minSdkVersion = 21
-    targetSdkVersion = 28
-    compileSdkVersion = 28
+    targetSdkVersion = 31
+    compileSdkVersion = 31
 }
 
 evaluationDependsOnChildren()

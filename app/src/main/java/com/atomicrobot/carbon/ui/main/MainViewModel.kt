@@ -54,6 +54,7 @@ class MainViewModel(
 
             when (value) {
                 is Commits.Error -> snackbarMessage.value = value.message
+                else -> {}
             }
         }
 

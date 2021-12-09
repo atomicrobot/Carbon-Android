@@ -11,6 +11,7 @@ class AppLogger : Logger() {
             Level.DEBUG -> Timber.d(msg)
             Level.ERROR -> Timber.e(msg)
             Level.INFO -> Timber.i(msg)
+            else -> {}
         }
     }
 }
