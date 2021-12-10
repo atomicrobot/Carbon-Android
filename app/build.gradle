@@ -3,10 +3,6 @@ buildscript {
         google()
         mavenCentral()
     }
-
-    dependencies {
-        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-    }
 }
 
 repositories {
@@ -21,7 +17,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-parcelize'
 
-apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.google.firebase.crashlytics'
 
 apply plugin: 'pmd'
@@ -125,7 +120,7 @@ ext {
     koinVersion = '3.1.4'
     retrofitVersion = '2.9.0'
     okHttpVersion = '5.0.0-alpha.3'
-    moshiVersion = '1.12.0'
+    moshiVersion = '1.13.0'
 
     // Test dependency versions
     mockitoVersion = '4.1.0'
