@@ -4,7 +4,7 @@ import android.app.Application
 import android.os.Parcelable
 import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.ui.NavigationEvent
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(

@@ -15,9 +15,7 @@ import com.atomicrobot.carbon.ui.SimpleSnackbarMessage
 import com.atomicrobot.carbon.util.RxUtils.delayAtLeast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.parcel.Parcelize
-import javax.inject.Inject
-import javax.inject.Named
+import kotlinx.parcelize.Parcelize
 
 class MainViewModel(
         private val app: Application,
@@ -54,6 +52,8 @@ class MainViewModel(
 
             when (value) {
                 is Commits.Error -> snackbarMessage.value = value.message
+                is Commits.Result -> {}
+                Commits.Loading -> {}
             }
         }
 

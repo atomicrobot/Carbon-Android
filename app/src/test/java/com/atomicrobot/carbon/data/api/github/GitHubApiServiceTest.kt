@@ -1,9 +1,10 @@
 package com.atomicrobot.carbon.data.api.github
 
 import com.atomicrobot.carbon.data.DataModule
-import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.loadResourceAsString
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.observers.TestObserver
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
@@ -12,7 +13,10 @@ import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.mockito.MockitoAnnotations
+import retrofit2.Converter
 import retrofit2.Response
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
@@ -22,6 +26,7 @@ class GitHubApiServiceTest {
 
     @Before
     fun setup() {
+        MockitoAnnotations.initMocks(this)
         server = MockWebServer()
     }
 
@@ -102,7 +107,9 @@ class GitHubApiServiceTest {
     private fun buildApi(baseUrl: String): GitHubApiService {
         val module = DataModule()
         val client = OkHttpClient.Builder().build()
-        val converterFactory = module.provideConverter()
+        // TODO - fix with koin tests?
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        val converterFactory = MoshiConverterFactory.create(moshi) as Converter.Factory
         val retrofit = module.provideRetrofit(client, baseUrl, converterFactory)
         return module.provideGitHubApiService(retrofit)
     }

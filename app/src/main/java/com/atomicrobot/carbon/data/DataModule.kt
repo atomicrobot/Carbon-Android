@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.data
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
@@ -97,7 +98,8 @@ class DataModule {
         return settings.baseUrl
     }
 
-    private fun provideRetrofit(
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun provideRetrofit(
         client: OkHttpClient,
         baseUrl: String,
         converterFactory: Converter.Factory
@@ -110,7 +112,8 @@ class DataModule {
             .build()
     }
 
-    private fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
         return retrofit.create(GitHubApiService::class.java)
     }
 
