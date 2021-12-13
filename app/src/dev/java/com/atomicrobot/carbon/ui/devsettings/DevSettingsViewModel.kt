@@ -6,8 +6,7 @@ import androidx.databinding.Bindable
 import com.atomicrobot.carbon.BR
 import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.ui.BaseViewModel
-import kotlinx.android.parcel.Parcelize
-import javax.inject.Inject
+import kotlinx.parcelize.Parcelize
 
 class DevSettingsViewModel(
         private val app: Application,
