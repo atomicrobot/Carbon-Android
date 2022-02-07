@@ -1,28 +1,18 @@
 package com.atomicrobot.carbon.app
 
 import com.atomicrobot.carbon.data.OkHttpSecurityModifier
-import com.atomicrobot.carbon.ui.devsettings.DevSettingsViewModel
+import dagger.Binds
 import okhttp3.OkHttpClient
-import org.koin.android.ext.koin.androidApplication
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
+import javax.inject.Inject
+import javax.inject.Singleton
 
-val variantModule = module {
-    single {
-        DevSecurityModifier(
-            settings = get()
-        ) as OkHttpSecurityModifier // Cast is needed - compiler lies
-    }
-
-    viewModel {
-        DevSettingsViewModel(
-            app = androidApplication(),
-            settings = get()
-        )
-    }
+abstract class VariantModule {
+    @Singleton
+    @Binds
+    abstract fun bindDevSecurityModifier(impl: DevSecurityModifier): OkHttpSecurityModifier
 }
 
-class DevSecurityModifier(val settings: Settings) : OkHttpSecurityModifier {
+class DevSecurityModifier @Inject constructor(val settings: Settings) : OkHttpSecurityModifier {
     override fun apply(builder: OkHttpClient.Builder) {
         if (settings.trustAllSSL) {
             SSLDevelopmentHelper.applyTrustAllSettings(builder)

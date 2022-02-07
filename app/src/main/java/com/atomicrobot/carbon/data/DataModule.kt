@@ -5,103 +5,59 @@ import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
-import com.atomicrobot.carbon.ui.main.MainViewModel
-import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dagger.Provides
+import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.Cache
 import okhttp3.OkHttpClient
-import org.koin.android.ext.koin.androidApplication
-import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
+import javax.inject.Qualifier
 
+
+@Qualifier
+annotation class BaseUrl
 
 interface OkHttpSecurityModifier {
     fun apply(builder: OkHttpClient.Builder)
 }
 
-class DataModule {
-    val dataModule = module {
-        single {
-            val cacheDir = File(androidApplication().cacheDir, "http")
-            Cache(cacheDir, DISK_CACHE_SIZE.toLong())
-        }
-
-        single {
-            provideOkHttpClient(
-                cache = get(),
-                securityModifier = get()
-            )
-        }
-
-        single(named(BASE_URL)) {
-            provideBaseUrl(
-                settings = get()
-            )
-        }
-
-        single {
-            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-            MoshiConverterFactory.create(moshi) as Converter.Factory
-        }
-
-        single {
-            provideRetrofit(
-                client = get(),
-                baseUrl = get(qualifier = named(BASE_URL)),
-                converterFactory = get())
-        }
-
-        single {
-            provideGitHubApiService(
-                retrofit = get()
-            )
-        }
-
-        single {
-            provideGitHubService(
-                context = androidContext(),
-                api = get()
-            )
-        }
-
-        viewModel {
-            MainViewModel(
-                app = androidApplication(),
-                gitHubInteractor =  get(),
-                loadingDelayMs = get(qualifier = named("loading_delay_ms"))
-            )
-        }
-
-        viewModel {
-            SplashViewModel(
-                app = androidApplication()
-            )
-        }
+object DataModule {
+    @Provides
+    fun provideCache(@ApplicationContext appContext: Context): Cache {
+        val cacheDir = File(appContext.cacheDir, "http")
+        return Cache(cacheDir, DISK_CACHE_SIZE.toLong())
     }
 
-    private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
+    @Provides
+    fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.cache(cache)
         securityModifier.apply(builder)
         return builder.build()
     }
 
-    private fun provideBaseUrl(settings: Settings): String {
+    @Provides
+    fun provideConverterFactory(): Converter.Factory {
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        return MoshiConverterFactory.create(moshi) as Converter.Factory
+    }
+
+    @BaseUrl
+    @Provides
+    fun provideBaseUrl(settings: Settings): String {
         return settings.baseUrl
     }
 
+    @Provides
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun provideRetrofit(
         client: OkHttpClient,
-        baseUrl: String,
+        @BaseUrl baseUrl: String,
         converterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
@@ -112,21 +68,19 @@ class DataModule {
             .build()
     }
 
+    @Provides
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
         return retrofit.create(GitHubApiService::class.java)
     }
 
-    private fun provideGitHubService(
-        context: Context,
+    @Provides
+    fun provideGitHubService(
+        @ApplicationContext context: Context,
         api: GitHubApiService
     ): GitHubInteractor {
         return GitHubInteractor(context, api)
     }
 
-    companion object {
-        private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
-
-        const val BASE_URL = "baseUrl"
-    }
+    private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
 }

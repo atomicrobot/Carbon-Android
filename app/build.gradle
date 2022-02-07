@@ -17,6 +17,8 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-parcelize'
 
+apply plugin: 'dagger.hilt.android.plugin'
+
 apply plugin: 'com.google.firebase.crashlytics'
 
 apply plugin: 'pmd'
@@ -111,14 +113,17 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 ext {
     // App dependency versions
-    appCompatVersion = '1.4.0'
+    appCompatVersion = '1.4.1'
     supportVersion = '1.0.0'
     playServicesVersion = '17.6.0'
     lifecycleVersion = '2.0.0'
     lifecycleRuntimeVersion = '2.4.0'
-    koinVersion = '3.1.4'
     retrofitVersion = '2.9.0'
     okHttpVersion = '4.9.1'
     moshiVersion = '1.13.0'
@@ -161,6 +166,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "androidx.fragment:fragment-ktx:$appCompatVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation "androidx.cardview:cardview:$supportVersion"
     implementation "androidx.annotation:annotation:$supportVersion"
@@ -172,8 +178,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
 
-    // App architecture - Koin
-    implementation "io.insert-koin:koin-android:$koinVersion"
+    // App architecture - Hilt
+    implementation"com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // App architecture - RxJava
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"

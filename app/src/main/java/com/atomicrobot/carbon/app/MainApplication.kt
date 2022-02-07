@@ -4,28 +4,14 @@ import android.app.Application
 import com.atomicrobot.carbon.data.DataModule
 import com.atomicrobot.carbon.modules.crashReporterModule
 import com.atomicrobot.carbon.util.AppLogger
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 open class MainApplication : Application() {
     private lateinit var initializer: MainApplicationInitializer
 
     override fun onCreate() {
         super.onCreate()
-        startKoin {
-            androidContext(this@MainApplication)
-
-            AppLogger()
-
-            modules(
-                listOf(
-                    crashReporterModule,
-                    AppModule().appModule,
-                    variantModule,
-                    DataModule().dataModule
-                )
-            )
-        }
 
         initializer = MainApplicationInitializer(this)
 

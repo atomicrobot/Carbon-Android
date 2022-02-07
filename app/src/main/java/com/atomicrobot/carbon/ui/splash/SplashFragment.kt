@@ -4,23 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.databinding.FragmentSplashBinding
 import com.atomicrobot.carbon.ui.BaseFragment
 import com.atomicrobot.carbon.ui.NavigationEvent
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashFragment : BaseFragment() {
 
-    private val viewModel: SplashViewModel by viewModel()
+    private val viewModel: SplashViewModel by viewModels()
     private lateinit var binding: FragmentSplashBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewModel.navigationEvent.observe(
             this,
             object : NavigationEvent.NavigationObserver<SplashViewModel.ViewNavigation> {

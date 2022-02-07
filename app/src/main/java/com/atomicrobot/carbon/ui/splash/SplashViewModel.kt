@@ -4,12 +4,14 @@ import android.app.Application
 import android.os.Parcelable
 import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.ui.NavigationEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
+@HiltViewModel
 class SplashViewModel @Inject constructor(
-        private val app: Application)
-    : BaseViewModel<SplashViewModel.State>(app, STATE_KEY, State()) {
+    private val app: Application
+) : BaseViewModel<SplashViewModel.State>(app, STATE_KEY, State()) {
 
     @Parcelize
     class State : Parcelable
