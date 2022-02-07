@@ -1,19 +1,16 @@
 package com.atomicrobot.carbon.app
 
 import android.app.Application
-import com.atomicrobot.carbon.data.DataModule
-import com.atomicrobot.carbon.modules.crashReporterModule
-import com.atomicrobot.carbon.util.AppLogger
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
 open class MainApplication : Application() {
-    private lateinit var initializer: MainApplicationInitializer
+    @Inject
+    lateinit var initializer: MainApplicationInitializer
 
     override fun onCreate() {
         super.onCreate()
-
-        initializer = MainApplicationInitializer(this)
 
         initializeApplication()
     }

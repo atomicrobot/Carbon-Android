@@ -7,8 +7,11 @@ import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Converter
@@ -26,6 +29,8 @@ interface OkHttpSecurityModifier {
     fun apply(builder: OkHttpClient.Builder)
 }
 
+@InstallIn(SingletonComponent::class)
+@Module
 object DataModule {
     @Provides
     fun provideCache(@ApplicationContext appContext: Context): Cache {
