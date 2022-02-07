@@ -105,12 +105,11 @@ class GitHubApiServiceTest {
 
     @Throws(Exception::class)
     private fun buildApi(baseUrl: String): GitHubApiService {
-        val module = DataModule()
         val client = OkHttpClient.Builder().build()
         // TODO - fix with koin tests?
         val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
         val converterFactory = MoshiConverterFactory.create(moshi) as Converter.Factory
-        val retrofit = module.provideRetrofit(client, baseUrl, converterFactory)
-        return module.provideGitHubApiService(retrofit)
+        val retrofit = DataModule.provideRetrofit(client, baseUrl, converterFactory)
+        return DataModule.provideGitHubApiService(retrofit)
     }
 }
