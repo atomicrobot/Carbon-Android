@@ -16,7 +16,6 @@
 
         <activity
             android:name="com.atomicrobot.carbon.StartActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"
             android:exported="true">
@@ -26,6 +25,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <!-- deep link with URI: atomicrobot://carbon -->
+            <!-- Test from adb shell using: -->
+            <!-- adb shell am start -W -a android.intent.action.VIEW -d "atomicrobot://carbon" -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="atomicrobot"
+                    android:host="carbon" />
+            </intent-filter>
+
+            <!-- deep link with URI: http://www.atomicrobot.com/carbon -->
+            <!-- Test from adb shell using: -->
+            <!-- adb shell am start -W -a android.intent.action.VIEW -d "http://www.atomicrobot.com/carbon" -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data
+                    android:host="*.atomicrobot.com"
+                    android:pathPrefix="/carbon" />
+            </intent-filter>
+
         </activity>
         <!-- GENERATOR - MORE ACTIVITIES -->
 
