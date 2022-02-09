@@ -28,7 +28,7 @@
 
             <!-- deep link with URI: atomicrobot://carbon -->
             <!-- Test from adb shell using: -->
-            <!-- adb shell am start -W -a android.intent.action.VIEW -d "atomicrobot://carbon" -->
+            <!-- adb shell am start -W -a android.intent.action.VIEW -d "atomicrobot://carbon-android" -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -37,12 +37,12 @@
 
                 <data
                     android:scheme="atomicrobot"
-                    android:host="carbon" />
+                    android:host="carbon-android" />
             </intent-filter>
 
             <!-- deep link with URI: http://www.atomicrobot.com/carbon -->
             <!-- Test from adb shell using: -->
-            <!-- adb shell am start -W -a android.intent.action.VIEW -d "http://www.atomicrobot.com/carbon" -->
+            <!-- adb shell am start -W -a android.intent.action.VIEW -d "http://www.atomicrobot.com/carbon-android" -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -53,7 +53,7 @@
                 <data android:scheme="https"/>
                 <data
                     android:host="*.atomicrobot.com"
-                    android:pathPrefix="/carbon" />
+                    android:pathPrefix="/carbon-android" />
             </intent-filter>
 
         </activity>
