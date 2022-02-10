@@ -5,23 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.atomicrobot.carbon.CommitItemBinding
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.databinding.FragmentMainBinding
 import com.atomicrobot.carbon.ui.BaseFragment
 import com.atomicrobot.carbon.ui.SimpleSnackbarMessage
 import com.atomicrobot.carbon.util.recyclerview.ArrayAdapter
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainFragment : BaseFragment() {
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewModel = getViewModel(MainViewModel::class)
-
         binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.vm = viewModel
 
@@ -71,8 +72,8 @@ class MainFragment : BaseFragment() {
     }
 
     private class CommitViewHolder(
-            private val binding: CommitItemBinding)
-        : RecyclerView.ViewHolder(binding.root) {
+        private val binding: CommitItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Commit) {
             binding.item = item

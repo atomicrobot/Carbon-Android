@@ -1,22 +1,26 @@
 package com.atomicrobot.carbon.app
 
-import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.OkHttpSecurityModifier
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import javax.inject.Inject
+import javax.inject.Singleton
 
+@InstallIn(SingletonComponent::class)
 @Module
-class VariantModule {
+abstract class VariantModule {
+    @Singleton
+    @Binds
+    abstract fun bindDevSecurityModifier(impl: DevSecurityModifier): OkHttpSecurityModifier
+}
 
-    @Provides
-    fun provideOkHttpClientTrustAllBinding(settings: Settings): OkHttpSecurityModifier {
-        return object: OkHttpSecurityModifier {
-            override fun apply(builder: OkHttpClient.Builder) {
-                if (settings.trustAllSSL) {
-                    SSLDevelopmentHelper.applyTrustAllSettings(builder)
-                }
-            }
+class DevSecurityModifier @Inject constructor(val settings: Settings) : OkHttpSecurityModifier {
+    override fun apply(builder: OkHttpClient.Builder) {
+        if (settings.trustAllSSL) {
+            SSLDevelopmentHelper.applyTrustAllSettings(builder)
         }
     }
 }

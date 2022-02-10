@@ -1,23 +1,16 @@
 package com.atomicrobot.carbon.app
 
 import android.app.Application
-import androidx.annotation.VisibleForTesting
-import com.atomicrobot.carbon.app.MainApplicationInitializer
-
+import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
+@HiltAndroidApp
 open class MainApplication : Application() {
-    lateinit var component: ApplicationComponent
-    @set:VisibleForTesting
-
-    @Inject lateinit var initializer: MainApplicationInitializer
+    @Inject
+    lateinit var initializer: MainApplicationInitializer
 
     override fun onCreate() {
         super.onCreate()
-        component = DaggerApplicationComponent.builder()
-                .androidModule(AndroidModule(this))
-                .build()
-        component.inject(this)
 
         initializeApplication()
     }

@@ -1,13 +1,17 @@
 package com.atomicrobot.carbon.data
 
-import android.app.Application
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Converter
@@ -15,23 +19,25 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
-import javax.inject.Singleton
+import javax.inject.Qualifier
+
+
+@Qualifier
+annotation class BaseUrl
 
 interface OkHttpSecurityModifier {
     fun apply(builder: OkHttpClient.Builder)
 }
 
+@InstallIn(SingletonComponent::class)
 @Module
-class DataModule {
-
-    @Singleton
+object DataModule {
     @Provides
-    fun provideCache(app: Application): Cache {
-        val cacheDir = File(app.cacheDir, "http")
+    fun provideCache(@ApplicationContext appContext: Context): Cache {
+        val cacheDir = File(appContext.cacheDir, "http")
         return Cache(cacheDir, DISK_CACHE_SIZE.toLong())
     }
 
-    @Singleton
     @Provides
     fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
         val builder = OkHttpClient.Builder()
@@ -40,48 +46,46 @@ class DataModule {
         return builder.build()
     }
 
-    @Singleton
+    @Provides
+    fun provideConverterFactory(): Converter.Factory {
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        return MoshiConverterFactory.create(moshi) as Converter.Factory
+    }
+
+    @BaseUrl
     @Provides
     fun provideBaseUrl(settings: Settings): String {
         return settings.baseUrl
     }
 
-    @Singleton
     @Provides
-    fun provideConverter(): Converter.Factory {
-        val moshi = Moshi.Builder().build()
-        return MoshiConverterFactory.create(moshi)
-    }
-
-    @Singleton
-    @Provides
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun provideRetrofit(
-            client: OkHttpClient,
-            baseUrl: String,
-            converterFactory: Converter.Factory): Retrofit {
+        client: OkHttpClient,
+        @BaseUrl baseUrl: String,
+        converterFactory: Converter.Factory
+    ): Retrofit {
         return Retrofit.Builder()
-                .client(client)
-                .baseUrl(baseUrl)
-                .addConverterFactory(converterFactory)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
+            .client(client)
+            .baseUrl(baseUrl)
+            .addConverterFactory(converterFactory)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
     }
 
-    @Singleton
     @Provides
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
         return retrofit.create(GitHubApiService::class.java)
     }
 
-    @Singleton
     @Provides
     fun provideGitHubService(
-            context: Context,
-            api: GitHubApiService): GitHubInteractor {
+        @ApplicationContext context: Context,
+        api: GitHubApiService
+    ): GitHubInteractor {
         return GitHubInteractor(context, api)
     }
 
-    companion object {
-        private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
-    }
+    private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
 }

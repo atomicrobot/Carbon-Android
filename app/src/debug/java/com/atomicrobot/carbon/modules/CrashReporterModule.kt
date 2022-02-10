@@ -1,13 +1,18 @@
 package com.atomicrobot.carbon.modules
 
+import com.atomicrobot.carbon.monitoring.CrashReporter
 import com.atomicrobot.carbon.monitoring.LoggingOnlyCrashReporter
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+@InstallIn(SingletonComponent::class)
 @Module
-class CrashReporterModule {
+abstract class CrashReporterModule {
+
     @Singleton
-    @Provides
-    fun crashReporter() = LoggingOnlyCrashReporter()
+    @Binds
+    abstract fun bindLoggingOnlyCrashReporter(impl: LoggingOnlyCrashReporter): CrashReporter
 }

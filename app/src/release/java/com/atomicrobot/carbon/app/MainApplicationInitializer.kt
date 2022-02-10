@@ -1,15 +1,13 @@
 package com.atomicrobot.carbon.app
 
 import android.app.Application
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import timber.log.Timber
+import com.atomicrobot.carbon.monitoring.model.NoOpTree
+import javax.inject.Inject
 
 /**
  * Specific to the production variant.
  */
-class MainApplicationInitializer(
-        application: Application,
-        logger: Timber.Tree) : BaseApplicationInitializer(application, logger) {
+class MainApplicationInitializer @Inject constructor(application: Application) : BaseApplicationInitializer(application, NoOpTree()) {
 
     override fun initialize() {
         super.initialize()

@@ -6,18 +6,21 @@ import androidx.databinding.Bindable
 import com.atomicrobot.carbon.BR
 import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.ui.BaseViewModel
-import kotlinx.android.parcel.Parcelize
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
+@HiltViewModel
 class DevSettingsViewModel @Inject constructor(
-        private val app: Application,
-        private val settings: Settings)
-    : BaseViewModel<DevSettingsViewModel.State>(app, STATE_KEY, State()) {
+    private val app: Application,
+    private val settings: Settings
+) : BaseViewModel<DevSettingsViewModel.State>(app, STATE_KEY, State()) {
 
     @Parcelize
     data class State(
-            var baseUrl: String = "",
-            var trustAllSSL: Boolean = false) : Parcelable
+        var baseUrl: String = "",
+        var trustAllSSL: Boolean = false
+    ) : Parcelable
 
     override fun setupViewModel() {
         baseUrl = settings.baseUrl
