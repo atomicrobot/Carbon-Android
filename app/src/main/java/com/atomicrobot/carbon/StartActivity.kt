@@ -4,9 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import com.atomicrobot.carbon.ui.BaseActivity
+import com.atomicrobot.carbon.ui.splash.SplashViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class StartActivity : BaseActivity() {
+    private val splashViewModel: SplashViewModel by viewModel()
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -22,9 +26,10 @@ class StartActivity : BaseActivity() {
             Timber.d("KAB TESTING - appLinkAction detected")
             Timber.d("KAB TESTING - appLinkData = $appLinkData")
 
-            appLinkData?.lastPathSegment?.also {
-                // TODO - go to a specific page based on the lastPathSegment
-                Timber.d("KAB TESTING - appLinkData.lastPathSegment = ${appLinkData.lastPathSegment}")
+            appLinkData?.encodedPath?.also {
+                Timber.d("KAB TESTING - appLinkData.encodedPath = ${appLinkData.encodedPath}")
+                splashViewModel.setDeepLinkPath(appLinkData.encodedPath)
+
             }
         }
     }
