@@ -27,7 +27,7 @@ class SplashViewModel @Inject constructor(
     }
 
     fun setDeepLinkPath(path: String?) {
-        deepLinkInteractor.deepLinkPath = path
+        deepLinkInteractor.setDeepLinkPath(path)
     }
 
     companion object {

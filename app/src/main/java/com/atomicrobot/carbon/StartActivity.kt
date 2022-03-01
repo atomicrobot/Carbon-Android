@@ -23,13 +23,9 @@ class StartActivity : BaseActivity() {
         val appLinkAction = intent.action
         val appLinkData: Uri? = intent.data
         if (Intent.ACTION_VIEW == appLinkAction) {
-            Timber.d("KAB TESTING - appLinkAction detected")
-            Timber.d("KAB TESTING - appLinkData = $appLinkData")
-
             appLinkData?.encodedPath?.also {
-                Timber.d("KAB TESTING - appLinkData.encodedPath = ${appLinkData.encodedPath}")
+                Timber.d("appLinkData.encodedPath = ${appLinkData.encodedPath}")
                 splashViewModel.setDeepLinkPath(appLinkData.encodedPath)
-
             }
         }
     }

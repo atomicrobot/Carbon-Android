@@ -110,6 +110,10 @@ class MainViewModel(
         return deepLinkInteractor.getNavResourceFromDeepLink()
     }
 
+    fun clearDeepLinkPath() {
+        deepLinkInteractor.setDeepLinkPath(null)
+    }
+
     companion object {
         private const val STATE_KEY = "MainViewModelState"  // NON-NLS
     }

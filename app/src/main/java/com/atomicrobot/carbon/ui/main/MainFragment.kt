@@ -17,7 +17,6 @@ import com.atomicrobot.carbon.ui.SimpleSnackbarMessage
 import com.atomicrobot.carbon.util.recyclerview.ArrayAdapter
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class MainFragment : BaseFragment() {
     private val viewModel: MainViewModel by viewModel()
@@ -54,8 +53,8 @@ class MainFragment : BaseFragment() {
         viewModel.onResume()
 
         // Let's go places
-        Timber.d("KAB TESTING - getNavResourceFromDeepLink()")
         viewModel.getNavResourceFromDeepLink()?.let { navResource ->
+            viewModel.clearDeepLinkPath()
             Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment)).navigate(navResource)
         }
     }
