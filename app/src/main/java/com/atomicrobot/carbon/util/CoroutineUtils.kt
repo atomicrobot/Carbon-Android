@@ -4,10 +4,10 @@ import kotlinx.coroutines.delay
 
 object CoroutineUtils {
     suspend fun <T> delayAtLeast(delayMs: Long, networkCall: suspend () -> T): T {
-        val startTime = System.currentTimeMillis()
+        val endTime = System.currentTimeMillis() + delayMs
         val response = networkCall.invoke()
-        val elapsedTime = System.currentTimeMillis() - startTime
-        if (elapsedTime < delayMs) delay(delayMs - elapsedTime)
+        if (System.currentTimeMillis() < endTime)
+            delay((endTime - System.currentTimeMillis()).coerceAtLeast(0L))
         return response
     }
 }
