@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.Bindable
+import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.BR
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
@@ -12,10 +13,10 @@ import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsReques
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.ui.SimpleSnackbarMessage
-import com.atomicrobot.carbon.util.RxUtils.delayAtLeast
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.atomicrobot.carbon.util.CoroutineUtils.delayAtLeast
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import java.lang.Exception
 
 class MainViewModel(
         private val app: Application,
@@ -92,16 +93,21 @@ class MainViewModel(
     fun getFingerprint(): String = BuildConfig.VERSION_FINGERPRINT
 
     fun fetchCommits() {
-        commits = Commits.Loading
-        disposables.add(delayAtLeast(gitHubInteractor.loadCommits(LoadCommitsRequest(username, repository)), loadingDelayMs)
-                .map { it.commits }  // Pull the commits out of the response
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { commits = Commits.Result(it) },
-                        { commits = Commits.Error(it.message
-                                ?: app.getString(R.string.error_unexpected))
-                        }))
+        viewModelScope.launch {
+            commits = Commits.Loading
+
+            commits = delayAtLeast(loadingDelayMs) {
+                try {
+                    Commits.Result(
+                        gitHubInteractor.loadCommits(
+                            LoadCommitsRequest(username, repository)
+                        ).commits
+                    )
+                } catch (e: Exception) {
+                    Commits.Error(e.message ?: app.getString(R.string.error_unexpected))
+                }
+            }
+        }
     }
 
     companion object {
