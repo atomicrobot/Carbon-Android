@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.data.api.github
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.Mockable
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
@@ -26,7 +27,8 @@ class GitHubInteractor(
         )
     }
 
-    private fun <T> checkResponse(response: Response<T>, message: String): Response<T> {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun <T> checkResponse(response: Response<T>, message: String): Response<T> {
         return when {
             response.isSuccessful -> response
             else -> {
