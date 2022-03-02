@@ -3,14 +3,14 @@ package com.atomicrobot.carbon.ui.devsettings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.BaseActivity
 import com.atomicrobot.carbon.ui.devsettings.DevSettingsFragment.DevSettingsFragmentHost
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DevSettingsActivity : BaseActivity(), DevSettingsFragmentHost {
-    private val viewModel: DevSettingsViewModel by viewModel()
+    private val viewModel: DevSettingsViewModel by viewModels()
     private lateinit var binding: DevSettingsActivityBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {

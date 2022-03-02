@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.BR
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.app.LoadingDelayMs
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.atomicrobot.carbon.data.api.github.model.Commit
@@ -17,17 +18,21 @@ import com.atomicrobot.carbon.util.CoroutineUtils.delayAtLeast
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import java.lang.Exception
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel(
-        private val app: Application,
-        private val gitHubInteractor: GitHubInteractor,
-        private val loadingDelayMs: Long)
-    : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    val app: Application,
+    private val gitHubInteractor: GitHubInteractor,
+    @LoadingDelayMs private val loadingDelayMs: Long
+) : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
     @Parcelize
     class State(
-            var username: String = "",
-            var repository: String = "") : Parcelable
+        var username: String = "",
+        var repository: String = ""
+    ) : Parcelable
 
     sealed class Commits {
         object Loading : Commits()

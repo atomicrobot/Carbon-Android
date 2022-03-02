@@ -4,14 +4,20 @@ import android.app.Activity
 import android.app.Application
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
+import com.atomicrobot.carbon.app.BaseApplicationInitializer
+
 import com.atomicrobot.carbon.ui.RiseAndShine
-import timber.log.Timber
+
+import timber.log.Timber.Tree
+import javax.inject.Inject
 
 /**
  * Specific to the debug variant.
  */
-class MainApplicationInitializer(application: Application) :
-    BaseApplicationInitializer(application, Timber.DebugTree()) {
+class MainApplicationInitializer @Inject constructor(
+        application: Application,
+        logger: Tree)
+    : BaseApplicationInitializer(application, logger) {
 
     override fun initialize() {
         super.initialize()
