@@ -22,11 +22,11 @@ class MainFragment : BaseFragment() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: FragmentMainBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.vm = viewModel
 
-        viewModel.snackbarMessage.observe(this, object : SimpleSnackbarMessage.SnackbarObserver {
+        viewModel.snackbarMessage.observe(viewLifecycleOwner, object : SimpleSnackbarMessage.SnackbarObserver {
             override fun onNewMessage(message: String) {
                 Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
             }

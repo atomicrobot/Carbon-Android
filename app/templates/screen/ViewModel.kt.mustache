@@ -4,8 +4,10 @@ import android.app.Application
 import android.os.Parcelable
 import {{package}}.ui.BaseViewModel
 import kotlinx.android.parcel.Parcelize
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class {{screenUpperCamel}}ViewModel @Inject constructor(
         private val app: Application)
     : BaseViewModel<{{screenUpperCamel}}ViewModel.State>(app, STATE_KEY, State()) {
