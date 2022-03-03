@@ -131,8 +131,6 @@ ext {
     constraintLayoutVersion = '2.1.2'
     recyclerViewVersion = '1.2.1'
     materialVersion = '1.4.0'
-    rxJavaVersion = '2.2.21'
-    rxAndroidVersion = '2.1.1'
     timberVersion = '5.0.1'
     leakCanaryVersion = '2.7'
 
@@ -177,14 +175,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleRuntimeVersion"
 
     // App architecture - Hilt
     implementation"com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-
-    // App architecture - RxJava
-    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
 
     // JSON
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
@@ -200,7 +195,6 @@ dependencies {
 
     // Networking - REST
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
 
     // Monitoring - Timber (logging)
