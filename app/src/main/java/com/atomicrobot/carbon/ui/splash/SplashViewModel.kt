@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.splash
 
 import android.app.Application
+import android.net.Uri
 import android.os.Parcelable
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
 import com.atomicrobot.carbon.ui.BaseViewModel
@@ -24,6 +25,10 @@ class SplashViewModel @Inject constructor(
 
     override fun setupViewModel() {
         navigationEvent.postValue(ViewNavigation.FirstTime)
+    }
+
+    fun setDeepLinkUri(uri: Uri?) {
+        deepLinkInteractor.setDeepLinkUri(uri)
     }
 
     fun setDeepLinkPath(path: String?) {

@@ -6,6 +6,7 @@ import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
+import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.squareup.moshi.Moshi
@@ -88,6 +89,13 @@ class DataModule {
 
         viewModel {
             SplashViewModel(
+                app = androidApplication(),
+                deepLinkInteractor = get()
+            )
+        }
+
+        viewModel {
+            DeepLinkSampleViewModel(
                 app = androidApplication(),
                 deepLinkInteractor = get()
             )

@@ -24,8 +24,13 @@ class StartActivity : BaseActivity() {
         val appLinkData: Uri? = intent.data
         if (Intent.ACTION_VIEW == appLinkAction) {
             appLinkData?.encodedPath?.also {
-                Timber.d("appLinkData.encodedPath = ${appLinkData.encodedPath}")
+                splashViewModel.setDeepLinkUri(appLinkData)
                 splashViewModel.setDeepLinkPath(appLinkData.encodedPath)
+
+                Timber.d("appLinkData.encodedPath = $appLinkData")
+                Timber.d("appLinkData.query = ${appLinkData.query}")
+                Timber.d("appLinkData.encodedQuery = ${appLinkData.encodedQuery}")
+                Timber.d("appLinkData.queryParameterNames = ${appLinkData.queryParameterNames}")
             }
         }
     }

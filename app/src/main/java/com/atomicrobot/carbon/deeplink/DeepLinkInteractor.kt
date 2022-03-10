@@ -1,13 +1,17 @@
 package com.atomicrobot.carbon.deeplink
 
+import android.graphics.Color
+import android.net.Uri
 import com.atomicrobot.carbon.R
 import timber.log.Timber
+import java.lang.NumberFormatException
 
 class DeepLinkInteractor {
+    private var deepLinkUri: Uri? = null
     private var deepLinkPath: String? = null
 
-    fun getDeepLinkPath(): String? {
-        return this.deepLinkPath
+    fun setDeepLinkUri(uri: Uri?) {
+        this.deepLinkUri = uri
     }
 
     fun setDeepLinkPath(path: String?) {
@@ -36,5 +40,37 @@ class DeepLinkInteractor {
             }
         }
         return null
+    }
+
+    fun getDeepLinkTextColor(): Int {
+        var color = Color.BLACK
+        deepLinkUri?.let { uri ->
+            val textColor = uri.getQueryParameter("textColor")
+            if(!textColor.isNullOrEmpty()) {
+                try {
+                    color = Color.parseColor(textColor)
+                } catch(exception: IllegalArgumentException) {
+                    Timber.e("Unsupported value for color")
+                }
+            }
+        }
+
+        return color
+    }
+
+    fun getDeepLinkTextSize(): Float {
+        var size = 30f
+        deepLinkUri?.let { uri ->
+            val textSize = uri.getQueryParameter("textSize")
+            if(!textSize.isNullOrEmpty()) {
+                try {
+                    size = textSize.toFloat()
+                } catch(exception: NumberFormatException) {
+                    Timber.e("Unsupported value for size")
+                }
+            }
+        }
+
+        return size
     }
 }
