@@ -100,11 +100,6 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError true
-        lintConfig file('lint.xml')
-        htmlReport true
-    }
 
     dataBinding {
         enabled = true
@@ -116,6 +111,11 @@ android {
         unitTests {
             includeAndroidResources = true
         }
+    }
+    lint {
+        abortOnError true
+        htmlReport true
+        lintConfig file('lint.xml')
     }
 }
 
