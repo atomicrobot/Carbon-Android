@@ -1,15 +1,17 @@
 package com.atomicrobot.carbon.ui.main
 
+import android.app.Application
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.ActivityTestRule
 import com.atomicrobot.carbon.EspressoMatchers.regex
-import com.atomicrobot.carbon.MainApplicationDaggerMockRule
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.StartActivity
+import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsResponse
@@ -21,25 +23,33 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.hamcrest.Matchers.not
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
 @RunWith(AndroidJUnit4::class)
 class StartActivityEspressoTest {
 
-    @JvmField @Rule var mockitoRule = MainApplicationDaggerMockRule()
-
-    @JvmField @Rule var testRule = ActivityTestRule(StartActivity::class.java, false, false)
+    @get:Rule val testRule = ActivityScenarioRule(StartActivity::class.java)
 
     @Mock lateinit var gitHubInteractor: GitHubInteractor
+    @Mock lateinit var api: GitHubApiService
+
+    @Before
+    fun setup() {
+        MockitoAnnotations.initMocks(this)
+
+        val context = ApplicationProvider.getApplicationContext<Application>()
+        gitHubInteractor = GitHubInteractor(context, api)
+    }
 
     @Test
     fun testBuildFingerprint() {
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.empty())
 
-        testRule.launchActivity(null)
         onView(withId(R.id.fingerprint)).check(matches(withText(regex("Fingerprint: .+"))))
     }
 
@@ -50,7 +60,6 @@ class StartActivityEspressoTest {
                 emptyList())
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.just(response))
 
-        testRule.launchActivity(null)
         onView(withId(R.id.fetch_commits)).check(matches(isEnabled()))
 
         onView(withId(R.id.username)).perform(clearText())
@@ -68,7 +77,6 @@ class StartActivityEspressoTest {
         val response = buildMockLoadCommitsResponse()
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(response)
 
-        testRule.launchActivity(null)
         closeSoftKeyboard()
 
         onView(withRecyclerView(R.id.commits)

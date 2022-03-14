@@ -147,7 +147,6 @@ ext {
     espressoVersion = '3.4.0'
     junitVersion = '4.13.2'
     junitTestVersion = '1.1.3'
-    daggerMockVersion = '0.8.4'
 }
 
 dependencies {
@@ -231,7 +230,6 @@ dependencies {
 
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
-    androidTestImplementation "com.github.fabioCollini:DaggerMock:$daggerMockVersion"
 }
 
 
@@ -288,14 +286,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
             '**/*Creator.*',
             /* Data binding */
             '**/*Binding*.*',
-            '**/BR.**',
-            /* Dagger */
-            '**/*_MembersInjector.*',
-            '**/*_Factory.*',
-            '**/*_*Factory.*',
-            '**/Dagger*Component*.*',
-            '**/Dagger*Subcomponent*.*',
-            '**/devsettings/**/*.*'
+            '**/BR.**'
     ]
 
     getClassDirectories().setFrom(fileTree(
@@ -321,7 +312,6 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
 
 // Kotlin plugin for testing
 allOpen {
-    annotation('dagger.Module')
     annotation("com.atomicrobot.carbon.Mockable")
 }
 
