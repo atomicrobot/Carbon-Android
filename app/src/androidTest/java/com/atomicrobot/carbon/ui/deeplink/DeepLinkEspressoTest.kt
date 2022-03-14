@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.hasTextColor
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.atomicrobot.carbon.EspressoMatchers.withFontSize
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.StartActivity
 import org.hamcrest.Description
@@ -68,23 +69,5 @@ class DeepLinkEspressoTest {
         scenario = ActivityScenario.launch(intent)
 
         onView(withId(R.id.deep_link_text)).check(matches(withFontSize(textSize)))
-    }
-
-    private fun withFontSize(expectedSize: Float): Matcher<View?> {
-        return object : BoundedMatcher<View?, View>(View::class.java) {
-            override fun matchesSafely(target: View): Boolean {
-                if (target !is TextView) {
-                    return false
-                }
-                val pixels = target.textSize
-                val actualSize = pixels / target.getResources().displayMetrics.scaledDensity
-                return actualSize.compareTo(expectedSize) == 0
-            }
-
-            override fun describeTo(description: Description) {
-                description.appendText("with fontSize: ")
-                description.appendValue(expectedSize)
-            }
-        }
     }
 }
