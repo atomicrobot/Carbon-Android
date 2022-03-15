@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.atomicrobot.carbon.StartActivity"
+            android:name="com.atomicrobot.carbon.ComposeStartActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"
@@ -31,7 +31,7 @@
 
         <activity-alias
             android:name=".Launcher"
-            android:targetActivity="com.atomicrobot.carbon.StartActivity" />
+            android:targetActivity="com.atomicrobot.carbon.ComposeStartActivity" />
 
     </application>
 

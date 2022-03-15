@@ -5,8 +5,4 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlin.reflect.KClass
 
-abstract class BaseFragment: Fragment() {
-    fun <VM: ViewModel> getViewModel(viewModelClass: KClass<VM>): VM {
-        return ViewModelProvider(requireActivity()).get(viewModelClass.java)
-    }
-}
+abstract class BaseFragment: Fragment()
