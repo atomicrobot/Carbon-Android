@@ -1,17 +1,18 @@
 package com.atomicrobot.carbon.ui.main
 
-import android.app.Application
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.clearText
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.atomicrobot.carbon.EspressoMatchers.regex
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.StartActivity
-import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsResponse
@@ -23,33 +24,39 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.hamcrest.Matchers.not
+import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
+import org.koin.core.context.GlobalContext.loadKoinModules
+import org.koin.core.context.GlobalContext.stopKoin
+import org.koin.dsl.module
+import org.mockito.Mockito
 
 @RunWith(AndroidJUnit4::class)
 class StartActivityEspressoTest {
+    private lateinit var scenario: ActivityScenario<StartActivity>
 
-    @get:Rule val testRule = ActivityScenarioRule(StartActivity::class.java)
-
-    @Mock lateinit var gitHubInteractor: GitHubInteractor
-    @Mock lateinit var api: GitHubApiService
+//    @get:Rule val testRule = ActivityScenarioRule(StartActivity::class.java)
+    private lateinit var gitHubInteractor: GitHubInteractor
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        gitHubInteractor = Mockito.mock(GitHubInteractor::class.java)
+        loadKoinModules(module {
+            gitHubInteractor
+        })
+    }
 
-        val context = ApplicationProvider.getApplicationContext<Application>()
-        gitHubInteractor = GitHubInteractor(context, api)
+    @After
+    fun cleanUp() {
+        stopKoin()
     }
 
     @Test
     fun testBuildFingerprint() {
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.empty())
-
+        scenario = ActivityScenario.launch(StartActivity::class.java)
         onView(withId(R.id.fingerprint)).check(matches(withText(regex("Fingerprint: .+"))))
     }
 
@@ -60,7 +67,7 @@ class StartActivityEspressoTest {
                 emptyList())
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.just(response))
 
-        onView(withId(R.id.fetch_commits)).check(matches(isEnabled()))
+        scenario = ActivityScenario.launch(StartActivity::class.java)
 
         onView(withId(R.id.username)).perform(clearText())
         onView(withId(R.id.fetch_commits)).check(matches(not(isEnabled())))
@@ -77,14 +84,16 @@ class StartActivityEspressoTest {
         val response = buildMockLoadCommitsResponse()
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(response)
 
+        scenario = ActivityScenario.launch(StartActivity::class.java)
+
         closeSoftKeyboard()
 
         onView(withRecyclerView(R.id.commits)
-                .atPositionOnView(0, R.id.author))
-                .check(matches(withText("Author: Test author")))
+            .atPositionOnView(0, R.id.author))
+            .check(matches(withText("Author: Test author")))
         onView(withRecyclerView(R.id.commits)
-                .atPositionOnView(0, R.id.message))
-                .check(matches(withText("Test commit message")))
+            .atPositionOnView(0, R.id.message))
+            .check(matches(withText("Test commit message")))
     }
 
     private fun buildMockLoadCommitsResponse(): Observable<LoadCommitsResponse> {

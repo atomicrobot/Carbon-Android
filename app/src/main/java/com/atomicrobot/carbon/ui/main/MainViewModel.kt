@@ -76,7 +76,7 @@ class MainViewModel(
         }
 
     @Bindable("username", "repository")
-    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && !username.isEmpty() && !repository.isEmpty()
+    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && username.isNotEmpty() && repository.isNotEmpty()
 
     @Bindable
     fun isLoading(): Boolean = commits is Commits.Loading

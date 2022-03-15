@@ -140,7 +140,7 @@ ext {
     leakCanaryVersion = '2.7'
 
     // Test dependency versions
-    mockitoVersion = '4.1.0'
+    mockitoVersion = '4.4.0'
     mockitoKotlinVersion = '1.6.0'
     robolectricVersion = '4.7.3'
     androidTestSupportVersion = '1.4.0'
@@ -220,6 +220,7 @@ dependencies {
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
 
 
+    // Android JUnit Runner, JUnit Rules, and Espresso
     // Android JUnit Runner, JUnit Rules, and Espresso
     androidTestImplementation "androidx.test:runner:$androidTestSupportVersion"
     androidTestImplementation "androidx.test:rules:$androidTestSupportVersion"
