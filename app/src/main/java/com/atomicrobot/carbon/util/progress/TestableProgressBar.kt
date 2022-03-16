@@ -7,6 +7,7 @@ import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.app.CoreApplication
 import com.atomicrobot.carbon.app.MainApplication
 
 
@@ -30,7 +31,7 @@ class TestableProgressBar : ProgressBar {
     }
 
     private fun killAnimatedProgressBar(context: Context) {
-        if ((context.applicationContext as MainApplication).isTesting()) {
+        if ((context.applicationContext as CoreApplication).isTesting()) {
             indeterminateDrawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher)
         }
     }
