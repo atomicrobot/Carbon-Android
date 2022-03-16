@@ -22,8 +22,8 @@ open class CoreApplication : Application() {
 
     /**
      * For Espresso tests we *do not* want to setupViewModel the full application and instead will
-     * favor mocking out non-ui dependencies. This should be overridden to a no-op if initialization
-     * should not occur.
+     * favor mocking out non-ui dependencies. This should be overridden to if initialization
+     * should occur.
      */
     protected open fun initializeApplication() {
 

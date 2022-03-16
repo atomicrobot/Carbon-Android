@@ -4,7 +4,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-open class MainApplication : CoreApplication() {
+class MainApplication : CoreApplication() {
 
     override fun initializeApplication() {
         initializer = EntryPointAccessors.fromApplication(
