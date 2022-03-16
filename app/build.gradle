@@ -180,6 +180,8 @@ dependencies {
     // App architecture - Hilt
     implementation"com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // JSON
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"

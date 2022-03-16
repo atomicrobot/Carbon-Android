@@ -20,7 +20,7 @@ class CustomAppTestRunner : AndroidJUnitRunner() {
 
     @Throws(InstantiationException::class, IllegalAccessException::class, ClassNotFoundException::class)
     override fun newApplication(cl: ClassLoader, className: String, context: Context): Application {
-        return super.newApplication(cl, TestMainApplication::class.java.name, context)
+        return super.newApplication(cl, HiltTestMainApplication_Application::class.java.name, context)
     }
 
     @Suppress("DEPRECATION")
