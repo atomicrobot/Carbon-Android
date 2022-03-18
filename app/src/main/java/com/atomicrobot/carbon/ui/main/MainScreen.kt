@@ -1,31 +1,38 @@
 package com.atomicrobot.carbon.ui.main
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Author
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.data.api.github.model.CommitDetails
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.math.pow
 
 @Composable
 fun Main(mainViewModelCompose: MainViewModelCompose) {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
     val mainState by mainViewModelCompose.uiState.collectAsState()
+
     MainContent(
-        userName = mainState.state.username,
-        repository = mainState.state.repository,
-        commits = mainState.commits,
+        scope = scope,
+        userName = mainState.username,
+        repository = mainState.repository,
+        commitsState = mainState.commitsState,
+        snackbarHostState = snackbarHostState,
         onUserInputChanged = { username, repo ->
             mainViewModelCompose.updateUserInput(username, repo)
         },
@@ -35,20 +42,33 @@ fun Main(mainViewModelCompose: MainViewModelCompose) {
 
 @Composable
 fun MainContent(
+    scope: CoroutineScope,
     userName: String,
     repository: String,
-    commits: MainViewModelCompose.Commits,
+    commitsState: MainViewModelCompose.CommitsState,
+    snackbarHostState: SnackbarHostState,
     onUserInputChanged: (String, String) -> Unit,
     onFetchCommitsClick: () -> Unit,
 ) {
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(
+            title = { Text(text = BuildConfig.APPLICATION_ID) }
+        )
         GithubInput(
             userName = userName,
             repository = repository,
+            isLoading = commitsState is MainViewModelCompose.CommitsState.Loading,
             onUserInputChanged = onUserInputChanged,
             onFetchCommitsClick = onFetchCommitsClick
         )
-        GitHubResponse(commits = commits)
+        GitHubResponse(
+            scope = scope,
+            commitsState = commitsState,
+            snackbarHostState = snackbarHostState,
+            modifier = Modifier.weight(1f)
+        )
+        SnackbarHost(hostState = snackbarHostState)
+        BottomBar()
     }
 }
 
@@ -56,27 +76,38 @@ fun MainContent(
 fun GithubInput(
     userName: String,
     repository: String,
+    isLoading: Boolean,
     onUserInputChanged: (String, String) -> Unit,
-    onFetchCommitsClick: () -> Unit
+    onFetchCommitsClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Surface {
-        Column {
+    Surface(
+        color = MaterialTheme.colors.onSurface
+            .copy(alpha = TextFieldDefaults.BackgroundOpacity)
+    ) {
+        Column(modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)) {
             TextField(
                 value = userName,
                 onValueChange = { onUserInputChanged(it, repository) },
                 label = {
                     Text(text = stringResource(id = R.string.username))
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
             TextField(
                 value = repository,
                 onValueChange = { onUserInputChanged(userName, it) },
                 label = {
                     Text(text = stringResource(id = R.string.repository))
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
             OutlinedButton(
-                onClick = onFetchCommitsClick
+                onClick = onFetchCommitsClick,
+                enabled = !isLoading && userName.isNotEmpty() && repository.isNotEmpty(),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = stringResource(id = R.string.fetch_commits))
             }
@@ -85,17 +116,44 @@ fun GithubInput(
 }
 
 @Composable
-fun GitHubResponse(commits: MainViewModelCompose.Commits) {
-    when (commits) {
-        is MainViewModelCompose.Commits.Error -> CommitList(emptyList())
-        MainViewModelCompose.Commits.Loading -> CommitList(emptyList())
-        is MainViewModelCompose.Commits.Result -> CommitList(commits.commits)
+fun GitHubResponse(
+    scope: CoroutineScope,
+    commitsState: MainViewModelCompose.CommitsState,
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier
+) {
+    when (commitsState) {
+        is MainViewModelCompose.CommitsState.Error -> Error(scope, snackbarHostState, modifier)
+        MainViewModelCompose.CommitsState.Loading -> LoadingCommits(modifier)
+        is MainViewModelCompose.CommitsState.Result -> CommitList(commitsState.commits, modifier)
     }
 }
 
 @Composable
-fun CommitList(commits: List<Commit> = practiceData()) {
-    LazyColumn {
+fun Error(scope: CoroutineScope, snackbarHostState: SnackbarHostState, modifier: Modifier) {
+    Column(modifier = modifier) {
+        LaunchedEffect(Unit) {
+            scope.launch {
+                snackbarHostState.showSnackbar("Hello there")
+            }
+        }
+    }
+}
+
+@Composable
+fun LoadingCommits(modifier: Modifier) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun CommitList(commits: List<Commit>, modifier: Modifier) {
+    LazyColumn(modifier = modifier){
         items(commits) {
             CommitUiElement(commit = it)
         }
@@ -124,23 +182,28 @@ fun CommitUiElement(commit: Commit) {
     }
 }
 
-private fun practiceData() = listOf(
-    Commit(
-      commit = CommitDetails(
-          message = "test message",
-          author = Author(name = "Sierra")
-      )
-    ),
-    Commit(
-        commit = CommitDetails(
-            message = "test message",
-            author = Author(name = "Sierra")
+@Composable
+fun BottomBar() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colors.onSurface
+                    .copy(alpha = TextFieldDefaults.BackgroundOpacity)
+            )
+            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp)
+    ) {
+        Text(
+            text = stringResource(
+                id = R.string.version_format, BuildConfig.VERSION_NAME
+            ),
+            modifier = Modifier.weight(1f)
         )
-    ),
-    Commit(
-        commit = CommitDetails(
-            message = "test message",
-            author = Author(name = "Sierra")
+        Text(
+            text = stringResource(
+                id = R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT
+            )
         )
-    )
-)
+    }
+}

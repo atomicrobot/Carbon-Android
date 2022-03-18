@@ -9,6 +9,7 @@ import com.atomicrobot.carbon.ui.ComposeBaseActivity
 import com.atomicrobot.carbon.ui.main.Main
 import com.atomicrobot.carbon.ui.main.MainContent
 import com.atomicrobot.carbon.ui.main.MainViewModelCompose
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,7 +20,9 @@ class ComposeStartActivity : ComposeBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Main(viewModelCompose)
+            CarbonAndroidTheme {
+                Main(viewModelCompose)
+            }
         }
     }
 }
