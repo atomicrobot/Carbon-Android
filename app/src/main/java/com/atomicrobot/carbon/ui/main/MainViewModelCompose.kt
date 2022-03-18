@@ -22,7 +22,7 @@ class MainViewModelCompose @Inject constructor(
     @LoadingDelayMs private val loadingDelayMs: Long
 ) : BaseViewModel<MainViewModel.State>(app, STATE_KEY, MainViewModel.State()) {
     // ^ need to change this. research what should be in a BaseVM for compose app
-    // Can remove all the databinding observable functions  
+    // Can remove all the databinding observable functions
 
     sealed class CommitsState {
         object Loading : CommitsState()
@@ -58,15 +58,14 @@ class MainViewModelCompose @Inject constructor(
             _uiState.value = _uiState.value.copy(
                 commitsState = delayAtLeast(loadingDelayMs) {
                     try {
-                        CommitsState.Error("Sierra")
-//                        CommitsState.Result(
-//                            gitHubInteractor.loadCommits(
-//                                GitHubInteractor.LoadCommitsRequest(
-//                                    uiState.value.username,
-//                                    uiState.value.repository
-//                                )
-//                            ).commits
-//                        )
+                        CommitsState.Result(
+                            gitHubInteractor.loadCommits(
+                                GitHubInteractor.LoadCommitsRequest(
+                                    uiState.value.username,
+                                    uiState.value.repository
+                                )
+                            ).commits
+                        )
                     } catch (e: Exception) {
                         CommitsState.Error(
                             e.message ?: app.getString(R.string.error_unexpected)

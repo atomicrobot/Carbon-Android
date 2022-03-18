@@ -16,6 +16,8 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Author
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.data.api.github.model.CommitDetails
+import com.atomicrobot.carbon.ui.components.BottomBar
+import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -23,16 +25,16 @@ import kotlin.math.pow
 
 @Composable
 fun Main(mainViewModelCompose: MainViewModelCompose) {
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
+
+    val scaffoldState: ScaffoldState = rememberScaffoldState()
+
     val mainState by mainViewModelCompose.uiState.collectAsState()
 
     MainContent(
-        scope = scope,
         userName = mainState.username,
         repository = mainState.repository,
         commitsState = mainState.commitsState,
-        snackbarHostState = snackbarHostState,
+        scaffoldState = scaffoldState,
         onUserInputChanged = { username, repo ->
             mainViewModelCompose.updateUserInput(username, repo)
         },
@@ -42,33 +44,33 @@ fun Main(mainViewModelCompose: MainViewModelCompose) {
 
 @Composable
 fun MainContent(
-    scope: CoroutineScope,
     userName: String,
     repository: String,
     commitsState: MainViewModelCompose.CommitsState,
-    snackbarHostState: SnackbarHostState,
+    scaffoldState: ScaffoldState,
     onUserInputChanged: (String, String) -> Unit,
     onFetchCommitsClick: () -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = { Text(text = BuildConfig.APPLICATION_ID) }
-        )
-        GithubInput(
-            userName = userName,
-            repository = repository,
-            isLoading = commitsState is MainViewModelCompose.CommitsState.Loading,
-            onUserInputChanged = onUserInputChanged,
-            onFetchCommitsClick = onFetchCommitsClick
-        )
-        GitHubResponse(
-            scope = scope,
-            commitsState = commitsState,
-            snackbarHostState = snackbarHostState,
-            modifier = Modifier.weight(1f)
-        )
-        SnackbarHost(hostState = snackbarHostState)
-        BottomBar()
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        scaffoldState = scaffoldState
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            TopBar()
+            GithubInput(
+                userName = userName,
+                repository = repository,
+                isLoading = commitsState is MainViewModelCompose.CommitsState.Loading,
+                onUserInputChanged = onUserInputChanged,
+                onFetchCommitsClick = onFetchCommitsClick
+            )
+            GitHubResponse(
+                commitsState = commitsState,
+                scaffoldState = scaffoldState,
+                modifier = Modifier.weight(1f)
+            )
+            BottomBar()
+        }
     }
 }
 
@@ -117,25 +119,25 @@ fun GithubInput(
 
 @Composable
 fun GitHubResponse(
-    scope: CoroutineScope,
     commitsState: MainViewModelCompose.CommitsState,
-    snackbarHostState: SnackbarHostState,
+    scaffoldState: ScaffoldState,
     modifier: Modifier
 ) {
     when (commitsState) {
-        is MainViewModelCompose.CommitsState.Error -> Error(scope, snackbarHostState, modifier)
-        MainViewModelCompose.CommitsState.Loading -> LoadingCommits(modifier)
-        is MainViewModelCompose.CommitsState.Result -> CommitList(commitsState.commits, modifier)
+        is MainViewModelCompose.CommitsState.Error ->
+            Error(commitsState.message, scaffoldState, modifier)
+        MainViewModelCompose.CommitsState.Loading ->
+            LoadingCommits(modifier)
+        is MainViewModelCompose.CommitsState.Result ->
+            CommitList(commitsState.commits, modifier)
     }
 }
 
 @Composable
-fun Error(scope: CoroutineScope, snackbarHostState: SnackbarHostState, modifier: Modifier) {
+fun Error(text: String, scaffoldState: ScaffoldState, modifier: Modifier) {
     Column(modifier = modifier) {
-        LaunchedEffect(Unit) {
-            scope.launch {
-                snackbarHostState.showSnackbar("Hello there")
-            }
+        LaunchedEffect(scaffoldState.snackbarHostState) {
+            scaffoldState.snackbarHostState.showSnackbar(text)
         }
     }
 }
@@ -179,31 +181,5 @@ fun CommitUiElement(commit: Commit) {
             )
             Text(text = stringResource(id = R.string.author_format, commit.author))
         }
-    }
-}
-
-@Composable
-fun BottomBar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colors.onSurface
-                    .copy(alpha = TextFieldDefaults.BackgroundOpacity)
-            )
-            .padding(horizontal = 16.dp)
-            .padding(top = 16.dp)
-    ) {
-        Text(
-            text = stringResource(
-                id = R.string.version_format, BuildConfig.VERSION_NAME
-            ),
-            modifier = Modifier.weight(1f)
-        )
-        Text(
-            text = stringResource(
-                id = R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT
-            )
-        )
     }
 }
