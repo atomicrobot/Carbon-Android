@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -18,6 +19,7 @@ import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.data.api.github.model.CommitDetails
 import com.atomicrobot.carbon.ui.components.BottomBar
 import com.atomicrobot.carbon.ui.components.TopBar
+import com.atomicrobot.carbon.ui.components.TransparentTextField
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -89,23 +91,17 @@ fun GithubInput(
     ) {
         Column(modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)) {
-            TextField(
+            .padding(16.dp))
+        {
+            TransparentTextField(
                 value = userName,
-                onValueChange = { onUserInputChanged(it, repository) },
-                label = {
-                    Text(text = stringResource(id = R.string.username))
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-            TextField(
+                labelResId = R.string.repository,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) { onUserInputChanged(it, repository) }
+            TransparentTextField(
                 value = repository,
-                onValueChange = { onUserInputChanged(userName, it) },
-                label = {
-                    Text(text = stringResource(id = R.string.repository))
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+                labelResId = R.string.repository,
+            ) { onUserInputChanged(userName, it) }
             OutlinedButton(
                 onClick = onFetchCommitsClick,
                 enabled = !isLoading && userName.isNotEmpty() && repository.isNotEmpty(),
@@ -125,11 +121,15 @@ fun GitHubResponse(
 ) {
     when (commitsState) {
         is MainViewModelCompose.CommitsState.Error ->
-            Error(commitsState.message, scaffoldState, modifier)
+            Error(
+                text = commitsState.message,
+                scaffoldState = scaffoldState,
+                modifier = modifier
+            )
         MainViewModelCompose.CommitsState.Loading ->
-            LoadingCommits(modifier)
+            LoadingCommits(modifier = modifier)
         is MainViewModelCompose.CommitsState.Result ->
-            CommitList(commitsState.commits, modifier)
+            CommitList(commits = commitsState.commits, modifier = modifier)
     }
 }
 
