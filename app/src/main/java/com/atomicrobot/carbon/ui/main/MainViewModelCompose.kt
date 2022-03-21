@@ -46,8 +46,8 @@ class MainViewModelCompose @Inject constructor(
 
     fun updateUserInput(username: String?, repository: String?) {
         _uiState.value = _uiState.value.copy(
-            username = username ?: "",
-            repository = repository ?: ""
+            username = username ?: _uiState.value.username,
+            repository = repository ?:  _uiState.value.repository,
         )
     }
 
