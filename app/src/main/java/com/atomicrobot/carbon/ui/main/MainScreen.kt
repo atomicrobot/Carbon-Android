@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.components.BottomBar
+import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.components.TransparentTextField
 
@@ -45,8 +46,12 @@ fun MainContent(
     onFetchCommitsClick: () -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        scaffoldState = scaffoldState
+        modifier = Modifier.fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding(),
+        scaffoldState = scaffoldState,
+        snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) }
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopBar()

@@ -195,6 +195,8 @@ dependencies {
     // UI Tests
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
 
+    implementation "androidx.compose.foundation:foundation:1.2.0-alpha05"
+
     // App architecture - Hilt
     implementation"com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
