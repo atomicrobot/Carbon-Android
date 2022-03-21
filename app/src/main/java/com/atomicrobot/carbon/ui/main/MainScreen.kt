@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon.ui.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,22 +7,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.data.api.github.model.Author
 import com.atomicrobot.carbon.data.api.github.model.Commit
-import com.atomicrobot.carbon.data.api.github.model.CommitDetails
 import com.atomicrobot.carbon.ui.components.BottomBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.components.TransparentTextField
-import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlin.math.pow
 
 @Composable
 fun Main(mainViewModelCompose: MainViewModelCompose) {
@@ -119,33 +110,31 @@ fun GitHubResponse(
     scaffoldState: ScaffoldState,
     modifier: Modifier
 ) {
-    when (commitsState) {
-        is MainViewModelCompose.CommitsState.Error ->
-            Error(
-                text = commitsState.message,
-                scaffoldState = scaffoldState,
-                modifier = modifier
-            )
-        MainViewModelCompose.CommitsState.Loading ->
-            LoadingCommits(modifier = modifier)
-        is MainViewModelCompose.CommitsState.Result ->
-            CommitList(commits = commitsState.commits, modifier = modifier)
-    }
-}
-
-@Composable
-fun Error(text: String, scaffoldState: ScaffoldState, modifier: Modifier) {
-    Column(modifier = modifier) {
-        LaunchedEffect(scaffoldState.snackbarHostState) {
-            scaffoldState.snackbarHostState.showSnackbar(text)
+    Box(modifier = modifier) {
+        when (commitsState) {
+            is MainViewModelCompose.CommitsState.Error ->
+                Error(
+                    text = commitsState.message,
+                    scaffoldState = scaffoldState
+                )
+            MainViewModelCompose.CommitsState.Loading -> LoadingCommits()
+            is MainViewModelCompose.CommitsState.Result ->
+                CommitList(commits = commitsState.commits)
         }
     }
 }
 
 @Composable
-fun LoadingCommits(modifier: Modifier) {
+fun Error(text: String, scaffoldState: ScaffoldState) {
+    LaunchedEffect(scaffoldState.snackbarHostState) {
+        scaffoldState.snackbarHostState.showSnackbar(text)
+    }
+}
+
+@Composable
+fun LoadingCommits() {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -154,8 +143,8 @@ fun LoadingCommits(modifier: Modifier) {
 }
 
 @Composable
-fun CommitList(commits: List<Commit>, modifier: Modifier) {
-    LazyColumn(modifier = modifier){
+fun CommitList(commits: List<Commit>) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(commits) {
             CommitUiElement(commit = it)
         }
