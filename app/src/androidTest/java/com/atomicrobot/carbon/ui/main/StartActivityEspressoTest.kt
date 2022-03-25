@@ -6,10 +6,10 @@ import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.atomicrobot.carbon.EspressoMatchers.regex
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.StartActivity
@@ -26,6 +26,7 @@ import io.reactivex.Observable
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.GlobalContext.loadKoinModules
@@ -37,7 +38,8 @@ import org.mockito.Mockito
 class StartActivityEspressoTest {
     private lateinit var scenario: ActivityScenario<StartActivity>
 
-//    @get:Rule val testRule = ActivityScenarioRule(StartActivity::class.java)
+//    @get:Rule val activityRule = ActivityScenarioRule(StartActivity::class.java)
+
     private lateinit var gitHubInteractor: GitHubInteractor
 
     @Before
@@ -51,6 +53,7 @@ class StartActivityEspressoTest {
     @After
     fun cleanUp() {
         stopKoin()
+        scenario.close()
     }
 
     @Test
@@ -69,6 +72,9 @@ class StartActivityEspressoTest {
 
         scenario = ActivityScenario.launch(StartActivity::class.java)
 
+        Thread.sleep(5 * 1000L)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
         onView(withId(R.id.username)).perform(clearText())
         onView(withId(R.id.fetch_commits)).check(matches(not(isEnabled())))
 
@@ -86,14 +92,18 @@ class StartActivityEspressoTest {
 
         scenario = ActivityScenario.launch(StartActivity::class.java)
 
+        Thread.sleep(5 * 1000L)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
         closeSoftKeyboard()
 
+        // Check recycler view's 0th position and confirm text does not equal default test values
         onView(withRecyclerView(R.id.commits)
             .atPositionOnView(0, R.id.author))
-            .check(matches(withText("Author: Test author")))
+            .check(matches(not(withText("Author: Test author"))))
         onView(withRecyclerView(R.id.commits)
             .atPositionOnView(0, R.id.message))
-            .check(matches(withText("Test commit message")))
+            .check(matches(not(withText("Test commit message"))))
     }
 
     private fun buildMockLoadCommitsResponse(): Observable<LoadCommitsResponse> {
