@@ -27,7 +27,8 @@ class StartActivity : BaseActivity() {
                 splashViewModel.setDeepLinkUri(appLinkData)
                 splashViewModel.setDeepLinkPath(appLinkData.encodedPath)
 
-                Timber.d("appLinkData.encodedPath = $appLinkData")
+                Timber.d("appLinkData = $appLinkData")
+                Timber.d("appLinkData.encodedPath = ${appLinkData.encodedPath}")
                 Timber.d("appLinkData.query = ${appLinkData.query}")
                 Timber.d("appLinkData.encodedQuery = ${appLinkData.encodedQuery}")
                 Timber.d("appLinkData.queryParameterNames = ${appLinkData.queryParameterNames}")
