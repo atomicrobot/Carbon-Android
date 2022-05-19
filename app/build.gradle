@@ -66,6 +66,14 @@ android {
             keyAlias sampleKeyAlias
             keyPassword sampleKeyPassword
         }
+        // Use debug.keystore in this project so that debug version works with AR's Carbon web link
+        // setup. You can safely remove this section if you are not using web linking within your app
+        debug {
+            storeFile rootProject.file('distribution/keys/debug.keystore')
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+        }
     }
 
     flavorDimensions "app"
