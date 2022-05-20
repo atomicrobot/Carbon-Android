@@ -54,11 +54,11 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
                     }
                 }
 
-                if (targetViewId == -1) {
-                    return view === childView
+                return if (targetViewId == -1) {
+                    view === childView
                 } else {
                     val targetView = childView?.findViewById<View>(targetViewId)
-                    return view === targetView
+                    view === targetView
                 }
             }
         }
