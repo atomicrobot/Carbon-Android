@@ -35,8 +35,8 @@ class MainViewModel(
     }
 
     override fun setupViewModel() {
-        username = "madebyatomicrobot"  // NON-NLS
-        repository = "android-starter-project"  // NON-NLS
+        username = DEFAULT_USERNAME  // NON-NLS
+        repository = DEFAULT_REPO  // NON-NLS
 
         fetchCommits()
     }
@@ -74,7 +74,9 @@ class MainViewModel(
         }
 
     @Bindable("username", "repository")
-    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && !username.isEmpty() && !repository.isEmpty()
+    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading &&
+            !username.isEmpty() &&
+            !repository.isEmpty()
 
     @Bindable
     fun isLoading(): Boolean = commits is Commits.Loading
@@ -93,18 +95,25 @@ class MainViewModel(
 
     fun fetchCommits() {
         commits = Commits.Loading
-        disposables.add(delayAtLeast(gitHubInteractor.loadCommits(LoadCommitsRequest(username, repository)), loadingDelayMs)
+        disposables.add(
+                delayAtLeast(
+                    gitHubInteractor.loadCommits(LoadCommitsRequest(username, repository)),
+                    loadingDelayMs
+                )
                 .map { it.commits }  // Pull the commits out of the response
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { commits = Commits.Result(it) },
-                        { commits = Commits.Error(it.message
-                                ?: app.getString(R.string.error_unexpected))
+                        {
+                            commits = Commits.Error(
+                                    it.message ?: app.getString(R.string.error_unexpected))
                         }))
     }
 
     companion object {
         private const val STATE_KEY = "MainViewModelState"  // NON-NLS
+        const val DEFAULT_USERNAME = "madebyatomicrobot"  // NON-NLS
+        const val DEFAULT_REPO = "android-starter-project"  // NON-NLS
     }
 }
