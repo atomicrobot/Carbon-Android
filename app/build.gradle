@@ -123,6 +123,7 @@ android {
 
 kapt {
     correctErrorTypes = true
+    generateStubs = true
 }
 
 ext {

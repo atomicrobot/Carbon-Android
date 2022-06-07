@@ -21,6 +21,16 @@
       android:name="com.atomicrobot.carbon.ui.main.MainFragment"
       android:label="MainFragment"
       tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_deepLinkPath1Fragment"
+            app:destination="@id/deepLinkSampleFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/deepLinkSampleFragment"
+        android:name="com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleFragment"
+        android:label="DeepLinkSampleFragment"
+        tools:layout="@layout/fragment_deep_link_sample">
     </fragment>
 
 </navigation>
