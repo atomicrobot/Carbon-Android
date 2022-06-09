@@ -5,6 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.ui.deeplink.DeepLinkInteractor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.runBlocking
@@ -21,18 +22,21 @@ import org.mockito.MockitoAnnotations
 class MainViewModelTest {
 
     @Mock private lateinit var githubInteractor: GitHubInteractor
+    @Mock private lateinit var deepLinkInteractor: DeepLinkInteractor
+
 
     private lateinit var viewModel: MainViewModel
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
 
         val app = ApplicationProvider.getApplicationContext<Application>()
         viewModel = MainViewModel(
                 app,
                 githubInteractor,
-                0)
+                0,
+            deepLinkInteractor)
     }
 
     @Test
