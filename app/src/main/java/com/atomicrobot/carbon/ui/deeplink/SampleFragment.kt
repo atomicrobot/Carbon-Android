@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.atomicrobot.carbon.databinding.FragmentDeepLinkSampleBinding
 
 
