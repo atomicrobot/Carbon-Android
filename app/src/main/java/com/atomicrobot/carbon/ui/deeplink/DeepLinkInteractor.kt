@@ -7,7 +7,6 @@ import timber.log.Timber
 import java.lang.NumberFormatException
 import javax.inject.Inject
 
-
 class DeepLinkInteractor @Inject constructor(){
     private var deepLinkUri: Uri? = null
     private var deepLinkPath: String? = null

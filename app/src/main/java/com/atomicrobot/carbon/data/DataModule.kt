@@ -5,6 +5,7 @@ import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
+import com.atomicrobot.carbon.ui.deeplink.DeepLinkInteractor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -83,6 +84,12 @@ object DataModule {
         api: GitHubApiService
     ): GitHubInteractor {
         return GitHubInteractor(context, api)
+    }
+
+    @Provides
+    fun provideDeepLinkInteractor(
+    ): DeepLinkInteractor {
+        return DeepLinkInteractor()
     }
 
     private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
