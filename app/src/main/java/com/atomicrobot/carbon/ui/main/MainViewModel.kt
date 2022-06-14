@@ -14,6 +14,7 @@ import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsReques
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.ui.SimpleSnackbarMessage
+import com.atomicrobot.carbon.ui.deeplink.DeepLinkInteractor
 import com.atomicrobot.carbon.util.CoroutineUtils.delayAtLeast
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     val app: Application,
     private val gitHubInteractor: GitHubInteractor,
-    @LoadingDelayMs private val loadingDelayMs: Long
+    @LoadingDelayMs private val loadingDelayMs: Long,
+    private val deepLinkInteractor: DeepLinkInteractor
 ) : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
     @Parcelize
@@ -80,7 +82,7 @@ class MainViewModel @Inject constructor(
         }
 
     @Bindable("username", "repository")
-    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && !username.isEmpty() && !repository.isEmpty()
+    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && username.isNotEmpty() && repository.isNotEmpty()
 
     @Bindable
     fun isLoading(): Boolean = commits is Commits.Loading
@@ -113,6 +115,13 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+    }
+    fun getNavResourceFromDeepLink(): Int? {
+        return deepLinkInteractor.getNavResourceFromDeepLink()
+    }
+
+    fun clearDeepLinkPath() {
+        deepLinkInteractor.setDeepLinkPath(null)
     }
 
     companion object {

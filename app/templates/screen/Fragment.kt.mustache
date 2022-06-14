@@ -2,18 +2,21 @@ package {{package}}.ui.{{screenLowerCase}}
 
 import android.content.Context
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import {{package}}.ui.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 import {{package}}.R
 
+@AndroidEntryPoint
 class {{screenUpperCamel}}Fragment : BaseFragment() {
     interface {{screenUpperCamel}}FragmentHost
 
-    private lateinit var viewModel: {{screenUpperCamel}}ViewModel
+    private val viewModel: {{screenUpperCamel}}ViewModel by viewModels()
     private lateinit var binding: {{screenUpperCamel}}FragmentBinding
     private var host: {{screenUpperCamel}}FragmentHost? = null
 
@@ -28,7 +31,6 @@ class {{screenUpperCamel}}Fragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewModel = getViewModel({{screenUpperCamel}}ViewModel::class)
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_{{screenUnderscore}}, container, false)
         binding.vm = viewModel

@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.atomicrobot.carbon.CommitItemBinding
+import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.databinding.FragmentMainBinding
 import com.atomicrobot.carbon.ui.BaseFragment
@@ -22,11 +24,11 @@ class MainFragment : BaseFragment() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: FragmentMainBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.vm = viewModel
 
-        viewModel.snackbarMessage.observe(this, object : SimpleSnackbarMessage.SnackbarObserver {
+        viewModel.snackbarMessage.observe(viewLifecycleOwner, object : SimpleSnackbarMessage.SnackbarObserver {
             override fun onNewMessage(message: String) {
                 Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
             }
@@ -51,6 +53,12 @@ class MainFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         viewModel.onResume()
+
+        // Let's go places
+        viewModel.getNavResourceFromDeepLink()?.let { navResource ->
+            viewModel.clearDeepLinkPath()
+            Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment)).navigate(navResource)
+        }
     }
 
     override fun onDestroyView() {

@@ -21,16 +21,17 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
 
     fun atPositionOnView(position: Int, targetViewId: Int): Matcher<View> {
         return object : TypeSafeMatcher<View>() {
-            internal var resources: Resources? = null
-            internal var childView: View? = null
+            var resources: Resources? = null
+            var childView: View? = null
 
             override fun describeTo(description: Description) {
-                var idDescription = Integer.toString(recyclerViewId)
+                var idDescription = recyclerViewId.toString()
                 if (this.resources != null) {
-                    try {
-                        idDescription = this.resources!!.getResourceName(recyclerViewId)
+                    idDescription = try {
+                        this.resources?.getResourceName(recyclerViewId)
+                            ?: String.format("%s (resource name not found)", recyclerViewId)
                     } catch (var4: Resources.NotFoundException) {
-                        idDescription = String.format("%s (resource name not found)", recyclerViewId)
+                        String.format("%s (resource name not found)", recyclerViewId)
                     }
 
                 }
@@ -53,11 +54,11 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
                     }
                 }
 
-                if (targetViewId == -1) {
-                    return view === childView
+                return if (targetViewId == -1) {
+                    view === childView
                 } else {
-                    val targetView = childView!!.findViewById<View>(targetViewId)
-                    return view === targetView
+                    val targetView = childView?.findViewById<View>(targetViewId)
+                    view === targetView
                 }
             }
         }
