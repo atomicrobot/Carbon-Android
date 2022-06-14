@@ -25,7 +25,6 @@ class StartActivity : BaseActivity() {
         val appLinkData: Uri? = intent.data
         if (Intent.ACTION_VIEW == appLinkAction) {
             appLinkData?.encodedPath?.also {
-                //these are koin functions what is the equivalent for hilt?
                 splashViewModel.setDeepLinkUri(appLinkData)
                 splashViewModel.setDeepLinkPath(appLinkData.encodedPath)
 
