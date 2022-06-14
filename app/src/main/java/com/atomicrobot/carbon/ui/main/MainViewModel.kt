@@ -10,6 +10,7 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
 import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.ui.SimpleSnackbarMessage
 import com.atomicrobot.carbon.util.RxUtils.delayAtLeast
@@ -20,7 +21,8 @@ import kotlinx.parcelize.Parcelize
 class MainViewModel(
         private val app: Application,
         private val gitHubInteractor: GitHubInteractor,
-        private val loadingDelayMs: Long)
+        private val loadingDelayMs: Long,
+        private val deepLinkInteractor: DeepLinkInteractor)
     : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
 
     @Parcelize
@@ -74,7 +76,7 @@ class MainViewModel(
         }
 
     @Bindable("username", "repository")
-    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && !username.isEmpty() && !repository.isEmpty()
+    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && username.isNotEmpty() && repository.isNotEmpty()
 
     @Bindable
     fun isLoading(): Boolean = commits is Commits.Loading
@@ -102,6 +104,14 @@ class MainViewModel(
                         { commits = Commits.Error(it.message
                                 ?: app.getString(R.string.error_unexpected))
                         }))
+    }
+
+    fun getNavResourceFromDeepLink(): Int? {
+        return deepLinkInteractor.getNavResourceFromDeepLink()
+    }
+
+    fun clearDeepLinkPath() {
+        deepLinkInteractor.setDeepLinkPath(null)
     }
 
     companion object {

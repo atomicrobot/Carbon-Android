@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.atomicrobot.carbon.CommitItemBinding
+import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.databinding.FragmentMainBinding
 import com.atomicrobot.carbon.ui.BaseFragment
@@ -49,6 +51,12 @@ class MainFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         viewModel.onResume()
+
+        // Let's go places
+        viewModel.getNavResourceFromDeepLink()?.let { navResource ->
+            viewModel.clearDeepLinkPath()
+            Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment)).navigate(navResource)
+        }
     }
 
     override fun onDestroyView() {
