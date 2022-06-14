@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.atomicrobot.carbon.databinding.FragmentDeepLinkSampleBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class DeepLinkSampleFragment : Fragment() {
     private val viewModel: DeepLinkSampleViewModel by viewModels()
     private lateinit var binding: FragmentDeepLinkSampleBinding
