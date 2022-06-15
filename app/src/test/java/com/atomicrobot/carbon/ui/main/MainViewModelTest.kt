@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.atomicrobot.carbon.TrampolineSchedulerRule
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
-import com.atomicrobot.carbon.ui.main.MainViewModel
+import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -26,6 +26,7 @@ class MainViewModelTest {
     @JvmField @Rule val trampolineSchedulerRule = TrampolineSchedulerRule()
 
     @Mock private lateinit var githubInteractor: GitHubInteractor
+    @Mock private lateinit var deepLinkInteractor: DeepLinkInteractor
 
     private lateinit var viewModel: MainViewModel
 
@@ -37,7 +38,8 @@ class MainViewModelTest {
         viewModel = MainViewModel(
                 app,
                 githubInteractor,
-                0)
+                0,
+                deepLinkInteractor)
     }
 
     @Test

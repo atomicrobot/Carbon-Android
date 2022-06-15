@@ -67,6 +67,14 @@ android {
             keyAlias sampleKeyAlias
             keyPassword sampleKeyPassword
         }
+        // Use debug.keystore in this project so that debug version works with AR's Carbon web link
+        // setup. You can safely remove this section if you are not using web linking within your app
+        debug {
+            storeFile rootProject.file('distribution/keys/debug.keystore')
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+        }
     }
 
     flavorDimensions "app"
@@ -95,11 +103,6 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError true
-        lintConfig file('lint.xml')
-        htmlReport true
-    }
 
     dataBinding {
         enabled = true
@@ -124,6 +127,11 @@ android {
         }
     }
     namespace 'com.atomicrobot.carbon'
+    lint {
+        abortOnError true
+        htmlReport true
+        lintConfig file('lint.xml')
+    }
 }
 
 ext {
@@ -147,14 +155,13 @@ ext {
     leakCanaryVersion = '2.7'
 
     // Test dependency versions
-    mockitoVersion = '4.1.0'
+    mockitoVersion = '4.4.0'
     mockitoKotlinVersion = '1.6.0'
     robolectricVersion = '4.7.3'
     androidTestSupportVersion = '1.4.0'
     espressoVersion = '3.4.0'
     junitVersion = '4.13.2'
     junitTestVersion = '1.1.3'
-    daggerMockVersion = '0.8.4'
 }
 
 dependencies {
@@ -254,6 +261,7 @@ dependencies {
 
 
     // Android JUnit Runner, JUnit Rules, and Espresso
+    // Android JUnit Runner, JUnit Rules, and Espresso
     androidTestImplementation "androidx.test:runner:$androidTestSupportVersion"
     androidTestImplementation "androidx.test:rules:$androidTestSupportVersion"
     androidTestImplementation "androidx.test:core:$androidTestSupportVersion"
@@ -263,7 +271,6 @@ dependencies {
 
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
-    androidTestImplementation "com.github.fabioCollini:DaggerMock:$daggerMockVersion"
 }
 
 
@@ -326,14 +333,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
             '**/*Creator.*',
             /* Data binding */
             '**/*Binding*.*',
-            '**/BR.**',
-            /* Dagger */
-            '**/*_MembersInjector.*',
-            '**/*_Factory.*',
-            '**/*_*Factory.*',
-            '**/Dagger*Component*.*',
-            '**/Dagger*Subcomponent*.*',
-            '**/devsettings/**/*.*'
+            '**/BR.**'
     ]
 
     getClassDirectories().setFrom(fileTree(
@@ -359,7 +359,6 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
 
 // Kotlin plugin for testing
 allOpen {
-    annotation('dagger.Module')
     annotation("com.atomicrobot.carbon.Mockable")
 }
 

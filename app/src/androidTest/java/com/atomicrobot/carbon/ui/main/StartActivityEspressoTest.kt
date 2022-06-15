@@ -1,13 +1,16 @@
 package com.atomicrobot.carbon.ui.main
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.clearText
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.ActivityTestRule
+import androidx.test.platform.app.InstrumentationRegistry
 import com.atomicrobot.carbon.EspressoMatchers.regex
-import com.atomicrobot.carbon.MainApplicationDaggerMockRule
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.StartActivity
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
@@ -21,25 +24,42 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.hamcrest.Matchers.not
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
+import org.koin.core.context.GlobalContext.loadKoinModules
+import org.koin.core.context.GlobalContext.stopKoin
+import org.koin.dsl.module
+import org.mockito.Mockito
 
 @RunWith(AndroidJUnit4::class)
 class StartActivityEspressoTest {
+    private lateinit var scenario: ActivityScenario<StartActivity>
 
-    @JvmField @Rule var mockitoRule = MainApplicationDaggerMockRule()
+//    @get:Rule val activityRule = ActivityScenarioRule(StartActivity::class.java)
 
-    @JvmField @Rule var testRule = ActivityTestRule(StartActivity::class.java, false, false)
+    private lateinit var gitHubInteractor: GitHubInteractor
 
-    @Mock lateinit var gitHubInteractor: GitHubInteractor
+    @Before
+    fun setup() {
+        gitHubInteractor = Mockito.mock(GitHubInteractor::class.java)
+        loadKoinModules(module {
+            gitHubInteractor
+        })
+    }
+
+    @After
+    fun cleanUp() {
+        stopKoin()
+        scenario.close()
+    }
 
     @Test
     fun testBuildFingerprint() {
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.empty())
-
-        testRule.launchActivity(null)
+        scenario = ActivityScenario.launch(StartActivity::class.java)
         onView(withId(R.id.fingerprint)).check(matches(withText(regex("Fingerprint: .+"))))
     }
 
@@ -50,8 +70,10 @@ class StartActivityEspressoTest {
                 emptyList())
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(Observable.just(response))
 
-        testRule.launchActivity(null)
-        onView(withId(R.id.fetch_commits)).check(matches(isEnabled()))
+        scenario = ActivityScenario.launch(StartActivity::class.java)
+
+        Thread.sleep(5 * 1000L)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
         onView(withId(R.id.username)).perform(clearText())
         onView(withId(R.id.fetch_commits)).check(matches(not(isEnabled())))
@@ -68,15 +90,20 @@ class StartActivityEspressoTest {
         val response = buildMockLoadCommitsResponse()
         whenever(gitHubInteractor.loadCommits(any())).thenReturn(response)
 
-        testRule.launchActivity(null)
+        scenario = ActivityScenario.launch(StartActivity::class.java)
+
+        Thread.sleep(5 * 1000L)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
         closeSoftKeyboard()
 
+        // Check recycler view's 0th position and confirm text does not equal default test values
         onView(withRecyclerView(R.id.commits)
-                .atPositionOnView(0, R.id.author))
-                .check(matches(withText("Author: Test author")))
+            .atPositionOnView(0, R.id.author))
+            .check(matches(not(withText("Author: Test author"))))
         onView(withRecyclerView(R.id.commits)
-                .atPositionOnView(0, R.id.message))
-                .check(matches(withText("Test commit message")))
+            .atPositionOnView(0, R.id.message))
+            .check(matches(not(withText("Test commit message"))))
     }
 
     private fun buildMockLoadCommitsResponse(): Observable<LoadCommitsResponse> {
