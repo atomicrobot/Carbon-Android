@@ -7,6 +7,7 @@ import com.atomicrobot.carbon.app.LoadingDelayMs
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.BaseViewModel
+import com.atomicrobot.carbon.ui.deeplink.DeepLinkInteractor
 import com.atomicrobot.carbon.util.CoroutineUtils.delayAtLeast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class MainViewModelCompose @Inject constructor(
     val app: Application,
     private val gitHubInteractor: GitHubInteractor,
-    @LoadingDelayMs private val loadingDelayMs: Long
+    @LoadingDelayMs private val loadingDelayMs: Long,
+    private val deepLinkInteractor: DeepLinkInteractor
 ) : BaseViewModel<MainViewModel.State>(app, STATE_KEY, MainViewModel.State()) {
     // ^ need to change this. research what should be in a BaseVM for compose app
     // Can remove all the databinding observable functions
@@ -74,6 +76,13 @@ class MainViewModelCompose @Inject constructor(
                 }
             )
         }
+    }
+    fun getNavResourceFromDeepLink(): Int? {
+        return deepLinkInteractor.getNavResourceFromDeepLink()
+    }
+
+    fun clearDeepLinkPath() {
+        deepLinkInteractor.setDeepLinkPath(null)
     }
 
     companion object {
