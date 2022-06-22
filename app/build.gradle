@@ -141,7 +141,7 @@ ext {
     playServicesVersion = '18.0.1'
     lifecycleVersion = '2.0.0'
     lifecycleRuntimeVersion = '2.4.1'
-    koinVersion = '3.1.4'
+    koinVersion = '3.2.0'
     retrofitVersion = '2.9.0'
     okHttpVersion = '4.9.1'
     moshiVersion = '1.13.0'
@@ -221,6 +221,7 @@ dependencies {
 
     // App architecture - Koin
     implementation "io.insert-koin:koin-android:$koinVersion"
+    implementation "io.insert-koin:koin-androidx-compose:$koinVersion"
 
     // App architecture - RxJava
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
@@ -231,6 +232,7 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     // Navigation
+    implementation "androidx.navigation:navigation-compose:2.4.2"
     implementation "android.arch.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "android.arch.navigation:navigation-ui-ktx:$navigation_version"
 

@@ -22,44 +22,44 @@ import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.components.TransparentTextField
 import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MainScreen(viewModel: MainViewModelCompose) {
+fun MainScreen() {
+    val viewModel: MainViewModelCompose = getViewModel()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val screenState by viewModel.uiState.collectAsState()
 
     MainContent(username = screenState.username,
-            repository = screenState.repository,
-            commitsState = screenState.commitsState,
-            scaffoldState = scaffoldState,
-            onUserInputChanged = { username, repository ->
-                viewModel.updateUserInput(username, repository)
-            },
-            onUserSelectedFetchCommits = {
-                viewModel.fetchCommits()
-            })
+        repository = screenState.repository,
+        commitsState = screenState.commitsState,
+        scaffoldState = scaffoldState,
+        onUserInputChanged = { username, repository ->
+            viewModel.updateUserInput(username, repository)
+        },
+        onUserSelectedFetchCommits = {
+            viewModel.fetchCommits()
+        })
 }
 
 @Preview(name = "Main Screen")
 @Composable
 fun MainContent(
-    username: String = MainViewModel.DEFAULT_USERNAME,
-    repository: String = MainViewModel.DEFAULT_REPO,
-    commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
+    username: String = MainViewModelCompose.DEFAULT_USERNAME,
+    repository: String = MainViewModelCompose.DEFAULT_REPO,
+    commitsState: MainViewModelCompose.Commits = MainViewModelCompose.Commits.Result(emptyList()),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    onUserInputChanged: (String, String) -> Unit = {_, _ -> },
-    onUserSelectedFetchCommits: () -> Unit = {})
-{
+    onUserInputChanged: (String, String) -> Unit = { _, _ -> },
+    onUserSelectedFetchCommits: () -> Unit = {}
+) {
     Scaffold(
-            modifier = Modifier
-                    .fillMaxSize()
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
-                    .imePadding(),
-            scaffoldState = scaffoldState,
-            topBar = { TopBar() },
-            bottomBar = { BottomBar() },
-            snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) } ) 
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding(),
+        scaffoldState = scaffoldState,
+        topBar = { TopBar() },
+        bottomBar = { BottomBar() },
+        snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) })
     { padding -> /* Must use padding arg otherwise causes compiler issue */
         Column(modifier = Modifier.padding(padding)) {
             /*
@@ -70,11 +70,13 @@ fun MainContent(
             *       fetch commits button
             * (2) Commit List / Circular Progress when loading
             */
-            GithubUserInput(username = username,
-                    repository = repository,
-                    isLoading = false,
-                    onUserInputChanged = onUserInputChanged,
-                    onUserSelectedFetchCommits = onUserSelectedFetchCommits)
+            GithubUserInput(
+                username = username,
+                repository = repository,
+                isLoading = false,
+                onUserInputChanged = onUserInputChanged,
+                onUserSelectedFetchCommits = onUserSelectedFetchCommits
+            )
             GithubResponse(commitsState = commitsState, scaffoldState = scaffoldState)
         }
     }
@@ -83,39 +85,44 @@ fun MainContent(
 @Preview(name = "User Input")
 @Composable
 fun GithubUserInput(
-    username: String = MainViewModel.DEFAULT_USERNAME,
-    repository: String = MainViewModel.DEFAULT_REPO,
+    username: String = MainViewModelCompose.DEFAULT_USERNAME,
+    repository: String = MainViewModelCompose.DEFAULT_REPO,
     isLoading: Boolean = false,
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
-    onUserSelectedFetchCommits: () -> Unit = {})
-{
+    onUserSelectedFetchCommits: () -> Unit = {}
+) {
     Surface(
-            color = MaterialTheme.colors.onSurface.copy(
-                    alpha = TextFieldDefaults.BackgroundOpacity))
+        color = MaterialTheme.colors.onSurface.copy(
+            alpha = TextFieldDefaults.BackgroundOpacity
+        )
+    )
     {
-        Column(modifier = Modifier
+        Column(
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp))
+                .padding(16.dp)
+        )
         {
             // Username
             TransparentTextField(
-                    value = username,
-                    labelResId = R.string.username,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                value = username,
+                labelResId = R.string.username,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
             { newUsername -> onUserInputChanged(newUsername, repository) }
             // Repo
             TransparentTextField(
-                    value = repository,
-                    labelResId = R.string.repository
+                value = repository,
+                labelResId = R.string.repository
             )
             { newRepo -> onUserInputChanged(username, newRepo) }
             // Fetch commits
             OutlinedButton(
-                    onClick = onUserSelectedFetchCommits,
-                    // Make sure the button is disabled when loading or the input fields are empty
-                    enabled = !isLoading && (username.isNotEmpty() && repository.isNotEmpty()),
-                    modifier = Modifier.fillMaxWidth()) {
+                onClick = onUserSelectedFetchCommits,
+                // Make sure the button is disabled when loading or the input fields are empty
+                enabled = !isLoading && (username.isNotEmpty() && repository.isNotEmpty()),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(text = stringResource(id = R.string.fetch_commits))
             }
         }
@@ -124,32 +131,33 @@ fun GithubUserInput(
 
 @Composable
 fun GithubResponse(
-    commitsState: MainViewModel.Commits,
+    commitsState: MainViewModelCompose.Commits,
     scaffoldState: ScaffoldState,
-    modifier: Modifier = Modifier)
-{
+    modifier: Modifier = Modifier
+) {
     Box(modifier = modifier) {
-        when(commitsState) {
-            is MainViewModel.Commits.Loading ->
-                Column(modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center)
+        when (commitsState) {
+            is MainViewModelCompose.Commits.Loading ->
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                )
                 {
                     CircularProgressIndicator()
                 }
-            is MainViewModel.Commits.Error ->
+            is MainViewModelCompose.Commits.Error ->
                 LaunchedEffect(scaffoldState.snackbarHostState) {
                     scaffoldState.snackbarHostState.showSnackbar(message = commitsState.message)
                 }
-            is MainViewModel.Commits.Result -> CommitList(commits = commitsState.commits)
+            is MainViewModelCompose.Commits.Result -> CommitList(commits = commitsState.commits)
 
         }
     }
 }
 
 @Composable
-fun CommitList(commits: List<Commit>)
-{
+fun CommitList(commits: List<Commit>) {
     LazyColumn(modifier = Modifier.fillMaxSize())
     {
         items(commits) { commit ->
@@ -159,22 +167,26 @@ fun CommitList(commits: List<Commit>)
 }
 
 
-
 @Preview(name = "Github Commit")
 @Composable
-fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit)
-{
-    Card(modifier = Modifier
+fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit) {
+    Card(
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp))
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+    )
     {
-        Column(modifier = Modifier
+        Column(
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp))
+                .padding(16.dp)
+        )
         {
-            Text(text = commit.commitMessage,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 8.dp))
+            Text(
+                text = commit.commitMessage,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
             Text(text = stringResource(id = R.string.author_format, commit.author))
         }
     }

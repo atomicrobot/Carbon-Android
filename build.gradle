@@ -5,7 +5,7 @@ buildscript {
         compose_vm_version = '2.4.1'
         compose_foundation_verison = '1.2.0-beta02'
     }
-    ext.android_plugin_version = '7.2.0'
+    ext.android_plugin_version = '7.2.1'
     ext.kotlin_version = '1.6.10'
     ext.jacoco_version = '0.8.6'
     ext.navigation_version = '1.0.0'

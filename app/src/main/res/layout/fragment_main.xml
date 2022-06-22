@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
-            name="vm"
-            type="com.atomicrobot.carbon.ui.main.MainViewModel"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +55,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
-                    android:text="@={vm.username}"
                     android:inputType="text"
                     android:autofillHints="@string/username" />
 
@@ -75,7 +72,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/repository"
-                    android:text="@={vm.repository}"
                     android:inputType="text"
                     android:autofillHints="@string/repository" />
 
@@ -89,8 +85,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp"
-                android:enabled="@{vm.fetchCommitsEnabled}"
-                android:onClick="@{() -> vm.fetchCommits()}"
                 android:text="@string/fetch_commits"/>
 
         </LinearLayout>
@@ -113,7 +107,6 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@{@string/version_format(vm.version)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -125,7 +118,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
-                android:text="@{@string/fingerprint_format(vm.fingerprint)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -137,12 +129,11 @@
             android:layout_height="0dp"
             android:layout_marginEnd="0dp"
             android:scrollbars="vertical"
-            app:items="@{vm.commits}"
             app:layout_constraintBottom_toTopOf="@+id/footer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header"
-            app:visible="@{!vm.loading}"/>
+            />
 
         <com.atomicrobot.carbon.util.progress.TestableProgressBar
             android:id="@+id/loading"
@@ -153,7 +144,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header"
-            app:visible="@{vm.loading}"/>
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

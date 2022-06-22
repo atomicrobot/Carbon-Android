@@ -4,9 +4,7 @@
 
     <data class="com.atomicrobot.carbon.ui.devsettings.DevSettingsFragmentBinding">
 
-        <variable
-            name="vm"
-            type="com.atomicrobot.carbon.ui.devsettings.DevSettingsViewModel"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/base_url"
-                android:text="@={vm.baseUrl}"
                 android:inputType="textUri"
                 android:autofillHints="" />
 
@@ -42,7 +39,6 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:checked="@={vm.trustAllSSL}"
             android:text="@string/trust_all_SSL"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +51,6 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:onClick="@{() -> vm.saveSettings()}"
             android:text="@string/save_settings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

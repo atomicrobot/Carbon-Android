@@ -4,9 +4,6 @@
 
     <data class="com.atomicrobot.carbon.ui.devsettings.DevSettingsActivityBinding">
 
-        <variable
-            name="vm"
-            type="com.atomicrobot.carbon.ui.devsettings.DevSettingsViewModel"/>
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
