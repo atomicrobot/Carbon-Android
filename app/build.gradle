@@ -147,6 +147,8 @@ ext {
     materialVersion = '1.4.0'
     timberVersion = '5.0.1'
     leakCanaryVersion = '2.7'
+    navVersion = "2.4.2"
+    composeHiltNavigationVersion = "1.0.0"
 
     // Test dependency versions
     mockitoVersion = '4.1.0'
@@ -220,6 +222,9 @@ dependencies {
     // Navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "android.arch.navigation:navigation-ui-ktx:$navigation_version"
+    implementation("androidx.navigation:navigation-compose:$navVersion")
+    implementation "androidx.hilt:hilt-navigation-compose:$composeHiltNavigationVersion"
+
 
     // Networking - HTTP
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"

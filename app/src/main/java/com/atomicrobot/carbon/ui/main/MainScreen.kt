@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.components.BottomBar
@@ -18,11 +19,10 @@ import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.components.TransparentTextField
 
 @Composable
-fun Main(mainViewModelCompose: MainViewModelCompose) {
-
+fun Main(viewModelCompose: MainViewModelCompose) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
 
-    val mainState by mainViewModelCompose.uiState.collectAsState()
+    val mainState by viewModelCompose.uiState.collectAsState()
 
     MainContent(
         userName = mainState.username,
@@ -30,23 +30,24 @@ fun Main(mainViewModelCompose: MainViewModelCompose) {
         commitsState = mainState.commitsState,
         scaffoldState = scaffoldState,
         onUserInputChanged = { username, repo ->
-            mainViewModelCompose.updateUserInput(username, repo)
+            viewModelCompose.updateUserInput(username, repo)
         },
-        onFetchCommitsClick = { mainViewModelCompose.fetchCommits() },
+        onFetchCommitsClick = { viewModelCompose.fetchCommits() },
     )
 }
 
 @Composable
 fun MainContent(
-    userName: String,
-    repository: String,
-    commitsState: MainViewModelCompose.CommitsState,
+    userName: String = MainViewModelCompose.DEFAULT_USERNAME,
+    repository: String = MainViewModelCompose.DEFAULT_REPO,
+    commitsState: MainViewModelCompose.Commits = MainViewModelCompose.Commits.Result(emptyList()),
     scaffoldState: ScaffoldState,
     onUserInputChanged: (String, String) -> Unit,
     onFetchCommitsClick: () -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding()
             .imePadding(),
@@ -58,7 +59,7 @@ fun MainContent(
             GithubInput(
                 userName = userName,
                 repository = repository,
-                isLoading = commitsState is MainViewModelCompose.CommitsState.Loading,
+                isLoading = commitsState is MainViewModelCompose.Commits.Loading,
                 onUserInputChanged = onUserInputChanged,
                 onFetchCommitsClick = onFetchCommitsClick
             )
@@ -85,7 +86,8 @@ fun GithubInput(
         color = MaterialTheme.colors.onSurface
             .copy(alpha = TextFieldDefaults.BackgroundOpacity)
     ) {
-        Column(modifier = modifier
+        Column(
+            modifier = modifier
             .fillMaxWidth()
             .padding(16.dp))
         {
@@ -100,7 +102,7 @@ fun GithubInput(
             ) { onUserInputChanged(userName, it) }
             OutlinedButton(
                 onClick = onFetchCommitsClick,
-                enabled = !isLoading && userName.isNotEmpty() && repository.isNotEmpty(),
+                enabled = !isLoading && (userName.isNotEmpty() && repository.isNotEmpty()),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = stringResource(id = R.string.fetch_commits))
@@ -111,19 +113,19 @@ fun GithubInput(
 
 @Composable
 fun GitHubResponse(
-    commitsState: MainViewModelCompose.CommitsState,
+    commitsState: MainViewModelCompose.Commits,
     scaffoldState: ScaffoldState,
     modifier: Modifier
 ) {
     Box(modifier = modifier) {
         when (commitsState) {
-            is MainViewModelCompose.CommitsState.Error ->
+            is MainViewModelCompose.Commits.Error ->
                 Error(
                     text = commitsState.message,
                     scaffoldState = scaffoldState
                 )
-            MainViewModelCompose.CommitsState.Loading -> LoadingCommits()
-            is MainViewModelCompose.CommitsState.Result ->
+            MainViewModelCompose.Commits.Loading -> LoadingCommits()
+            is MainViewModelCompose.Commits.Result ->
                 CommitList(commits = commitsState.commits)
         }
     }

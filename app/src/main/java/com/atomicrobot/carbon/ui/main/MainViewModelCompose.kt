@@ -18,24 +18,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModelCompose @Inject constructor(
-    val app: Application,
+    private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
     @LoadingDelayMs private val loadingDelayMs: Long,
-    private val deepLinkInteractor: DeepLinkInteractor
-) : BaseViewModel<MainViewModel.State>(app, STATE_KEY, MainViewModel.State()) {
-    // ^ need to change this. research what should be in a BaseVM for compose app
-    // Can remove all the databinding observable functions
+) : BaseViewModel(app){
 
-    sealed class CommitsState {
-        object Loading : CommitsState()
-        class Result(val commits: List<Commit>) : CommitsState()
-        class Error(val message: String) : CommitsState()
+    sealed class Commits {
+        object Loading : Commits()
+        class Result(val commits: List<Commit>) : Commits()
+        class Error(val message: String) : Commits()
     }
 
     data class MainScreenUiState(
         val username: String = "madebyatomicrobot",  // NON-NLS
         val repository: String = "android-starter-project", // NON-NLS
-        val commitsState: CommitsState = CommitsState.Result(emptyList())
+        val commitsState: Commits = Commits.Result(emptyList())
     )
 
     private val _uiState = MutableStateFlow(MainScreenUiState())
@@ -55,12 +52,12 @@ class MainViewModelCompose @Inject constructor(
 
     fun fetchCommits() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(commitsState = CommitsState.Loading)
+            _uiState.value = _uiState.value.copy(commitsState = Commits.Loading)
 
             _uiState.value = _uiState.value.copy(
                 commitsState = delayAtLeast(loadingDelayMs) {
                     try {
-                        CommitsState.Result(
+                        Commits.Result(
                             gitHubInteractor.loadCommits(
                                 GitHubInteractor.LoadCommitsRequest(
                                     uiState.value.username,
@@ -69,7 +66,7 @@ class MainViewModelCompose @Inject constructor(
                             ).commits
                         )
                     } catch (e: Exception) {
-                        CommitsState.Error(
+                        Commits.Error(
                             e.message ?: app.getString(R.string.error_unexpected)
                         )
                     }
@@ -77,15 +74,11 @@ class MainViewModelCompose @Inject constructor(
             )
         }
     }
-    fun getNavResourceFromDeepLink(): Int? {
-        return deepLinkInteractor.getNavResourceFromDeepLink()
-    }
 
-    fun clearDeepLinkPath() {
-        deepLinkInteractor.setDeepLinkPath(null)
-    }
 
     companion object {
         private const val STATE_KEY = "MainViewModelState"  // NON-NLS
+        const val DEFAULT_USERNAME = "madebyatomicrobot"  // NON-NLS
+        const val DEFAULT_REPO = "android-starter-project"  // NON-NLS
     }
 }
