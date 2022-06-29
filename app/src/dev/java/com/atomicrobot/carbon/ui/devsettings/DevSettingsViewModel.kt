@@ -14,36 +14,20 @@ import javax.inject.Inject
 class DevSettingsViewModel @Inject constructor(
     private val app: Application,
     private val settings: Settings
-) : BaseViewModel<DevSettingsViewModel.State>(app, STATE_KEY, State()) {
-
-    @Parcelize
-    data class State(
-        var baseUrl: String = "",
-        var trustAllSSL: Boolean = false
-    ) : Parcelable
+) : BaseViewModel(app) {
 
     override fun setupViewModel() {
         baseUrl = settings.baseUrl
         trustAllSSL = settings.trustAllSSL
     }
 
-    var baseUrl: String
-        @Bindable get() = state.baseUrl
-        set(value) {
-            state.baseUrl = value
-            notifyPropertyChanged(BR.baseUrl)
-        }
+    var baseUrl: String = ""
 
-    var trustAllSSL: Boolean
-        @Bindable get() = state.trustAllSSL
-        set(value) {
-            state.trustAllSSL = value
-            notifyPropertyChanged(BR.trustAllSSL)
-        }
+    var trustAllSSL: Boolean = false
 
     fun saveSettings() {
-        settings.baseUrl = state.baseUrl
-        settings.trustAllSSL = state.trustAllSSL
+        settings.baseUrl = baseUrl
+        settings.trustAllSSL = trustAllSSL
     }
 
     companion object {

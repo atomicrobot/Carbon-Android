@@ -2,6 +2,7 @@ package com.atomicrobot.carbon.ui.main
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
+import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.app.LoadingDelayMs
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
@@ -74,6 +75,9 @@ class MainViewModelCompose @Inject constructor(
             )
         }
     }
+    fun getVersion(): String = BuildConfig.VERSION_NAME
+
+    fun getFingerprint(): String = BuildConfig.VERSION_FINGERPRINT
 
 
     companion object {
