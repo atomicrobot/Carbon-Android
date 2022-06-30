@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.components.BottomBar
@@ -47,10 +46,7 @@ fun MainContent(
 ) {
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .imePadding(),
+            .fillMaxSize(),
         scaffoldState = scaffoldState,
         snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) }
     ) {

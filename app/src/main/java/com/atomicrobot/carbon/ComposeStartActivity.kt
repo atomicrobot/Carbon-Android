@@ -6,12 +6,8 @@ import android.os.Bundle
 import android.os.StrictMode
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.Composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.ui.ComposeBaseActivity
 import com.atomicrobot.carbon.ui.compose.MainNavigation
-import com.atomicrobot.carbon.ui.main.MainViewModelCompose
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +24,9 @@ class ComposeStartActivity : ComposeBaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MainNavigation(true)
+            CarbonAndroidTheme {
+                MainNavigation(true)
+            }
         }
         handleIntent(intent)
     }
