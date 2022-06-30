@@ -1,17 +1,13 @@
 package com.atomicrobot.carbon.ui.splash
 
 import android.app.Application
-import android.os.Parcelable
 import com.atomicrobot.carbon.ui.BaseViewModel
 import android.net.Uri
-import android.view.View
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkInteractor
-import com.atomicrobot.carbon.ui.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,9 +16,6 @@ class SplashViewModel @Inject constructor(
     private val deepLinkInteractor: DeepLinkInteractor
 )
  : BaseViewModel(app) {
-
-//    @Parcelize
-//    class State : Parcelable
 
     sealed class ViewNavigation {
         object None : ViewNavigation()

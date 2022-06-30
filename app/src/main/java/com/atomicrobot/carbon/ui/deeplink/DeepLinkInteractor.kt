@@ -3,7 +3,6 @@ package com.atomicrobot.carbon.ui.deeplink
 import android.graphics.Color
 import android.net.Uri
 import com.atomicrobot.carbon.ComposeStartActivity
-import com.atomicrobot.carbon.R
 import timber.log.Timber
 import java.lang.NumberFormatException
 import javax.inject.Inject

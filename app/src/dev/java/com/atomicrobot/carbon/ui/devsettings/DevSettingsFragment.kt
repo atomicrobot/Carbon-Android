@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.BaseFragment
 

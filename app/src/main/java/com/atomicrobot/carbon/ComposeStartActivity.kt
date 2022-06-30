@@ -32,7 +32,7 @@ class ComposeStartActivity : ComposeBaseActivity() {
     }
 
     private fun handleIntent(intent: Intent): Boolean {
-        Timber.d("Brandon handle intent")
+        Timber.d("handle intent")
         val appLinkAction = intent.action
         val appLinkData: Uri? = intent.data
         return if (Intent.ACTION_VIEW == appLinkAction) {
