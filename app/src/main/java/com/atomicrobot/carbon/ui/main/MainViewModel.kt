@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.parcelize.Parcelize
 
-class MainViewModelCompose(
+class MainViewModel(
     private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
     private val loadingDelayMs: Long,

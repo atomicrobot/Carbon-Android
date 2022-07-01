@@ -26,7 +26,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun MainScreen() {
-    val viewModel: MainViewModelCompose = getViewModel()
+    val viewModel: MainViewModel = getViewModel()
     viewModel.initializeViewModel()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val screenState by viewModel.uiState.collectAsState()
@@ -46,9 +46,9 @@ fun MainScreen() {
 @Preview(name = "Main Screen")
 @Composable
 fun MainContent(
-    username: String = MainViewModelCompose.DEFAULT_USERNAME,
-    repository: String = MainViewModelCompose.DEFAULT_REPO,
-    commitsState: MainViewModelCompose.Commits = MainViewModelCompose.Commits.Result(emptyList()),
+    username: String = MainViewModel.DEFAULT_USERNAME,
+    repository: String = MainViewModel.DEFAULT_REPO,
+    commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {}
@@ -86,8 +86,8 @@ fun MainContent(
 @Preview(name = "User Input")
 @Composable
 fun GithubUserInput(
-    username: String = MainViewModelCompose.DEFAULT_USERNAME,
-    repository: String = MainViewModelCompose.DEFAULT_REPO,
+    username: String = MainViewModel.DEFAULT_USERNAME,
+    repository: String = MainViewModel.DEFAULT_REPO,
     isLoading: Boolean = false,
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {}
@@ -132,13 +132,13 @@ fun GithubUserInput(
 
 @Composable
 fun GithubResponse(
-    commitsState: MainViewModelCompose.Commits,
+    commitsState: MainViewModel.Commits,
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         when (commitsState) {
-            is MainViewModelCompose.Commits.Loading ->
+            is MainViewModel.Commits.Loading ->
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -147,11 +147,11 @@ fun GithubResponse(
                 {
                     CircularProgressIndicator()
                 }
-            is MainViewModelCompose.Commits.Error ->
+            is MainViewModel.Commits.Error ->
                 LaunchedEffect(scaffoldState.snackbarHostState) {
                     scaffoldState.snackbarHostState.showSnackbar(message = commitsState.message)
                 }
-            is MainViewModelCompose.Commits.Result -> CommitList(commits = commitsState.commits)
+            is MainViewModel.Commits.Result -> CommitList(commits = commitsState.commits)
 
         }
     }
