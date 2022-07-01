@@ -3,27 +3,34 @@ package com.atomicrobot.carbon
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.atomicrobot.carbon.ui.BaseActivity
-import dagger.hilt.android.AndroidEntryPoint
+import com.atomicrobot.carbon.ui.compose.MainNavigation
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
 class StartActivity : BaseActivity() {
     private val splashViewModel: SplashViewModel by viewModels()
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_start)
-
+        setContent {
+            CarbonAndroidTheme {
+                MainNavigation(true)
+            }
+        }
         handleIntent(intent)
     }
 
-    private fun handleIntent(intent: Intent) {
+    private fun handleIntent(intent: Intent): Boolean {
+        Timber.d("handle intent")
         val appLinkAction = intent.action
         val appLinkData: Uri? = intent.data
-        if (Intent.ACTION_VIEW == appLinkAction) {
+        return if (Intent.ACTION_VIEW == appLinkAction) {
             appLinkData?.encodedPath?.also {
                 splashViewModel.setDeepLinkUri(appLinkData)
                 splashViewModel.setDeepLinkPath(appLinkData.encodedPath)
@@ -34,6 +41,13 @@ class StartActivity : BaseActivity() {
                 Timber.d("appLinkData.encodedQuery = ${appLinkData.encodedQuery}")
                 Timber.d("appLinkData.queryParameterNames = ${appLinkData.queryParameterNames}")
             }
-        }
+            true
+        } else false
+    }
+
+    companion object {
+        const val mainPage = "mainScreen"
+        const val splashPage = "splashScreen"
+        const val deepLinkPath1 = "deepLinkPath1"
     }
 }

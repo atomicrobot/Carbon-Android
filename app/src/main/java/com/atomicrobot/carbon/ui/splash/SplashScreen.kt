@@ -10,10 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.atomicrobot.carbon.ComposeStartActivity
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.theme.Purple700
 import kotlinx.coroutines.delay

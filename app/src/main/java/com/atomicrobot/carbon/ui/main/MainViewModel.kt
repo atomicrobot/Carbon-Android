@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.main
 
 import android.app.Application
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
@@ -17,7 +18,7 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModelCompose @Inject constructor(
+class MainViewModel @Inject constructor(
     private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
     @LoadingDelayMs private val loadingDelayMs: Long,
@@ -30,12 +31,12 @@ class MainViewModelCompose @Inject constructor(
     }
 
     data class MainScreenUiState(
-        val username: String = "madebyatomicrobot",  // NON-NLS
-        val repository: String = "android-starter-project", // NON-NLS
-        val commitsState: Commits = Commits.Result(emptyList())
+        var username: String = "madebyatomicrobot",  // NON-NLS
+        var repository: String = "android-starter-project", // NON-NLS
+        var commitsState: Commits = Commits.Result(emptyList())
     )
-
-    private val _uiState = MutableStateFlow(MainScreenUiState())
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val _uiState = MutableStateFlow(MainScreenUiState())
     val uiState: StateFlow<MainScreenUiState>
         get() = _uiState
 

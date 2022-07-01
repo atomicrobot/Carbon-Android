@@ -18,10 +18,10 @@ import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.components.TransparentTextField
 
 @Composable
-fun Main(viewModelCompose: MainViewModelCompose) {
+fun Main(viewModel: MainViewModel) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
 
-    val mainState by viewModelCompose.uiState.collectAsState()
+    val mainState by viewModel.uiState.collectAsState()
 
     MainContent(
         userName = mainState.username,
@@ -29,17 +29,17 @@ fun Main(viewModelCompose: MainViewModelCompose) {
         commitsState = mainState.commitsState,
         scaffoldState = scaffoldState,
         onUserInputChanged = { username, repo ->
-            viewModelCompose.updateUserInput(username, repo)
+            viewModel.updateUserInput(username, repo)
         },
-        onFetchCommitsClick = { viewModelCompose.fetchCommits() },
+        onFetchCommitsClick = { viewModel.fetchCommits() },
     )
 }
 
 @Composable
 fun MainContent(
-    userName: String = MainViewModelCompose.DEFAULT_USERNAME,
-    repository: String = MainViewModelCompose.DEFAULT_REPO,
-    commitsState: MainViewModelCompose.Commits = MainViewModelCompose.Commits.Result(emptyList()),
+    userName: String = MainViewModel.DEFAULT_USERNAME,
+    repository: String = MainViewModel.DEFAULT_REPO,
+    commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
     scaffoldState: ScaffoldState,
     onUserInputChanged: (String, String) -> Unit,
     onFetchCommitsClick: () -> Unit,
@@ -55,7 +55,7 @@ fun MainContent(
             GithubInput(
                 userName = userName,
                 repository = repository,
-                isLoading = commitsState is MainViewModelCompose.Commits.Loading,
+                isLoading = commitsState is MainViewModel.Commits.Loading,
                 onUserInputChanged = onUserInputChanged,
                 onFetchCommitsClick = onFetchCommitsClick
             )
@@ -109,19 +109,19 @@ fun GithubInput(
 
 @Composable
 fun GitHubResponse(
-    commitsState: MainViewModelCompose.Commits,
+    commitsState: MainViewModel.Commits,
     scaffoldState: ScaffoldState,
     modifier: Modifier
 ) {
     Box(modifier = modifier) {
         when (commitsState) {
-            is MainViewModelCompose.Commits.Error ->
+            is MainViewModel.Commits.Error ->
                 Error(
                     text = commitsState.message,
                     scaffoldState = scaffoldState
                 )
-            MainViewModelCompose.Commits.Loading -> LoadingCommits()
-            is MainViewModelCompose.Commits.Result ->
+            MainViewModel.Commits.Loading -> LoadingCommits()
+            is MainViewModel.Commits.Result ->
                 CommitList(commits = commitsState.commits)
         }
     }

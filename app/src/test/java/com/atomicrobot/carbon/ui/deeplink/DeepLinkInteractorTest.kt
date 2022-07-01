@@ -1,10 +1,9 @@
-package com.atomicrobot.carbon.data.api.github
+package com.atomicrobot.carbon.ui.deeplink
 
 import android.graphics.Color
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.ui.deeplink.DeepLinkInteractor
+import com.atomicrobot.carbon.StartActivity
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -27,8 +26,8 @@ class DeepLinkInteractorTest {
         interactor.setDeepLinkUri(Uri.parse("https://www.atomicrobot.com/carbon-android/path1"))
         interactor.setDeepLinkPath("/carbon-android/path1")
 
-        val navResource = interactor.getNavResourceFromDeepLink()
-        assertTrue(navResource == R.id.action_mainFragment_to_deepLinkPath1Fragment)
+        val navResource = interactor.getDeepLinkNavDestination()
+        assertTrue(navResource == StartActivity.deepLinkPath1)
     }
 
     @Test
@@ -53,8 +52,8 @@ class DeepLinkInteractorTest {
         interactor.setDeepLinkUri(Uri.parse("https://www.atomicrobot.com/carbon-android/path1?textColor=razzle&textSize=22L"))
         interactor.setDeepLinkPath("/carbon-android/path1")
 
-        val navResource = interactor.getNavResourceFromDeepLink()
-        assertTrue(navResource == R.id.action_mainFragment_to_deepLinkPath1Fragment)
+        val navResource = interactor.getDeepLinkNavDestination()
+        assertTrue(navResource == StartActivity.deepLinkPath1)
 
         val resourceColor = interactor.getDeepLinkTextColor()
         assertTrue(resourceColor == Color.BLACK)
