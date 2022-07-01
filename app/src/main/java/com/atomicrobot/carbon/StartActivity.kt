@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.atomicrobot.carbon.ui.compose.MainNavigation
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -15,11 +16,12 @@ class StartActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        handleIntent(intent)
-
+        val isDeepLinkIntent = handleIntent(intent)
 
         setContent {
-                MainNavigation(false)
+            CarbonAndroidTheme() {
+                MainNavigation(isDeepLinkIntent)
+            }
         }
     }
 
