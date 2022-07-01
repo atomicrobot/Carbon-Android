@@ -3,7 +3,6 @@ package com.atomicrobot.carbon
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.StrictMode
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.atomicrobot.carbon.ui.ComposeBaseActivity
@@ -17,10 +16,6 @@ import timber.log.Timber
 class ComposeStartActivity : ComposeBaseActivity() {
     private val splashViewModel: SplashViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
-        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
-            .detectNetwork()
-            .penaltyLog()
-            .build())
         super.onCreate(savedInstanceState)
 
         setContent {
