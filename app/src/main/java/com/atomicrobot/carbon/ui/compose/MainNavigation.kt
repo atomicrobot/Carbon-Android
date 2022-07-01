@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.atomicrobot.carbon.ComposeStartActivity
+import com.atomicrobot.carbon.StartActivity
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.splash.SplashScreen
@@ -28,7 +28,7 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
             }
         }
         composable("mainScreen") { MainScreen() }
-        composable(ComposeStartActivity.deepLinkPath1) {
+        composable(StartActivity.deepLinkPath1) {
             val textColor = viewModel.getDeepLinkTextColor()
             val textSize = viewModel.getDeepLinkTextSize()
             DeepLinkSampleScreen(textColor, textSize)

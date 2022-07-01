@@ -10,7 +10,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.atomicrobot.carbon.EspressoMatchers.withFontSize
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.StartActivity
 import org.junit.Test
 import org.junit.runner.RunWith
 

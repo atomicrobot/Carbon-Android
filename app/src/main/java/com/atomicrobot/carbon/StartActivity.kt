@@ -3,26 +3,30 @@ package com.atomicrobot.carbon
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import com.atomicrobot.carbon.ui.BaseActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.atomicrobot.carbon.ui.compose.MainNavigation
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class StartActivity : BaseActivity() {
+class StartActivity : ComponentActivity() {
     private val splashViewModel: SplashViewModel by viewModel()
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_start)
-
         handleIntent(intent)
+
+
+        setContent {
+                MainNavigation(false)
+        }
     }
 
-    private fun handleIntent(intent: Intent) {
+    private fun handleIntent(intent: Intent): Boolean {
         val appLinkAction = intent.action
         val appLinkData: Uri? = intent.data
-        if (Intent.ACTION_VIEW == appLinkAction) {
+        return if (Intent.ACTION_VIEW == appLinkAction) {
             appLinkData?.encodedPath?.also {
                 splashViewModel.setDeepLinkUri(appLinkData)
                 splashViewModel.setDeepLinkPath(appLinkData.encodedPath)
@@ -33,6 +37,13 @@ class StartActivity : BaseActivity() {
                 Timber.d("appLinkData.encodedQuery = ${appLinkData.encodedQuery}")
                 Timber.d("appLinkData.queryParameterNames = ${appLinkData.queryParameterNames}")
             }
-        }
+            true
+        } else false
+    }
+
+    companion object {
+        const val mainPage = "mainScreen"
+        const val splashPage = "splashScreen"
+        const val deepLinkPath1 = "deepLinkPath1"
     }
 }

@@ -2,8 +2,7 @@ package com.atomicrobot.carbon.deeplink
 
 import android.graphics.Color
 import android.net.Uri
-import com.atomicrobot.carbon.ComposeStartActivity
-import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.StartActivity
 import timber.log.Timber
 import java.lang.NumberFormatException
 
@@ -24,19 +23,19 @@ class DeepLinkInteractor {
             when(path) {
                 "/carbon-android" -> {
                     Timber.d("default deep link received")
-                    return ComposeStartActivity.mainPage
+                    return StartActivity.mainPage
                 }
                 "/carbon-android/path1" -> {
                     Timber.d("path1 deep link received")
-                    return ComposeStartActivity.deepLinkPath1
+                    return StartActivity.deepLinkPath1
                 }
                 else -> {
                     Timber.e("Deep link path not recognized")
-                    return ComposeStartActivity.mainPage
+                    return StartActivity.mainPage
                 }
             }
         }
-        return ComposeStartActivity.mainPage
+        return StartActivity.mainPage
     }
 
     fun getDeepLinkTextColor(): Int {

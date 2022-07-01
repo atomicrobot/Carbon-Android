@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ComposeStartActivity"
+            android:name=".StartActivity"
             android:exported="true"
             android:label="@string/title_activity_compose_start"
             android:theme="@style/AppTheme">
@@ -57,7 +57,7 @@
 
         <activity-alias
             android:name=".Launcher"
-            android:targetActivity=".ComposeStartActivity" />
+            android:targetActivity=".StartActivity" />
     </application>
 
 </manifest>
