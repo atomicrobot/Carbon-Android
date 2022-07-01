@@ -5,7 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.atomicrobot.carbon.ui.BaseActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.atomicrobot.carbon.ui.compose.MainNavigation
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class StartActivity : BaseActivity() {
+class StartActivity : AppCompatActivity() {
     private val splashViewModel: SplashViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
