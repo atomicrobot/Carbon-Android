@@ -20,13 +20,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class ComposeStartActivity : ComponentActivity() {
-
-    private val viewModel: MainViewModelCompose by viewModel()
     private val splashViewModel: SplashViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-         handleIntent(intent)
+        handleIntent(intent)
+
 
         setContent {
                 MainNavigation(false)
@@ -34,7 +33,6 @@ class ComposeStartActivity : ComponentActivity() {
     }
 
     private fun handleIntent(intent: Intent): Boolean {
-        Timber.d("Brandon handle intent")
         val appLinkAction = intent.action
         val appLinkData: Uri? = intent.data
         return if (Intent.ACTION_VIEW == appLinkAction) {

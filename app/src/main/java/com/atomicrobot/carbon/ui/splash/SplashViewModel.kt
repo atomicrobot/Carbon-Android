@@ -25,7 +25,6 @@ class SplashViewModel @Inject constructor(
         get() = _navigationEvent
 
     override fun setupViewModel() {
-        Timber.d("Brandon setup viewmodel")
         _navigationEvent.update { ViewNavigation.FirstTime }
     }
 

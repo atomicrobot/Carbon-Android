@@ -38,6 +38,9 @@ fun SplashScreen(navigate: () -> Unit) {
     }
 
     if (navigationEvent == SplashViewModel.ViewNavigation.FirstTime) {
-        navigate()
+        LaunchedEffect(true) {
+            delay(1000) // This is here to show the splash screen for a moment
+            navigate()
+        }
     }
 }

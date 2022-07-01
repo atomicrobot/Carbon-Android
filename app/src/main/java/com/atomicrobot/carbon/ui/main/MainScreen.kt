@@ -27,6 +27,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MainScreen() {
     val viewModel: MainViewModelCompose = getViewModel()
+    viewModel.initializeViewModel()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val screenState by viewModel.uiState.collectAsState()
 
