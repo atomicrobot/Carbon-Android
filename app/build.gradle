@@ -329,9 +329,8 @@ ktlint {
     android = true
     outputToConsole = true
     outputColorName = "RED"
-    additionalEditorconfigFile = file("/some/additional/.editorconfig")
+    additionalEditorconfigFile = file(".editorconfig")
     disabledRules = ["final-newline"]
-    baseline = file("my-project-ktlint-baseline.xml")
     reporters {
         reporter "plain"
         reporter "checkstyle"
