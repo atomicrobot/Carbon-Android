@@ -9,6 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
@@ -16,9 +18,10 @@ import com.atomicrobot.carbon.ui.components.BottomBar
 import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.components.TransparentTextField
+import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
 
 @Composable
-fun Main(viewModel: MainViewModel) {
+fun MainScreen(viewModel: MainViewModel) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
 
     val mainState by viewModel.uiState.collectAsState()
@@ -35,14 +38,15 @@ fun Main(viewModel: MainViewModel) {
     )
 }
 
+@Preview(name = "Main Screen")
 @Composable
 fun MainContent(
     userName: String = MainViewModel.DEFAULT_USERNAME,
     repository: String = MainViewModel.DEFAULT_REPO,
     commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
-    scaffoldState: ScaffoldState,
-    onUserInputChanged: (String, String) -> Unit,
-    onFetchCommitsClick: () -> Unit,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    onUserInputChanged: (String, String) -> Unit = { _, _ -> },
+    onFetchCommitsClick: () -> Unit = {},
 ) {
     Scaffold(
         modifier = Modifier
@@ -52,7 +56,7 @@ fun MainContent(
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopBar()
-            GithubInput(
+            GithubUserInput(
                 userName = userName,
                 repository = repository,
                 isLoading = commitsState is MainViewModel.Commits.Loading,
@@ -69,13 +73,14 @@ fun MainContent(
     }
 }
 
+@Preview(name = "User Input")
 @Composable
-fun GithubInput(
-    userName: String,
-    repository: String,
-    isLoading: Boolean,
-    onUserInputChanged: (String, String) -> Unit,
-    onFetchCommitsClick: () -> Unit,
+fun GithubUserInput(
+    userName: String = MainViewModel.DEFAULT_USERNAME,
+    repository: String = MainViewModel.DEFAULT_REPO,
+    isLoading: Boolean = false,
+    onUserInputChanged: (String, String) -> Unit = { _, _ -> },
+    onFetchCommitsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -149,13 +154,14 @@ fun LoadingCommits() {
 fun CommitList(commits: List<Commit>) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(commits) {
-            CommitUiElement(commit = it)
+            CommitItem(commit = it)
         }
     }
 }
 
+@Preview(name = "Github Commit")
 @Composable
-fun CommitUiElement(commit: Commit) {
+fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

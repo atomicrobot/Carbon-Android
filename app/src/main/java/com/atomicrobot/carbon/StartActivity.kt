@@ -17,17 +17,16 @@ class StartActivity : AppCompatActivity() {
     private val splashViewModel: SplashViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val isDeepLinkIntent = handleIntent(intent)
 
         setContent {
             CarbonAndroidTheme {
-                MainNavigation(true)
+                MainNavigation(isDeepLinkIntent)
             }
         }
-        handleIntent(intent)
     }
 
     private fun handleIntent(intent: Intent): Boolean {
-        Timber.d("handle intent")
         val appLinkAction = intent.action
         val appLinkData: Uri? = intent.data
         return if (Intent.ACTION_VIEW == appLinkAction) {
