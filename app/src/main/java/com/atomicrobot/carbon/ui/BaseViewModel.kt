@@ -1,9 +1,7 @@
 package com.atomicrobot.carbon.ui
 
 import android.app.Application
-
 import androidx.lifecycle.AndroidViewModel
-
 
 abstract class BaseViewModel(
     app: Application,
@@ -19,6 +17,4 @@ abstract class BaseViewModel(
     }
 
     protected abstract fun setupViewModel()
-
-
 }
