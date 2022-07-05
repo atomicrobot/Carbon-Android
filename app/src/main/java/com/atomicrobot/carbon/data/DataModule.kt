@@ -23,7 +23,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 
-
 interface OkHttpSecurityModifier {
     fun apply(builder: OkHttpClient.Builder)
 }

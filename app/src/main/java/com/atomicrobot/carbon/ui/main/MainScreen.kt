@@ -1,9 +1,24 @@
 package com.atomicrobot.carbon.ui.main
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,7 +46,8 @@ fun MainScreen() {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val screenState by viewModel.uiState.collectAsState()
 
-    MainContent(username = screenState.username,
+    MainContent(
+        username = screenState.username,
         repository = screenState.repository,
         commitsState = screenState.commitsState,
         scaffoldState = scaffoldState,
@@ -40,7 +56,8 @@ fun MainScreen() {
         },
         onUserSelectedFetchCommits = {
             viewModel.fetchCommits()
-        })
+        }
+    )
 }
 
 @Preview(name = "Main Screen")
@@ -60,8 +77,8 @@ fun MainContent(
         scaffoldState = scaffoldState,
         topBar = { TopBar() },
         bottomBar = { BottomBar() },
-        snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) })
-    { padding -> /* Must use padding arg otherwise causes compiler issue */
+        snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) }
+    ) { padding -> /* Must use padding arg otherwise causes compiler issue */
         Column(modifier = Modifier.padding(padding)) {
             /*
             * Main Screen is split into two chunks
@@ -96,27 +113,23 @@ fun GithubUserInput(
         color = MaterialTheme.colors.onSurface.copy(
             alpha = TextFieldDefaults.BackgroundOpacity
         )
-    )
-    {
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-        )
-        {
+        ) {
             // Username
             TransparentTextField(
                 value = username,
                 labelResId = R.string.username,
                 modifier = Modifier.padding(bottom = 8.dp)
-            )
-            { newUsername -> onUserInputChanged(newUsername, repository) }
+            ) { newUsername -> onUserInputChanged(newUsername, repository) }
             // Repo
             TransparentTextField(
                 value = repository,
                 labelResId = R.string.repository
-            )
-            { newRepo -> onUserInputChanged(username, newRepo) }
+            ) { newRepo -> onUserInputChanged(username, newRepo) }
             // Fetch commits
             OutlinedButton(
                 onClick = onUserSelectedFetchCommits,
@@ -143,8 +156,7 @@ fun GithubResponse(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
-                )
-                {
+                ) {
                     CircularProgressIndicator()
                 }
             is MainViewModel.Commits.Error ->
@@ -152,21 +164,18 @@ fun GithubResponse(
                     scaffoldState.snackbarHostState.showSnackbar(message = commitsState.message)
                 }
             is MainViewModel.Commits.Result -> CommitList(commits = commitsState.commits)
-
         }
     }
 }
 
 @Composable
 fun CommitList(commits: List<Commit>) {
-    LazyColumn(modifier = Modifier.fillMaxSize())
-    {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(commits) { commit ->
             CommitItem(commit)
         }
     }
 }
-
 
 @Preview(name = "Github Commit")
 @Composable
@@ -175,14 +184,12 @@ fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp)
-    )
-    {
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-        )
-        {
+        ) {
             Text(
                 text = commit.commitMessage,
                 fontWeight = FontWeight.Bold,

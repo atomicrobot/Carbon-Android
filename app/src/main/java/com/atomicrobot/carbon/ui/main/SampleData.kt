@@ -9,5 +9,5 @@ val dummyCommits = listOf(
     Commit(commit = CommitDetails(message = "Sample github commit message #2", author = Author("Joe Smitty"))),
     Commit(commit = CommitDetails(message = "Sample github commit message #3", author = Author("Smith Joe"))),
     Commit(commit = CommitDetails(message = "Sample github commit message #4", author = Author("Joe Smith"))),
-    Commit(commit = CommitDetails(message = "Sample github commit message #5", author = Author("Joe Smoe"))))
-
+    Commit(commit = CommitDetails(message = "Sample github commit message #5", author = Author("Joe Smoe")))
+)

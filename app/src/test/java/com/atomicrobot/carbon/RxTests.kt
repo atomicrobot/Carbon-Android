@@ -18,42 +18,42 @@ class RxTests {
     @Test
     fun testObservableFactoryError() {
         Observable.error<String>(IllegalStateException())
-                .subscribe(subscriber)
+            .subscribe(subscriber)
         subscriber.assertError(IllegalStateException::class.java)
     }
 
     @Test
     fun testSingleFactoryError() {
         Single.error<String>(IllegalStateException())
-                .subscribe(subscriber)
+            .subscribe(subscriber)
         subscriber.assertError(IllegalStateException::class.java)
     }
 
     @Test
     fun testCompletableFactoryError() {
         Completable.error(IllegalStateException())
-                .subscribe(subscriber)
+            .subscribe(subscriber)
         subscriber.assertError(IllegalStateException::class.java)
     }
 
     @Test
     fun testObservableCallableError() {
         Observable.fromCallable { throw IllegalStateException() }
-                .subscribe(subscriber)
+            .subscribe(subscriber)
         subscriber.assertError(IllegalStateException::class.java)
     }
 
     @Test
     fun testSingleCallableError() {
         Single.fromCallable { throw IllegalStateException() }
-                .subscribe(subscriber)
+            .subscribe(subscriber)
         subscriber.assertError(IllegalStateException::class.java)
     }
 
     @Test
     fun testCompletableCallableError() {
         Completable.fromCallable { throw IllegalStateException() }
-                .subscribe(subscriber)
+            .subscribe(subscriber)
         subscriber.assertError(IllegalStateException::class.java)
     }
 }

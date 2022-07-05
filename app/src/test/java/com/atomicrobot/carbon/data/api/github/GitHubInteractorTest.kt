@@ -3,8 +3,6 @@ package com.atomicrobot.carbon.data.api.github
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.atomicrobot.carbon.data.api.github.GitHubApiService
-import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsResponse
 import com.atomicrobot.carbon.data.api.github.model.CommitTestHelper.stubCommit

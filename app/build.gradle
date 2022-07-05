@@ -5,23 +5,21 @@ buildscript {
     }
 }
 
-repositories {
+plugins {
+    id "com.android.application"
+    id "org.jlleitschuh.gradle.ktlint"
 
+    id "kotlin-android"
+    id "kotlin-kapt"
+    id "kotlin-allopen"
+    id "kotlin-parcelize"
+
+    id "com.google.firebase.crashlytics"
+
+    id "pmd"
+    id "checkstyle"
+    id "jacoco"
 }
-
-
-apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-allopen'
-apply plugin: 'kotlin-parcelize'
-
-apply plugin: 'com.google.firebase.crashlytics'
-
-apply plugin: 'pmd'
-apply plugin: 'checkstyle'
-apply plugin: 'jacoco'
 
 android {
     compileOptions {

@@ -27,7 +27,7 @@ class CustomAppTestRunner : AndroidJUnitRunner() {
     private fun keepScreenAwake(app: Context, name: String) {
         val power = app.getSystemService(Context.POWER_SERVICE) as PowerManager
         power.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.FULL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.ON_AFTER_RELEASE, name)
-                .acquire(10 * 60 * 1000L /*10 minutes*/)
+            .acquire(10 * 60 * 1000L /*10 minutes*/)
     }
 
     @Suppress("DEPRECATION")

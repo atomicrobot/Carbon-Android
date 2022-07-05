@@ -33,7 +33,7 @@ object SSLDevelopmentHelper {
         val trustAllCerts = arrayOf<TrustManager>(buildTrustAllTrustManager())
 
         try {
-            val sc = SSLContext.getInstance("TLS")  //NON-NLS
+            val sc = SSLContext.getInstance("TLS") // NON-NLS
             sc.init(null, trustAllCerts, java.security.SecureRandom())
             return sc
         } catch (ex: Exception) {
