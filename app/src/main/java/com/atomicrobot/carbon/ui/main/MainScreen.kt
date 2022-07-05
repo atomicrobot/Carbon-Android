@@ -18,7 +18,7 @@ import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.components.TransparentTextField
 
 @Composable
-fun Main(viewModel: MainViewModel) {
+fun MainScreen(viewModel: MainViewModel) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
 
     val mainState by viewModel.uiState.collectAsState()
