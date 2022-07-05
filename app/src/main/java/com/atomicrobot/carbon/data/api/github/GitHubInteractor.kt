@@ -5,14 +5,14 @@ import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.Mockable
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
-
 import retrofit2.Response
 import timber.log.Timber
 
 @Mockable
 class GitHubInteractor(
-        private val context: Context,
-        private val api: GitHubApiService) {
+    private val context: Context,
+    private val api: GitHubApiService
+) {
 
     class LoadCommitsRequest(val user: String, val repository: String)
     class LoadCommitsResponse(val request: LoadCommitsRequest, val commits: List<Commit>)

@@ -1,7 +1,6 @@
 package com.atomicrobot.carbon.app
 
 import android.annotation.SuppressLint
-import okhttp3.OkHttpClient
 import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
@@ -9,6 +8,7 @@ import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
+import okhttp3.OkHttpClient
 
 object SSLDevelopmentHelper {
 
@@ -33,7 +33,7 @@ object SSLDevelopmentHelper {
         val trustAllCerts = arrayOf<TrustManager>(buildTrustAllTrustManager())
 
         try {
-            val sc = SSLContext.getInstance("TLS")  //NON-NLS
+            val sc = SSLContext.getInstance("TLS") // NON-NLS
             sc.init(null, trustAllCerts, java.security.SecureRandom())
             return sc
         } catch (ex: Exception) {

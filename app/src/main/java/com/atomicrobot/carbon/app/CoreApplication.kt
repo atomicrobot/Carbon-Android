@@ -26,7 +26,6 @@ open class CoreApplication : Application() {
      * should occur.
      */
     protected open fun initializeApplication() {
-
     }
 
     open fun isTesting() = true

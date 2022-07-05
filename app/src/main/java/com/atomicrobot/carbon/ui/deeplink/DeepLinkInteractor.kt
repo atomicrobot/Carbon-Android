@@ -2,12 +2,12 @@ package com.atomicrobot.carbon.ui.deeplink
 
 import android.graphics.Color
 import android.net.Uri
-import com.atomicrobot.carbon.R
-import timber.log.Timber
+import com.atomicrobot.carbon.StartActivity
 import java.lang.NumberFormatException
 import javax.inject.Inject
+import timber.log.Timber
 
-class DeepLinkInteractor @Inject constructor(){
+class DeepLinkInteractor @Inject constructor() {
     private var deepLinkUri: Uri? = null
     private var deepLinkPath: String? = null
 
@@ -19,38 +19,34 @@ class DeepLinkInteractor @Inject constructor(){
         this.deepLinkPath = path
     }
 
-    fun getNavResourceFromDeepLink(): Int? {
+    fun getDeepLinkNavDestination(): String {
         deepLinkPath?.let { path ->
-            when(path) {
+            when (path) {
                 "/carbon-android" -> {
                     Timber.d("default deep link received")
-                    return null
+                    return StartActivity.mainPage
                 }
                 "/carbon-android/path1" -> {
                     Timber.d("path1 deep link received")
-                    return R.id.action_mainFragment_to_deepLinkPath1Fragment
-                }
-                "/carbon-android/path2" -> {
-                    Timber.d("path2 deep link received")
-                    return null
+                    return StartActivity.deepLinkPath1
                 }
                 else -> {
                     Timber.e("Deep link path not recognized")
-                    return null
+                    return StartActivity.mainPage
                 }
             }
         }
-        return null
+        return StartActivity.mainPage
     }
 
     fun getDeepLinkTextColor(): Int {
         var color = Color.BLACK
         deepLinkUri?.let { uri ->
             val textColor = uri.getQueryParameter("textColor")
-            if(!textColor.isNullOrEmpty()) {
+            if (!textColor.isNullOrEmpty()) {
                 try {
                     color = Color.parseColor(textColor)
-                } catch(exception: IllegalArgumentException) {
+                } catch (exception: IllegalArgumentException) {
                     Timber.e("Unsupported value for color")
                 }
             }
@@ -63,10 +59,10 @@ class DeepLinkInteractor @Inject constructor(){
         var size = 30f
         deepLinkUri?.let { uri ->
             val textSize = uri.getQueryParameter("textSize")
-            if(!textSize.isNullOrEmpty()) {
+            if (!textSize.isNullOrEmpty()) {
                 try {
                     size = textSize.toFloat()
-                } catch(exception: NumberFormatException) {
+                } catch (exception: NumberFormatException) {
                     Timber.e("Unsupported value for size")
                 }
             }

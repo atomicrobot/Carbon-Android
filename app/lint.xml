@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<lint>
-    <!-- See https://youtrack.jetbrains.com/issue/KT-19300 -->
-    <issue id="ParcelCreator" severity="ignore" />
-</lint>

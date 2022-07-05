@@ -18,16 +18,30 @@ class CustomAppTestRunner : AndroidJUnitRunner() {
         super.onStart()
     }
 
-    @Throws(InstantiationException::class, IllegalAccessException::class, ClassNotFoundException::class)
+    @Throws(
+        InstantiationException::class,
+        IllegalAccessException::class,
+        ClassNotFoundException::class
+    )
     override fun newApplication(cl: ClassLoader, className: String, context: Context): Application {
-        return super.newApplication(cl, HiltTestMainApplication_Application::class.java.name, context)
+        return super.newApplication(
+            cl,
+            HiltTestMainApplication_Application::class.java.name,
+            context
+        )
     }
 
     @Suppress("DEPRECATION")
     private fun keepScreenAwake(app: Context, name: String) {
         val power = app.getSystemService(Context.POWER_SERVICE) as PowerManager
-        power.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.FULL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.ON_AFTER_RELEASE, name)
-                .acquire(10 * 60 * 1000L /*10 minutes*/)
+        power.newWakeLock(
+            PowerManager.SCREEN_BRIGHT_WAKE_LOCK or
+                PowerManager.FULL_WAKE_LOCK or
+                PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                PowerManager.ON_AFTER_RELEASE,
+            name
+        )
+            .acquire(10 * 60 * 1000L /*10 minutes*/)
     }
 
     @Suppress("DEPRECATION")

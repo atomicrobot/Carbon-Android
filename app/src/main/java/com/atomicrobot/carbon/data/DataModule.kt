@@ -13,15 +13,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.io.File
+import javax.inject.Qualifier
+import javax.inject.Singleton
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.io.File
-import javax.inject.Qualifier
-import javax.inject.Singleton
-
 
 @Qualifier
 annotation class BaseUrl
@@ -89,8 +88,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideDeepLinkInteractor(
-    ): DeepLinkInteractor {
+    fun provideDeepLinkInteractor(): DeepLinkInteractor {
         return DeepLinkInteractor()
     }
 

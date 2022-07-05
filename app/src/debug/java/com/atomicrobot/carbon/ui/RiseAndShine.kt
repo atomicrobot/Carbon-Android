@@ -11,7 +11,10 @@ import android.view.WindowManager
  */
 @Suppress("DEPRECATION")
 object RiseAndShine {
-    private val LOCK_FLAGS = PowerManager.FULL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.ON_AFTER_RELEASE
+    private val LOCK_FLAGS =
+        PowerManager.FULL_WAKE_LOCK or
+            PowerManager.ACQUIRE_CAUSES_WAKEUP or
+            PowerManager.ON_AFTER_RELEASE
 
     fun riseAndShine(activity: Activity) {
         val keyguardManager = activity.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager

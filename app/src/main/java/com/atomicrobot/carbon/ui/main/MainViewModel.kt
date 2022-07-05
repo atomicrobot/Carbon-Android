@@ -1,40 +1,28 @@
 package com.atomicrobot.carbon.ui.main
 
 import android.app.Application
-import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
-import androidx.databinding.Bindable
 import androidx.lifecycle.viewModelScope
-import com.atomicrobot.carbon.BR
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.app.LoadingDelayMs
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
-import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.BaseViewModel
-import com.atomicrobot.carbon.ui.SimpleSnackbarMessage
-import com.atomicrobot.carbon.ui.deeplink.DeepLinkInteractor
 import com.atomicrobot.carbon.util.CoroutineUtils.delayAtLeast
-import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
-import java.lang.Exception
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.lang.Exception
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val app: Application,
+    private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
     @LoadingDelayMs private val loadingDelayMs: Long,
-    private val deepLinkInteractor: DeepLinkInteractor
-) : BaseViewModel<MainViewModel.State>(app, STATE_KEY, State()) {
-
-    @Parcelize
-    class State(
-        var username: String = "",
-        var repository: String = ""
-    ) : Parcelable
+) : BaseViewModel(app) {
 
     sealed class Commits {
         object Loading : Commits()
@@ -42,56 +30,50 @@ class MainViewModel @Inject constructor(
         class Error(val message: String) : Commits()
     }
 
-    override fun setupViewModel() {
-        username = "madebyatomicrobot"  // NON-NLS
-        repository = "android-starter-project"  // NON-NLS
+    data class MainScreenUiState(
+        var username: String = "madebyatomicrobot", // NON-NLS
+        var repository: String = "android-starter-project", // NON-NLS
+        var commitsState: Commits = Commits.Result(emptyList())
+    )
 
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val _uiState = MutableStateFlow(MainScreenUiState())
+    val uiState: StateFlow<MainScreenUiState>
+        get() = _uiState
+
+    override fun setupViewModel() {
         fetchCommits()
     }
 
-    @VisibleForTesting
-    internal var commits: Commits = Commits.Result(emptyList())
-        set(value) {
-            field = value
+    fun updateUserInput(username: String?, repository: String?) {
+        _uiState.value = _uiState.value.copy(
+            username = username ?: _uiState.value.username,
+            repository = repository ?: _uiState.value.repository,
+        )
+    }
 
-            notifyPropertyChanged(BR.loading)
-            notifyPropertyChanged(BR.commits)
-            notifyPropertyChanged(BR.fetchCommitsEnabled)
+    fun fetchCommits() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(commitsState = Commits.Loading)
 
-            when (value) {
-                is Commits.Error -> snackbarMessage.value = value.message
-                is Commits.Result -> {}
-                Commits.Loading -> {}
-            }
-        }
-
-    val snackbarMessage = SimpleSnackbarMessage()
-
-    var username: String
-        @Bindable get() = state.username
-        set(value) {
-            state.username = value
-            notifyPropertyChanged(BR.username)
-        }
-
-    var repository: String
-        @Bindable get() = state.repository
-        set(value) {
-            state.repository = value
-            notifyPropertyChanged(BR.repository)
-        }
-
-    @Bindable("username", "repository")
-    fun isFetchCommitsEnabled(): Boolean = commits !is Commits.Loading && username.isNotEmpty() && repository.isNotEmpty()
-
-    @Bindable
-    fun isLoading(): Boolean = commits is Commits.Loading
-
-    @Bindable
-    fun getCommits() = commits.let {
-        when (it) {
-            is Commits.Result -> it.commits
-            else -> emptyList()
+            _uiState.value = _uiState.value.copy(
+                commitsState = delayAtLeast(loadingDelayMs) {
+                    try {
+                        Commits.Result(
+                            gitHubInteractor.loadCommits(
+                                GitHubInteractor.LoadCommitsRequest(
+                                    uiState.value.username,
+                                    uiState.value.repository
+                                )
+                            ).commits
+                        )
+                    } catch (e: Exception) {
+                        Commits.Error(
+                            e.message ?: app.getString(R.string.error_unexpected)
+                        )
+                    }
+                }
+            )
         }
     }
 
@@ -99,32 +81,9 @@ class MainViewModel @Inject constructor(
 
     fun getFingerprint(): String = BuildConfig.VERSION_FINGERPRINT
 
-    fun fetchCommits() {
-        viewModelScope.launch {
-            commits = Commits.Loading
-
-            commits = delayAtLeast(loadingDelayMs) {
-                try {
-                    Commits.Result(
-                        gitHubInteractor.loadCommits(
-                            LoadCommitsRequest(username, repository)
-                        ).commits
-                    )
-                } catch (e: Exception) {
-                    Commits.Error(e.message ?: app.getString(R.string.error_unexpected))
-                }
-            }
-        }
-    }
-    fun getNavResourceFromDeepLink(): Int? {
-        return deepLinkInteractor.getNavResourceFromDeepLink()
-    }
-
-    fun clearDeepLinkPath() {
-        deepLinkInteractor.setDeepLinkPath(null)
-    }
-
     companion object {
-        private const val STATE_KEY = "MainViewModelState"  // NON-NLS
+        private const val STATE_KEY = "MainViewModelState" // NON-NLS
+        const val DEFAULT_USERNAME = "madebyatomicrobot" // NON-NLS
+        const val DEFAULT_REPO = "android-starter-project" // NON-NLS
     }
 }
