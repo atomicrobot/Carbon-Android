@@ -27,8 +27,8 @@ class DeepLinkInteractorTest {
         interactor.setDeepLinkUri(Uri.parse("https://www.atomicrobot.com/carbon-android/path1"))
         interactor.setDeepLinkPath("/carbon-android/path1")
 
-        val navResource = interactor.getNavResourceFromDeepLink()
-        assertTrue(navResource == R.id.action_mainFragment_to_deepLinkPath1Fragment)
+        val navResource = interactor.getDeepLinkNavDestination()
+        assertTrue(navResource == "deepLinkPath1")
     }
 
     @Test
@@ -53,8 +53,8 @@ class DeepLinkInteractorTest {
         interactor.setDeepLinkUri(Uri.parse("https://www.atomicrobot.com/carbon-android/path1?textColor=razzle&textSize=22L"))
         interactor.setDeepLinkPath("/carbon-android/path1")
 
-        val navResource = interactor.getNavResourceFromDeepLink()
-        assertTrue(navResource == R.id.action_mainFragment_to_deepLinkPath1Fragment)
+        val navResource = interactor.getDeepLinkNavDestination()
+        assertTrue(navResource == "deepLinkPath1")
 
         val resourceColor = interactor.getDeepLinkTextColor()
         assertTrue(resourceColor == Color.BLACK)

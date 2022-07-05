@@ -6,7 +6,6 @@ import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
-import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.squareup.moshi.Moshi
@@ -58,7 +57,8 @@ class DataModule {
             provideRetrofit(
                 client = get(),
                 baseUrl = get(qualifier = named(BASE_URL)),
-                converterFactory = get())
+                converterFactory = get()
+            )
         }
 
         single {
@@ -79,15 +79,6 @@ class DataModule {
         }
 
         viewModel {
-            MainViewModel(
-                app = androidApplication(),
-                gitHubInteractor =  get(),
-                loadingDelayMs = get(qualifier = named("loading_delay_ms")),
-                deepLinkInteractor = get()
-            )
-        }
-
-        viewModel {
             SplashViewModel(
                 app = androidApplication(),
                 deepLinkInteractor = get()
@@ -95,9 +86,10 @@ class DataModule {
         }
 
         viewModel {
-            DeepLinkSampleViewModel(
+            MainViewModel(
                 app = androidApplication(),
-                deepLinkInteractor = get()
+                gitHubInteractor = get(),
+                loadingDelayMs = get(qualifier = named("loading_delay_ms"))
             )
         }
     }

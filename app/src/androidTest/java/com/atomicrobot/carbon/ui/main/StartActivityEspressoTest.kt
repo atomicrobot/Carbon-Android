@@ -7,12 +7,10 @@ import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.atomicrobot.carbon.EspressoMatchers.regex
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.StartActivity
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsResponse
@@ -26,7 +24,6 @@ import io.reactivex.Observable
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.GlobalContext.loadKoinModules
