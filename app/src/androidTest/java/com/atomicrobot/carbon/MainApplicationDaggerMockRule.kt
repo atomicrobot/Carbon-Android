@@ -9,12 +9,13 @@ import dagger.hilt.components.SingletonComponent
 import it.cosenonjaviste.daggermock.DaggerMockRule
 
 class MainApplicationDaggerMockRule : DaggerMockRule<SingletonComponent>(
-        SingletonComponent::class.java,
-        VariantModule::class,
-        AppModule(0),
-        LoggerModule,
-        CrashReporterModule::class,
-        DataModule) {
+    SingletonComponent::class.java,
+    VariantModule::class,
+    AppModule(0),
+    LoggerModule,
+    CrashReporterModule::class,
+    DataModule
+) {
     init {
 //        set { component -> getAppUnderTest().component = component }
     }

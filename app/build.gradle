@@ -325,7 +325,6 @@ apply plugin: 'com.google.gms.google-services'
 
 ktlint {
     debug = true
-    verbose = true
     android = true
     outputToConsole = true
     outputColorName = "RED"
@@ -340,7 +339,6 @@ ktlint {
     }
     filter {
         exclude("**/generated/**")
-        include("**/androidTest/**")
-        include("**/test/**")
+        include("**/kotlin/**")
     }
 }
