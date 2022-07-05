@@ -340,6 +340,7 @@ ktlint {
     }
     filter {
         exclude("**/generated/**")
-        include("**/kotlin/**")
+        include("**/androidTest/**")
+        include("**/test/**")
     }
 }
