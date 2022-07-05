@@ -16,20 +16,20 @@ import com.atomicrobot.carbon.R
 @Preview
 @Composable
 fun TransparentTextField(
-        modifier: Modifier = Modifier,
-        value: String = stringResource(id = R.string.txtField_placeholder),
-        labelResId: Int = R.string.label_placeholder,
-        onValueChanged: (String) -> Unit = {_ ->}
+    modifier: Modifier = Modifier,
+    value: String = stringResource(id = R.string.txtField_placeholder),
+    labelResId: Int = R.string.label_placeholder,
+    onValueChanged: (String) -> Unit = { _ -> }
 ) {
     TextField(
-            value = value,
-            onValueChange = onValueChanged,
-            label = {
-                Text(text = stringResource(id = labelResId))
-            },
-            modifier = modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent)
+        value = value,
+        onValueChange = onValueChanged,
+        label = {
+            Text(text = stringResource(id = labelResId))
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent)
     )
 }

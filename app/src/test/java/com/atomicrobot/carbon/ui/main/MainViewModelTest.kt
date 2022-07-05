@@ -33,9 +33,10 @@ class MainViewModelTest {
 
         val app = ApplicationProvider.getApplicationContext<Application>()
         viewModel = MainViewModel(
-                app,
-                githubInteractor,
-                0)
+            app,
+            githubInteractor,
+            0
+        )
     }
 
     @Test

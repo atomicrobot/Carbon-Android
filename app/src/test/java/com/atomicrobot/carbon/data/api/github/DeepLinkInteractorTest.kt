@@ -3,7 +3,6 @@ package com.atomicrobot.carbon.data.api.github
 import android.graphics.Color
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
 import org.junit.Assert.assertTrue
 import org.junit.Before

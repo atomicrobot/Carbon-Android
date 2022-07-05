@@ -34,5 +34,4 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
             DeepLinkSampleScreen(textColor, textSize)
         }
     }
-
 }

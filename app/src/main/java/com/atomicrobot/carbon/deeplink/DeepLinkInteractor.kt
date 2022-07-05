@@ -20,7 +20,7 @@ class DeepLinkInteractor {
 
     fun getDeepLinkNavDestination(): String {
         deepLinkPath?.let { path ->
-            when(path) {
+            when (path) {
                 "/carbon-android" -> {
                     Timber.d("default deep link received")
                     return StartActivity.mainPage
@@ -42,10 +42,10 @@ class DeepLinkInteractor {
         var color = Color.BLACK
         deepLinkUri?.let { uri ->
             val textColor = uri.getQueryParameter("textColor")
-            if(!textColor.isNullOrEmpty()) {
+            if (!textColor.isNullOrEmpty()) {
                 try {
                     color = Color.parseColor(textColor)
-                } catch(exception: IllegalArgumentException) {
+                } catch (exception: IllegalArgumentException) {
                     Timber.e("Unsupported value for color")
                 }
             }
@@ -58,10 +58,10 @@ class DeepLinkInteractor {
         var size = 30f
         deepLinkUri?.let { uri ->
             val textSize = uri.getQueryParameter("textSize")
-            if(!textSize.isNullOrEmpty()) {
+            if (!textSize.isNullOrEmpty()) {
                 try {
                     size = textSize.toFloat()
-                } catch(exception: NumberFormatException) {
+                } catch (exception: NumberFormatException) {
                     Timber.e("Unsupported value for size")
                 }
             }

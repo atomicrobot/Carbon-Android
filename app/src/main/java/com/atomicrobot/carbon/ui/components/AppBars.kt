@@ -20,8 +20,8 @@ import com.atomicrobot.carbon.R
 @Composable
 fun TopBar(modifier: Modifier = Modifier) {
     TopAppBar(
-            modifier = modifier,
-            title = { Text(text = BuildConfig.APPLICATION_ID) }
+        modifier = modifier,
+        title = { Text(text = BuildConfig.APPLICATION_ID) }
     )
 }
 
@@ -29,25 +29,25 @@ fun TopBar(modifier: Modifier = Modifier) {
 @Composable
 fun BottomBar(modifier: Modifier = Modifier) {
     Row(
-            modifier = modifier
-                    .fillMaxWidth()
-                    .background(
-                            color = MaterialTheme.colors.onSurface
-                                    .copy(alpha = TextFieldDefaults.BackgroundOpacity)
-                    )
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp)
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colors.onSurface
+                    .copy(alpha = TextFieldDefaults.BackgroundOpacity)
+            )
+            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp)
     ) {
         Text(
-                text = stringResource(
-                        id = R.string.version_format, BuildConfig.VERSION_NAME
-                ),
-                modifier = Modifier.weight(1f)
+            text = stringResource(
+                id = R.string.version_format, BuildConfig.VERSION_NAME
+            ),
+            modifier = Modifier.weight(1f)
         )
         Text(
-                text = stringResource(
-                        id = R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT
-                )
+            text = stringResource(
+                id = R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT
+            )
         )
     }
 }

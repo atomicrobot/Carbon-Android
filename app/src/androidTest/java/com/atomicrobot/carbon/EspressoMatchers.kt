@@ -6,7 +6,6 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-
 import java.util.regex.Pattern
 
 object EspressoMatchers {

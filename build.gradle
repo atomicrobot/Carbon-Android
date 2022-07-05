@@ -14,10 +14,14 @@ buildscript {
     ext.firebase_analytics_version = '21.0.0'
     ext.google_services_version = '4.3.10'
     ext.firebase_crashlytics_gradle_version = '2.6.1'
+    ext.ktlint_version = '10.3.0'
 
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 
     dependencies {
@@ -28,7 +32,7 @@ buildscript {
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath "org.jacoco:org.jacoco.core:$jacoco_version"
-
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlint_version"
     }
 }
 
@@ -104,18 +108,6 @@ task initialCleanup() {
     dependsOn uninstallTasks
 }
 
-task staticAnalysis {
-    def appProject = subprojects.find { project -> 'app' == project.name }
-
-    def pmdTasks = getProjectTask(appProject, 'pmd')
-    def lintTasks = getProjectTask(appProject, 'lint')
-    def checkstyleTasks = getProjectTask(appProject, 'checkstyle')
-
-    dependsOn pmdTasks
-    dependsOn lintTasks
-    dependsOn checkstyleTasks
-}
-
 task testing() {
     def appProject = subprojects.find { project -> 'app' == project.name }
 
@@ -146,12 +138,10 @@ static def getProjectTask(project, taskName) {
 
 task continuousIntegration() {
     dependsOn initialCleanup
-    dependsOn staticAnalysis
     dependsOn testing
     dependsOn release
 
     // Static analysis first, then testing, then release
-    staticAnalysis.mustRunAfter initialCleanup
-    testing.mustRunAfter staticAnalysis
+    testing.mustRunAfter initialCleanup
     release.mustRunAfter testing
 }
