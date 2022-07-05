@@ -19,7 +19,11 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
     val mainViewModel = hiltViewModel<MainViewModel>()
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = StartActivity.splashPage, modifier = Modifier) {
+    NavHost(
+        navController = navController,
+        startDestination = StartActivity.splashPage,
+        modifier = Modifier
+    ) {
         composable(StartActivity.splashPage) {
             SplashScreen() {
                 navController.popBackStack()

@@ -11,18 +11,18 @@ import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.util.CoroutineUtils.delayAtLeast
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.lang.Exception
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
     @LoadingDelayMs private val loadingDelayMs: Long,
-) : BaseViewModel(app){
+) : BaseViewModel(app) {
 
     sealed class Commits {
         object Loading : Commits()
@@ -31,10 +31,11 @@ class MainViewModel @Inject constructor(
     }
 
     data class MainScreenUiState(
-        var username: String = "madebyatomicrobot",  // NON-NLS
+        var username: String = "madebyatomicrobot", // NON-NLS
         var repository: String = "android-starter-project", // NON-NLS
         var commitsState: Commits = Commits.Result(emptyList())
     )
+
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val _uiState = MutableStateFlow(MainScreenUiState())
     val uiState: StateFlow<MainScreenUiState>
@@ -47,7 +48,7 @@ class MainViewModel @Inject constructor(
     fun updateUserInput(username: String?, repository: String?) {
         _uiState.value = _uiState.value.copy(
             username = username ?: _uiState.value.username,
-            repository = repository ?:  _uiState.value.repository,
+            repository = repository ?: _uiState.value.repository,
         )
     }
 
@@ -75,14 +76,14 @@ class MainViewModel @Inject constructor(
             )
         }
     }
+
     fun getVersion(): String = BuildConfig.VERSION_NAME
 
     fun getFingerprint(): String = BuildConfig.VERSION_FINGERPRINT
 
-
     companion object {
-        private const val STATE_KEY = "MainViewModelState"  // NON-NLS
-        const val DEFAULT_USERNAME = "madebyatomicrobot"  // NON-NLS
-        const val DEFAULT_REPO = "android-starter-project"  // NON-NLS
+        private const val STATE_KEY = "MainViewModelState" // NON-NLS
+        const val DEFAULT_USERNAME = "madebyatomicrobot" // NON-NLS
+        const val DEFAULT_REPO = "android-starter-project" // NON-NLS
     }
 }

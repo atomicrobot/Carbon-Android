@@ -5,7 +5,6 @@ import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.Mockable
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
-
 import retrofit2.Response
 import timber.log.Timber
 
