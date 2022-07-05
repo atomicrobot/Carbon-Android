@@ -1,21 +1,21 @@
 package com.atomicrobot.carbon.ui.splash
 
 import android.app.Application
-import com.atomicrobot.carbon.ui.BaseViewModel
 import android.net.Uri
+import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val app: Application,
     private val deepLinkInteractor: DeepLinkInteractor
 ) :
- BaseViewModel(app) {
+    BaseViewModel(app) {
 
     sealed class ViewNavigation {
         object None : ViewNavigation()
@@ -24,7 +24,7 @@ class SplashViewModel @Inject constructor(
 
     private val _navigationEvent = MutableStateFlow<ViewNavigation>(ViewNavigation.None)
     val navigationEvent: StateFlow<ViewNavigation>
-    get() = _navigationEvent
+        get() = _navigationEvent
 
     override fun setupViewModel() {
         _navigationEvent.update { ViewNavigation.FirstTime }
@@ -37,6 +37,7 @@ class SplashViewModel @Inject constructor(
     fun setDeepLinkPath(path: String?) {
         deepLinkInteractor.setDeepLinkPath(path)
     }
+
     fun getDeepLinkNavDestination(): String {
         return deepLinkInteractor.getDeepLinkNavDestination()
     }

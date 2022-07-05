@@ -3,12 +3,9 @@ package com.atomicrobot.carbon.ui.main
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.atomicrobot.carbon.*
 import com.atomicrobot.carbon.EspressoMatchers.regex
 import com.atomicrobot.carbon.data.DataModule
 import com.atomicrobot.carbon.data.TestGitHubService
@@ -37,7 +34,8 @@ class StartActivityEspressoTest {
     var hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    var testRule: ActivityScenarioRule<StartActivity> = ActivityScenarioRule(StartActivity::class.java)
+    var testRule: ActivityScenarioRule<StartActivity> =
+        ActivityScenarioRule(StartActivity::class.java)
 
     @Before
     fun setUp() {
@@ -91,11 +89,15 @@ class StartActivityEspressoTest {
 
         closeSoftKeyboard()
 
-        onView(withRecyclerView(R.id.commits)
-                .atPositionOnView(0, R.id.author))
-                .check(matches(withText("Author: Test author")))
-        onView(withRecyclerView(R.id.commits)
-                .atPositionOnView(0, R.id.message))
-                .check(matches(withText("Test commit message")))
+        onView(
+            withRecyclerView(R.id.commits)
+                .atPositionOnView(0, R.id.author)
+        )
+            .check(matches(withText("Author: Test author")))
+        onView(
+            withRecyclerView(R.id.commits)
+                .atPositionOnView(0, R.id.message)
+        )
+            .check(matches(withText("Test commit message")))
     }
 }
