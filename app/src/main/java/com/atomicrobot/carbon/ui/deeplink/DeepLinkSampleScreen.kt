@@ -25,5 +25,3 @@ fun DeepLinkSampleScreen(textColor: Int = Color.BLACK, textSize: Float = 30f) {
         )
     }
 }
-
-

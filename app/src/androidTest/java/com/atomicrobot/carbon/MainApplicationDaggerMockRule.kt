@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon
 
-import com.atomicrobot.carbon.TestUtils.getAppUnderTest
 import com.atomicrobot.carbon.app.AppModule
 import com.atomicrobot.carbon.app.VariantModule
 import com.atomicrobot.carbon.data.DataModule

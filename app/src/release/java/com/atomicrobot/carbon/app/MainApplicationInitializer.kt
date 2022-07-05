@@ -7,7 +7,8 @@ import javax.inject.Inject
 /**
  * Specific to the production variant.
  */
-class MainApplicationInitializer @Inject constructor(application: Application) : BaseApplicationInitializer(application, NoOpTree()) {
+class MainApplicationInitializer @Inject constructor(application: Application) :
+    BaseApplicationInitializer(application, NoOpTree()) {
 
     override fun initialize() {
         super.initialize()

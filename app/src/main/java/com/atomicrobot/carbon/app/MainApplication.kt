@@ -14,5 +14,4 @@ class MainApplication : CoreApplication() {
     }
 
     override fun isTesting() = false
-
 }

@@ -22,7 +22,6 @@ import java.io.File
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
-
 @Qualifier
 annotation class BaseUrl
 
@@ -89,8 +88,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideDeepLinkInteractor(
-    ): DeepLinkInteractor {
+    fun provideDeepLinkInteractor(): DeepLinkInteractor {
         return DeepLinkInteractor()
     }
 

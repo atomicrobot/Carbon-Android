@@ -19,7 +19,7 @@ fun TransparentTextField(
     modifier: Modifier = Modifier,
     value: String = stringResource(id = R.string.txtField_placeholder),
     labelResId: Int = R.string.label_placeholder,
-    onValueChanged: (String) -> Unit = {_ ->}
+    onValueChanged: (String) -> Unit = { _ -> }
 ) {
     TextField(
         value = value,

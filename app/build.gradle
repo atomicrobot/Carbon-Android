@@ -5,24 +5,21 @@ buildscript {
     }
 }
 
-repositories {
+plugins {
+    id "com.android.application"
+    id "org.jlleitschuh.gradle.ktlint"
 
+    id "kotlin-android"
+    id "kotlin-kapt"
+    id "kotlin-allopen"
+    id "kotlin-parcelize"
+
+    id "dagger.hilt.android.plugin"
+
+    id "com.google.firebase.crashlytics"
+
+    id "jacoco"
 }
-
-apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-allopen'
-apply plugin: 'kotlin-parcelize'
-
-apply plugin: 'dagger.hilt.android.plugin'
-
-apply plugin: 'com.google.firebase.crashlytics'
-
-apply plugin: 'pmd'
-apply plugin: 'checkstyle'
-apply plugin: 'jacoco'
 
 android {
     compileOptions {
@@ -99,12 +96,6 @@ android {
             shrinkResources true
             signingConfig signingConfigs.release
         }
-    }
-
-    lintOptions {
-        abortOnError true
-        htmlReport true
-        lintConfig file('lint.xml')
     }
 
     buildFeatures {
@@ -268,34 +259,6 @@ dependencies {
     androidTestImplementation "com.github.fabioCollini:DaggerMock:$daggerMockVersion"
 }
 
-
-task pmd(type: Pmd, dependsOn: "assembleDebug") {
-    ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
-    ruleSets = []
-    // See http://sourceforge.net/p/pmd/discussion/188193/thread/6e9c6017/ for why this is needed...
-    source = fileTree('src/main/java/')
-    exclude '**/gen/**'
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
-task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
-    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**', '**/test/**', '**/androidTest/**'
-    reports {
-        xml.enabled false
-        html.enabled true
-    }
-    classpath = files(file("${project.rootDir}/app/build/intermediates/classes"))
-    configProperties = [
-            'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
-    ]
-}
-
 jacoco {
     toolVersion = rootProject.ext.jacoco_version
 }
@@ -358,5 +321,27 @@ allOpen {
     annotation('dagger.Module')
     annotation("com.atomicrobot.carbon.Mockable")
 }
-
 apply plugin: 'com.google.gms.google-services'
+
+ktlint {
+    debug = true
+    verbose = true
+    android = true
+    outputToConsole = true
+    outputColorName = "RED"
+    additionalEditorconfigFile = file("/some/additional/.editorconfig")
+    disabledRules = ["final-newline"]
+    baseline = file("my-project-ktlint-baseline.xml")
+    reporters {
+        reporter "plain"
+        reporter "checkstyle"
+        reporter "sarif"
+    }
+    kotlinScriptAdditionalPaths {
+        include fileTree("scripts/")
+    }
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
+}

@@ -19,7 +19,7 @@ fun SplashScreen(navigate: () -> Unit) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(if(isSystemInDarkTheme()) Purple700 else Color.White),
+            .background(if (isSystemInDarkTheme()) Purple700 else Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

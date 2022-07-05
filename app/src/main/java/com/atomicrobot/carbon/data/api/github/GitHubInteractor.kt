@@ -11,8 +11,9 @@ import timber.log.Timber
 
 @Mockable
 class GitHubInteractor(
-        private val context: Context,
-        private val api: GitHubApiService) {
+    private val context: Context,
+    private val api: GitHubApiService
+) {
 
     class LoadCommitsRequest(val user: String, val repository: String)
     class LoadCommitsResponse(val request: LoadCommitsRequest, val commits: List<Commit>)

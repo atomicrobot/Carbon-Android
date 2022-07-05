@@ -7,7 +7,7 @@ import timber.log.Timber
 import java.lang.NumberFormatException
 import javax.inject.Inject
 
-class DeepLinkInteractor @Inject constructor(){
+class DeepLinkInteractor @Inject constructor() {
     private var deepLinkUri: Uri? = null
     private var deepLinkPath: String? = null
 
@@ -21,7 +21,7 @@ class DeepLinkInteractor @Inject constructor(){
 
     fun getDeepLinkNavDestination(): String {
         deepLinkPath?.let { path ->
-            when(path) {
+            when (path) {
                 "/carbon-android" -> {
                     Timber.d("default deep link received")
                     return StartActivity.mainPage
@@ -43,10 +43,10 @@ class DeepLinkInteractor @Inject constructor(){
         var color = Color.BLACK
         deepLinkUri?.let { uri ->
             val textColor = uri.getQueryParameter("textColor")
-            if(!textColor.isNullOrEmpty()) {
+            if (!textColor.isNullOrEmpty()) {
                 try {
                     color = Color.parseColor(textColor)
-                } catch(exception: IllegalArgumentException) {
+                } catch (exception: IllegalArgumentException) {
                     Timber.e("Unsupported value for color")
                 }
             }
@@ -59,10 +59,10 @@ class DeepLinkInteractor @Inject constructor(){
         var size = 30f
         deepLinkUri?.let { uri ->
             val textSize = uri.getQueryParameter("textSize")
-            if(!textSize.isNullOrEmpty()) {
+            if (!textSize.isNullOrEmpty()) {
                 try {
                     size = textSize.toFloat()
-                } catch(exception: NumberFormatException) {
+                } catch (exception: NumberFormatException) {
                     Timber.e("Unsupported value for size")
                 }
             }

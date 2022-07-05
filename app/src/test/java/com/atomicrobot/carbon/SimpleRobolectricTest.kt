@@ -3,7 +3,6 @@ package com.atomicrobot.carbon
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.atomicrobot.carbon.R
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

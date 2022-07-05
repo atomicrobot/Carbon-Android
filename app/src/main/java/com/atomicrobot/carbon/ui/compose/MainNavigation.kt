@@ -21,16 +21,14 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
 
     NavHost(navController = navController, startDestination = StartActivity.splashPage, modifier = Modifier) {
         composable(StartActivity.splashPage) {
-            SplashScreen(){
+            SplashScreen() {
                 navController.popBackStack()
                 if (isDeepLinkIntent) {
                     navController.navigate(viewModel.getDeepLinkNavDestination())
-                }
-                else {
+                } else {
                     navController.navigate(StartActivity.mainPage)
                 }
             }
-
         }
         composable(StartActivity.mainPage) { MainScreen(mainViewModel) }
         composable(StartActivity.deepLinkPath1) {

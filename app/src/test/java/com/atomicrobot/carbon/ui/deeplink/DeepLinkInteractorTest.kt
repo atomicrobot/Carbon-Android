@@ -32,7 +32,9 @@ class DeepLinkInteractorTest {
 
     @Test
     fun testDeepLinkPathTextColor() {
-        interactor.setDeepLinkUri(Uri.parse("https://www.atomicrobot.com/carbon-android/path1?textColor=blue"))
+        interactor.setDeepLinkUri(
+            Uri.parse("https://www.atomicrobot.com/carbon-android/path1?textColor=blue")
+        )
 
         val resourceColor = interactor.getDeepLinkTextColor()
         assertTrue(resourceColor == Color.BLUE)
@@ -40,7 +42,9 @@ class DeepLinkInteractorTest {
 
     @Test
     fun testDeepLinkPathTextSize() {
-        interactor.setDeepLinkUri(Uri.parse("https://www.atomicrobot.com/carbon-android/path1?textSize=22"))
+        interactor.setDeepLinkUri(
+            Uri.parse("https://www.atomicrobot.com/carbon-android/path1?textSize=22")
+        )
 
         val resourceSize = interactor.getDeepLinkTextSize()
         assertTrue(resourceSize == 22f)
@@ -49,7 +53,11 @@ class DeepLinkInteractorTest {
     @Test
     fun testDeepLinkPathTextColorTextSize() {
         // Passing in bad data, function should use default values
-        interactor.setDeepLinkUri(Uri.parse("https://www.atomicrobot.com/carbon-android/path1?textColor=razzle&textSize=22L"))
+        interactor.setDeepLinkUri(
+            Uri.parse(
+                "https://www.atomicrobot.com/carbon-android/path1?textColor=razzle&textSize=22L"
+            )
+        )
         interactor.setDeepLinkPath("/carbon-android/path1")
 
         val navResource = interactor.getDeepLinkNavDestination()

@@ -14,8 +14,8 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val app: Application,
     private val deepLinkInteractor: DeepLinkInteractor
-)
- : BaseViewModel(app) {
+) :
+ BaseViewModel(app) {
 
     sealed class ViewNavigation {
         object None : ViewNavigation()
@@ -49,8 +49,7 @@ class SplashViewModel @Inject constructor(
         return deepLinkInteractor.getDeepLinkTextSize()
     }
 
-
     companion object {
-        private const val STATE_KEY = "SplashViewModelState"  // NON-NLS
+        private const val STATE_KEY = "SplashViewModelState" // NON-NLS
     }
 }
