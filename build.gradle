@@ -1,10 +1,4 @@
 buildscript {
-    ext {
-        compose_version = "1.1.1"
-        compose_act_version = "1.4.0"
-        compose_vm_version = "2.4.1"
-        compose_foundation_version = "1.2.0-beta02"
-    }
     ext.android_plugin_version = "7.2.1"
     ext.kotlin_version = "1.6.10"
     ext.jacoco_version = "0.8.6"
@@ -100,49 +94,49 @@ ext {
     compileSdkVersion = 32
 }
 
-evaluationDependsOnChildren()
+//evaluationDependsOnChildren()
 
-task initialCleanup() {
-    def cleanTasks = getProjectTask(this, "clean")
-    def uninstallTasks = getProjectTask(this, "uninstallAll")
+//task initialCleanup() {
+//    def cleanTasks = getProjectTask(this, "clean")
+//    def uninstallTasks = getProjectTask(this, "uninstallAll")
+//
+//    dependsOn cleanTasks
+//    dependsOn uninstallTasks
+//}
 
-    dependsOn cleanTasks
-    dependsOn uninstallTasks
-}
+//task testing() {
+//    def appProject = subprojects.find { project -> "app" == project.name }
+//
+//    def unitTestTasks = getProjectTask(appProject, "testDevDebugUnitTest")
+//    def integrationTestTasks = getProjectTask(appProject, "jacocoTestReport")
+//
+//    dependsOn unitTestTasks
+//    dependsOn integrationTestTasks
+//
+//    integrationTestTasks.each { task -> task.mustRunAfter unitTestTasks }
+//}
 
-task testing() {
-    def appProject = subprojects.find { project -> "app" == project.name }
+//task release() {
+//    def appProject = subprojects.find { project -> "app" == project.name }
+//
+//    def appTasks = getProjectTask(appProject, "assemble")
+//
+//    dependsOn appTasks
+//}
 
-    def unitTestTasks = getProjectTask(appProject, "testDevDebugUnitTest")
-    def integrationTestTasks = getProjectTask(appProject, "jacocoTestReport")
+//static def getProjectTask(project, taskName) {
+//    def tasks = project.getTasksByName(taskName, true)
+//    if (tasks == null || tasks.empty) {
+//        throw new IllegalArgumentException("Task " + taskName + " not found")
+//    }
+//    return tasks
+//}
 
-    dependsOn unitTestTasks
-    dependsOn integrationTestTasks
-
-    integrationTestTasks.each { task -> task.mustRunAfter unitTestTasks }
-}
-
-task release() {
-    def appProject = subprojects.find { project -> "app" == project.name }
-
-    def appTasks = getProjectTask(appProject, "assemble")
-
-    dependsOn appTasks
-}
-
-static def getProjectTask(project, taskName) {
-    def tasks = project.getTasksByName(taskName, true)
-    if (tasks == null || tasks.empty) {
-        throw new IllegalArgumentException("Task " + taskName + " not found")
-    }
-    return tasks
-}
-
-task continuousIntegration() {
-    dependsOn initialCleanup
-    dependsOn testing
-    dependsOn release
-
-    // InitialCleanup first, then testing, then release
-    release.mustRunAfter testing
-}
+//task continuousIntegration() {
+//    dependsOn initialCleanup
+//    dependsOn testing
+//    dependsOn release
+//
+//    // InitialCleanup first, then testing, then release
+//    release.mustRunAfter testing
+//}
