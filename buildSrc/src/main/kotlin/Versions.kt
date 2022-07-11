@@ -1,3 +1,6 @@
+const val kotlinVersion = "1.6.10"
+const val android_plugin_version = "7.2.1"
+
 object Versions {
     //Dependency Versions
     const val appCompatVersion = "1.4.1"
@@ -18,7 +21,6 @@ object Versions {
     const val recyclerViewVersion = "1.2.1"
     const val supportVersion = "1.0.0"
     const val timberVersion = "5.0.1"
-
 }
 
 object TestVersions {
@@ -35,5 +37,5 @@ object TestVersions {
 
 object Carbon{
     const val firebase_bom_version = "28.0.0"
-
+    const val kotlin_version = "1.6.10"
 }

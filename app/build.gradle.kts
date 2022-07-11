@@ -24,9 +24,16 @@ val minSdkVersion = 21
 val targetSdkVersion = 32
 val compileSdkVersion = 32
 //TODO placeholder values
+//var versionCode : Int
+//if(project.hasProperty("buildNumber")){
+//    versionCode = Integer.parseInt(buildNumber)
+//}
+//else{
+//    versionCode = 1
+//}
 val versionCode = 1
-val versionFingerprint = "DEV"
-val versionName = "1.0"
+val versionFingerprint = "\"DEV\""
+val versionName = "$appVersion b${versionCode}"
 
 android {
 //    compileOptions {
@@ -50,8 +57,8 @@ android {
 
         versionCode = versionCode
 
-//        buildConfigField("String", "VERSION_FINGERPRINT", versionFingerprint)
-//        buildConfigField("String", "VERSION_NAME", "One")
+        buildConfigField("String", "VERSION_FINGERPRINT", versionFingerprint)
+//        buildConfigField("String", "VERSION_NAME", "$versionName")
 
 //        proguardFile getDefaultProguardFile("proguard-android.txt")
 //        proguardFile ("proguard-rules.pro")
