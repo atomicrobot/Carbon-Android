@@ -8,8 +8,8 @@ import retrofit2.http.Path
 
 interface GitHubApiService {
     @GET("repos/{user}/{repository}/commits")
-    fun listCommits(
+    suspend fun listCommits(
         @Path("user") user: String,
         @Path("repository") repository: String
-    ): Single<Response<List<Commit>>>
+    ): Response<List<Commit>>
 }

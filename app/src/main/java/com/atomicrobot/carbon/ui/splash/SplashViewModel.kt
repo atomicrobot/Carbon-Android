@@ -1,18 +1,16 @@
 package com.atomicrobot.carbon.ui.splash
 
-import android.app.Application
 import android.net.Uri
+import androidx.lifecycle.ViewModel
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
-import com.atomicrobot.carbon.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(
-    private val app: Application,
     private val deepLinkInteractor: DeepLinkInteractor
-) : BaseViewModel(app) {
+) : ViewModel() {
     sealed class ViewNavigation {
         object None : ViewNavigation()
         object FirstTime : ViewNavigation()
@@ -22,7 +20,7 @@ class SplashViewModel @Inject constructor(
     val navigationEvent: StateFlow<ViewNavigation>
         get() = _navigationEvent
 
-    override fun setupViewModel() {
+    fun navigateFirstTime() {
         _navigationEvent.update { ViewNavigation.FirstTime }
     }
 

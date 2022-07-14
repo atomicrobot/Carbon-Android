@@ -79,7 +79,6 @@ class DataModule {
 
         viewModel {
             SplashViewModel(
-                app = androidApplication(),
                 deepLinkInteractor = get()
             )
         }

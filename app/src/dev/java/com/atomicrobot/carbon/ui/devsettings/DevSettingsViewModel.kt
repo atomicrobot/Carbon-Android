@@ -1,16 +1,15 @@
 package com.atomicrobot.carbon.ui.devsettings
 
 import android.app.Application
+import androidx.lifecycle.ViewModel
 import com.atomicrobot.carbon.app.Settings
-import com.atomicrobot.carbon.ui.BaseViewModel
 
 class DevSettingsViewModel(
     private val app: Application,
     private val settings: Settings
-) :
-    BaseViewModel(app) {
+) : ViewModel() {
 
-    override fun setupViewModel() {
+    fun setupViewModel() {
         baseUrl = settings.baseUrl
         trustAllSSL = settings.trustAllSSL
     }

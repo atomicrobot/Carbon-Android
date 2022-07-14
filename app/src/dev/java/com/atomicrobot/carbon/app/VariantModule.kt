@@ -14,12 +14,12 @@ val variantModule = module {
         ) as OkHttpSecurityModifier // Cast is needed - compiler lies
     }
 
-    viewModel {
-        DevSettingsViewModel(
-            app = androidApplication(),
-            settings = get()
-        )
-    }
+//    viewModel {
+//        DevSettingsViewModel(
+//            app = androidApplication(),
+//            settings = get()
+//        )
+//    }
 }
 
 class DevSecurityModifier(val settings: Settings) : OkHttpSecurityModifier {

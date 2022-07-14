@@ -33,14 +33,12 @@ fun SplashScreen(navigate: () -> Unit) {
         )
     }
 
-    if (!viewModel.viewModelInitialized) {
-        viewModel.initializeViewModel()
-    }
-
     if (navigationEvent == SplashViewModel.ViewNavigation.FirstTime) {
         LaunchedEffect(true) {
             delay(1000) // This is here to show the splash screen for a moment
             navigate()
         }
+    } else {
+        viewModel.navigateFirstTime()
     }
 }
