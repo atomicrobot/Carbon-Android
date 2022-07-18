@@ -18,15 +18,6 @@ import com.atomicrobot.carbon.R
 
 @Preview
 @Composable
-fun TopBar(modifier: Modifier = Modifier) {
-    TopAppBar(
-        modifier = modifier,
-        title = { Text(text = BuildConfig.APPLICATION_ID) }
-    )
-}
-
-@Preview
-@Composable
 fun BottomBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier

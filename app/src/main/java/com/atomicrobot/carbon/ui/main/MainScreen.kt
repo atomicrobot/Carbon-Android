@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -17,15 +19,15 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.navigation.TopBar
 import com.atomicrobot.carbon.ui.components.BottomBar
 import com.atomicrobot.carbon.ui.components.CustomSnackbar
-import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.components.TransparentTextField
 import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MainScreen() {
+fun MainScreen(openDrawer: () -> Unit) {
     val viewModel: MainViewModel = getViewModel()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val screenState by viewModel.uiState.collectAsState()
@@ -34,18 +36,30 @@ fun MainScreen() {
         viewModel.fetchCommits()
     }
 
-    MainContent(
-        username = screenState.username,
-        repository = screenState.repository,
-        commitsState = screenState.commitsState,
-        scaffoldState = scaffoldState,
-        onUserInputChanged = { username, repository ->
-            viewModel.updateUserInput(username, repository)
-        },
-        onUserSelectedFetchCommits = {
-            viewModel.fetchCommits()
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopBar(
+            title = "Home",
+            buttonIcon = Icons.Filled.Menu,
+            onButtonClicked = { openDrawer() }
+        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            MainContent(
+                username = screenState.username,
+                repository = screenState.repository,
+                commitsState = screenState.commitsState,
+                scaffoldState = scaffoldState,
+                onUserInputChanged = { username, repository ->
+                    viewModel.updateUserInput(username, repository)
+                },
+                onUserSelectedFetchCommits = {
+                    viewModel.fetchCommits()
+                }
+            )
         }
-    )
+    }
 }
 
 @Preview(name = "Main Screen")
@@ -63,7 +77,6 @@ fun MainContent(
             .fillMaxSize()
             .imePadding(),
         scaffoldState = scaffoldState,
-        topBar = { TopBar() },
         bottomBar = { BottomBar() },
         snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) }
     ) { padding -> /* Must use padding arg otherwise causes compiler issue */
