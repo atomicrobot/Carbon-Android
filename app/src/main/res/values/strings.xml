@@ -20,4 +20,10 @@
 
     <string name="title_activity_compose_start">ComposeStartActivity</string>
     <string name="title_activity_delete_me">DeleteMeActivity</string>
+
+    <string name="notifications_update_settings">Update Notifications Settings</string>
+    <string name="notifications_not_enabled_description">To receive notifications, update your notifications settings.</string>
+    <string name="notifications_pre_ask_allow_notifications">Allow Notifications</string>
+    <string name="notifications_pre_ask_maybe_later">Maybe Later</string>
+    <string name="notifications_pre_ask_description">My App would like to send you notificatons.</string>
 </resources>

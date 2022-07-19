@@ -2,6 +2,7 @@ package com.atomicrobot.carbon.ui.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,6 +11,7 @@ import com.atomicrobot.carbon.StartActivity
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.main.MainViewModel
+import com.atomicrobot.carbon.ui.permissions.NotificationsPermissionsScreen
 import com.atomicrobot.carbon.ui.splash.SplashScreen
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 
@@ -30,7 +32,13 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
                 if (isDeepLinkIntent) {
                     navController.navigate(viewModel.getDeepLinkNavDestination())
                 } else {
-                    navController.navigate(StartActivity.mainPage)
+                    if ( NotificationManagerCompat.from(mainViewModel.getApplication()).areNotificationsEnabled() ) {
+                        navController.navigate(StartActivity.mainPage)
+                    } else {
+                        navController.navigate(StartActivity.notificationsPermissions){
+                            navController.navigate(StartActivity.mainPage)
+                        }
+                    }
                 }
             }
         }
@@ -39,6 +47,21 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
             val textColor = viewModel.getDeepLinkTextColor()
             val textSize = viewModel.getDeepLinkTextSize()
             DeepLinkSampleScreen(textColor, textSize)
+        }
+        composable(StartActivity.notificationsPermissions) {
+            NotificationsPermissionsScreen(
+                onPermissionGranted = {
+                    navController.popBackStack()
+                    navController.navigate(StartActivity.mainPage)
+                },
+                onPermissionDenied = {
+                    navController.popBackStack()
+                    navController.navigate(StartActivity.mainPage)
+                },
+                onPermissionDelayed = {
+                    navController.popBackStack()
+                    navController.navigate(StartActivity.mainPage)
+                })
         }
     }
 }

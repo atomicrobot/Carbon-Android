@@ -48,5 +48,6 @@ class StartActivity : AppCompatActivity() {
         const val mainPage = "mainScreen"
         const val splashPage = "splashScreen"
         const val deepLinkPath1 = "deepLinkPath1"
+        const val notificationsPermissions = "notificationsPermissions"
     }
 }
