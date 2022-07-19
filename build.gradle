@@ -95,7 +95,7 @@ ext {
     versionName = "$appVersion b$versionCode"
 
     // Build settings that are likely to be reused across different modules
-    minSdkVersion = 21
+    minSdkVersion = 29
     targetSdkVersion = 33
     compileSdkVersion = 33
 }
