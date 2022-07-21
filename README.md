@@ -68,6 +68,11 @@ app/build/reports/coverage/dev/debug/ => quality/coverage
 - "Unit Tests" with a start page of `quality/tests/index.html`
 - "Integration Tests" with a start page of `quality/integrationTests/index.html`
 
+### Supported Android Versions
+The Carbon app will only support those Android versions that Google Security continues to support: https://endoflife.date/android
+
+As of July 15, 2022, the latest Android version that's supported is Android 10. Therefore the minSDK is set to 29
+
 License
 =======
 
