@@ -113,7 +113,7 @@ android {
         dataBinding = true
         compose = true
     }
-//
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.1.1"
     }
