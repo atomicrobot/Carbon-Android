@@ -55,6 +55,8 @@ android {
         versionName = "\"$appVersion b$version\""
 
         buildConfigField("String", "VERSION_FINGERPRINT", versionFingerprint)
+        /*versionName requires null check while versionFingerprint does not, not sure why this is
+        the behavior if someone knows what's up here or wants something to investigate*/
         buildConfigField("String", "VERSION_NAME", versionName!!)
 
         proguardFiles("proguard-android.txt", "proguard-rules.pro")
