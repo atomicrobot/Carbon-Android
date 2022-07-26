@@ -205,8 +205,7 @@ dependencies {
     // Android/Google libraries
     implementation("androidx.core:core-ktx:$coreVersion")
     implementation(
-        "androidx.constraintlayout:constraintlayout:" +
-            "$constraintLayoutVersion"
+        "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     )
     implementation("androidx.appcompat:appcompat:$appCompatVersion")
     implementation("androidx.fragment:fragment-ktx:$appCompatVersion")
@@ -216,19 +215,16 @@ dependencies {
     implementation("com.google.android.material:material:$materialVersion")
 
     implementation(
-        "com.google.android.gms:play-services-base:" +
-            "$playServicesVersion"
+        "com.google.android.gms:play-services-base:$playServicesVersion"
     )
 
     implementation(
-        "androidx.lifecycle:lifecycle-runtime-ktx:" +
-            "$lifecycleRuntimeVersion"
+        "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeVersion"
     )
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
     implementation(
-        "androidx.lifecycle:lifecycle-viewmodel-ktx:" +
-            "$lifecycleRuntimeVersion"
+        "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleRuntimeVersion"
     )
 
     // Integration with activities
@@ -241,18 +237,15 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     // Integration with ViewModels
     implementation(
-        "androidx.lifecycle:lifecycle-viewmodel-compose:" +
-            "$composeVmVersion"
+        "androidx.lifecycle:lifecycle-viewmodel-compose:$composeVmVersion"
     )
     // UI Tests
     androidTestImplementation(
-        "androidx.compose.ui:ui-test-junit4:" +
-            "$composeVersion"
+        "androidx.compose.ui:ui-test-junit4:$composeVersion"
     )
 
     implementation(
-        "androidx.compose.foundation:foundation:" +
-            "$composeFoundationVersion"
+        "androidx.compose.foundation:foundation:$composeFoundationVersion"
     )
 
     // App architecture - Dagger core
@@ -268,8 +261,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
     androidTestImplementation(
-        "com.google.dagger:hilt-android-testing:" +
-            "$hiltVersion"
+        "com.google.dagger:hilt-android-testing:$hiltVersion"
     )
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
 
@@ -279,14 +271,12 @@ dependencies {
 
     // Navigation
     implementation(
-        "android.arch.navigation:navigation-fragment-ktx:" +
-            "$navigationVersion"
+        "android.arch.navigation:navigation-fragment-ktx:$navigationVersion"
     )
     implementation("android.arch.navigation:navigation-ui-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation(
-        "androidx.hilt:hilt-navigation-compose:" +
-            "$composeHiltNavigationVersion"
+        "androidx.hilt:hilt-navigation-compose:$composeHiltNavigationVersion"
     )
 
     // Networking - HTTP
@@ -302,8 +292,7 @@ dependencies {
 
     // Monitoring - Leak Canary
     debugImplementation(
-        "com.squareup.leakcanary:leakcanary-android:" +
-            "$leakCanaryVersion"
+        "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     )
 
     // Unit test
@@ -322,22 +311,18 @@ dependencies {
     androidTestImplementation("androidx.test:core:$androidTestSupportVersion")
     androidTestImplementation("androidx.test.ext:junit:$junitTestVersion")
     androidTestImplementation(
-        "androidx.test.espresso:espresso-core:" +
-            "$espressoVersion"
+        "androidx.test.espresso:espresso-core:$espressoVersion"
     )
     androidTestImplementation(
-        "androidx.test.espresso:espresso-contrib:" +
-            "$espressoVersion"
+        "androidx.test.espresso:espresso-contrib:$espressoVersion"
     )
 
     androidTestImplementation("org.mockito:mockito-android:$mockitoVersion")
     androidTestImplementation(
-        "com.nhaarman:mockito-kotlin-kt1.1:" +
-            "$mockitoKotlinVersion"
+        "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
     )
     androidTestImplementation(
-        "com.github.fabioCollini:DaggerMock:" +
-            "$daggerMockVersion"
+        "com.github.fabioCollini:DaggerMock:$daggerMockVersion"
     )
 }
 
