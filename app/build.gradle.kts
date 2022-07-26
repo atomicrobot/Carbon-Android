@@ -25,13 +25,15 @@ val minSdkVersion = 21
 val targetSdkVersion = 32
 val compileSdkVersion = 32
 var versionCode = 1
-if(project.hasProperty("buildNumber")) {
+if (project.hasProperty("buildNumber")) {
     val buildNumber = Integer.parseInt(project.property("buildNumber").toString())
     versionCode = buildNumber
 }
 val version = versionCode
-val versionFingerprint =
-    if (project.hasProperty("fingerprint")) "\"" + project.property("fingerprint").toString() + "\"" else "\"DEV\""
+var versionFingerprint = "\"DEV\""
+if (project.hasProperty("fingerprint")) {
+    versionFingerprint = "\"" + project.property("fingerprint").toString() + "\""
+}
 
 android {
     compileOptions {
@@ -44,7 +46,7 @@ android {
     }
 
     defaultConfig {
-        applicationId= "com.atomicrobot.carbon"
+        applicationId = "com.atomicrobot.carbon"
 
         minSdk = minSdkVersion
         targetSdk = targetSdkVersion
@@ -61,7 +63,6 @@ android {
 
         proguardFiles("proguard-android.txt", "proguard-rules.pro")
         testInstrumentationRunner = "com.atomicrobot.carbon.CustomAppTestRunner"
-
     }
 
     signingConfigs {
@@ -84,7 +85,6 @@ android {
         }
     }
 
-
     flavorDimensions("app")
     productFlavors {
         create("dev") {
@@ -98,9 +98,9 @@ android {
     }
     buildTypes {
         getByName("debug") {
-           isMinifyEnabled = false
-           isShrinkResources = false
-           isTestCoverageEnabled = true
+            isMinifyEnabled = false
+            isShrinkResources = false
+            isTestCoverageEnabled = true
         }
 
         getByName("release") {
@@ -138,7 +138,6 @@ kapt {
     correctErrorTypes = true
     generateStubs = true
 }
-
 
 // App dependency versions
 val appCompatVersion = "1.4.1"
@@ -181,118 +180,165 @@ val hiltVersion = "2.40.1"
 val navigationVersion = "1.0.0"
 val jacocoVersion = "0.8.6"
 
-
-
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:${firebaseBomVersion}"))
-    implementation ("com.google.firebase:firebase-analytics-ktx")
+    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Add the Firebase Crashlytics SDK.
-    implementation ("com.google.firebase:firebase-crashlytics:$rootProject.ext.firebase_crashlytics_version")
+    implementation(
+        "com.google.firebase:firebase-crashlytics:" +
+            "$rootProject.ext.firebase_crashlytics_version"
+    )
 
     // Recommended: Add the Google Analytics SDK.
-    implementation ("com.google.firebase:firebase-analytics:$rootProject.ext.firebase_analytics_version")
+    implementation(
+        "com.google.firebase:firebase-analytics:" +
+            "$rootProject.ext.firebase_analytics_version"
+    )
 
-    implementation ("org.jacoco:org.jacoco.core:$jacocoVersion")
-    implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
-    implementation ("androidx.test.ext:junit-ktx:1.1.3")
+    implementation("org.jacoco:org.jacoco.core:$jacocoVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
+    implementation("androidx.test.ext:junit-ktx:1.1.3")
 //    kapt ("androidx.databinding:databinding-compiler:$rootProject.ext.android_plugin_version")
     // Need this because of Kotlin
 
     // Android/Google libraries
-    implementation ("androidx.core:core-ktx:$coreVersion")
-    implementation ("androidx.constraintlayout:constraintlayout:$constraintLayoutVersion")
-    implementation ("androidx.appcompat:appcompat:$appCompatVersion")
-    implementation ("androidx.fragment:fragment-ktx:$appCompatVersion")
-    implementation ("androidx.recyclerview:recyclerview:$recyclerViewVersion")
-    implementation ("androidx.cardview:cardview:$supportVersion")
-    implementation ("androidx.annotation:annotation:$supportVersion")
-    implementation ("com.google.android.material:material:$materialVersion")
+    implementation("androidx.core:core-ktx:$coreVersion")
+    implementation(
+        "androidx.constraintlayout:constraintlayout:" +
+            "$constraintLayoutVersion"
+    )
+    implementation("androidx.appcompat:appcompat:$appCompatVersion")
+    implementation("androidx.fragment:fragment-ktx:$appCompatVersion")
+    implementation("androidx.recyclerview:recyclerview:$recyclerViewVersion")
+    implementation("androidx.cardview:cardview:$supportVersion")
+    implementation("androidx.annotation:annotation:$supportVersion")
+    implementation("com.google.android.material:material:$materialVersion")
 
-    implementation ("com.google.android.gms:play-services-base:$playServicesVersion")
+    implementation(
+        "com.google.android.gms:play-services-base:" +
+            "$playServicesVersion"
+    )
 
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeVersion")
-    implementation ("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
-    implementation ("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleRuntimeVersion")
+    implementation(
+        "androidx.lifecycle:lifecycle-runtime-ktx:" +
+            "$lifecycleRuntimeVersion"
+    )
+    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
+    implementation(
+        "androidx.lifecycle:lifecycle-viewmodel-ktx:" +
+            "$lifecycleRuntimeVersion"
+    )
 
     // Integration with activities
-    implementation ("androidx.activity:activity-compose:$composeActVersion")
+    implementation("androidx.activity:activity-compose:$composeActVersion")
     // Compose Material Design
-    implementation ("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material:material:$composeVersion")
     // Animations
-    implementation ("androidx.compose.animation:animation:$composeVersion")
+    implementation("androidx.compose.animation:animation:$composeVersion")
     // Tooling support (Previews, etc.)
-    implementation ("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     // Integration with ViewModels
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:$composeVmVersion")
+    implementation(
+        "androidx.lifecycle:lifecycle-viewmodel-compose:" +
+            "$composeVmVersion"
+    )
     // UI Tests
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    androidTestImplementation(
+        "androidx.compose.ui:ui-test-junit4:" +
+            "$composeVersion"
+    )
 
-    implementation ("androidx.compose.foundation:foundation:$composeFoundationVersion")
+    implementation(
+        "androidx.compose.foundation:foundation:" +
+            "$composeFoundationVersion"
+    )
 
-    //App architecture - Dagger core
+    // App architecture - Dagger core
     implementation("com.google.dagger:dagger:$hiltVersion")
     kapt("com.google.dagger:dagger-compiler:$hiltVersion")
 
-    //Dagger -android
+    // Dagger -android
     api("com.google.dagger:dagger-android:$hiltVersion")
     api("com.google.dagger:dagger-android-support:$hiltVersion")
     kapt("com.google.dagger:dagger-android-processor:$hiltVersion")
 
     // App architecture - Hilt
-    implementation ("com.google.dagger:hilt-android:$hiltVersion")
-    kapt ("com.google.dagger:hilt-android-compiler:$hiltVersion")
-    androidTestImplementation ("com.google.dagger:hilt-android-testing:$hiltVersion")
-    kaptAndroidTest ("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    androidTestImplementation(
+        "com.google.dagger:hilt-android-testing:" +
+            "$hiltVersion"
+    )
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
 
     // JSON
-    implementation ("com.squareup.moshi:moshi-kotlin:$moshiVersion")
-    kapt ("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
+    implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 
     // Navigation
-    implementation ("android.arch.navigation:navigation-fragment-ktx:$navigationVersion")
-    implementation ("android.arch.navigation:navigation-ui-ktx:$navigationVersion")
+    implementation(
+        "android.arch.navigation:navigation-fragment-ktx:" +
+            "$navigationVersion"
+    )
+    implementation("android.arch.navigation:navigation-ui-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-compose:$navVersion")
-    implementation ("androidx.hilt:hilt-navigation-compose:$composeHiltNavigationVersion")
-
+    implementation(
+        "androidx.hilt:hilt-navigation-compose:" +
+            "$composeHiltNavigationVersion"
+    )
 
     // Networking - HTTP
-    implementation ("com.squareup.okhttp3:okhttp:$okHttpVersion")
-    implementation ("com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion")
+    implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion")
 
     // Networking - REST
-    implementation ("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation ("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
 
     // Monitoring - Timber (logging)
-    implementation ("com.jakewharton.timber:timber:$timberVersion")
+    implementation("com.jakewharton.timber:timber:$timberVersion")
 
     // Monitoring - Leak Canary
-    debugImplementation ("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
+    debugImplementation(
+        "com.squareup.leakcanary:leakcanary-android:" +
+            "$leakCanaryVersion"
+    )
 
     // Unit test
-    testImplementation ("junit:junit:$junitVersion")
-    testImplementation ("androidx.test:rules:$androidTestSupportVersion")
-    testImplementation ("androidx.test:core:$androidTestSupportVersion")
-    testImplementation ("androidx.test.ext:junit:$junitTestVersion")
-    testImplementation ("org.robolectric:robolectric:$robolectricVersion")
-    testImplementation ("org.mockito:mockito-core:$mockitoVersion")
-    testImplementation ("com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion")
-    testImplementation ("com.squareup.okhttp3:mockwebserver:$okHttpVersion")
-
+    testImplementation("junit:junit:$junitVersion")
+    testImplementation("androidx.test:rules:$androidTestSupportVersion")
+    testImplementation("androidx.test:core:$androidTestSupportVersion")
+    testImplementation("androidx.test.ext:junit:$junitTestVersion")
+    testImplementation("org.robolectric:robolectric:$robolectricVersion")
+    testImplementation("org.mockito:mockito-core:$mockitoVersion")
+    testImplementation("com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion")
+    testImplementation("com.squareup.okhttp3:mockwebserver:$okHttpVersion")
 
     // Android JUnit Runner, JUnit Rules, and Espresso
-    androidTestImplementation ("androidx.test:runner:$androidTestSupportVersion")
-    androidTestImplementation ("androidx.test:rules:$androidTestSupportVersion")
-    androidTestImplementation ("androidx.test:core:$androidTestSupportVersion")
-    androidTestImplementation ("androidx.test.ext:junit:$junitTestVersion")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:$espressoVersion")
-    androidTestImplementation ("androidx.test.espresso:espresso-contrib:$espressoVersion")
+    androidTestImplementation("androidx.test:runner:$androidTestSupportVersion")
+    androidTestImplementation("androidx.test:rules:$androidTestSupportVersion")
+    androidTestImplementation("androidx.test:core:$androidTestSupportVersion")
+    androidTestImplementation("androidx.test.ext:junit:$junitTestVersion")
+    androidTestImplementation(
+        "androidx.test.espresso:espresso-core:" +
+            "$espressoVersion"
+    )
+    androidTestImplementation(
+        "androidx.test.espresso:espresso-contrib:" +
+            "$espressoVersion"
+    )
 
-    androidTestImplementation ("org.mockito:mockito-android:$mockitoVersion")
-    androidTestImplementation ("com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion")
-    androidTestImplementation ("com.github.fabioCollini:DaggerMock:$daggerMockVersion")
+    androidTestImplementation("org.mockito:mockito-android:$mockitoVersion")
+    androidTestImplementation(
+        "com.nhaarman:mockito-kotlin-kt1.1:" +
+            "$mockitoKotlinVersion"
+    )
+    androidTestImplementation(
+        "com.github.fabioCollini:DaggerMock:" +
+            "$daggerMockVersion"
+    )
 }
 
 jacoco {
@@ -302,10 +348,9 @@ jacoco {
 tasks.withType<Test> {
     configure<JacocoTaskExtension> {
         isIncludeNoLocationClasses = true
-
     }
 }
-//would not build as a private val
+// would not build as a private val
 val fileFilter = mutableSetOf(
     "**/R.class",
     "**/R\$*.class",
@@ -341,7 +386,10 @@ private val sourceDirectoriesTree = fileTree("${project.buildDir}") {
 }
 private val executionDataTree = fileTree(project.buildDir) {
     include(
-
+        "outputs/code_coverage/**/*.ec",
+        "jacoco/jacocoTestReportDebug.exec",
+        "jacoco/testDebugUnitTest.exec",
+        "jacoco/test.exec"
     )
 }
 fun JacocoReportsContainer.reports() {
@@ -358,7 +406,6 @@ fun JacocoReport.setDirectories() {
     classDirectories.setFrom(classDirectoriesTree)
     executionData.setFrom(executionDataTree)
 }
-
 
 if (tasks.findByName("jacocoTestReport") == null) {
 
@@ -404,8 +451,8 @@ ktlint {
     disabledRules.set(setOf("final-newline"))
     reporters {
         reporter(ReporterType.PLAIN)
-        reporter (ReporterType.CHECKSTYLE)
-        reporter (ReporterType.SARIF)
+        reporter(ReporterType.CHECKSTYLE)
+        reporter(ReporterType.SARIF)
     }
     kotlinScriptAdditionalPaths {
         include(fileTree("scripts/"))
@@ -415,7 +462,6 @@ ktlint {
         include("**/kotlin/**")
     }
 }
-
 
 repositories {
     mavenCentral()
