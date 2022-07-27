@@ -26,7 +26,7 @@ class GitHubInteractorTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
 
         val context = ApplicationProvider.getApplicationContext<Application>()
         interactor = GitHubInteractor(context, api)

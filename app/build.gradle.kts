@@ -247,15 +247,6 @@ dependencies {
         "androidx.compose.foundation:foundation:$composeFoundationVersion"
     )
 
-    // App architecture - Dagger core
-    implementation("com.google.dagger:dagger:$hiltVersion")
-    kapt("com.google.dagger:dagger-compiler:$hiltVersion")
-
-    // Dagger -android
-    api("com.google.dagger:dagger-android:$hiltVersion")
-    api("com.google.dagger:dagger-android-support:$hiltVersion")
-    kapt("com.google.dagger:dagger-android-processor:$hiltVersion")
-
     // App architecture - Hilt
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
