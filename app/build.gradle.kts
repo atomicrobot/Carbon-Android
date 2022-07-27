@@ -21,7 +21,7 @@ plugins {
 }
 
 val appVersion = "1.0"
-val minSdkVersion = 21
+val minSdkVersion = 29
 val targetSdkVersion = 32
 val compileSdkVersion = 32
 var versionCode = 1
@@ -136,7 +136,6 @@ android {
 
 kapt {
     correctErrorTypes = true
-    generateStubs = true
 }
 
 // App dependency versions
@@ -333,6 +332,7 @@ jacoco {
 tasks.withType<Test> {
     configure<JacocoTaskExtension> {
         isIncludeNoLocationClasses = true
+        excludes = mutableListOf("jdk.internal.*")
     }
 }
 // would not build as a private val
