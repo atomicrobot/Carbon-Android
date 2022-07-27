@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> Unit) {
@@ -24,3 +25,6 @@ fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> U
         backgroundColor = MaterialTheme.colors.primaryVariant
     )
 }
+
+@Composable
+fun TopBar(title: String = "") = TopAppBar( title = { Text(text = title) } )

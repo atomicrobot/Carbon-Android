@@ -1,83 +1,125 @@
 package com.atomicrobot.carbon.ui.compose
 
-import androidx.compose.material.DrawerValue
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalDrawer
-import androidx.compose.material.Surface
-import androidx.compose.material.rememberDrawerState
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.atomicrobot.carbon.StartActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.navigation.*
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.*
+import androidx.navigation.compose.navigation
 import com.atomicrobot.carbon.navigation.AppScreens
-import com.atomicrobot.carbon.navigation.Drawer
-import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
+import com.atomicrobot.carbon.navigation.TopBar
+import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.Settings
 import com.atomicrobot.carbon.ui.splash.SplashScreen
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
-import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
+
+private val screens = listOf(
+    AppScreens.Home,
+    AppScreens.Settings,
+)
 
 @Composable
 fun MainNavigation(isDeepLinkIntent: Boolean) {
     val viewModel: SplashViewModel = getViewModel()
     val navController = rememberNavController()
-
-    Surface(color = MaterialTheme.colors.background) {
-        val drawerState = rememberDrawerState(DrawerValue.Closed)
-        val scope = rememberCoroutineScope()
-        val openDrawer = {
-            scope.launch {
-                drawerState.open()
+    Scaffold(
+        topBar =
+        {
+            // Hide the top app bar during splash screen transition
+            if(showAppBar(navController = navController)) {
+                TopBar(appBarTitle(navController = navController))
             }
-        }
-        ModalDrawer(
-            drawerState = drawerState,
-            gesturesEnabled = drawerState.isOpen,
-            drawerContent = {
-                Drawer(
-                    onDestinationClicked = { route ->
-                        scope.launch {
-                            drawerState.close()
-                        }
-                        navController.navigate(route) {
+        },
+        bottomBar =
+        {
+            // Hide the bottom bar during splash screen transition
+            if(showAppBar(navController = navController)) {
+                BottomNavigationBar(
+                    navController = navController,
+                    destinations = screens,
+                    onDestinationClicked = {
+                        navController.navigate(it.route) {
+                            // Make sure the back stack only consists of the current graphs main
+                            // destination
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            // Singular instance of destinations
                             launchSingleTop = true
+                            restoreState = true
                         }
-                    }
-                )
+                    })
             }
+        }
+    ) { innerPadding ->
+        NavHost(modifier = Modifier.padding(innerPadding),
+            navController = navController,
+            startDestination = AppScreens.SplashScreen.graph
         ) {
-            NavHost(
-                navController = navController,
-                startDestination = AppScreens.SplashScreen.route
-            ) {
-                composable(AppScreens.Home.route) {
-                    MainScreen(
-                        openDrawer = {
-                            openDrawer()
-                        }
-                    )
-                }
-                composable(AppScreens.Settings.route) {
-                    Settings(
-                        navController = navController
-                    )
-                }
-                composable(AppScreens.SplashScreen.route) {
-                    SplashScreen {
-                        navController.popBackStack()
-                        if (isDeepLinkIntent) {
-                            navController.navigate(viewModel.getDeepLinkNavDestination())
-                        } else {
-                            navController.navigate(AppScreens.Home.route)
-                        }
-                    }
+            splashGraph(navController, isDeepLinkIntent, viewModel)
+            mainFlowGraph(navController)
+        }
+    }
+}
+
+/*
+ * Nested nav. graph dedicated to displaying Splash related content
+ */
+fun NavGraphBuilder.splashGraph(
+    navController: NavController,
+    isDeepLinkIntent: Boolean,
+    viewModel: SplashViewModel) {
+    navigation(AppScreens.SplashScreen.route, AppScreens.SplashScreen.graph) {
+        composable(AppScreens.SplashScreen.route) {
+            SplashScreen {
+                navController.popBackStack()
+                if (isDeepLinkIntent) {
+                    navController.navigate(viewModel.getDeepLinkNavDestination())
+                } else {
+                    navController.navigate(AppScreens.Home.graph)
                 }
             }
         }
+    }
+}
+
+/**
+ * Nested nav. graph dedicated to displaying 'main' app content.
+ */
+fun NavGraphBuilder.mainFlowGraph(navController: NavHostController) {
+    navigation(startDestination = AppScreens.Home.route, route = AppScreens.Home.graph) {
+        composable(AppScreens.Home.route) {
+            MainScreen()
+        }
+        composable(AppScreens.Settings.route) {
+            Settings()
+        }
+    }
+}
+
+@Composable
+fun currentRoute(navController: NavHostController): String? {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route
+}
+
+@Composable
+fun showAppBar(navController: NavHostController): Boolean {
+    val route = currentRoute(navController = navController)
+    return route != null && route != AppScreens.SplashScreen.route
+}
+
+@Composable
+fun appBarTitle(navController: NavHostController): String {
+    return when(currentRoute(navController = navController)) {
+        AppScreens.SplashScreen.route -> AppScreens.SplashScreen.title
+        AppScreens.Home.route -> AppScreens.Home.title
+        AppScreens.Settings.route -> AppScreens.Settings.title
+        else -> ""
     }
 }

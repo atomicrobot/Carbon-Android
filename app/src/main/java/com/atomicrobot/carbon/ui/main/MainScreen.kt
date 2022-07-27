@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,7 +25,7 @@ import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MainScreen(openDrawer: () -> Unit) {
+fun MainScreen() {
     val viewModel: MainViewModel = getViewModel()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val screenState by viewModel.uiState.collectAsState()
@@ -35,31 +33,18 @@ fun MainScreen(openDrawer: () -> Unit) {
     LaunchedEffect(true) {
         viewModel.fetchCommits()
     }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        TopBar(
-            title = "Home",
-            buttonIcon = Icons.Filled.Menu,
-            onButtonClicked = { openDrawer() }
-        )
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            MainContent(
-                username = screenState.username,
-                repository = screenState.repository,
-                commitsState = screenState.commitsState,
-                scaffoldState = scaffoldState,
-                onUserInputChanged = { username, repository ->
-                    viewModel.updateUserInput(username, repository)
-                },
-                onUserSelectedFetchCommits = {
-                    viewModel.fetchCommits()
-                }
-            )
+    MainContent(
+        username = screenState.username,
+        repository = screenState.repository,
+        commitsState = screenState.commitsState,
+        scaffoldState = scaffoldState,
+        onUserInputChanged = { username, repository ->
+            viewModel.updateUserInput(username, repository)
+        },
+        onUserSelectedFetchCommits = {
+            viewModel.fetchCommits()
         }
-    }
+    )
 }
 
 @Preview(name = "Main Screen")
