@@ -1,103 +1,123 @@
 package com.atomicrobot.carbon.ui.permissions
 
+import android.Manifest
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityOptionsCompat
-import com.atomicrobot.carbon.app.LoadingDelayMs
-import com.atomicrobot.carbon.data.api.github.GitHubInteractor
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationsPermissionsViewModel @Inject constructor(
-    private val app: Application,
+    private val app: Application
 ) : BaseViewModel(app) {
 
-    var inSettings: Boolean = false
-    var returnState: PreAskReturnState = PreAskReturnState.INITIAL
+
+    sealed class UiState {
+        object Unknown : UiState()
+        object Initial : UiState()
+        object Denied : UiState()
+        object Granted: UiState()
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val _uiState = MutableLiveData<UiState>(UiState.Unknown)
+    val uiState: LiveData<UiState>
+        get() = _uiState
+
+    fun setState(state: UiState) {
+        _uiState.value = state
+    }
 
     override fun setupViewModel() {
-        TODO("Not yet implemented")
+
     }
 
-    @Composable
-    fun EnablePermissionButtonClicked() {
 
-        val context = LocalContext.current
-        val intent = Intent()
-
-        intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
-        intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+    fun notificationsPermissionsGranted(): Boolean {
+        return uiState.value != UiState.Denied && uiState.value != UiState.Initial
     }
-}
 
-/**
- * This composable wraps the new ActivityResults API and exposes a results launcher to be consumed
- * by other composables. For example:
- *
- * val permissionsLauncher = registerForActivityResult(
- *     contract = ActivityResultContracts.RequestPermission(),
- *     onResult = { granted ->
- *         // Process result, check rationale, etc.
- *         Toast.makeText(context, "Result: $granted", Toast.LENGTH_LONG).show()
- *     }
- * )
- *
- * permissionsLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
- *
- * @param I The input type
- * @param O The output type
- * @param contract The contract to be fulfilled
- * @param onResult Our callback for when a contract is completed
- * @return The launcher for executing the contract
- */
-@Composable
-fun <I, O> activityResultA(
-    contract: ActivityResultContract<I, O>,
-    onResult: (O) -> Unit
-) : ActivityResultLauncher<I> {
 
-    val activityResultRegistry = (LocalContext.current as ActivityResultRegistryOwner).activityResultRegistry
 
-    val currentOnResult = rememberUpdatedState(onResult)
+//    fun configureState(activity: AppCompatActivity) {
+//        Timber.tag("NotificationsPermissionsViewModel").d("doStartup()")
+//
+//        if ( uiState.value == UiState.Unknown) {
+//            if (NotificationManagerCompat.from(app).areNotificationsEnabled()) {
+//                _uiState.value = UiState.Granted
+//                return
+//            }
+//
+//            var shouldShowNotificationsNotEnabled = true
+//
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+//                shouldShowNotificationsNotEnabled = activity.shouldShowRequestPermissionRationale(
+//                    Manifest.permission.POST_NOTIFICATIONS
+//                )
+//            }
+//
+//            if (shouldShowNotificationsNotEnabled) {
+//                _uiState.value = UiState.Denied
+//            } else {
+//                _uiState.value = UiState.Initial
+//            }
+//        }
+//    }
+//
+//    fun askForPermission(activity: AppCompatActivity): Boolean {
+//        configureState(activity)
+//        Timber.tag("NotificationsPermissionsViewModel").d("Granted: "+(uiState.value != UiState.Granted)+" UiStateUIState: "+uiState.value)
+//        return (uiState.value != UiState.Granted)
+//    }
 
-    val key = rememberSaveable { UUID.randomUUID().toString() }
-
-    // This usage of indirection allows us to immediately return an [ActivityResultLauncher] even
-    // though we don't actually get an instance until calling the register() method
-    val realLauncher = remember { mutableStateOf<ActivityResultLauncher<I>?>(null) }
-
-    val returnedLauncher = remember {
-        object : ActivityResultLauncher<I>() {
-            override fun launch(input: I, options: ActivityOptionsCompat?) {
-                realLauncher.value?.launch(input, options)
+    fun getDescription(): String {
+        when ( uiState.value ) {
+            UiState.Initial -> {
+                return app.getString(R.string.notifications_pre_ask_description)
+            } else -> {
+                return app.getString(R.string.notifications_not_enabled_description)
             }
-
-            override fun unregister() {
-                realLauncher.value?.unregister()
-            }
-
-            override fun getContract() = contract
         }
     }
 
-    // This [DisposableEffect] uses our UUID to make sure that we only register this contract once
-    DisposableEffect(activityResultRegistry, key, contract) {
-        realLauncher.value = activityResultRegistry.register(key, contract) { result ->
-            currentOnResult.value(result)
+    fun getButtonLabel(): String {
+        when ( uiState.value ) {
+            UiState.Initial -> {
+                return app.getString(R.string.notifications_pre_ask_allow_notifications)
+            } else -> {
+                return app.getString(R.string.notifications_update_settings)
+            }
         }
-
-        onDispose { realLauncher.value?.unregister() }
     }
 
-    return returnedLauncher
+    fun getLaterButtonLabel(): String {
+        return app.getString(R.string.notifications_pre_ask_maybe_later)
+    }
+
 }
+
+
+

@@ -1,7 +1,10 @@
 package com.atomicrobot.carbon.ui.compose
 
+import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -12,6 +15,7 @@ import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.main.MainViewModel
 import com.atomicrobot.carbon.ui.permissions.NotificationsPermissionsScreen
+import com.atomicrobot.carbon.ui.permissions.NotificationsPermissionsViewModel
 import com.atomicrobot.carbon.ui.splash.SplashScreen
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 
@@ -19,7 +23,9 @@ import com.atomicrobot.carbon.ui.splash.SplashViewModel
 fun MainNavigation(isDeepLinkIntent: Boolean) {
     val viewModel = hiltViewModel<SplashViewModel>()
     val mainViewModel = hiltViewModel<MainViewModel>()
+    val notificationsPermissionsViewModel = hiltViewModel<NotificationsPermissionsViewModel>()
     val navController = rememberNavController()
+    val activity = LocalContext.current as AppCompatActivity
 
     NavHost(
         navController = navController,
@@ -32,10 +38,11 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
                 if (isDeepLinkIntent) {
                     navController.navigate(viewModel.getDeepLinkNavDestination())
                 } else {
-                    if ( NotificationManagerCompat.from(mainViewModel.getApplication()).areNotificationsEnabled() ) {
+                    if ( notificationsPermissionsViewModel.notificationsPermissionsGranted() ) {
+//                    if (NotificationManagerCompat.from(activity).areNotificationsEnabled()) {
                         navController.navigate(StartActivity.mainPage)
                     } else {
-                        navController.navigate(StartActivity.notificationsPermissions){
+                        navController.navigate(StartActivity.notificationsPermissions) {
                             navController.navigate(StartActivity.mainPage)
                         }
                     }
@@ -50,6 +57,8 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
         }
         composable(StartActivity.notificationsPermissions) {
             NotificationsPermissionsScreen(
+                activity = activity,
+                notificationsPermissionsViewModel = notificationsPermissionsViewModel,
                 onPermissionGranted = {
                     navController.popBackStack()
                     navController.navigate(StartActivity.mainPage)

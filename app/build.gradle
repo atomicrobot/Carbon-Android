@@ -144,6 +144,7 @@ ext {
     leakCanaryVersion = '2.7'
     navVersion = "2.4.2"
     composeHiltNavigationVersion = "1.0.0"
+    accompanistVersion = "0.25.0"
 
     // Test dependency versions
     mockitoVersion = '4.1.0'
@@ -197,6 +198,12 @@ dependencies {
     implementation "androidx.compose.animation:animation:$compose_version"
     // Tooling support (Previews, etc.)
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    // Integration with LiveData
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
+    // permissions
+    implementation "com.google.accompanist:accompanist-permissions:$accompanistVersion"
+
     // Integration with ViewModels
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_vm_version"
     // UI Tests

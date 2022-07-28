@@ -1,18 +1,17 @@
 package com.atomicrobot.carbon.ui.permissions
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,6 +19,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -29,11 +29,61 @@ import androidx.lifecycle.LifecycleOwner
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.components.TopBar
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import java.util.*
 
 
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun Sample() {
+    val locationPermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+    )
+    if (locationPermissionsState.allPermissionsGranted) {
+        Text("Thanks! I can access your exact location :D")
+    } else {
+        Column {
+            val allPermissionsRevoked =
+                locationPermissionsState.permissions.size ==
+                        locationPermissionsState.revokedPermissions.size
+
+            val textToShow = if (!allPermissionsRevoked) {
+                // If not all the permissions are revoked, it's because the user accepted the COARSE
+                // location permission, but not the FINE one.
+                "Yay! Thanks for letting me access your approximate location. " +
+                        "But you know what would be great? If you allow me to know where you " +
+                        "exactly are. Thank you!"
+            } else if (locationPermissionsState.shouldShowRationale) {
+                // Both location permissions have been denied
+                "Getting your exact location is important for this app. " +
+                        "Please grant us fine location. Thank you :D"
+            } else {
+                // First time the user sees this feature or the user doesn't want to be asked again
+                "This feature requires location permission"
+            }
+
+            val buttonText = if (!allPermissionsRevoked) {
+                "Allow precise location"
+            } else {
+                "Request permissions"
+            }
+
+            Text(text = textToShow)
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(onClick = { locationPermissionsState.launchMultiplePermissionRequest() }) {
+                Text(buttonText)
+            }
+        }
+    }
+}
+
 @Composable
 fun NotificationsPermissionsScreen(
+    notificationsPermissionsViewModel: NotificationsPermissionsViewModel,
+    activity: AppCompatActivity,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     onPermissionGranted: () -> Unit,
     onPermissionDenied: () -> Unit,
@@ -42,19 +92,30 @@ fun NotificationsPermissionsScreen(
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     var inSettings: Boolean by remember { mutableStateOf(false) }
     var returnState: PreAskReturnState by remember { mutableStateOf(PreAskReturnState.INITIAL)}
-    val activity = LocalContext.current as Activity
-    var shouldShowNotificationsNotEnabled = true
-    val context = LocalContext.current
-    val intent = Intent()
+//    val activity = LocalContext.current as AppCompatActivity
 
-    intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
-    intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+//    if ( notificationsPermissionsViewModel.uiState.value == NotificationsPermissionsViewModel.UiState.Unknown) {
+//        var shouldShowNotificationsNotEnabled = true
+//
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+//            shouldShowNotificationsNotEnabled = activity.shouldShowRequestPermissionRationale(
+//                Manifest.permission.POST_NOTIFICATIONS
+//            )
+//        }
+//
+//        if (shouldShowNotificationsNotEnabled) {
+//            notificationsPermissionsViewModel.setState(NotificationsPermissionsViewModel.UiState.Denied)
+//        } else {
+//            notificationsPermissionsViewModel.setState(NotificationsPermissionsViewModel.UiState.Initial)
+//        }
+//    }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                if (inSettings) {
+                if ( inSettings ) {
                     returnState = PreAskReturnState.RETURNED
+                    inSettings = false
                 }
             }
         }
@@ -62,60 +123,53 @@ fun NotificationsPermissionsScreen(
         lifecycleOwner.lifecycle.addObserver(observer)
 
         onDispose {
-            inSettings = false
+            notificationsPermissionsViewModel.setState(NotificationsPermissionsViewModel.UiState.Unknown)
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
-    if (returnState == PreAskReturnState.RETURNED) {
-        returnState = PreAskReturnState.INITIAL
-        when (NotificationManagerCompat.from(LocalContext.current).areNotificationsEnabled()) {
-            true -> onPermissionGranted()
-            else -> onPermissionDenied()
+    when ( returnState ) {
+        PreAskReturnState.RETURNED -> {
+            returnState = PreAskReturnState.INITIAL
+            when (NotificationManagerCompat.from(LocalContext.current).areNotificationsEnabled()) {
+                true -> onPermissionGranted()
+                else -> onPermissionDenied()
+            }
         }
-    } else {
-        val notificationsPermissionRequest =
-            activityResult(
-                contract = ActivityResultContracts.RequestPermission(),
-                onResult = { result ->
-                    when (result) {
-                        true -> onPermissionGranted()
-                        else -> onPermissionDenied()
-                    }
-                },
-            )
+        else -> {
+            val notificationsPermissionRequest =
+                activityResult(
+                    contract = ActivityResultContracts.RequestPermission(),
+                    onResult = { result ->
+                        when (result) {
+                            true -> onPermissionGranted()
+                            else -> onPermissionDenied()
+                        }
+                    },
+                )
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            shouldShowNotificationsNotEnabled = activity.shouldShowRequestPermissionRationale(
-                Manifest.permission.POST_NOTIFICATIONS
-            )
-        }
-
-        if (shouldShowNotificationsNotEnabled) {
-            NotificationsPermissionsContent(
-                scaffoldState = scaffoldState,
-                onEnableNotificationsButtonClicked = {
+            val onEnableNotificationsButtonClicked = {
+                if (notificationsPermissionsViewModel.uiState.value == NotificationsPermissionsViewModel.UiState.Denied) {
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)
                     inSettings = true
-                    ContextCompat.startActivity(context, intent, null)
-                },
-                onPermissionDelayedButtonClicked = onPermissionDelayed,
-                descriptionText = stringResource(id = R.string.notifications_not_enabled_description),
-                allowButtonText = stringResource(id = R.string.notifications_update_settings),
-                delayButtonText = stringResource(id = R.string.notifications_pre_ask_maybe_later)
-            )
-        } else {
-            NotificationsPermissionsContent(
-                scaffoldState = scaffoldState,
-                onEnableNotificationsButtonClicked = {
-                    // We will only get here if we are API 33 or higher, but this check supresses a warning
+
+                    ContextCompat.startActivity(activity, intent, null)
+                } else {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                         notificationsPermissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
                     }
-                },
+                }
+            }
+
+            NotificationsPermissionsContent(
+                scaffoldState = scaffoldState,
+                onEnableNotificationsButtonClicked = onEnableNotificationsButtonClicked,
                 onPermissionDelayedButtonClicked = onPermissionDelayed,
-                descriptionText = stringResource(id = R.string.notifications_pre_ask_description),
-                allowButtonText = stringResource(id = R.string.notifications_pre_ask_allow_notifications),
-                delayButtonText = stringResource(id = R.string.notifications_pre_ask_maybe_later)
+                descriptionText = notificationsPermissionsViewModel.getDescription(),
+                allowButtonText = notificationsPermissionsViewModel.getButtonLabel(),
+                delayButtonText = notificationsPermissionsViewModel.getLaterButtonLabel()
             )
         }
     }
@@ -185,13 +239,11 @@ fun <I, O> activityResult(
 }
 
 
-
-
 @Composable
 fun NotificationsPermissionsContent(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    onEnableNotificationsButtonClicked: () -> Unit,
-    onPermissionDelayedButtonClicked: () -> Unit,
+    onEnableNotificationsButtonClicked: () -> Unit = {},
+    onPermissionDelayedButtonClicked: () -> Unit = {},
     descriptionText: String,
     allowButtonText: String,
     delayButtonText: String,
@@ -232,9 +284,10 @@ enum class PreAskReturnState {
 }
 
 
-@Preview(name = "Pre-Ask")
+@Preview(name = "Pre-Ask-Denied")
 @Composable
 internal fun PreviewNotificationsPreAskScreen() {
+
     NotificationsPermissionsContent(
         onEnableNotificationsButtonClicked = {},
         onPermissionDelayedButtonClicked = {},
@@ -244,7 +297,7 @@ internal fun PreviewNotificationsPreAskScreen() {
     )
 }
 
-@Preview(name = "Not-Enabled")
+@Preview(name = "Pre-Ask-Not-Enabled")
 @Composable
 internal fun PreviewNotificationsNotEnabledScreen() {
     NotificationsPermissionsContent(
