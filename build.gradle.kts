@@ -106,7 +106,7 @@ allprojects {
 //    compileSdkVersion = 32
 //}
 
-    evaluationDependsOnChildren()
+evaluationDependsOnChildren()
 
 //task initialCleanup() {
 //    def cleanTasks = getProjectTask(this, "clean")
