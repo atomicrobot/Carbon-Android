@@ -5,10 +5,15 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.*
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.*
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.navigation.AppScreens
 import com.atomicrobot.carbon.navigation.TopBar
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
@@ -31,14 +36,14 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
         topBar =
         {
             // Hide the top app bar during splash screen transition
-            if(showAppBar(navController = navController)) {
+            if (showAppBar(navController = navController)) {
                 TopBar(appBarTitle(navController = navController))
             }
         },
         bottomBar =
         {
             // Hide the bottom bar during splash screen transition
-            if(showAppBar(navController = navController)) {
+            if (showAppBar(navController = navController)) {
                 BottomNavigationBar(
                     navController = navController,
                     destinations = screens,
@@ -53,11 +58,13 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
                             launchSingleTop = true
                             restoreState = true
                         }
-                    })
+                    }
+                )
             }
         }
     ) { innerPadding ->
-        NavHost(modifier = Modifier.padding(innerPadding),
+        NavHost(
+            modifier = Modifier.padding(innerPadding),
             navController = navController,
             startDestination = AppScreens.SplashScreen.graph
         ) {
@@ -73,7 +80,8 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
 fun NavGraphBuilder.splashGraph(
     navController: NavController,
     isDeepLinkIntent: Boolean,
-    viewModel: SplashViewModel) {
+    viewModel: SplashViewModel
+) {
     navigation(AppScreens.SplashScreen.route, AppScreens.SplashScreen.graph) {
         composable(AppScreens.SplashScreen.route) {
             SplashScreen {
@@ -91,6 +99,7 @@ fun NavGraphBuilder.splashGraph(
 /**
  * Nested nav. graph dedicated to displaying 'main' app content.
  */
+@Suppress("UNUSED_PARAMETER")
 fun NavGraphBuilder.mainFlowGraph(navController: NavHostController) {
     navigation(startDestination = AppScreens.Home.route, route = AppScreens.Home.graph) {
         composable(AppScreens.Home.route) {
@@ -116,7 +125,7 @@ fun showAppBar(navController: NavHostController): Boolean {
 
 @Composable
 fun appBarTitle(navController: NavHostController): String {
-    return when(currentRoute(navController = navController)) {
+    return when (currentRoute(navController = navController)) {
         AppScreens.SplashScreen.route -> AppScreens.SplashScreen.title
         AppScreens.Home.route -> AppScreens.Home.title
         AppScreens.Settings.route -> AppScreens.Settings.title

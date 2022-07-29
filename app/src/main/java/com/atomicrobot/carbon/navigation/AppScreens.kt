@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.atomicrobot.carbon.R
 
 sealed class AppScreens(val title: String, val route: String, val iconData: ScreenIcon) {
-
     val graph: String
     get() = "graph/${this.route}"
 
