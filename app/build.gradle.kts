@@ -198,8 +198,6 @@ dependencies {
     implementation("org.jacoco:org.jacoco.core:$jacocoVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
     implementation("androidx.test.ext:junit-ktx:1.1.3")
-//    kapt ("androidx.databinding:databinding-compiler:$rootProject.ext.android_plugin_version")
-    // Need this because of Kotlin
 
     // Android/Google libraries
     implementation("androidx.core:core-ktx:$coreVersion")
