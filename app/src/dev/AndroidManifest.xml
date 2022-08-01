@@ -5,18 +5,6 @@
     <application
         android:allowBackup="false"
         tools:replace="android:allowBackup">
-        <activity
-            android:name="com.atomicrobot.carbon.ui.devsettings.DevSettingsActivity"
-            android:label="@string/dev_settings"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:taskAffinity="com.atomicrobot.carbon.dev_settings"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

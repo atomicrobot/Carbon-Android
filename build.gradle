@@ -60,18 +60,6 @@ allprojects {
     }
 }
 
-// Disable predexing (enable on build servers)
-project.ext.preDexLibs = !project.hasProperty('disablePreDex')
-subprojects {
-    project.plugins.whenPluginAdded { plugin ->
-        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        }
-    }
-}
-
 // Prevent wildcard dependencies
 // https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
 allprojects {
@@ -95,7 +83,7 @@ ext {
     versionName = "$appVersion b$versionCode"
 
     // Build settings that are likely to be reused across different modules
-    minSdkVersion = 21
+    minSdkVersion = 29
     targetSdkVersion = 32
     compileSdkVersion = 32
 }

@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.components.BottomBar
@@ -38,15 +39,19 @@ import com.atomicrobot.carbon.ui.components.TransparentTextField
 import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen() {
+    val viewModel: MainViewModel = hiltViewModel()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val viewState by viewModel.viewState.collectAsState()
 
-    val mainState by viewModel.uiState.collectAsState()
+    LaunchedEffect(true) {
+        viewModel.fetchCommits()
+    }
 
     MainContent(
-        userName = mainState.username,
-        repository = mainState.repository,
-        commitsState = mainState.commitsState,
+        userName = viewState.username,
+        repository = viewState.repository,
+        commitsState = viewState.commitsState,
         scaffoldState = scaffoldState,
         onUserInputChanged = { username, repo ->
             viewModel.updateUserInput(username, repo)

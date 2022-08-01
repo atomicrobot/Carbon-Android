@@ -2,19 +2,18 @@ package com.atomicrobot.carbon.ui.main
 
 import android.app.Application
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.app.LoadingDelayMs
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
-import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.util.CoroutineUtils.delayAtLeast
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.lang.Exception
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -22,7 +21,7 @@ class MainViewModel @Inject constructor(
     private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
     @LoadingDelayMs private val loadingDelayMs: Long,
-) : BaseViewModel(app) {
+) : ViewModel() {
 
     sealed class Commits {
         object Loading : Commits()
@@ -30,40 +29,35 @@ class MainViewModel @Inject constructor(
         class Error(val message: String) : Commits()
     }
 
-    data class MainScreenUiState(
+    data class MainScreenViewState(
         var username: String = "madebyatomicrobot", // NON-NLS
         var repository: String = "android-starter-project", // NON-NLS
         var commitsState: Commits = Commits.Result(emptyList())
     )
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val _uiState = MutableStateFlow(MainScreenUiState())
-    val uiState: StateFlow<MainScreenUiState>
-        get() = _uiState
-
-    override fun setupViewModel() {
-        fetchCommits()
-    }
+    val _viewState = MutableStateFlow(MainScreenViewState())
+    val viewState = _viewState.asStateFlow()
 
     fun updateUserInput(username: String?, repository: String?) {
-        _uiState.value = _uiState.value.copy(
-            username = username ?: _uiState.value.username,
-            repository = repository ?: _uiState.value.repository,
+        _viewState.value = _viewState.value.copy(
+            username = username ?: _viewState.value.username,
+            repository = repository ?: _viewState.value.repository,
         )
     }
 
     fun fetchCommits() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(commitsState = Commits.Loading)
+            _viewState.value = _viewState.value.copy(commitsState = Commits.Loading)
 
-            _uiState.value = _uiState.value.copy(
+            _viewState.value = _viewState.value.copy(
                 commitsState = delayAtLeast(loadingDelayMs) {
                     try {
                         Commits.Result(
                             gitHubInteractor.loadCommits(
                                 GitHubInteractor.LoadCommitsRequest(
-                                    uiState.value.username,
-                                    uiState.value.repository
+                                    viewState.value.username,
+                                    viewState.value.repository
                                 )
                             ).commits
                         )
@@ -82,7 +76,6 @@ class MainViewModel @Inject constructor(
     fun getFingerprint(): String = BuildConfig.VERSION_FINGERPRINT
 
     companion object {
-        private const val STATE_KEY = "MainViewModelState" // NON-NLS
         const val DEFAULT_USERNAME = "madebyatomicrobot" // NON-NLS
         const val DEFAULT_REPO = "android-starter-project" // NON-NLS
     }

@@ -60,7 +60,7 @@ class MainViewModelTest {
 
         assertTrue(
             (
-                viewModel.uiState.value.commitsState as?
+                viewModel.viewState.value.commitsState as?
                     MainViewModel.Commits.Result
                 )?.commits?.isEmpty()
                 ?: false
@@ -68,7 +68,7 @@ class MainViewModelTest {
         viewModel.fetchCommits()
         assertTrue(
             (
-                viewModel.uiState.value.commitsState as?
+                viewModel.viewState.value.commitsState as?
                     MainViewModel.Commits.Result
                 )?.commits?.size == 1
         )

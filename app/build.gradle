@@ -99,7 +99,6 @@ android {
     }
 
     buildFeatures {
-        dataBinding true
         compose true
     }
 
@@ -123,7 +122,6 @@ android {
 
 kapt {
     correctErrorTypes = true
-    generateStubs = true
 }
 
 ext {
@@ -153,7 +151,6 @@ ext {
     espressoVersion = '3.3.0'
     junitVersion = '4.13.2'
     junitTestVersion = '1.1.3'
-    daggerMockVersion = '0.8.4'
 }
 
 dependencies {
@@ -166,10 +163,7 @@ dependencies {
     // Recommended: Add the Google Analytics SDK.
     implementation "com.google.firebase:firebase-analytics:$rootProject.ext.firebase_analytics_version"
 
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.test.ext:junit-ktx:1.1.3'
-    kapt "androidx.databinding:databinding-compiler:$rootProject.ext.android_plugin_version"
     // Need this because of Kotlin
 
     // Android/Google libraries
@@ -199,16 +193,11 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     // Integration with ViewModels
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_vm_version"
-    // UI Tests
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-
     implementation "androidx.compose.foundation:foundation:$compose_foundation_version"
 
     // App architecture - Hilt
     implementation"com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // JSON
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
@@ -219,7 +208,6 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui-ktx:$navigation_version"
     implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation "androidx.hilt:hilt-navigation-compose:$composeHiltNavigationVersion"
-
 
     // Networking - HTTP
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
@@ -245,7 +233,6 @@ dependencies {
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
 
-
     // Android JUnit Runner, JUnit Rules, and Espresso
     androidTestImplementation "androidx.test:runner:$androidTestSupportVersion"
     androidTestImplementation "androidx.test:rules:$androidTestSupportVersion"
@@ -253,10 +240,11 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$junitTestVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
-
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
-    androidTestImplementation "com.github.fabioCollini:DaggerMock:$daggerMockVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 }
 
 jacoco {
@@ -286,12 +274,12 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
             /* Data binding */
             '**/*Binding*.*',
             '**/BR.**',
-            /* Dagger */
+            /* Hilt */
             '**/*_MembersInjector.*',
             '**/*_Factory.*',
             '**/*_*Factory.*',
-            '**/Dagger*Component*.*',
-            '**/Dagger*Subcomponent*.*',
+            '**/Hilt*Component*.*',
+            '**/Hilt*Subcomponent*.*',
             '**/devsettings/**/*.*'
     ]
 
@@ -318,7 +306,6 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'c
 
 // Kotlin plugin for testing
 allOpen {
-    annotation('dagger.Module')
     annotation("com.atomicrobot.carbon.Mockable")
 }
 apply plugin: 'com.google.gms.google-services'
