@@ -48,14 +48,14 @@ class MainViewModel(
         // Try and fetching the commit records
         viewModelScope.launch(Dispatchers.IO) {
             try {
-            gitHubInteractor.loadCommits(
-                GitHubInteractor.LoadCommitsRequest(
-                    uiState.value.username,
-                    uiState.value.repository
-                )
-            ).let {
-                _uiState.value = _uiState.value.copy(commitsState = Commits.Result(it.commits))
-            }
+                gitHubInteractor.loadCommits(
+                    GitHubInteractor.LoadCommitsRequest(
+                        uiState.value.username,
+                        uiState.value.repository
+                    )
+                ).let {
+                    _uiState.value = _uiState.value.copy(commitsState = Commits.Result(it.commits))
+                }
             } catch (error: Exception) {
                 Timber.e(error)
                 _uiState.value = _uiState.value.copy(

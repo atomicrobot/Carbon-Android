@@ -15,7 +15,8 @@ import com.atomicrobot.carbon.navigation.AppScreens
 fun BottomNavigationBar(
     navController: NavController,
     destinations: List<AppScreens>,
-    onDestinationClicked: (AppScreens) -> Unit) {
+    onDestinationClicked: (AppScreens) -> Unit
+) {
     BottomNavigation {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
@@ -23,14 +24,17 @@ fun BottomNavigationBar(
             BottomNavigationItem(
                 selected = currentDestination
                     ?.hierarchy
-                    ?.any { it.route == destination.route} == true,
-                icon = { Icon(
-                    destination.iconData.icon,
-                    stringResource(id = destination.iconData.iconContentDescription)
-                ) },
+                    ?.any { it.route == destination.route } == true,
+                icon = {
+                    Icon(
+                        destination.iconData.icon,
+                        stringResource(id = destination.iconData.iconContentDescription)
+                    )
+                },
                 onClick = {
                     onDestinationClicked(destination)
-                })
-            }
+                }
+            )
+        }
     }
 }
