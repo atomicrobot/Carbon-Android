@@ -108,13 +108,13 @@ allprojects {
 
 evaluationDependsOnChildren()
 
-//task initialCleanup() {
-//    def cleanTasks = getProjectTask(this, "clean")
-//    def uninstallTasks = getProjectTask(this, "uninstallAll")
-//
-//    dependsOn cleanTasks
-//    dependsOn uninstallTasks
-//}
+tasks.register("initialCleanup") {
+    val cleanTasks = getProjectTask(this, "clean")
+    val uninstallTasks = getProjectTask(this, "uninstallAll")
+
+    dependsOn("cleanTasks")
+    dependsOn("uninstallTasks")
+}
 
 //task testing() {
 //    def appProject = subprojects.find { project -> "app" == project.name }
@@ -144,8 +144,8 @@ evaluationDependsOnChildren()
 //    return tasks
 //}
 
-fun getProjectTask(project: Project, taskName: String): MutableSet<Task> {
-    val tasks = project.getTasksByName(taskName, true)
+fun getProjectTask(task: Project, taskName: String): MutableSet<Task> {
+    val tasks = task.getTasksByName(taskName, true)
     if (tasks == null || tasks.isEmpty()) {
         throw IllegalArgumentException("Task $taskName not found")
     }
