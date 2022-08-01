@@ -108,34 +108,34 @@ allprojects {
 
 evaluationDependsOnChildren()
 
-tasks.register("initialCleanup") {
+
+val initialCleanup by tasks.registering {
     val cleanTasks = getProjectTask(rootProject.project("Carbon-Android"), "clean")
     val uninstallTasks = getProjectTask(rootProject.project("Carbon-Android"), "uninstallAll")
-
-    dependsOn("cleanTasks")
-    dependsOn("uninstallTasks")
+    dependsOn(cleanTasks)
+    dependsOn(uninstallTasks)
 }
 
-//task testing() {
-//    def appProject = subprojects.find { project -> "app" == project.name }
-//
-//    def unitTestTasks = getProjectTask(appProject, "testDevDebugUnitTest")
-//    def integrationTestTasks = getProjectTask(appProject, "jacocoTestReport")
-//
-//    dependsOn unitTestTasks
-//    dependsOn integrationTestTasks
-//
-//    integrationTestTasks.each { task -> task.mustRunAfter unitTestTasks }
-//}
-//
-//task release() {
-//    def appProject = subprojects.find { project -> "app" == project.name }
-//
-//    def appTasks = getProjectTask(appProject, "assemble")
-//
-//    dependsOn appTasks
-//}
-//
+val testing by tasks.registering  {
+    val appProject = subprojects.find { project -> "app" == project.name }
+
+    val unitTestTasks = getProjectTask(appProject!!, "testDevDebugUnitTest")
+    val integrationTestTasks = getProjectTask(appProject!!, "jacocoTestReport")
+
+    dependsOn(unitTestTasks)
+    dependsOn(integrationTestTasks)
+
+    integrationTestTasks.forEach { task -> task.mustRunAfter(unitTestTasks) }
+}
+
+val release by tasks.registering {
+    val appProject = subprojects.find { project -> "app" == project.name }
+
+    val appTasks = getProjectTask(appProject!!, "assemble")
+
+    dependsOn(appTasks)
+}
+
 //static def getProjectTask(project, taskName) {
 //    def tasks = project.getTasksByName(taskName, true)
 //    if (tasks == null || tasks.empty) {
@@ -151,12 +151,14 @@ fun getProjectTask(project: Project, taskName: String): MutableSet<Task> {
     }
     return tasks
 }
-//
-//task continuousIntegration() {
-//    dependsOn initialCleanup
-//    dependsOn testing
-//    dependsOn release
-//
-//    // InitialCleanup first, then testing, then release
-//    release.mustRunAfter testing
-//}
+
+val continuousIntegration by tasks.registering {
+    dependsOn(initialCleanup)
+    dependsOn(testing)
+    dependsOn(release)
+
+    // InitialCleanup first, then testing, then release
+    release {
+        mustRunAfter(testing)
+    }
+}
