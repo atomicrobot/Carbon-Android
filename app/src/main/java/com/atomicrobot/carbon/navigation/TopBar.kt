@@ -7,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> Unit) {
@@ -18,7 +17,7 @@ fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> U
             )
         },
         navigationIcon = {
-            IconButton(onClick = { onButtonClicked() } ) {
+            IconButton(onClick = { onButtonClicked() }) {
                 Icon(buttonIcon, contentDescription = "")
             }
         },
@@ -27,4 +26,4 @@ fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> U
 }
 
 @Composable
-fun TopBar(title: String = "") = TopAppBar( title = { Text(text = title) } )
+fun TopBar(title: String = "") = TopAppBar(title = { Text(text = title) })
