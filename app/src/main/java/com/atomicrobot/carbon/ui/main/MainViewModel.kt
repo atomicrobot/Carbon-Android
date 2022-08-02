@@ -6,12 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.Exception
 
 class MainViewModel(
     private val app: Application,
@@ -46,7 +44,7 @@ class MainViewModel(
         // Update the UI state to indicate that we are loading.
         _uiState.value = _uiState.value.copy(commitsState = Commits.Loading)
         // Try and fetching the commit records
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 gitHubInteractor.loadCommits(
                     GitHubInteractor.LoadCommitsRequest(
