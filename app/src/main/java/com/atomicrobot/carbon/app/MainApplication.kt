@@ -5,6 +5,7 @@ import com.atomicrobot.carbon.data.DataModule
 import com.atomicrobot.carbon.modules.crashReporterModule
 import com.atomicrobot.carbon.util.AppLogger
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 
 open class MainApplication : Application() {
@@ -12,19 +13,22 @@ open class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        startKoin {
-            androidContext(this@MainApplication)
+        // This check is for Robolectric tests that run in parallel so Koin gets setup correctly
+        if(GlobalContext.getOrNull() == null) {
+            startKoin {
+                androidContext(this@MainApplication)
 
-            AppLogger()
+                AppLogger()
 
-            modules(
-                listOf(
-                    crashReporterModule,
-                    AppModule().appModule,
-                    variantModule,
-                    DataModule().dataModule
+                modules(
+                    listOf(
+                        crashReporterModule,
+                        AppModule().appModule,
+                        variantModule,
+                        DataModule().dataModule
+                    )
                 )
-            )
+            }
         }
 
         initializer = MainApplicationInitializer(this)
