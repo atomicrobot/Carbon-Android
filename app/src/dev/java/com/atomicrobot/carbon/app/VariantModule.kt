@@ -8,7 +8,7 @@ val variantModule = module {
     single {
         DevSecurityModifier(
             settings = get()
-        ) // Cast is needed - compiler lies
+        ) as OkHttpSecurityModifier // Cast is needed - compiler lies
     }
 
 //    viewModel {
