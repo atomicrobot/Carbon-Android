@@ -14,7 +14,7 @@ open class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         // This check is for Robolectric tests that run in parallel so Koin gets setup correctly
-        if(GlobalContext.getOrNull() == null) {
+        if (GlobalContext.getOrNull() == null) {
             startKoin {
                 androidContext(this@MainApplication)
 
