@@ -39,9 +39,8 @@ import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MainScreen() {
+fun MainScreen(scaffoldState: ScaffoldState) {
     val viewModel: MainViewModel = getViewModel()
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
     val screenState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(true) {
@@ -71,32 +70,28 @@ fun MainContent(
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {}
 ) {
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .imePadding(),
-        scaffoldState = scaffoldState,
-        bottomBar = { BottomBar() },
-        snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) }
-    ) { padding -> /* Must use padding arg otherwise causes compiler issue */
-        Column(modifier = Modifier.padding(padding)) {
-            /*
-            * Main Screen is split into two chunks
-            * (1) User Input
-            *       user name Textfield
-            *       repo Textfield
-            *       fetch commits button
-            * (2) Commit List / Circular Progress when loading
-            */
-            GithubUserInput(
-                username = username,
-                repository = repository,
-                isLoading = false,
-                onUserInputChanged = onUserInputChanged,
-                onUserSelectedFetchCommits = onUserSelectedFetchCommits
-            )
-            GithubResponse(commitsState = commitsState, scaffoldState = scaffoldState)
-        }
+    Column {
+        /*
+        * Main Screen is split into two chunks
+        * (1) User Input
+        *       user name Textfield
+        *       repo Textfield
+        *       fetch commits button
+        * (2) Commit List / Circular Progress when loading
+        * (3) App Info Bottom Bar
+        */
+        GithubUserInput(
+            username = username,
+            repository = repository,
+            isLoading = false,
+            onUserInputChanged = onUserInputChanged,
+            onUserSelectedFetchCommits = onUserSelectedFetchCommits
+        )
+        GithubResponse(
+            commitsState = commitsState,
+            scaffoldState = scaffoldState,
+            modifier = Modifier.weight(1f))
+        BottomBar()
     }
 }
 
@@ -149,16 +144,10 @@ fun GithubResponse(
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         when (commitsState) {
             is MainViewModel.Commits.Loading ->
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+                CircularProgressIndicator()
             is MainViewModel.Commits.Error ->
                 LaunchedEffect(scaffoldState.snackbarHostState) {
                     scaffoldState.snackbarHostState.showSnackbar(message = commitsState.message)
