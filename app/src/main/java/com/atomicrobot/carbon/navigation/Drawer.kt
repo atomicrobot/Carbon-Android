@@ -3,7 +3,14 @@ package com.atomicrobot.carbon.navigation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -26,14 +33,19 @@ import com.atomicrobot.carbon.ui.compose.AppScreenPreviewProvider
 fun Drawer(
     modifier: Modifier = Modifier,
     screens: List<AppScreens> = emptyList(),
-    onDestinationClicked: (route: String) -> Unit = { _ -> }) {
+    onDestinationClicked: (route: String) -> Unit = { _ -> }
+) {
     Column(
         modifier
             .fillMaxSize()
             .padding(start = 24.dp, top = 48.dp)
     ) {
-        Box(Modifier.clip(CircleShape)
-            .background(Color.Gray)) {
+        Box(
+            Modifier.clip(CircleShape)
+                .background(
+                    Color.Gray
+                )
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "App Icon foreground"
@@ -52,12 +64,15 @@ fun DrawerAppScreenItem(
     @PreviewParameter(AppScreenPreviewProvider::class, limit = 2) screen: AppScreens,
     onDestinationClicked: (route: String) -> Unit = { _ -> }
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clickable {
-            onDestinationClicked(screen.route)
-        },
-        verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable
+            {
+                onDestinationClicked(screen.route)
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Icon(
             screen.iconData.icon,
             stringResource(id = screen.iconData.iconContentDescription),
