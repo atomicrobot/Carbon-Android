@@ -69,9 +69,6 @@ allprojects {
 //    }
 
     // Verbose output for usage of deprecated APIs
-//    tasks.withType(JavaCompile) {
-//        options.compilerArgs << "-Xlint:deprecation"
-//    }
     tasks.withType<JavaCompile> {
         options.compilerArgs = mutableListOf("-Xlint:deprecation")
     }
