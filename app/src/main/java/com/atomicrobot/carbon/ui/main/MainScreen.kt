@@ -1,11 +1,9 @@
 package com.atomicrobot.carbon.ui.main
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,7 +11,6 @@ import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -33,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.components.BottomBar
-import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.components.TransparentTextField
 import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
@@ -90,7 +86,8 @@ fun MainContent(
         GithubResponse(
             commitsState = commitsState,
             scaffoldState = scaffoldState,
-            modifier = Modifier.weight(1f))
+            modifier = Modifier.weight(1f)
+        )
         BottomBar()
     }
 }

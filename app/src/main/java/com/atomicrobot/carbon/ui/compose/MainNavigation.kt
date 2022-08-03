@@ -1,16 +1,17 @@
 package com.atomicrobot.carbon.ui.compose
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -54,7 +55,8 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
                         scope.launch {
                             scaffoldState.drawerState.open()
                         }
-                    })
+                    }
+                )
             }
         },
         bottomBar =
@@ -65,7 +67,7 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
                     navController = navController,
                     destinations = screens,
                     onDestinationClicked = {
-                        if(navController.currentBackStackEntry?.destination?.route != it.route){
+                        if (navController.currentBackStackEntry?.destination?.route != it.route) {
                             navController.navigate(it.route) {
                                 // Make sure the back stack only consists of the current graphs main
                                 // destination
@@ -89,7 +91,7 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
                     scope.launch {
                         scaffoldState.drawerState.close()
                     }
-                    if(navController.currentBackStackEntry?.destination?.route != route) {
+                    if (navController.currentBackStackEntry?.destination?.route != route) {
                         navController.navigate(route) {
                             popUpTo(navController.graph.startDestinationId)
                             launchSingleTop = true
