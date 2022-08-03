@@ -1,10 +1,12 @@
 package com.atomicrobot.carbon.data.api.github
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.Mockable
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import retrofit2.Response
+import timber.log.Timber
 
 @Mockable
 class GitHubInteractor(
@@ -24,10 +26,14 @@ class GitHubInteractor(
         return LoadCommitsResponse(request, commits)
     }
 
-    private fun <T> checkResponse(response: Response<T>, message: String): Response<T> {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun <T> checkResponse(response: Response<T>, message: String): Response<T> {
         return when {
             response.isSuccessful -> response
-            else -> throw IllegalStateException(message)
+            else -> {
+                Timber.e(response.errorBody()?.string() ?: message)
+                throw IllegalStateException(message)
+            }
         }
     }
 }

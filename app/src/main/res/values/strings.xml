@@ -19,4 +19,8 @@
     <string name="error_get_commits_error">Could not find the requested commits</string>
     <string name="title_activity_compose_start">ComposeStartActivity</string>
     <string name="title_activity_delete_me">DeleteMeActivity</string>
+
+    <string name="cont_desc_splash_icon">Splash icon</string>
+    <string name="cont_desc_home_icon">Home icon</string>
+    <string name="cont_desc_settings_icon">Settings icon</string>
 </resources>

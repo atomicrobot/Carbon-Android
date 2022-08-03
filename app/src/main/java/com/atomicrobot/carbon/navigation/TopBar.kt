@@ -17,10 +17,13 @@ fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> U
             )
         },
         navigationIcon = {
-            IconButton(onClick = { onButtonClicked() } ) {
+            IconButton(onClick = { onButtonClicked() }) {
                 Icon(buttonIcon, contentDescription = "")
             }
         },
         backgroundColor = MaterialTheme.colors.primaryVariant
     )
 }
+
+@Composable
+fun TopBar(title: String = "") = TopAppBar(title = { Text(text = title) })
