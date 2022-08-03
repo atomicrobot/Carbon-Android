@@ -1,23 +1,25 @@
 package com.atomicrobot.carbon.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.compose.AppScreenPreviewProvider
-import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
 
 @Preview
 @Composable
@@ -30,10 +32,13 @@ fun Drawer(
             .fillMaxSize()
             .padding(start = 24.dp, top = 48.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = "App Icon"
-        )
+        Box(Modifier.clip(CircleShape)
+            .background(Color.Gray)) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "App Icon foreground"
+            )
+        }
         screens.forEach { screen ->
             Spacer(Modifier.height(24.dp))
             DrawerAppScreenItem(screen, onDestinationClicked)
