@@ -2,9 +2,7 @@ package com.atomicrobot.carbon.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.atomicrobot.carbon.R
 
@@ -28,6 +26,12 @@ sealed class AppScreens(val title: String, val route: String, val iconData: Scre
         "Splash",
         "splash",
         ScreenIcon(Icons.Filled.Build, R.string.cont_desc_splash_icon)
+    )
+
+    object Scanner : AppScreens(
+        "Scanner",
+            "scanner",
+        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
     )
 }
 

@@ -23,4 +23,6 @@
     <string name="cont_desc_splash_icon">Splash icon</string>
     <string name="cont_desc_home_icon">Home icon</string>
     <string name="cont_desc_settings_icon">Settings icon</string>
+    <string name="cont_desc_scanner_icon">Scanner icon</string>
+    <string name="camera_perm_rationale">The Camera permission is required to scan barcodes and QR codes.</string>
 </resources>

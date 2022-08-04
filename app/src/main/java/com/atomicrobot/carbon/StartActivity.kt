@@ -5,6 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.CompositionLocalProvider
+import com.atomicrobot.carbon.ui.compose.LocalActivity
 import com.atomicrobot.carbon.ui.compose.MainNavigation
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
@@ -19,8 +21,10 @@ class StartActivity : ComponentActivity() {
         val isDeepLinkIntent = handleIntent(intent)
 
         setContent {
-            CarbonAndroidTheme() {
-                MainNavigation(isDeepLinkIntent)
+            CarbonAndroidTheme {
+                CompositionLocalProvider(LocalActivity provides this) {
+                    MainNavigation(isDeepLinkIntent)
+                }
             }
         }
     }

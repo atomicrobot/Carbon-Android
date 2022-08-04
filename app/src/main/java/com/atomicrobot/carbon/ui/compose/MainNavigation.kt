@@ -3,6 +3,7 @@ package com.atomicrobot.carbon.ui.compose
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
@@ -23,8 +24,8 @@ import com.atomicrobot.carbon.navigation.AppScreens
 import com.atomicrobot.carbon.navigation.Drawer
 import com.atomicrobot.carbon.navigation.TopBar
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
-import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.main.MainScreen
+import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.Settings
 import com.atomicrobot.carbon.ui.splash.SplashScreen
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
@@ -34,6 +35,7 @@ import org.koin.androidx.compose.getViewModel
 private val screens = listOf(
     AppScreens.Home,
     AppScreens.Settings,
+    AppScreens.Scanner
 )
 
 @Composable
@@ -100,7 +102,7 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
                 }
             )
         },
-        snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) },
+        snackbarHost = { SnackbarHost(scaffoldState.snackbarHostState) },
         scaffoldState = scaffoldState
     ) { innerPadding ->
         NavHost(
@@ -148,6 +150,9 @@ fun NavGraphBuilder.mainFlowGraph(navController: NavHostController, scaffoldStat
         composable(AppScreens.Settings.route) {
             Settings()
         }
+        composable(AppScreens.Scanner.route) {
+            ScannerScreen(scaffoldState)
+        }
     }
 }
 
@@ -162,6 +167,7 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
         AppScreens.SplashScreen.route -> AppScreens.SplashScreen.title
         AppScreens.Home.route -> AppScreens.Home.title
         AppScreens.Settings.route -> AppScreens.Settings.title
+        AppScreens.Scanner.route -> AppScreens.Scanner.title
         else -> ""
     }
 }
