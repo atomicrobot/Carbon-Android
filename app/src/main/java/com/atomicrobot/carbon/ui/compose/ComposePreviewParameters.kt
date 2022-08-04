@@ -11,6 +11,6 @@ class CommitPreviewProvider : PreviewParameterProvider<Commit> {
 }
 
 class AppScreenPreviewProvider : PreviewParameterProvider<AppScreens> {
-override val values: Sequence<AppScreens>
-    get() = listOf(AppScreens.Home, AppScreens.Settings).asSequence()
+    override val values: Sequence<AppScreens>
+        get() = listOf(AppScreens.Home, AppScreens.Settings).asSequence()
 }
