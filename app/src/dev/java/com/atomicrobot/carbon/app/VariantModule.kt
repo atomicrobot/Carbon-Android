@@ -1,10 +1,7 @@
 package com.atomicrobot.carbon.app
 
 import com.atomicrobot.carbon.data.OkHttpSecurityModifier
-import com.atomicrobot.carbon.ui.devsettings.DevSettingsViewModel
 import okhttp3.OkHttpClient
-import org.koin.android.ext.koin.androidApplication
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val variantModule = module {
@@ -14,12 +11,12 @@ val variantModule = module {
         ) as OkHttpSecurityModifier // Cast is needed - compiler lies
     }
 
-    viewModel {
-        DevSettingsViewModel(
-            app = androidApplication(),
-            settings = get()
-        )
-    }
+//    viewModel {
+//        DevSettingsViewModel(
+//            app = androidApplication(),
+//            settings = get()
+//        )
+//    }
 }
 
 class DevSecurityModifier(val settings: Settings) : OkHttpSecurityModifier {
