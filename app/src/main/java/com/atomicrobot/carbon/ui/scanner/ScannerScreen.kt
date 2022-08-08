@@ -25,7 +25,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PhotoCamera
-import androidx.compose.material.icons.rounded.QrCode
+import androidx.compose.material.icons.rounded.PhotoCameraBack
+import androidx.compose.material.icons.rounded.PhotoCameraFront
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -53,6 +54,7 @@ fun ScannerScreen(scaffoldState: ScaffoldState = rememberScaffoldState()) {
     val viewModel: ScannerViewModel = getViewModel()
     val cameraPermRationale = stringResource(id = R.string.camera_perm_rationale)
     val cameraPermissionState by viewModel.cameraPermissionState.collectAsState()
+    val cameraSelectorState by viewModel.cameraSelectorState.collectAsState()
 
     RequestPermission(
         permission = Manifest.permission.CAMERA,
@@ -72,19 +74,25 @@ fun ScannerScreen(scaffoldState: ScaffoldState = rememberScaffoldState()) {
             viewModel.setCameraPermissionState(it == PermissionRequestResult.Granted)
         }
     )
-    CameraContent(cameraPermissionState)
+    CameraContent(cameraPermissionState, cameraSelectorState) {
+        viewModel.toggleSelectedCamera()
+    }
 }
 
 @androidx.compose.ui.tooling.preview.Preview
 @Composable
-private fun CameraContent(cameraPermissionGranted: Boolean = false) {
+private fun CameraContent(
+    cameraPermissionGranted: Boolean = false,
+    selectedCamera: Int = CameraSelector.LENS_FACING_BACK,
+    onToggleCamera: () -> Unit = { }
+) {
     Box {
         when (cameraPermissionGranted) {
             true -> CameraPreview(Modifier.fillMaxSize())
             false -> NoCameraPermissionPreview()
         }
         OutlinedButton(
-            onClick = { /*TODO*/ },
+            onClick = onToggleCamera,
             modifier = Modifier
                 .size(100.dp)
                 .align(Alignment.BottomCenter)
@@ -101,8 +109,13 @@ private fun CameraContent(cameraPermissionGranted: Boolean = false) {
                     .clip(CircleShape),
                 color = Color.White
             ) {
+                var imageVec = if (selectedCamera == CameraSelector.LENS_FACING_BACK) {
+                    Icons.Rounded.PhotoCameraBack
+                } else {
+                    Icons.Rounded.PhotoCameraFront
+                }
                 Icon(
-                    imageVector = Icons.Rounded.QrCode,
+                    imageVector = imageVec,
                     modifier = Modifier.padding(16.dp),
                     contentDescription = "Snap a pic of a QrCode",
                     tint = Color.Black
