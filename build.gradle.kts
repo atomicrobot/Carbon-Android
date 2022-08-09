@@ -1,28 +1,5 @@
 import java.lang.IllegalArgumentException
 buildscript {
-//    ext.kotlin_version = '1.7.10'
-//    ext.android_plugin_version = "7.2.1"
-//    ext.kotlin_version = "1.6.10"
-//    ext.jacoco_version = "0.8.6"
-//    ext.navigation_version = "1.0.0"
-//    ext.firebase_bom_version = "28.0.0"
-//    ext.firebase_crashlytics_version = "18.2.5"
-//    ext.firebase_analytics_version = "20.0.0"
-//    ext.google_services_version = "4.3.10"
-//    ext.firebase_crashlytics_gradle_version = "2.6.1"
-//    ext.hilt_version = "2.40.1"
-//    ext.ktlint_version = "10.3.0"
-    val kotlin_version = "1.6.10"
-    val android_plugin_version = "7.2.1"
-    val jacoco_version = "0.8.6"
-    val navigation_version = "1.0.0"
-    val firebase_bom_version = "28.0.0"
-    val firebase_crashlytics_version = "18.2.5"
-    val firebase_analytics_version = "20.0.0"
-    val google_services_version = "4.3.10"
-    val firebase_crashlytics_gradle_version = "2.6.1"
-    val hilt_version = "2.40.1"
-    val ktlint_version = "10.3.0"
 
     repositories {
         google()
@@ -32,18 +9,17 @@ buildscript {
         }
     }
 
-
     //Non-core plugins?
     dependencies {
-        classpath("com.google.gms:google-services:$google_services_version")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:$firebase_crashlytics_gradle_version")
-        classpath("com.android.tools.build:gradle:$android_plugin_version")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
-        classpath("android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version")
-        classpath("org.jetbrains.kotlin:kotlin-allopen:$kotlin_version")
-        classpath("org.jacoco:org.jacoco.core:$jacoco_version")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:$ktlint_version")
+        classpath("com.google.gms:google-services:${Dependencies.google_services_version}")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:${Dependencies.firebase_crashlytics_gradle_version}")
+        classpath("com.android.tools.build:gradle:${Dependencies.android_plugin_version}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.kotlin_version}")
+        classpath("android.arch.navigation:navigation-safe-args-gradle-plugin:${Dependencies.navigation_version}")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${Dependencies.kotlin_version}")
+        classpath("org.jacoco:org.jacoco.core:${Dependencies.jacoco_version}")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:${Dependencies.hilt_version}")
+        classpath("org.jlleitschuh.gradle:ktlint-gradle:${Dependencies.ktlint_version}")
     }
 }
 
@@ -60,13 +36,13 @@ allprojects {
     }
 
 //    Automatically pull down javadocs and sources (if available)
-//    apply(plugin = "idea")
-//    idea {
-//        module {
-//            downloadJavadoc = true
-//            downloadSources = true
-//        }
-//    }
+    apply(plugin = "idea")
+    idea {
+        module {
+            isDownloadJavadoc = true
+            isDownloadSources = true
+        }
+    }
 
     // Verbose output for usage of deprecated APIs
     tasks.withType<JavaCompile> {
@@ -74,37 +50,24 @@ allprojects {
     }
 }
 
-
 // Prevent wildcard dependencies
+// Code in groovy below
 // https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
-//allprojects {
-//    afterEvaluate { project ->
-//        project.configurations.all {
-//            resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-//                def requested = details.requested
-//                if (requested.version.contains("+")) {
-//                    throw new GradleException("Wildcard dependency forbidden: ${requested.group}:${requested.name}:${requested.version}")
-//                }
-//            }
-//        }
-//    }
-//}
-
-//ext {
-    // Build (this implementation assumes values are being provided as arguments, perhaps by a build server)
-//    appVersion = "1.0"
-//    versionFingerprint = project.hasProperty("fingerprint") ? ("\"" + fingerprint + "\"") : "\"DEV\""
-//    versionCode = project.hasProperty("buildNumber") ? Integer.parseInt(buildNumber) : 1
-//    versionName = "$appVersion b$versionCode"
-
-    // Build settings that are likely to be reused across different modules
-//    minSdkVersion = 29
-//    targetSdkVersion = 32
-//    compileSdkVersion = 32
-//}
+// modified Wharton's code for kts
+allprojects {
+    afterEvaluate() {
+        project.configurations.all {
+            resolutionStrategy.eachDependency {
+                if (requested.version!!.contains("+")) {
+                    throw GradleException("Wildcard dependency forbidden: ${requested.group}:" +
+                            "${requested.name}:${requested.version}")
+                }
+            }
+        }
+    }
+}
 
 evaluationDependsOnChildren()
-
 
 val initialCleanup by tasks.registering {
     val cleanTasks = getProjectTask(rootProject.project("Carbon-Android"), "clean")
@@ -117,7 +80,7 @@ val testing by tasks.registering  {
     val appProject = subprojects.find { project -> "app" == project.name }
 
     val unitTestTasks = getProjectTask(appProject!!, "testDevDebugUnitTest")
-    val integrationTestTasks = getProjectTask(appProject!!, "jacocoTestReport")
+    val integrationTestTasks = getProjectTask(appProject, "jacocoTestReport")
 
     dependsOn(unitTestTasks)
     dependsOn(integrationTestTasks)
@@ -132,14 +95,6 @@ val release by tasks.registering {
 
     dependsOn(appTasks)
 }
-
-//static def getProjectTask(project, taskName) {
-//    def tasks = project.getTasksByName(taskName, true)
-//    if (tasks == null || tasks.empty) {
-//        throw new IllegalArgumentException("Task " + taskName + " not found")
-//    }
-//    return tasks
-//}
 
 fun getProjectTask(project: Project, taskName: String): MutableSet<Task> {
     val tasks = project.getTasksByName(taskName, true)

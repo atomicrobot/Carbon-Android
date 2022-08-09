@@ -19,11 +19,10 @@ plugins {
     id("jacoco")
     id("com.google.gms.google-services")
 }
-
 val appVersion = "1.0"
 val minSdkVersion = 29
 val targetSdkVersion = 32
-val compileSdkVersion = 32
+
 var versionCode = 1
 if (project.hasProperty("buildNumber")) {
     val buildNumber = Integer.parseInt(project.property("buildNumber").toString())
@@ -44,15 +43,13 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-
     defaultConfig {
         applicationId = "com.atomicrobot.carbon"
 
-        minSdk = minSdkVersion
-        targetSdk = targetSdkVersion
-        compileSdk = 32
+        minSdk = ConfigVals.minSdkVersion
+        targetSdk = ConfigVals.targetSdkVersion
+        compileSdk = ConfigVals.compileSdkVersion
         multiDexEnabled = true
-
         versionCode = version
         versionName = "\"$appVersion b$version\""
 
@@ -138,184 +135,137 @@ kapt {
     correctErrorTypes = true
 }
 
-// App dependency versions
-val appCompatVersion = "1.4.1"
-val composeActVersion = "1.4.0"
-val composeFoundationVersion = "1.2.0-beta02"
-val composeVersion = "1.1.1"
-val composeVmVersion = "2.4.1"
-val supportVersion = "1.0.0"
-val playServicesVersion = "17.6.0"
-val lifecycleVersion = "2.0.0"
-val lifecycleRuntimeVersion = "2.4.0"
-val retrofitVersion = "2.9.0"
-val okHttpVersion = "4.9.1"
-val moshiVersion = "1.13.0"
-val coreVersion = "1.7.0"
-val constraintLayoutVersion = "2.1.2"
-val recyclerViewVersion = "1.2.1"
-val materialVersion = "1.4.0"
-val timberVersion = "5.0.1"
-val leakCanaryVersion = "2.7"
-val navVersion = "2.4.2"
-val composeHiltNavigationVersion = "1.0.0"
-
-// Test dependency versions
-val mockitoVersion = "4.1.0"
-val mockitoKotlinVersion = "1.6.0"
-val robolectricVersion = "4.7.3"
-val androidTestSupportVersion = "1.4.0"
-val espressoVersion = "3.3.0"
-val junitVersion = "4.13.2"
-val junitTestVersion = "1.1.3"
-val daggerMockVersion = "0.8.4"
-
-/*
-Brought in from build.gradle (carbon-android)
- */
-val firebaseBomVersion = "28.0.0"
-val kotlinVersion = "1.6.10"
-val hiltVersion = "2.40.1"
-val navigationVersion = "1.0.0"
-val jacocoVersion = "0.8.6"
-
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
+    implementation(
+        platform("com.google.firebase:firebase-bom:${Dependencies.firebase_bom_version}")
+    )
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Add the Firebase Crashlytics SDK.
     implementation(
-        "com.google.firebase:firebase-crashlytics:" +
-            "$rootProject.ext.firebase_crashlytics_version"
+        "com.google.firebase:firebase-crashlytics:${Dependencies.firebase_crashlytics_version}"
     )
 
     // Recommended: Add the Google Analytics SDK.
     implementation(
-        "com.google.firebase:firebase-analytics:" +
-            "$rootProject.ext.firebase_analytics_version"
+        "com.google.firebase:firebase-analytics:${Dependencies.firebase_analytics_version}"
     )
 
-    implementation("org.jacoco:org.jacoco.core:$jacocoVersion")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
+    implementation("org.jacoco:org.jacoco.core:${Dependencies.jacoco_version}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Dependencies.kotlin_version}")
     implementation("androidx.test.ext:junit-ktx:1.1.3")
 
     // Android/Google libraries
-    implementation("androidx.core:core-ktx:$coreVersion")
+    implementation("androidx.core:core-ktx:${Dependencies.coreVersion}")
     implementation(
-        "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+        "androidx.constraintlayout:constraintlayout:${Dependencies.constraintLayoutVersion}"
     )
-    implementation("androidx.appcompat:appcompat:$appCompatVersion")
-    implementation("androidx.fragment:fragment-ktx:$appCompatVersion")
-    implementation("androidx.recyclerview:recyclerview:$recyclerViewVersion")
-    implementation("androidx.cardview:cardview:$supportVersion")
-    implementation("androidx.annotation:annotation:$supportVersion")
-    implementation("com.google.android.material:material:$materialVersion")
+    implementation("androidx.appcompat:appcompat:${Dependencies.appCompatVersion}")
+    implementation("androidx.fragment:fragment-ktx:${Dependencies.appCompatVersion}")
+    implementation("androidx.recyclerview:recyclerview:${Dependencies.recyclerViewVersion}")
+    implementation("androidx.cardview:cardview:${Dependencies.supportVersion}")
+    implementation("androidx.annotation:annotation:${Dependencies.supportVersion}")
+    implementation("com.google.android.material:material:${Dependencies.materialVersion}")
+
+    implementation("com.google.android.gms:play-services-base:${Dependencies.playServicesVersion}")
 
     implementation(
-        "com.google.android.gms:play-services-base:$playServicesVersion"
+        "androidx.lifecycle:lifecycle-runtime-ktx:${Dependencies.lifecycleRuntimeVersion}"
     )
-
+    implementation("androidx.lifecycle:lifecycle-extensions:${Dependencies.lifecycleVersion}")
+    implementation("androidx.lifecycle:lifecycle-common-java8:${Dependencies.lifecycleVersion}")
     implementation(
-        "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeVersion"
-    )
-    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
-    implementation(
-        "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleRuntimeVersion"
+        "androidx.lifecycle:lifecycle-viewmodel-ktx:${Dependencies.lifecycleRuntimeVersion}"
     )
 
     // Integration with activities
-    implementation("androidx.activity:activity-compose:$composeActVersion")
+    implementation("androidx.activity:activity-compose:${Dependencies.composeActVersion}")
     // Compose Material Design
-    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material:material:${Dependencies.composeVersion}")
     // Animations
-    implementation("androidx.compose.animation:animation:$composeVersion")
+    implementation("androidx.compose.animation:animation:${Dependencies.composeVersion}")
     // Tooling support (Previews, etc.)
-    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}")
     // Integration with ViewModels
     implementation(
-        "androidx.lifecycle:lifecycle-viewmodel-compose:$composeVmVersion"
+        "androidx.lifecycle:lifecycle-viewmodel-compose:${Dependencies.composeVmVersion}"
     )
     // UI Tests
-    androidTestImplementation(
-        "androidx.compose.ui:ui-test-junit4:$composeVersion"
-    )
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Dependencies.composeVersion}")
 
     implementation(
-        "androidx.compose.foundation:foundation:$composeFoundationVersion"
+        "androidx.compose.foundation:foundation:${Dependencies.composeFoundationVersion}"
     )
 
     // App architecture - Hilt
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
-    androidTestImplementation(
-        "com.google.dagger:hilt-android-testing:$hiltVersion"
-    )
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    implementation("com.google.dagger:hilt-android:${Dependencies.hilt_version}")
+    kapt("com.google.dagger:hilt-android-compiler:${Dependencies.hilt_version}")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:${Dependencies.hilt_version}")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${Dependencies.hilt_version}")
 
     // JSON
-    implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
+    implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshiVersion}")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshiVersion}")
 
     // Navigation
     implementation(
-        "android.arch.navigation:navigation-fragment-ktx:$navigationVersion"
+        "android.arch.navigation:navigation-fragment-ktx:${Dependencies.navigation_version}"
     )
-    implementation("android.arch.navigation:navigation-ui-ktx:$navigationVersion")
-    implementation("androidx.navigation:navigation-compose:$navVersion")
+    implementation("android.arch.navigation:navigation-ui-ktx:${Dependencies.navigation_version}")
+    implementation("androidx.navigation:navigation-compose:${Dependencies.androidNavVersion}")
     implementation(
-        "androidx.hilt:hilt-navigation-compose:$composeHiltNavigationVersion"
+        "androidx.hilt:hilt-navigation-compose:${Dependencies.composeHiltNavigationVersion}"
     )
 
     // Networking - HTTP
-    implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
-    implementation("com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion")
+    implementation("com.squareup.okhttp3:okhttp:${Dependencies.okHttpVersion}")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:${Dependencies.okHttpVersion}")
 
     // Networking - REST
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
+    implementation("com.squareup.retrofit2:retrofit:${Dependencies.retrofitVersion}")
+    implementation("com.squareup.retrofit2:converter-moshi:${Dependencies.retrofitVersion}")
 
     // Monitoring - Timber (logging)
-    implementation("com.jakewharton.timber:timber:$timberVersion")
+    implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
 
     // Monitoring - Leak Canary
     debugImplementation(
-        "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+        "com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}"
     )
 
     // Unit test
-    testImplementation("junit:junit:$junitVersion")
-    testImplementation("androidx.test:rules:$androidTestSupportVersion")
-    testImplementation("androidx.test:core:$androidTestSupportVersion")
-    testImplementation("androidx.test.ext:junit:$junitTestVersion")
-    testImplementation("org.robolectric:robolectric:$robolectricVersion")
-    testImplementation("org.mockito:mockito-core:$mockitoVersion")
-    testImplementation("com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion")
-    testImplementation("com.squareup.okhttp3:mockwebserver:$okHttpVersion")
+    testImplementation("junit:junit:${Dependencies.junitVersion}")
+    testImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")
+    testImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
+    testImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
+    testImplementation("org.robolectric:robolectric:${Dependencies.robolectricVersion}")
+    testImplementation("org.mockito:mockito-core:${Dependencies.mockitoVersion}")
+    testImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
+    testImplementation("com.squareup.okhttp3:mockwebserver:${Dependencies.okHttpVersion}")
 
     // Android JUnit Runner, JUnit Rules, and Espresso
-    androidTestImplementation("androidx.test:runner:$androidTestSupportVersion")
-    androidTestImplementation("androidx.test:rules:$androidTestSupportVersion")
-    androidTestImplementation("androidx.test:core:$androidTestSupportVersion")
-    androidTestImplementation("androidx.test.ext:junit:$junitTestVersion")
+    androidTestImplementation("androidx.test:runner:${Dependencies.androidTestSupportVersion}")
+    androidTestImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")
+    androidTestImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
+    androidTestImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
     androidTestImplementation(
-        "androidx.test.espresso:espresso-core:$espressoVersion"
+        "androidx.test.espresso:espresso-core:${Dependencies.espressoVersion}"
     )
     androidTestImplementation(
-        "androidx.test.espresso:espresso-contrib:$espressoVersion"
+        "androidx.test.espresso:espresso-contrib:${Dependencies.espressoVersion}"
     )
 
-    androidTestImplementation("org.mockito:mockito-android:$mockitoVersion")
+    androidTestImplementation("org.mockito:mockito-android:${Dependencies.mockitoVersion}")
     androidTestImplementation(
-        "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
+        "com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}"
     )
     androidTestImplementation(
-        "com.github.fabioCollini:DaggerMock:$daggerMockVersion"
+        "com.github.fabioCollini:DaggerMock:${Dependencies.daggerMockVersion}"
     )
 }
 
 jacoco {
-    toolVersion = jacocoVersion
+    toolVersion = Dependencies.jacoco_version
 }
 
 tasks.withType<Test> {
