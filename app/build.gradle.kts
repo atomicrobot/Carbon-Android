@@ -19,9 +19,9 @@ plugins {
     id("jacoco")
     id("com.google.gms.google-services")
 }
-val appVersion = "1.0"
-val minSdkVersion = 29
-val targetSdkVersion = 32
+val appVersion = ConfigVals.appVersion
+val minSdkVersion = ConfigVals.minSdkVersion
+val targetSdkVersion = ConfigVals.targetSdkVersion
 
 var versionCode = 1
 if (project.hasProperty("buildNumber")) {
@@ -46,8 +46,8 @@ android {
     defaultConfig {
         applicationId = "com.atomicrobot.carbon"
 
-        minSdk = ConfigVals.minSdkVersion
-        targetSdk = ConfigVals.targetSdkVersion
+        minSdk = minSdkVersion
+        targetSdk = targetSdkVersion
         compileSdk = ConfigVals.compileSdkVersion
         multiDexEnabled = true
         versionCode = version
