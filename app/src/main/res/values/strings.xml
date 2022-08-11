@@ -25,4 +25,6 @@
     <string name="cont_desc_settings_icon">Settings icon</string>
     <string name="cont_desc_scanner_icon">Scanner icon</string>
     <string name="camera_perm_rationale">The Camera permission is required to scan barcodes and QR codes.</string>
+    <string name="camera_perm_denied">Camera permission not granted</string>
+    <string name="camera_cont_desc">Snap a pic of a QrCode</string>
 </resources>

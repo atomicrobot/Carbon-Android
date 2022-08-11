@@ -2,7 +2,7 @@ package com.atomicrobot.carbon.ui.scanner
 
 import android.Manifest
 import android.app.Application
-import android.util.Log
+import android.os.SystemClock
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -31,6 +31,7 @@ class ScannerViewModel(private val app: Application)
      private var options: BarcodeScannerOptions = BarcodeScannerOptions.Builder()
          .setBarcodeFormats(Barcode.FORMAT_EAN_13,
                  Barcode.FORMAT_UPC_E,
+                 Barcode.FORMAT_CODE_128,
                  Barcode.FORMAT_QR_CODE)
          .build()
 
@@ -45,16 +46,23 @@ class ScannerViewModel(private val app: Application)
     private val _cameraSelectorState: MutableStateFlow<Int> =
             MutableStateFlow(CameraSelector.LENS_FACING_BACK)
 
-    private val _barcodeOverlayState: MutableStateFlow<ScannerImageOverlayState> =
-            MutableStateFlow(ScannerImageOverlayState())
+    private val _barcodeStateState: MutableStateFlow<BarcodeAnalysisState> =
+            MutableStateFlow(BarcodeAnalysisState())
 
     val cameraPermissionState = _cameraPermissionState.asStateFlow()
 
     val cameraSelectorState = _cameraSelectorState.asStateFlow()
 
-    val barcodeOverlayState = _barcodeOverlayState.asStateFlow()
+    val barcodeOverlayState = _barcodeStateState.asStateFlow()
+
+    private val currentBarcode: Barcode?
+        get() = _barcodeStateState.value.barcode
 
     private val isImageFlipped = _cameraSelectorState.value == CameraSelector.LENS_FACING_FRONT
+
+    private var _elapsedMillis: Long = -1L
+
+    private var _lastBarcode: Barcode? = null
 
     fun setCameraPermissionState(granted: Boolean) {
         viewModelScope.launch {
@@ -75,10 +83,9 @@ class ScannerViewModel(private val app: Application)
 
     override fun analyze(image: ImageProxy) {
         image.image?.let {
-            val rotationDegrees = image.imageInfo.rotationDegrees
             val imageWidth: Int
             val imageHeight: Int
-            if(rotationDegrees == 0 || rotationDegrees == 180) {
+            if(image.imageInfo.rotationDegrees == 0 || image.imageInfo.rotationDegrees == 180) {
                 imageWidth = image.width
                 imageHeight = image.height
             } else {
@@ -86,10 +93,10 @@ class ScannerViewModel(private val app: Application)
                 imageHeight = image.width
             }
             // If the image state has changed, update the barcode overlay
-            if(_barcodeOverlayState.value.sourceImageWidth != imageWidth ||
-                    _barcodeOverlayState.value.sourceImageHeight != imageHeight ||
-                    _barcodeOverlayState.value.isFlipped != isImageFlipped) {
-                _barcodeOverlayState.value = _barcodeOverlayState.value.copy(
+            if(_barcodeStateState.value.sourceImageWidth != imageWidth ||
+                    _barcodeStateState.value.sourceImageHeight != imageHeight ||
+                    _barcodeStateState.value.isFlipped != isImageFlipped) {
+                _barcodeStateState.value = _barcodeStateState.value.copy(
                         sourceImageWidth = imageWidth,
                         sourceImageHeight = imageHeight,
                         isFlipped = isImageFlipped)
@@ -106,17 +113,38 @@ class ScannerViewModel(private val app: Application)
     }
 
     override fun onSuccess(barcodes: List<Barcode>) {
-        _barcodeOverlayState.value =
-                _barcodeOverlayState.value.copy(barcode = barcodes.firstOrNull())
+        // Support for a single barcode is artificial and makes displaying overlay data easier
+        val newBarcode = barcodes.firstOrNull()
+         if(currentBarcode == null && newBarcode != null) {
+            _barcodeStateState.value = _barcodeStateState.value.copy(barcode = newBarcode)
+        }
+        else if(newBarcode?.rawValue != currentBarcode?.rawValue) {
+            val now = SystemClock.elapsedRealtime()
+            if(_elapsedMillis == Long.MAX_VALUE) {
+                _elapsedMillis = now
+            }
+            if((now - _elapsedMillis) >= MAX_BARCODE_DWELL_MS) {
+                _elapsedMillis = Long.MAX_VALUE
+                _barcodeStateState.value = _barcodeStateState.value.copy(barcode = newBarcode)
+            }
+        }
+        else {
+             _elapsedMillis = Long.MAX_VALUE
+            // Keep updating the state to have an accurate bounding box
+            _barcodeStateState.value = _barcodeStateState.value.copy(barcode = newBarcode)
+        }
     }
 
     override fun onFailure(exception: Exception) {
-        Log.d("DBUG", "Failed trying to detect barcodes: ${exception.message}")
-        _barcodeOverlayState.value = _barcodeOverlayState.value.copy(barcode = null)
+        _barcodeStateState.value = _barcodeStateState.value.copy(barcode = null)
+    }
+
+    companion object {
+        private const val MAX_BARCODE_DWELL_MS = 200
     }
 }
 
-data class ScannerImageOverlayState(
+data class BarcodeAnalysisState(
         val sourceImageWidth: Int = 0,
         val sourceImageHeight: Int = 0,
         val isFlipped: Boolean = false,
