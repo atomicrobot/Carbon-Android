@@ -10,8 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.atomicrobot.carbon.R
 
 sealed class AppScreens(val title: String, val route: String, val iconData: ScreenIcon) {
-    val graph: String
-        get() = "graph/${this.route}"
 
     object Home : AppScreens(
         "Home",
@@ -35,6 +33,12 @@ sealed class AppScreens(val title: String, val route: String, val iconData: Scre
         "Scanner",
         "scanner",
         ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
+    )
+
+    object DeepLink : AppScreens(
+            "Deep Link",
+            "deepLinkPath1",
+            ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
     )
 }
 

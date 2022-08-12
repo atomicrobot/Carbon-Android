@@ -24,81 +24,13 @@ class AppScreenPreviewProvider : PreviewParameterProvider<AppScreens> {
         get() = listOf(AppScreens.Home, AppScreens.Settings, AppScreens.Scanner).asSequence()
 }
 
-class BarcodeAnalysisStatePreviewProvider :
-        PreviewParameterProvider<StateFlow<BarcodeAnalysisState>> {
-    override val values: Sequence<StateFlow<BarcodeAnalysisState>>
-        get() = listOf(
-                MutableStateFlow(
-                        BarcodeAnalysisState(
-                                barcode = Barcode(
-                                        BarcodeSourceSourceImp(
-                                                "example@email.com")))),
-                MutableStateFlow(
-                        BarcodeAnalysisState(
-                                barcode = Barcode(
-                                        BarcodeSourceSourceImp(
-                                                "example12344@email.com")))))
-                .asSequence()
-}
-
-class BarcodeSourceSourceImp(
-        private val barcodeDisplayValue: String,
-        private val barcodeFormat: Int = Barcode.FORMAT_CODE_128): BarcodeSource {
-
-    override fun getFormat(): Int = barcodeFormat
-
-    override fun getValueType(): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun getBoundingBox(): Rect? = Rect(0,0,0,0)
-
-    override fun getCalendarEvent(): Barcode.CalendarEvent? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getContactInfo(): Barcode.ContactInfo? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getDriverLicense(): Barcode.DriverLicense? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getEmail(): Barcode.Email? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getGeoPoint(): Barcode.GeoPoint? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getPhone(): Barcode.Phone? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getSms(): Barcode.Sms? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getUrl(): Barcode.UrlBookmark? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getWifi(): Barcode.WiFi? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getDisplayValue(): String = barcodeDisplayValue
-
-    override fun getRawValue(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getRawBytes(): ByteArray? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getCornerPoints(): Array<Point>? = emptyArray<Point>()
+class CameraSelectorProvider: PreviewParameterProvider<CameraSelector> {
+    override val values: Sequence<CameraSelector>
+        get() = listOf(CameraSelector
+                .Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build()).asSequence()
 
 }
+
+

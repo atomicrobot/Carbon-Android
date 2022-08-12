@@ -3,6 +3,7 @@ package com.atomicrobot.carbon.ui.scanner
 import android.Manifest
 import android.graphics.Rect
 import android.graphics.RectF
+import android.util.Log
 import android.view.WindowManager
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -22,7 +23,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -45,9 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,14 +56,15 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.compose.LocalActivity
 import com.atomicrobot.carbon.ui.compose.PermissionRationaleResult
@@ -81,11 +80,8 @@ import kotlin.math.min
 fun ScannerScreen(
         scaffoldState: ScaffoldState = rememberScaffoldState(),
         onBarcodeSelected: (Barcode) -> Unit = {}) {
-    val viewModel: ScannerViewModel = getViewModel()
     val cameraPermRationale = stringResource(id = R.string.camera_perm_rationale)
-    val cameraPermissionState by viewModel.cameraPermissionState.collectAsState()
-    // Keep the screen active
-    KeepScreenOn(cameraPermissionState)
+    val viewModel: ScannerViewModel = getViewModel()
     RequestPermission(
         permission = Manifest.permission.CAMERA,
         onShowRationale =
@@ -101,11 +97,25 @@ fun ScannerScreen(
             }
         },
         onPermissionResult = {
-            viewModel.setCameraPermissionState(it == PermissionRequestResult.Granted)
+            when (it) {
+                PermissionRequestResult.Granted ->
+                    viewModel.setCameraPermissionState(it == PermissionRequestResult.Granted)
+                else -> {}
+            }
         }
     )
+    CameraContent(viewModel, onBarcodeSelected)
+}
+@Composable
+fun CameraContent(viewModel: ScannerViewModel = getViewModel(),
+                  onBarcodeSelected: (Barcode) -> Unit = {}) {
+    Log.d("DBUG", "Camera control is recomposing!!!")
+    val cameraPermissionState by viewModel.cameraPermissionState.collectAsState()
+    // Keep the screen active
+    KeepScreenOn(cameraPermissionState)
 
     val selectedCamera by viewModel.cameraSelectorState.collectAsState()
+    // ConstraintLayout in Jetpack Compose YAY!!!
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (preview, barcodeOverlay, barcodeChip, shutter) = createRefs()
         CameraPreview(
@@ -118,9 +128,11 @@ fun ScannerScreen(
                             end.linkTo(parent.end)
                             bottom.linkTo(parent.bottom)
                         },
+                viewModel.cameraProviderLiveData,
                 cameraPermissionState,
                 selectedCamera,
                 viewModel)
+        // Overlay that will highlight detected barcodes
         ScannerOverlay(Modifier
                 .fillMaxSize()
                 .constrainAs(barcodeOverlay)
@@ -131,7 +143,10 @@ fun ScannerScreen(
                     bottom.linkTo(parent.bottom)
                 },
                 viewModel.barcodeOverlayState)
-        ScannerChip(Modifier.constrainAs(barcodeChip)
+        // Clickable Chip that allows operator to try and open the barcode
+        ScannerChip(
+                // Make sure the chip is always above the camera button
+                modifier = Modifier.constrainAs(barcodeChip)
                 {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -139,6 +154,7 @@ fun ScannerScreen(
                 },
                 viewModel.barcodeOverlayState,
                 onBarcodeSelected)
+        // Button to allow the operator to toggle back and forth between front and rear cameras
         CameraButton(
                 Modifier.constrainAs(shutter)
                 {
@@ -154,62 +170,50 @@ fun ScannerScreen(
 
 @Composable
 fun CameraPreview(modifier: Modifier = Modifier,
+                  cameraProviderLiveData: LiveData<ProcessCameraProvider>,
                   cameraPermissionGranted: Boolean,
-                  selectedCamera: Int,
+                  cameraSelector: CameraSelector,
                   imageAnalyzer: ImageAnalysis.Analyzer = EmptyImageAnalyzer()) {
     when (cameraPermissionGranted) {
-        true -> LivePreview(modifier, selectedCamera, imageAnalyzer)
+        true -> LivePreview(modifier, cameraProviderLiveData, cameraSelector, imageAnalyzer)
         false -> NoCameraPermissionPreview(modifier)
     }
 }
 
 @Composable
 fun LivePreview(modifier: Modifier = Modifier,
-                selectedCamera: Int,
+                cameraProviderLiveData: LiveData<ProcessCameraProvider>,
+                cameraSelector: CameraSelector,
                 imageAnalyzer: ImageAnalysis.Analyzer = EmptyImageAnalyzer()) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
-    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
-
     AndroidView({ ctx ->
         // Embed the Camera PreviewView as the content
         PreviewView(ctx)
     }, modifier) {
-        // Add a listener that will get invoked on the main executor when the Camera
-        // Provider is available
-        cameraProviderFuture.addListener(
-                {
-                    val provider = cameraProviderFuture.get()
-                    provider.unbindAll()
+        cameraProviderLiveData.observe(lifecycleOwner) { provider ->
+            provider.unbindAll()
+            // Create a use-case for previewing the camera feed
+            val previewUseCase = Preview
+                    .Builder()
+                    .build()
+                    .apply { setSurfaceProvider(it.surfaceProvider) }
+            val usesCases: MutableList<UseCase> = mutableListOf(previewUseCase)
+            // Create a use-case for for analyzing the camera feed
+            val inferenceUseCase = ImageAnalysis.Builder()
+                    .build().apply {
+                        setAnalyzer(
+                                ContextCompat.getMainExecutor(it.context),
+                                imageAnalyzer)
+                    }
+            usesCases.add(inferenceUseCase)
 
-                    // Create a use-case for previewing the camera feed
-                    val previewUseCase = Preview
-                            .Builder()
-                            .build()
-                            .apply { setSurfaceProvider(it.surfaceProvider) }
-                    val usesCases: MutableList<UseCase> = mutableListOf(previewUseCase)
-                    // Create a use-case for for analyzing the camera feed
-                    val inferenceUseCase = ImageAnalysis.Builder()
-                            .build().apply {
-                                setAnalyzer(
-                                        ContextCompat.getMainExecutor(it.context),
-                                        imageAnalyzer)
-                            }
-                    usesCases.add(inferenceUseCase)
-
-                    val cameraSelector = CameraSelector.Builder()
-                            .requireLensFacing(selectedCamera)
-                            .build()
-
-                    // Attach use cases to the camera with the same lifecycle owner
-                    provider.bindToLifecycle(
-                            lifecycleOwner,
-                            cameraSelector,
-                            *usesCases.toTypedArray()
-                    )
-                },
-                ContextCompat.getMainExecutor(it.context)
-        )
+            // Attach use cases to the camera with the same lifecycle owner
+            provider.bindToLifecycle(
+                    lifecycleOwner,
+                    cameraSelector,
+                    *usesCases.toTypedArray()
+            )
+        }
     }
 }
 
@@ -249,27 +253,25 @@ fun ScannerChip(
     AnimatedVisibility(visible = barcodeOverlayState.hasBarcodes,
             modifier = modifier) {
         Row(
-                modifier = Modifier.padding(
-                        horizontal = 16.dp,
-                        vertical = 8.dp)
-                        .fillMaxWidth(0.75f)
-                        .background(color = Color.DarkGray, shape = CircleShape)
+                modifier = Modifier
+                        .padding(horizontal = 40.dp, vertical = 8.dp)
                         .clip(shape = CircleShape)
-                        .padding(horizontal = 16.dp, vertical = 4.dp)
-                        .clickable {
-                            onBarcodeSelected(barcodeOverlayState.barcode!!)
-                        },
+                        .background(color = Color.DarkGray, shape = CircleShape)
+                        .clickable { onBarcodeSelected(barcodeOverlayState.barcode!!) }
+                        .padding(horizontal = 16.dp, vertical = 6.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                    imageVector = Icons.Rounded.QrCode,
-                    contentDescription = "",
-                    modifier = Modifier.padding(end = 8.dp),
-                    tint = Color.White)
+                imageVector = Icons.Rounded.QrCode,
+                contentDescription = "",
+                modifier = Modifier.padding(end = 8.dp),
+                tint = Color.White)
             Text(
-                    text = barcodeOverlayState.barcode?.displayValue ?: "",
-                    color = Color.White,
-                    fontSize = 16.sp)
+                text = barcodeOverlayState.barcode?.displayValue ?: "",
+                color = Color.White,
+                fontSize = 16.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1)
         }
     }
 }
@@ -290,7 +292,7 @@ fun ScannerOverlay(
 
     val textBoundsRect = remember { Rect() }
     val textDrawRect = remember { RectF() }
-    val adjustBoundsRect = remember { RectF() }
+    val adjustedBoundingRect = remember { RectF() }
 
     Canvas(modifier = modifier) {
         if(barcodeOverlayState.hasBarcodes) {
@@ -330,8 +332,8 @@ fun ScannerOverlay(
              * Returns a new RectF based on source but correct for the coordinate space of the
              * drawing context
              */
-            fun adjustBounds(source: Rect): RectF {
-                return adjustBoundsRect.apply {
+            fun adjustBounds(source: Rect, outRect: RectF) {
+                outRect.apply {
                     set(source)
                     val x0 = translateX(left)
                     val x1 = translateX(right)
@@ -342,12 +344,12 @@ fun ScannerOverlay(
                 }
             }
 
-            val boundingBox = adjustBounds(barcodeOverlayState.barcode?.boundingBox!!)
+            adjustBounds(barcodeOverlayState.barcode?.boundingBox!!, adjustedBoundingRect)
             // Draw barcode bounding box
             drawRoundRect(
                     color = Color.DarkGray,
-                    topLeft = Offset(boundingBox.left, boundingBox.top),
-                    size = Size(boundingBox.width(), boundingBox.height()),
+                    topLeft = Offset(adjustedBoundingRect.left, adjustedBoundingRect.top),
+                    size = Size(adjustedBoundingRect.width(), adjustedBoundingRect.height()),
                     style = Stroke(width = 4.dp.toPx()))
 
             val barcodeText = barcodeOverlayState.barcode!!.displayValue!!
@@ -355,20 +357,22 @@ fun ScannerOverlay(
             val textHeight = textBoundsRect.height().toFloat()
             val textWidth = textPaint.measureText(barcodeText) + 4.dp.toPx()
 
-            if((boundingBox.top - textHeight - 16.dp.toPx()) < 0) {
+            // Make sure the rect isn't to close to the top of the screen that would cause it to
+            // clip
+            if((adjustedBoundingRect.top - textHeight - 16.dp.toPx()) < 0) {
                 // Draw the label on the bottom of the bounding box
                 textDrawRect.apply {
-                    left = boundingBox.left
+                    left = adjustedBoundingRect.left
                     right = left + textWidth + 8.dp.toPx()
-                    top = boundingBox.bottom
+                    top = adjustedBoundingRect.bottom
                     bottom = top + textHeight + 16.dp.toPx()
                 }
             }
             else {
                 textDrawRect.apply {
-                    left = boundingBox.left
+                    left = adjustedBoundingRect.left
                     right = left + textWidth + 16.dp.toPx()
-                    bottom = boundingBox.top
+                    bottom = adjustedBoundingRect.top
                     top = (bottom - 16.dp.toPx() - textHeight)
                 }
             }
@@ -382,7 +386,7 @@ fun ScannerOverlay(
                     .canvas
                     .nativeCanvas
                     .drawText(barcodeOverlayState.barcode!!.displayValue!!,
-                            boundingBox.left + 8.dp.toPx(),
+                            adjustedBoundingRect.left + 8.dp.toPx(),
                             textDrawRect.centerY() + (textHeight / 2f),
                             textPaint)
         }
@@ -394,7 +398,7 @@ fun ScannerOverlay(
 fun CameraButton(
         modifier: Modifier = Modifier,
         cameraPermissionGranted: Boolean = false,
-        selectedCamera: Int = CameraSelector.LENS_FACING_BACK,
+        cameraSelector: CameraSelector? = null,
         onToggleCamera: () -> Unit = { }) {
     OutlinedButton(
             onClick = onToggleCamera,
@@ -412,16 +416,16 @@ fun CameraButton(
                         .clip(CircleShape),
                 color = Color.White
         ) {
-            val imageVec = if (selectedCamera == CameraSelector.LENS_FACING_BACK) {
+            val imageVec = if (cameraSelector?.lensFacing == CameraSelector.LENS_FACING_BACK) {
                 Icons.Rounded.PhotoCameraBack
             } else {
                 Icons.Rounded.PhotoCameraFront
             }
             Icon(
-                    imageVector = imageVec,
-                    modifier = Modifier.padding(16.dp),
-                    contentDescription = stringResource(R.string.camera_cont_desc),
-                    tint = Color.Black
+                imageVector = imageVec,
+                modifier = Modifier.padding(16.dp),
+                contentDescription = stringResource(R.string.camera_cont_desc),
+                tint = Color.Black
             )
         }
     }

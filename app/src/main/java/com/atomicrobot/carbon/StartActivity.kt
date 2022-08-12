@@ -22,6 +22,8 @@ class StartActivity : ComponentActivity() {
 
         setContent {
             CarbonAndroidTheme {
+                // Wrap the composable in a LocalActivity provider so our composable 'environment'
+                // has access to Activity context/scope which is required for requesting permissions
                 CompositionLocalProvider(LocalActivity provides this) {
                     MainNavigation(isDeepLinkIntent)
                 }
