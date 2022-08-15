@@ -36,9 +36,9 @@ sealed class AppScreens(val title: String, val route: String, val iconData: Scre
     )
 
     object DeepLink : AppScreens(
-            "Deep Link",
-            "deepLinkPath1",
-            ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
+        "Deep Link",
+        "deepLinkPath1",
+        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
     )
 }
 

@@ -78,8 +78,9 @@ import kotlin.math.min
 
 @Composable
 fun ScannerScreen(
-        scaffoldState: ScaffoldState = rememberScaffoldState(),
-        onBarcodeSelected: (Barcode) -> Unit = {}) {
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    onBarcodeSelected: (Barcode) -> Unit = {}
+) {
     val cameraPermRationale = stringResource(id = R.string.camera_perm_rationale)
     val viewModel: ScannerViewModel = getViewModel()
     RequestPermission(
@@ -107,8 +108,10 @@ fun ScannerScreen(
     CameraContent(viewModel, onBarcodeSelected)
 }
 @Composable
-fun CameraContent(viewModel: ScannerViewModel = getViewModel(),
-                  onBarcodeSelected: (Barcode) -> Unit = {}) {
+fun CameraContent(
+    viewModel: ScannerViewModel = getViewModel(),
+    onBarcodeSelected: (Barcode) -> Unit = {}
+) {
     Log.d("DBUG", "Camera control is recomposing!!!")
     val cameraPermissionState by viewModel.cameraPermissionState.collectAsState()
     // Keep the screen active
@@ -119,61 +122,64 @@ fun CameraContent(viewModel: ScannerViewModel = getViewModel(),
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (preview, barcodeOverlay, barcodeChip, shutter) = createRefs()
         CameraPreview(
-                Modifier
-                        .fillMaxSize()
-                        .constrainAs(preview)
-                        {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                        },
-                viewModel.cameraProviderLiveData,
-                cameraPermissionState,
-                selectedCamera,
-                viewModel)
-        // Overlay that will highlight detected barcodes
-        ScannerOverlay(Modifier
+            Modifier
                 .fillMaxSize()
-                .constrainAs(barcodeOverlay)
-                {
+                .constrainAs(preview) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
                 },
-                viewModel.barcodeOverlayState)
-        // Clickable Chip that allows operator to try and open the barcode
-        ScannerChip(
-                // Make sure the chip is always above the camera button
-                modifier = Modifier.constrainAs(barcodeChip)
-                {
+            viewModel.cameraProviderLiveData,
+            cameraPermissionState,
+            selectedCamera,
+            viewModel
+        )
+        // Overlay that will highlight detected barcodes
+        ScannerOverlay(
+            Modifier
+                .fillMaxSize()
+                .constrainAs(barcodeOverlay) {
+                    top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    bottom.linkTo(shutter.top, 16.dp)
+                    bottom.linkTo(parent.bottom)
                 },
-                viewModel.barcodeOverlayState,
-                onBarcodeSelected)
+            viewModel.barcodeOverlayState
+        )
+        // Clickable Chip that allows operator to try and open the barcode
+        ScannerChip(
+            // Make sure the chip is always above the camera button
+            modifier = Modifier.constrainAs(barcodeChip) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(shutter.top, 16.dp)
+            },
+            viewModel.barcodeOverlayState,
+            onBarcodeSelected
+        )
         // Button to allow the operator to toggle back and forth between front and rear cameras
         CameraButton(
-                Modifier.constrainAs(shutter)
-                {
-                    start.linkTo(parent.start, 16.dp)
-                    end.linkTo(parent.end, 16.dp)
-                    bottom.linkTo(parent.bottom, 10.dp)
-                },
-                cameraPermissionState,
-                selectedCamera,
-                viewModel::toggleSelectedCamera)
+            Modifier.constrainAs(shutter) {
+                start.linkTo(parent.start, 16.dp)
+                end.linkTo(parent.end, 16.dp)
+                bottom.linkTo(parent.bottom, 10.dp)
+            },
+            cameraPermissionState,
+            selectedCamera,
+            viewModel::toggleSelectedCamera
+        )
     }
 }
 
 @Composable
-fun CameraPreview(modifier: Modifier = Modifier,
-                  cameraProviderLiveData: LiveData<ProcessCameraProvider>,
-                  cameraPermissionGranted: Boolean,
-                  cameraSelector: CameraSelector,
-                  imageAnalyzer: ImageAnalysis.Analyzer = EmptyImageAnalyzer()) {
+fun CameraPreview(
+    modifier: Modifier = Modifier,
+    cameraProviderLiveData: LiveData<ProcessCameraProvider>,
+    cameraPermissionGranted: Boolean,
+    cameraSelector: CameraSelector,
+    imageAnalyzer: ImageAnalysis.Analyzer = EmptyImageAnalyzer()
+) {
     when (cameraPermissionGranted) {
         true -> LivePreview(modifier, cameraProviderLiveData, cameraSelector, imageAnalyzer)
         false -> NoCameraPermissionPreview(modifier)
@@ -181,40 +187,43 @@ fun CameraPreview(modifier: Modifier = Modifier,
 }
 
 @Composable
-fun LivePreview(modifier: Modifier = Modifier,
-                cameraProviderLiveData: LiveData<ProcessCameraProvider>,
-                cameraSelector: CameraSelector,
-                imageAnalyzer: ImageAnalysis.Analyzer = EmptyImageAnalyzer()) {
+fun LivePreview(
+    modifier: Modifier = Modifier,
+    cameraProviderLiveData: LiveData<ProcessCameraProvider>,
+    cameraSelector: CameraSelector,
+    imageAnalyzer: ImageAnalysis.Analyzer = EmptyImageAnalyzer()
+) {
     val lifecycleOwner = LocalLifecycleOwner.current
     AndroidView({ ctx ->
         // Embed the Camera PreviewView as the content
         PreviewView(ctx)
     }, modifier) {
-        cameraProviderLiveData.observe(lifecycleOwner) { provider ->
-            provider.unbindAll()
-            // Create a use-case for previewing the camera feed
-            val previewUseCase = Preview
-                    .Builder()
-                    .build()
-                    .apply { setSurfaceProvider(it.surfaceProvider) }
-            val usesCases: MutableList<UseCase> = mutableListOf(previewUseCase)
-            // Create a use-case for for analyzing the camera feed
-            val inferenceUseCase = ImageAnalysis.Builder()
-                    .build().apply {
-                        setAnalyzer(
-                                ContextCompat.getMainExecutor(it.context),
-                                imageAnalyzer)
-                    }
-            usesCases.add(inferenceUseCase)
+    cameraProviderLiveData.observe(lifecycleOwner) { provider ->
+        provider.unbindAll()
+        // Create a use-case for previewing the camera feed
+        val previewUseCase = Preview
+            .Builder()
+            .build()
+            .apply { setSurfaceProvider(it.surfaceProvider) }
+        val usesCases: MutableList<UseCase> = mutableListOf(previewUseCase)
+        // Create a use-case for for analyzing the camera feed
+        val inferenceUseCase = ImageAnalysis.Builder()
+            .build().apply {
+                setAnalyzer(
+                    ContextCompat.getMainExecutor(it.context),
+                    imageAnalyzer
+                )
+            }
+        usesCases.add(inferenceUseCase)
 
-            // Attach use cases to the camera with the same lifecycle owner
-            provider.bindToLifecycle(
-                    lifecycleOwner,
-                    cameraSelector,
-                    *usesCases.toTypedArray()
-            )
-        }
+        // Attach use cases to the camera with the same lifecycle owner
+        provider.bindToLifecycle(
+            lifecycleOwner,
+            cameraSelector,
+            *usesCases.toTypedArray()
+        )
     }
+}
 }
 
 @androidx.compose.ui.tooling.preview.Preview
@@ -222,21 +231,22 @@ fun LivePreview(modifier: Modifier = Modifier,
 fun NoCameraPermissionPreview(modifier: Modifier = Modifier) {
     Surface(modifier = modifier, color = Color.DarkGray) {
         Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             Image(
-                    imageVector = Icons.Rounded.PhotoCamera,
-                    contentDescription = "Camera",
-                    modifier = Modifier
-                            .size(88.dp)
-                            .align(Alignment.CenterHorizontally),
-                    colorFilter = ColorFilter.tint(Color.White)
+                imageVector = Icons.Rounded.PhotoCamera,
+                contentDescription = "Camera",
+                modifier = Modifier
+                    .size(88.dp)
+                    .align(Alignment.CenterHorizontally),
+                colorFilter = ColorFilter.tint(Color.White)
             )
             Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = stringResource(R.string.camera_perm_denied),
-                    color = Color.White,
-                    style = MaterialTheme.typography.body1
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = stringResource(R.string.camera_perm_denied),
+                color = Color.White,
+                style = MaterialTheme.typography.body1
             )
         }
     }
@@ -244,42 +254,49 @@ fun NoCameraPermissionPreview(modifier: Modifier = Modifier) {
 
 @Composable
 fun ScannerChip(
-        modifier: Modifier = Modifier,
-        barcodeOverlayStateFlow: StateFlow<BarcodeAnalysisState>,
-        onBarcodeSelected: (Barcode) -> Unit = {}) {
+    modifier: Modifier = Modifier,
+    barcodeOverlayStateFlow: StateFlow<BarcodeAnalysisState>,
+    onBarcodeSelected: (Barcode) -> Unit = {}
+) {
     val barcodeOverlayState by barcodeOverlayStateFlow.collectAsState()
 
     // Hide the chip if there are no barcodes
-    AnimatedVisibility(visible = barcodeOverlayState.hasBarcodes,
-            modifier = modifier) {
+    AnimatedVisibility(
+        visible = barcodeOverlayState.hasBarcodes,
+        modifier = modifier
+    ) {
         Row(
-                modifier = Modifier
-                        .padding(horizontal = 40.dp, vertical = 8.dp)
-                        .clip(shape = CircleShape)
-                        .background(color = Color.DarkGray, shape = CircleShape)
-                        .clickable { onBarcodeSelected(barcodeOverlayState.barcode!!) }
-                        .padding(horizontal = 16.dp, vertical = 6.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically) {
+            modifier = Modifier
+                .padding(horizontal = 40.dp, vertical = 8.dp)
+                .clip(shape = CircleShape)
+                .background(color = Color.DarkGray, shape = CircleShape)
+                .clickable { onBarcodeSelected(barcodeOverlayState.barcode!!) }
+                .padding(horizontal = 16.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 imageVector = Icons.Rounded.QrCode,
                 contentDescription = "",
                 modifier = Modifier.padding(end = 8.dp),
-                tint = Color.White)
+                tint = Color.White
+            )
             Text(
                 text = barcodeOverlayState.barcode?.displayValue ?: "",
                 color = Color.White,
                 fontSize = 16.sp,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = 1)
+                maxLines = 1
+            )
         }
     }
 }
 
 @Composable
 fun ScannerOverlay(
-        modifier: Modifier = Modifier,
-        barcodeOverlayStateFlow: StateFlow<BarcodeAnalysisState>) {
+    modifier: Modifier = Modifier,
+    barcodeOverlayStateFlow: StateFlow<BarcodeAnalysisState>
+) {
     val barcodeOverlayState by barcodeOverlayStateFlow.collectAsState()
 
     val textPaint = remember {
@@ -295,15 +312,17 @@ fun ScannerOverlay(
     val adjustedBoundingRect = remember { RectF() }
 
     Canvas(modifier = modifier) {
-        if(barcodeOverlayState.hasBarcodes) {
+        if (barcodeOverlayState.hasBarcodes) {
             /*
              * The logic for converting the barcode bounding box into the Compose coordinate space
              * was based on the example found in the MLKit Vision sample found at this link:
              * https://github.com/googlesamples/mlkit
              */
             val viewAspectRatio: Float = size.width / size.height
-            val imageAspectRatio: Float = (barcodeOverlayState.sourceImageWidth.toFloat()
-                    / barcodeOverlayState.sourceImageHeight)
+            val imageAspectRatio: Float = (
+                barcodeOverlayState.sourceImageWidth.toFloat() /
+                    barcodeOverlayState.sourceImageHeight
+                )
 
             var postScaleWidthOffset = 0f
             var postScaleHeightOffset = 0f
@@ -321,10 +340,10 @@ fun ScannerOverlay(
 
             fun scale(pixel: Float) = scaleFactor * pixel
 
-            fun translateX(x: Float): Float = if(barcodeOverlayState.isFlipped)
-                    size.width - (scale(x) - postScaleWidthOffset)
-                else
-                    scale(x) - postScaleWidthOffset
+            fun translateX(x: Float): Float = if (barcodeOverlayState.isFlipped)
+                size.width - (scale(x) - postScaleWidthOffset)
+            else
+                scale(x) - postScaleWidthOffset
 
             fun translateY(y: Float): Float = scale(y) - postScaleHeightOffset
 
@@ -347,10 +366,11 @@ fun ScannerOverlay(
             adjustBounds(barcodeOverlayState.barcode?.boundingBox!!, adjustedBoundingRect)
             // Draw barcode bounding box
             drawRoundRect(
-                    color = Color.DarkGray,
-                    topLeft = Offset(adjustedBoundingRect.left, adjustedBoundingRect.top),
-                    size = Size(adjustedBoundingRect.width(), adjustedBoundingRect.height()),
-                    style = Stroke(width = 4.dp.toPx()))
+                color = Color.DarkGray,
+                topLeft = Offset(adjustedBoundingRect.left, adjustedBoundingRect.top),
+                size = Size(adjustedBoundingRect.width(), adjustedBoundingRect.height()),
+                style = Stroke(width = 4.dp.toPx())
+            )
 
             val barcodeText = barcodeOverlayState.barcode!!.displayValue!!
             textPaint.getTextBounds(barcodeText, 0, barcodeText.length, textBoundsRect)
@@ -359,7 +379,7 @@ fun ScannerOverlay(
 
             // Make sure the rect isn't to close to the top of the screen that would cause it to
             // clip
-            if((adjustedBoundingRect.top - textHeight - 16.dp.toPx()) < 0) {
+            if ((adjustedBoundingRect.top - textHeight - 16.dp.toPx()) < 0) {
                 // Draw the label on the bottom of the bounding box
                 textDrawRect.apply {
                     left = adjustedBoundingRect.left
@@ -367,8 +387,7 @@ fun ScannerOverlay(
                     top = adjustedBoundingRect.bottom
                     bottom = top + textHeight + 16.dp.toPx()
                 }
-            }
-            else {
+            } else {
                 textDrawRect.apply {
                     left = adjustedBoundingRect.left
                     right = left + textWidth + 16.dp.toPx()
@@ -378,17 +397,20 @@ fun ScannerOverlay(
             }
             // Draw barcode label rect
             drawRoundRect(
-                    color = Color.DarkGray,
-                    topLeft = Offset(textDrawRect.left, textDrawRect.top),
-                    size = Size(textDrawRect.width(), textDrawRect.height()))
+                color = Color.DarkGray,
+                topLeft = Offset(textDrawRect.left, textDrawRect.top),
+                size = Size(textDrawRect.width(), textDrawRect.height())
+            )
             // For some reason text drawing in compose requires explicit calls to the native canvas.
             drawContext
-                    .canvas
-                    .nativeCanvas
-                    .drawText(barcodeOverlayState.barcode!!.displayValue!!,
-                            adjustedBoundingRect.left + 8.dp.toPx(),
-                            textDrawRect.centerY() + (textHeight / 2f),
-                            textPaint)
+                .canvas
+                .nativeCanvas
+                .drawText(
+                    barcodeOverlayState.barcode!!.displayValue!!,
+                    adjustedBoundingRect.left + 8.dp.toPx(),
+                    textDrawRect.centerY() + (textHeight / 2f),
+                    textPaint
+                )
         }
     }
 }
@@ -396,25 +418,26 @@ fun ScannerOverlay(
 @androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun CameraButton(
-        modifier: Modifier = Modifier,
-        cameraPermissionGranted: Boolean = false,
-        cameraSelector: CameraSelector? = null,
-        onToggleCamera: () -> Unit = { }) {
+    modifier: Modifier = Modifier,
+    cameraPermissionGranted: Boolean = false,
+    cameraSelector: CameraSelector? = null,
+    onToggleCamera: () -> Unit = { }
+) {
     OutlinedButton(
-            onClick = onToggleCamera,
-            modifier = modifier
-                    .size(80.dp),
-            enabled = cameraPermissionGranted,
-            shape = CircleShape,
-            border = BorderStroke(2.dp, Color.White),
-            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Transparent),
-            contentPadding = PaddingValues(5.dp)
+        onClick = onToggleCamera,
+        modifier = modifier
+            .size(80.dp),
+        enabled = cameraPermissionGranted,
+        shape = CircleShape,
+        border = BorderStroke(2.dp, Color.White),
+        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Transparent),
+        contentPadding = PaddingValues(5.dp)
     ) {
         Surface(
-                modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape),
-                color = Color.White
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(CircleShape),
+            color = Color.White
         ) {
             val imageVec = if (cameraSelector?.lensFacing == CameraSelector.LENS_FACING_BACK) {
                 Icons.Rounded.PhotoCameraBack
@@ -433,7 +456,7 @@ fun CameraButton(
 
 @Composable
 fun KeepScreenOn(cameraPermissionState: Boolean) {
-    if(cameraPermissionState) {
+    if (cameraPermissionState) {
         val activity = LocalActivity.current
         DisposableEffect(Unit) {
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -444,7 +467,7 @@ fun KeepScreenOn(cameraPermissionState: Boolean) {
     }
 }
 
-class EmptyImageAnalyzer: ImageAnalysis.Analyzer {
+class EmptyImageAnalyzer : ImageAnalysis.Analyzer {
     override fun analyze(image: ImageProxy) {
         TODO("Not yet implemented")
     }

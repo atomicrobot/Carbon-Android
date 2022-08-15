@@ -10,10 +10,11 @@ import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun RequestPermission(
-        permission: String,
-        onShowRationale: suspend CoroutineScope.(String) -> PermissionRationaleResult
-            = { PermissionRationaleResult.ActionPerformed },
-        onPermissionResult: (PermissionRequestResult) -> Unit) {
+    permission: String,
+    onShowRationale: suspend CoroutineScope.(String) -> PermissionRationaleResult =
+        { PermissionRationaleResult.ActionPerformed },
+    onPermissionResult: (PermissionRequestResult) -> Unit
+) {
     val activity = LocalActivity.current
 
     // Create a permission request launcher that will received the result of the perm. request
