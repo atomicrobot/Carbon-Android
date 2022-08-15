@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -61,7 +63,7 @@ fun Drawer(
 @Preview
 @Composable
 fun DrawerAppScreenItem(
-    @PreviewParameter(AppScreenPreviewProvider::class, limit = 2) screen: AppScreens,
+    @PreviewParameter(AppScreenPreviewProvider::class, limit = 3) screen: AppScreens,
     onDestinationClicked: (route: String) -> Unit = { _ -> }
 ) {
     Row(
@@ -76,10 +78,13 @@ fun DrawerAppScreenItem(
         Icon(
             screen.iconData.icon,
             stringResource(id = screen.iconData.iconContentDescription),
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.size(45.dp)
+                .padding(8.dp)
+                .align(Alignment.CenterVertically)
         )
         Text(
             text = screen.title,
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h4,
         )
     }

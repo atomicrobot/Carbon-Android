@@ -4,13 +4,12 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.atomicrobot.carbon.R
 
 sealed class AppScreens(val title: String, val route: String, val iconData: ScreenIcon) {
-    val graph: String
-        get() = "graph/${this.route}"
 
     object Home : AppScreens(
         "Home",
@@ -28,6 +27,18 @@ sealed class AppScreens(val title: String, val route: String, val iconData: Scre
         "Splash",
         "splash",
         ScreenIcon(Icons.Filled.Build, R.string.cont_desc_splash_icon)
+    )
+
+    object Scanner : AppScreens(
+        "Scanner",
+        "scanner",
+        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
+    )
+
+    object DeepLink : AppScreens(
+        "Deep Link",
+        "deepLinkPath1",
+        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
     )
 }
 
