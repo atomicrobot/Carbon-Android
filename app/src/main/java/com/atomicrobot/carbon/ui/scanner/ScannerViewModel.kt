@@ -32,6 +32,15 @@ class ScannerViewModel(private val app: Application) :
     OnSuccessListener<List<Barcode>>,
     OnFailureListener {
 
+    data class BarcodeAnalysisState(
+        val sourceImageWidth: Int = 0,
+        val sourceImageHeight: Int = 0,
+        val isFlipped: Boolean = false,
+        val barcode: Barcode? = null
+    ) {
+        val hasBarcodes: Boolean = barcode != null
+    }
+
     private var options: BarcodeScannerOptions = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
             Barcode.FORMAT_EAN_13,
@@ -70,12 +79,6 @@ class ScannerViewModel(private val app: Application) :
 
     private val isFrontFacing
         get() = _cameraSelectorState.value.lensFacing == CameraSelector.LENS_FACING_FRONT
-
-    private val isBackFacing
-        get() = isFrontFacing
-
-    private val isImageFlipped
-        get() = isFrontFacing
 
     private var _elapsedMillis: Long = -1L
 
@@ -145,12 +148,12 @@ class ScannerViewModel(private val app: Application) :
             // If the image state has changed, update the barcode overlay
             if (_barcodeStateState.value.sourceImageWidth != imageWidth ||
                 _barcodeStateState.value.sourceImageHeight != imageHeight ||
-                _barcodeStateState.value.isFlipped != isImageFlipped
+                _barcodeStateState.value.isFlipped != isFrontFacing
             ) {
                 _barcodeStateState.value = _barcodeStateState.value.copy(
                     sourceImageWidth = imageWidth,
                     sourceImageHeight = imageHeight,
-                    isFlipped = isImageFlipped
+                    isFlipped = isFrontFacing
                 )
             }
             // Pass the image to the barcode scanner then assign a completion listener that will
@@ -197,13 +200,4 @@ class ScannerViewModel(private val app: Application) :
     companion object {
         private const val MAX_BARCODE_DWELL_MS = 500
     }
-}
-
-data class BarcodeAnalysisState(
-    val sourceImageWidth: Int = 0,
-    val sourceImageHeight: Int = 0,
-    val isFlipped: Boolean = false,
-    val barcode: Barcode? = null
-) {
-    val hasBarcodes: Boolean = barcode != null
 }

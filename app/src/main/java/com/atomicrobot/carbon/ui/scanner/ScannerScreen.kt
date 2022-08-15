@@ -3,7 +3,6 @@ package com.atomicrobot.carbon.ui.scanner
 import android.Manifest
 import android.graphics.Rect
 import android.graphics.RectF
-import android.util.Log
 import android.view.WindowManager
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -55,7 +54,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -112,7 +110,6 @@ fun CameraContent(
     viewModel: ScannerViewModel = getViewModel(),
     onBarcodeSelected: (Barcode) -> Unit = {}
 ) {
-    Log.d("DBUG", "Camera control is recomposing!!!")
     val cameraPermissionState by viewModel.cameraPermissionState.collectAsState()
     // Keep the screen active
     KeepScreenOn(cameraPermissionState)
@@ -255,7 +252,7 @@ fun NoCameraPermissionPreview(modifier: Modifier = Modifier) {
 @Composable
 fun ScannerChip(
     modifier: Modifier = Modifier,
-    barcodeOverlayStateFlow: StateFlow<BarcodeAnalysisState>,
+    barcodeOverlayStateFlow: StateFlow<ScannerViewModel.BarcodeAnalysisState>,
     onBarcodeSelected: (Barcode) -> Unit = {}
 ) {
     val barcodeOverlayState by barcodeOverlayStateFlow.collectAsState()
@@ -295,7 +292,7 @@ fun ScannerChip(
 @Composable
 fun ScannerOverlay(
     modifier: Modifier = Modifier,
-    barcodeOverlayStateFlow: StateFlow<BarcodeAnalysisState>
+    barcodeOverlayStateFlow: StateFlow<ScannerViewModel.BarcodeAnalysisState>
 ) {
     val barcodeOverlayState by barcodeOverlayStateFlow.collectAsState()
 
@@ -395,6 +392,7 @@ fun ScannerOverlay(
                     top = (bottom - 16.dp.toPx() - textHeight)
                 }
             }
+            /* Ignore drawing the text with the overlay.. ScannerChip will take care of this
             // Draw barcode label rect
             drawRoundRect(
                 color = Color.DarkGray,
@@ -411,6 +409,7 @@ fun ScannerOverlay(
                     textDrawRect.centerY() + (textHeight / 2f),
                     textPaint
                 )
+             */
         }
     }
 }
