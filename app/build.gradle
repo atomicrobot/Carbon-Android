@@ -163,6 +163,7 @@ ext {
 
     mlBarcodeScannerVersion = '17.0.2'
     camerax_version = '1.2.0-alpha04'
+    splashVersion = "1.0.0"
 }
 
 dependencies {
@@ -293,6 +294,7 @@ dependencies {
     implementation "androidx.camera:camera-extensions:${camerax_version}"
 
     implementation "androidx.constraintlayout:constraintlayout-compose:${compose_constraint_version}"
+    implementation "androidx.core:core-splashscreen:${splashVersion}"
 }
 
 

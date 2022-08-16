@@ -7,6 +7,9 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.atomicrobot.carbon.R
 
 sealed class AppScreens(val title: String, val route: String, val iconData: ScreenIcon) {
@@ -39,7 +42,42 @@ sealed class AppScreens(val title: String, val route: String, val iconData: Scre
         "Deep Link",
         "deepLinkPath1",
         ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
-    )
+    ) {
+
+        const val textColor = "textColor"
+        const val textSize = "textSize"
+        const val path = "path"
+
+        val routeWithArgs = "deepLink/{$path}"
+
+        val arguments = listOf(
+            navArgument(path) {
+                nullable = false
+                type = NavType.StringType
+            },
+            navArgument(textColor) {
+                nullable = true
+                type = NavType.StringType
+                defaultValue = "black"
+            },
+            navArgument(textSize) {
+                nullable = true
+                type = NavType.StringType
+                defaultValue = "30"
+            }
+        )
+        val deepLink = listOf(
+            navDeepLink {
+                uriPattern = "atomicrobot://carbon-android/{$path}?textSize={$textSize}&textColor={$textColor}"
+            },
+            navDeepLink {
+                uriPattern = "http://www.atomicrobot.com/carbon-android/{$path}?textSize={$textSize}&textColor={$textColor}"
+            },
+            navDeepLink {
+                uriPattern = "https://www.atomicrobot.com/carbon-android/{$path}?textSize={$textSize}&textColor={$textColor}"
+            },
+        )
+    }
 }
 
 data class ScreenIcon(val icon: ImageVector, @StringRes val iconContentDescription: Int)
