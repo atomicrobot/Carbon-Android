@@ -31,10 +31,8 @@ import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.Settings
-import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
 import timber.log.Timber
 
 private val screens = listOf(
@@ -44,8 +42,7 @@ private val screens = listOf(
 )
 
 @Composable
-fun MainNavigation(isDeepLinkIntent: Boolean) {
-    val viewModel: SplashViewModel = getViewModel()
+fun MainNavigation() {
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
@@ -59,42 +56,36 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
     Scaffold(
         topBar =
         {
-            // Hide the top app bar during splash screen transition
-            if (showAppBar(navBackStackEntry)) {
-                TopBar(
-                    title = appBarTitle(navBackStackEntry),
-                    buttonIcon = Icons.Filled.Menu,
-                    onButtonClicked = {
-                        scope.launch {
-                            scaffoldState.drawerState.open()
-                        }
+            TopBar(
+                title = appBarTitle(navBackStackEntry),
+                buttonIcon = Icons.Filled.Menu,
+                onButtonClicked = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
                     }
-                )
-            }
+                }
+            )
         },
         bottomBar =
         {
-            // Hide the bottom bar during splash screen transition
-            if (showAppBar(navBackStackEntry)) {
-                BottomNavigationBar(
-                    navController = navController,
-                    destinations = screens,
-                    onDestinationClicked = {
-                        if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                            navController.navigate(it.route) {
-                                // Make sure the back stack only consists of the current graphs main
-                                // destination
-                                popUpTo(AppScreens.Home.route) {
-                                    saveState = true
-                                }
-                                // Singular instance of destinations
-                                launchSingleTop = true
-                                restoreState = true
+            BottomNavigationBar(
+                navController = navController,
+                destinations = screens,
+                onDestinationClicked = {
+                    if (navController.currentBackStackEntry?.destination?.route != it.route) {
+                        navController.navigate(it.route) {
+                            // Make sure the back stack only consists of the current graphs main
+                            // destination
+                            popUpTo(AppScreens.Home.route) {
+                                saveState = true
                             }
+                            // Singular instance of destinations
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
-                )
-            }
+                }
+            )
         },
         drawerContent =
         {
@@ -121,7 +112,7 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
             navController = navController,
             startDestination = "Main"
         ) {
-            mainFlowGraph(navController, scaffoldState, isDeepLinkIntent, viewModel)
+            mainFlowGraph(navController, scaffoldState)
         }
     }
 }
@@ -132,9 +123,7 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
 @Suppress("UNUSED_PARAMETER")
 fun NavGraphBuilder.mainFlowGraph(
     navController: NavHostController,
-    scaffoldState: ScaffoldState,
-    isDeepLinkIntent: Boolean,
-    viewModel: SplashViewModel
+    scaffoldState: ScaffoldState
 ) {
     navigation(startDestination = AppScreens.Home.route, route = "Main") {
         composable(AppScreens.Home.route) {
@@ -195,11 +184,6 @@ fun NavGraphBuilder.mainFlowGraph(
             )
         }
     }
-}
-
-@Composable
-fun showAppBar(navBackStackEntry: NavBackStackEntry?): Boolean {
-    return navBackStackEntry?.destination?.route != AppScreens.SplashScreen.route
 }
 
 @Composable
