@@ -19,14 +19,9 @@ plugins {
     id("jacoco")
     id("com.google.gms.google-services")
 }
-val appVersion = ConfigVals.appVersion
-val minSdkVersion = ConfigVals.minSdkVersion
-val targetSdkVersion = ConfigVals.targetSdkVersion
-
 var versionCode = 1
 if (project.hasProperty("buildNumber")) {
-    val buildNumber = Integer.parseInt(project.property("buildNumber").toString())
-    versionCode = buildNumber
+    versionCode = Integer.parseInt(project.property("buildNumber").toString())
 }
 val version = versionCode
 var versionFingerprint = "\"DEV\""
@@ -46,12 +41,12 @@ android {
     defaultConfig {
         applicationId = "com.atomicrobot.carbon"
 
-        minSdk = minSdkVersion
-        targetSdk = targetSdkVersion
+        minSdk = ConfigVals.minSdkVersion
+        targetSdk = ConfigVals.targetSdkVersion
         compileSdk = ConfigVals.compileSdkVersion
         multiDexEnabled = true
         versionCode = version
-        versionName = "\"$appVersion b$version\""
+        versionName = "\"${ConfigVals.appVersion} b$version\""
 
         buildConfigField("String", "VERSION_FINGERPRINT", versionFingerprint)
         /*versionName requires null check while versionFingerprint does not, not sure why this is
