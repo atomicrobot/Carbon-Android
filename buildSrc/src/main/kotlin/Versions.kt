@@ -48,4 +48,5 @@ object ConfigVals {
     const val minSdkVersion = 29
     const val targetSdkVersion = 32
     const val compileSdkVersion = 32
+
 }
