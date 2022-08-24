@@ -2,7 +2,7 @@ package com.atomicrobot.carbon.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.DesignServices
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
@@ -12,33 +12,37 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.atomicrobot.carbon.R
 
-sealed class AppScreens(val title: String, val route: String, val iconData: ScreenIcon) {
+data class ScreenIcon(
+        val vectorData: ImageVector,
+        @StringRes val iconContentDescription: Int)
 
-    object Home : AppScreens(
+sealed class CarbonScreens(val title: String, val route: String, val iconData: ScreenIcon) {
+
+    object Home : CarbonScreens(
         "Home",
         "home",
         ScreenIcon(Icons.Filled.Home, R.string.cont_desc_home_icon)
     )
 
-    object Settings : AppScreens(
+    object Settings : CarbonScreens(
         "Settings",
         "settings",
         ScreenIcon(Icons.Filled.Settings, R.string.cont_desc_settings_icon)
     )
 
-    object SplashScreen : AppScreens(
-        "Splash",
-        "splash",
-        ScreenIcon(Icons.Filled.Build, R.string.cont_desc_splash_icon)
-    )
-
-    object Scanner : AppScreens(
+    object Scanner : CarbonScreens(
         "Scanner",
         "scanner",
         ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
     )
 
-    object DeepLink : AppScreens(
+    object Design : CarbonScreens(
+            "Design Projects",
+            "design",
+        ScreenIcon(Icons.Filled.DesignServices, R.string.cont_desc_view_icon)
+    )
+
+    object DeepLink : CarbonScreens(
         "Deep Link",
         "deepLinkPath1",
         ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
@@ -80,4 +84,45 @@ sealed class AppScreens(val title: String, val route: String, val iconData: Scre
     }
 }
 
-data class ScreenIcon(val icon: ImageVector, @StringRes val iconContentDescription: Int)
+val appScreens = listOf(
+        CarbonScreens.Home,
+        CarbonScreens.Settings,
+        CarbonScreens.Scanner,
+        CarbonScreens.Design,
+)
+
+sealed class DesignScreens(val title: String, val route: String) {
+    object Lumen: DesignScreens("Lumen", "")
+}
+
+sealed class LumenScreens(
+    val title: String,
+    val route: String,
+    val iconResourceId: Int,
+    val iconContentDescription: Int) {
+
+    val displayTitle: String
+        get() = "Lumen -- $title"
+
+    object Home : LumenScreens(
+            "Home",
+            "home",
+            iconResourceId = R.drawable.ic_lumen_home_icon,
+            iconContentDescription = R.string.cont_desc_home_icon)
+    object Routines : LumenScreens("Routines", "routines",
+            iconResourceId = R.drawable.ic_lumen_schedule_icon,
+            iconContentDescription = R.string.cont_desc_schedule_icon)
+    object Scenes : LumenScreens("Scenes", "scene",
+            iconResourceId = R.drawable.ic_lumen_scene_icon,
+            iconContentDescription = R.string.cont_desc_scene_icon)
+    object Settings : LumenScreens("Settings", "settings",
+            iconResourceId = R.drawable.ic_lumen_meatball,
+            iconContentDescription = R.string.cont_desc_settings_icon)
+}
+
+val lumenScreens = listOf(
+        LumenScreens.Home,
+        LumenScreens.Routines,
+        LumenScreens.Scenes,
+        LumenScreens.Settings,
+)

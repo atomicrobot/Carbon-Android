@@ -47,3 +47,23 @@ fun CarbonAndroidTheme(
         content = content
     )
 }
+
+private val LumenColorPalette = lightColors(
+    primary = DarkBlurple,
+    onPrimary = White100,
+    surface = DarkBlurple,
+    onSurface = White100
+)
+
+@Composable
+fun LumenTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit) {
+
+    MaterialTheme(
+        colors = LumenColorPalette,
+        typography = LumenTypography,
+        shapes = lumenShapes,
+        content = content
+    )
+}
