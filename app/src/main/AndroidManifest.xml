@@ -14,7 +14,6 @@
 
         <activity
             android:name=".StartActivity"
-            android:label="@string/title_activity_compose_start"
             android:theme="@style/AppTheme"
             android:exported="true">
             <intent-filter>

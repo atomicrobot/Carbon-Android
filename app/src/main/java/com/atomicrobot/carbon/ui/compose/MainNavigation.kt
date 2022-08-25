@@ -9,14 +9,12 @@ import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.StartActivity
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
-import com.atomicrobot.carbon.ui.main.MainViewModel
 import com.atomicrobot.carbon.ui.splash.SplashScreen
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 
 @Composable
 fun MainNavigation(isDeepLinkIntent: Boolean) {
-    val viewModel = hiltViewModel<SplashViewModel>()
-    val mainViewModel = hiltViewModel<MainViewModel>()
+    val viewModel: SplashViewModel = hiltViewModel()
     val navController = rememberNavController()
 
     NavHost(
@@ -25,7 +23,7 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
         modifier = Modifier
     ) {
         composable(StartActivity.splashPage) {
-            SplashScreen() {
+            SplashScreen {
                 navController.popBackStack()
                 if (isDeepLinkIntent) {
                     navController.navigate(viewModel.getDeepLinkNavDestination())
@@ -34,7 +32,7 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
                 }
             }
         }
-        composable(StartActivity.mainPage) { MainScreen(mainViewModel) }
+        composable(StartActivity.mainPage) { MainScreen() }
         composable(StartActivity.deepLinkPath1) {
             val textColor = viewModel.getDeepLinkTextColor()
             val textSize = viewModel.getDeepLinkTextSize()

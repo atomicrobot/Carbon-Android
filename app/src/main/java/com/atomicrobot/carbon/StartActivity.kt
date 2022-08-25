@@ -15,6 +15,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class StartActivity : AppCompatActivity() {
     private val splashViewModel: SplashViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isDeepLinkIntent = handleIntent(intent)
