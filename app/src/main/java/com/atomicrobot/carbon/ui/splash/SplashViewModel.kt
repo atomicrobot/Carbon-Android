@@ -2,7 +2,7 @@ package com.atomicrobot.carbon.ui.splash
 
 import android.app.Application
 import android.net.Uri
-import com.atomicrobot.carbon.ui.BaseViewModel
+import androidx.lifecycle.ViewModel
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class SplashViewModel @Inject constructor(
     private val app: Application,
     private val deepLinkInteractor: DeepLinkInteractor
 ) :
-    BaseViewModel(app) {
+    ViewModel() {
 
     sealed class ViewNavigation {
         object None : ViewNavigation()
