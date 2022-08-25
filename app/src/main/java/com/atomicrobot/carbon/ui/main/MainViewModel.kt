@@ -2,13 +2,13 @@ package com.atomicrobot.carbon.ui.main
 
 import android.app.Application
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.app.LoadingDelayMs
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
-import com.atomicrobot.carbon.ui.BaseViewModel
 import com.atomicrobot.carbon.util.CoroutineUtils.delayAtLeast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.lang.Exception
@@ -22,7 +22,7 @@ class MainViewModel @Inject constructor(
     private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
     @LoadingDelayMs private val loadingDelayMs: Long,
-) : BaseViewModel(app) {
+) : ViewModel() {
 
     sealed class Commits {
         object Loading : Commits()
