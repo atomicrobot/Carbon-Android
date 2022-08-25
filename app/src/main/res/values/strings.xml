@@ -19,5 +19,4 @@
     <string name="error_get_commits_error">Could not find the requested commits</string>
 
     <string name="title_activity_compose_start">ComposeStartActivity</string>
-    <string name="title_activity_delete_me">DeleteMeActivity</string>
 </resources>
