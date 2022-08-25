@@ -1,10 +1,13 @@
 package com.atomicrobot.carbon.ui.deeplink
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.atomicrobot.carbon.StartActivity
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class DeepLinkEspressoTest {
+    private lateinit var scenario: ActivityScenario<StartActivity>
 
     // TODO Fix for Compose
     //  private lateinit var scenario: ActivityScenario<StartActivity>
