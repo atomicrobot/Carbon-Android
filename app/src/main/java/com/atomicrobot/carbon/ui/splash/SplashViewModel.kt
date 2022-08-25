@@ -26,7 +26,7 @@ class SplashViewModel @Inject constructor(
     val navigationEvent: StateFlow<ViewNavigation>
         get() = _navigationEvent
 
-    override fun setupViewModel() {
+    fun setupViewModel() {
         _navigationEvent.update { ViewNavigation.FirstTime }
     }
 
