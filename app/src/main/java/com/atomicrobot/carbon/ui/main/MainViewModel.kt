@@ -41,10 +41,6 @@ class MainViewModel @Inject constructor(
     val uiState: StateFlow<MainScreenUiState>
         get() = _uiState
 
-    override fun setupViewModel() {
-        fetchCommits()
-    }
-
     fun updateUserInput(username: String?, repository: String?) {
         _uiState.value = _uiState.value.copy(
             username = username ?: _uiState.value.username,
