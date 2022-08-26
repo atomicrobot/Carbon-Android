@@ -1,5 +1,6 @@
 package com.atomicrobot.carbon.ui.compose
 
+import android.graphics.Color
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -15,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,11 +31,9 @@ import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.Settings
-import com.atomicrobot.carbon.ui.splash.SplashScreen
-import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import timber.log.Timber
 
 private val screens = listOf(
     AppScreens.Home,
@@ -44,8 +42,7 @@ private val screens = listOf(
 )
 
 @Composable
-fun MainNavigation(isDeepLinkIntent: Boolean) {
-    val viewModel: SplashViewModel = getViewModel()
+fun MainNavigation() {
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
@@ -59,42 +56,36 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
     Scaffold(
         topBar =
         {
-            // Hide the top app bar during splash screen transition
-            if (showAppBar(navBackStackEntry)) {
-                TopBar(
-                    title = appBarTitle(navBackStackEntry),
-                    buttonIcon = Icons.Filled.Menu,
-                    onButtonClicked = {
-                        scope.launch {
-                            scaffoldState.drawerState.open()
-                        }
+            TopBar(
+                title = appBarTitle(navBackStackEntry),
+                buttonIcon = Icons.Filled.Menu,
+                onButtonClicked = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
                     }
-                )
-            }
+                }
+            )
         },
         bottomBar =
         {
-            // Hide the bottom bar during splash screen transition
-            if (showAppBar(navBackStackEntry)) {
-                BottomNavigationBar(
-                    navController = navController,
-                    destinations = screens,
-                    onDestinationClicked = {
-                        if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                            navController.navigate(it.route) {
-                                // Make sure the back stack only consists of the current graphs main
-                                // destination
-                                popUpTo(AppScreens.Home.route) {
-                                    saveState = true
-                                }
-                                // Singular instance of destinations
-                                launchSingleTop = true
-                                restoreState = true
+            BottomNavigationBar(
+                navController = navController,
+                destinations = screens,
+                onDestinationClicked = {
+                    if (navController.currentBackStackEntry?.destination?.route != it.route) {
+                        navController.navigate(it.route) {
+                            // Make sure the back stack only consists of the current graphs main
+                            // destination
+                            popUpTo(AppScreens.Home.route) {
+                                saveState = true
                             }
+                            // Singular instance of destinations
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
-                )
-            }
+                }
+            )
         },
         drawerContent =
         {
@@ -119,32 +110,9 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
         NavHost(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
-            startDestination = "Splash"
+            startDestination = "Main"
         ) {
-            splashGraph(navController, isDeepLinkIntent, viewModel)
-            mainFlowGraph(navController, scaffoldState, viewModel)
-        }
-    }
-}
-
-/*
- * Nested nav. graph dedicated to displaying Splash related content
- */
-fun NavGraphBuilder.splashGraph(
-    navController: NavController,
-    isDeepLinkIntent: Boolean,
-    viewModel: SplashViewModel
-) {
-    navigation(startDestination = AppScreens.SplashScreen.route, route = "Splash") {
-        composable(AppScreens.SplashScreen.route) {
-            SplashScreen {
-                navController.popBackStack()
-                if (isDeepLinkIntent) {
-                    navController.navigate(viewModel.getDeepLinkNavDestination())
-                } else {
-                    navController.navigate(AppScreens.Home.route)
-                }
-            }
+            mainFlowGraph(navController, scaffoldState)
         }
     }
 }
@@ -155,8 +123,7 @@ fun NavGraphBuilder.splashGraph(
 @Suppress("UNUSED_PARAMETER")
 fun NavGraphBuilder.mainFlowGraph(
     navController: NavHostController,
-    scaffoldState: ScaffoldState,
-    viewModel: SplashViewModel
+    scaffoldState: ScaffoldState
 ) {
     navigation(startDestination = AppScreens.Home.route, route = "Main") {
         composable(AppScreens.Home.route) {
@@ -173,18 +140,10 @@ fun NavGraphBuilder.mainFlowGraph(
                         val uri = Uri.parse(it.url!!.url)
                         when {
                             (
-                                uri.scheme.equals("atomicrobot") &&
-                                    uri.host.equals("carbon-android")
-                                ) || (
-                                (uri.host?.contains(".atomicrobot.com") == true) &&
-                                    uri.pathSegments.contains("carbon-android")
+                                uri.scheme.equals("atomicrobot") ||
+                                    uri.host?.contains(".atomicrobot.com") == true
                                 ) -> {
-                                // Store the uri data into the DeepLinkInteractor
-                                uri?.encodedPath?.also {
-                                    viewModel.setDeepLinkUri(uri)
-                                    viewModel.setDeepLinkPath(uri.encodedPath)
-                                }
-                                navController.navigate(viewModel.getDeepLinkNavDestination())
+                                navController.navigate(uri)
                                 return@ScannerScreen
                             }
                         }
@@ -198,18 +157,33 @@ fun NavGraphBuilder.mainFlowGraph(
                 ).show()
             }
         }
-        composable(AppScreens.DeepLink.route) {
+        composable(
+            route = AppScreens.DeepLink.routeWithArgs,
+            arguments = AppScreens.DeepLink.arguments,
+            deepLinks = AppScreens.DeepLink.deepLink
+        ) {
+            val textColor = it.arguments?.getString("textColor")
+            var color = Color.BLACK
+            try {
+                color = Color.parseColor(textColor)
+            } catch (exception: IllegalArgumentException) {
+                Timber.e("Unsupported value for color")
+            }
+            val textSize = it.arguments?.getString("textSize")
+            var size = 30f
+            if (!textSize.isNullOrEmpty()) {
+                try {
+                    size = textSize.toFloat()
+                } catch (exception: NumberFormatException) {
+                    Timber.e("Unsupported value for size")
+                }
+            }
             DeepLinkSampleScreen(
-                textColor = viewModel.getDeepLinkTextColor(),
-                textSize = viewModel.getDeepLinkTextSize()
+                textColor = color,
+                textSize = size
             )
         }
     }
-}
-
-@Composable
-fun showAppBar(navBackStackEntry: NavBackStackEntry?): Boolean {
-    return navBackStackEntry?.destination?.route != AppScreens.SplashScreen.route
 }
 
 @Composable

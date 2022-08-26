@@ -3,6 +3,7 @@ package com.atomicrobot.carbon.deeplink
 import android.graphics.Color
 import android.net.Uri
 import com.atomicrobot.carbon.StartActivity
+import com.atomicrobot.carbon.navigation.AppScreens
 import timber.log.Timber
 import java.lang.NumberFormatException
 
@@ -23,7 +24,7 @@ class DeepLinkInteractor {
             when (path) {
                 "/carbon-android" -> {
                     Timber.d("default deep link received")
-                    return StartActivity.mainPage
+                    return AppScreens.Home.route
                 }
                 "/carbon-android/path1" -> {
                     Timber.d("path1 deep link received")
@@ -31,7 +32,7 @@ class DeepLinkInteractor {
                 }
                 else -> {
                     Timber.e("Deep link path not recognized")
-                    return StartActivity.mainPage
+                    return AppScreens.Home.route
                 }
             }
         }
