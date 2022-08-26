@@ -7,4 +7,6 @@ data class Scene(
     val duration: String,
     val active: Boolean = false,
     val favorite: Boolean = false,
-)
+) {
+    override fun toString(): String = name
+}

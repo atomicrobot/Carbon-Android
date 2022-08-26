@@ -6,9 +6,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
 val lumenShapes = Shapes(
+    small = RoundedCornerShape(0.dp),
     medium = RoundedCornerShape(8.dp),
-    large= RoundedCornerShape(24.dp)
+    large = RoundedCornerShape(24.dp)
 )
-
-val Shapes.RoundedTextField: Shape
-    get() = RoundedCornerShape(8.dp)

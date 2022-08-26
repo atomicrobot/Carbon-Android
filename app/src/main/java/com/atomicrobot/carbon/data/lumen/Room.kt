@@ -7,4 +7,6 @@ data class Room(
     val devices: MutableList<Device> = mutableListOf()
 
     val scenes: MutableList<Scene> = mutableListOf()
+
+    override fun toString(): String = name
 }

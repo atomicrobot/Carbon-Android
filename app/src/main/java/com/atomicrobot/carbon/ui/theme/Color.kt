@@ -10,11 +10,9 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 val pink700 = Color(0xFFFF4081)
 
-
-////////////////////////////////////////////
-////            Lumen Colors             ///
-////////////////////////////////////////////
-
+/*
+* Lumen Colors
+* */
 
 val Black100 = Color(0xFF000000)
 val White100 = Color(0xFFFFFFFF)
@@ -29,37 +27,30 @@ val DarkBlurple = Color(0xFF05012F)
 val LightBlurple = Color(0xFF5A46FF)
 val BrightBlurple = Color(0xFF8B83D0)
 val MediumBlurple = Color(0xFF4A4867)
-
 val CardBackgroundOn = Color(0x26FFFFFF)
 val CardBackgroundOff = Color(0x0DFFFFFF)
-
 val RedPink = Color(0xFFA32758)
 val Orange = Color(0xFFE25C33)
 val LimeGreen = Color(0xFFC2F13D)
 val Teal = Color(0xFF53D8F2)
 val Purple = Color(0xFF6F2DFA)
-
 val DeepPink = Color(0xFFC63461)
 val YellowOrange = Color(0xFFEF9E37)
 val BrightGreen = Color(0xFF60D728)
 val LightBlue = Color(0xFF439BDF)
 val LightPurple = Color(0xFFB66FEE)
-
 val Pink = Color(0xFFFE54C7)
 val Yellow = Color(0xFFFFE661)
 val Green = Color(0xFF47C176)
 val Blue = Color(0xFF325FFF)
 val Magenta = Color(0xFF8F2CBB)
-
 val Red = Color(0xFFEE4134)
 val YellowGreen = Color(0xFFEFF847)
 val BlueGreen = Color(0xFF3BE1C9)
 val DarkBlue = Color(0xFF233CC7)
-
 val Temperature = Color(0xFFFFFBED)
 val BlurpleDisabledCTA = Color(0xFF302397)
 val BlurpleDisabledText = Color(0xFF828097)
-
 
 val PresetSwatches by lazy {
     linkedMapOf(

@@ -26,40 +26,47 @@ val Lexend = FontFamily(
 
 val LumenTypography = Typography(
     h1 = TextStyle(
-            fontFamily = Lexend,
-            fontWeight = FontWeight.Bold,
-            fontSize = 36.sp,
-            lineHeight = 40.sp),
+        fontFamily = Lexend,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp,
+        lineHeight = 40.sp
+    ),
     h2 = TextStyle(
-            fontFamily = Lexend,
-            fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-            lineHeight = 24.sp),
+        fontFamily = Lexend,
+        fontWeight = FontWeight.Medium,
+        fontSize = 20.sp,
+        lineHeight = 24.sp
+    ),
     h3 = TextStyle(
-            fontFamily = Lexend,
-            fontWeight = FontWeight.Medium,
-            fontSize = 16.sp,
-            lineHeight = 24.sp),
+        fontFamily = Lexend,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
+        lineHeight = 24.sp
+    ),
     h4 = TextStyle(
-            fontFamily = Lexend,
-            fontWeight = FontWeight.Light,
-            fontSize = 16.sp,
-            lineHeight = 24.sp),
+        fontFamily = Lexend,
+        fontWeight = FontWeight.Light,
+        fontSize = 16.sp,
+        lineHeight = 24.sp
+    ),
     h5 = TextStyle(
-            fontFamily = Lexend,
-            fontWeight = FontWeight.Medium,
-            fontSize = 12.sp,
-            lineHeight = 16.sp),
+        fontFamily = Lexend,
+        fontWeight = FontWeight.Medium,
+        fontSize = 12.sp,
+        lineHeight = 16.sp
+    ),
     body1 = TextStyle(
-            fontFamily = Lexend,
-            fontWeight = FontWeight.Light,
-            fontSize = 14.sp,
-            lineHeight = 16.sp),
+        fontFamily = Lexend,
+        fontWeight = FontWeight.Light,
+        fontSize = 14.sp,
+        lineHeight = 16.sp
+    ),
     body2 = TextStyle(
-            fontFamily = Lexend,
-            fontWeight = FontWeight.Light,
-            fontSize = 12.sp,
-            lineHeight = 16.sp),
+        fontFamily = Lexend,
+        fontWeight = FontWeight.Light,
+        fontSize = 12.sp,
+        lineHeight = 16.sp
+    ),
 )
 
 val Typography.ScreenHeading: TextStyle
@@ -69,11 +76,11 @@ val Typography.ScreenHeading: TextStyle
         fontSize = 36.sp,
         lineHeight = 40.sp
     )
-
+@Suppress("unused")
 val Typography.body3: TextStyle
     get() = TextStyle(
-            fontFamily = Lexend,
-            fontWeight = FontWeight.Light,
-            fontSize = 19.sp,
-            lineHeight = 16.sp
+        fontFamily = Lexend,
+        fontWeight = FontWeight.Light,
+        fontSize = 19.sp,
+        lineHeight = 16.sp
     )

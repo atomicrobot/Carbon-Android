@@ -4,7 +4,7 @@ buildscript {
         compose_version = '1.2.1'
         compose_act_version = '1.5.1'
         compose_vm_version = '2.5.1'
-        compose_foundation_verison = '1.3.0-alpha03'
+        compose_foundation_verison = '1.3.0-beta01'
         compose_nav_verison = '2.5.1'
         compose_constraint_version = '1.0.1'
     }

@@ -17,6 +17,7 @@ val dummyCommits = listOf(
 
 val dummyMasterBedroom = Room("Master Bedroom")
 val dummyLivingRoom = Room("Living Room")
+val dummyGardenRoom = Room("Indoor Garden")
 val dummyMasterBathroom = Room("Master Bathroom")
 val dummyKitchenRoom = Room("Kitchen")
 val dummyStudyRoom = Room("Study")
@@ -43,11 +44,14 @@ val masterBathroomDevices: List<Device> = listOf(
 )
 
 val dummyDevices: List<Device> = masterBedroomDevices
-        .plus(livingRoomDevices)
-        .plus(masterBathroomDevices)
+    .plus(livingRoomDevices)
+    .plus(masterBathroomDevices)
+
+val gardenRoomScenes = listOf(
+    Scene("Grow Lights", room = dummyGardenRoom, duration = "8 Hours", favorite = true),
+)
 
 val livingRoomScenes = listOf(
-    Scene("Grow Lights", room = dummyLivingRoom, duration = "Manual", favorite = true),
     Scene("Movie Night", room = dummyLivingRoom, duration = "3hrs"),
     Scene("Reading", room = dummyLivingRoom, duration = "45min left", active = true),
 )
@@ -58,7 +62,8 @@ val studyScenes: List<Scene> = listOf(
         room = dummyStudyRoom,
         duration = "45min left",
         active = true,
-        favorite = true),
+        favorite = true
+    ),
 )
 
 val kitchenScenes: List<Scene> = listOf(
@@ -66,9 +71,10 @@ val kitchenScenes: List<Scene> = listOf(
     Scene("Entertaining", room = dummyKitchenRoom, duration = "4hrs"),
 )
 
-val dummyScenes: List<Scene> = livingRoomScenes
-        .plus(studyScenes)
-        .plus(kitchenScenes)
+val dummyScenes: List<Scene> = gardenRoomScenes
+    .plus(livingRoomScenes)
+    .plus(studyScenes)
+    .plus(kitchenScenes)
 
 val dummyRooms: List<Room> = listOf(
     dummyMasterBedroom.apply {
@@ -86,5 +92,8 @@ val dummyRooms: List<Room> = listOf(
     },
     dummyStudyRoom.apply {
         scenes.addAll(studyScenes)
+    },
+    dummyGardenRoom.apply {
+        scenes.addAll(gardenRoomScenes)
     },
 )

@@ -57,8 +57,9 @@ private val LumenColorPalette = lightColors(
 
 @Composable
 fun LumenTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit) {
+    @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
 
     MaterialTheme(
         colors = LumenColorPalette,

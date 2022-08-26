@@ -37,11 +37,11 @@ import kotlin.math.sqrt
  */
 @Immutable
 class AngledLinearGradient constructor(
-        private val colors: List<Color>,
-        private val stops: List<Float>? = null,
-        private val tileMode: TileMode = TileMode.Clamp,
-        angleInDegrees: Float = 0f,
-        useAsCssAngle: Boolean = false
+    private val colors: List<Color>,
+    private val stops: List<Float>? = null,
+    private val tileMode: TileMode = TileMode.Clamp,
+    angleInDegrees: Float = 0f,
+    useAsCssAngle: Boolean = false
 ) : ShaderBrush() {
 
     // handle edge cases like: -1235, ...
@@ -56,11 +56,11 @@ class AngledLinearGradient constructor(
         val (from, to) = getGradientCoordinates(size = size)
 
         return LinearGradientShader(
-                colors = colors,
-                colorStops = stops,
-                from = from,
-                to = to,
-                tileMode = tileMode
+            colors = colors,
+            colorStops = stops,
+            from = from,
+            to = to,
+            tileMode = tileMode
         )
     }
 
@@ -68,13 +68,13 @@ class AngledLinearGradient constructor(
         val diagonal = sqrt(size.width.pow(2) + size.height.pow(2))
         val angleBetweenDiagonalAndWidth = acos(size.width / diagonal)
         val angleBetweenDiagonalAndGradientLine =
-                if ((normalizedAngle > 90 && normalizedAngle < 180)
-                        || (normalizedAngle > 270 && normalizedAngle < 360)
-                ) {
-                    PI.toFloat() - angleInRadians - angleBetweenDiagonalAndWidth
-                } else {
-                    angleInRadians - angleBetweenDiagonalAndWidth
-                }
+            if ((normalizedAngle > 90 && normalizedAngle < 180) ||
+                (normalizedAngle > 270 && normalizedAngle < 360)
+            ) {
+                PI.toFloat() - angleInRadians - angleBetweenDiagonalAndWidth
+            } else {
+                angleInRadians - angleBetweenDiagonalAndWidth
+            }
         val halfGradientLine = abs(cos(angleBetweenDiagonalAndGradientLine) * diagonal) / 2
 
         val horizontalOffset = halfGradientLine * cos(angleInRadians)
@@ -108,8 +108,8 @@ class AngledLinearGradient constructor(
 
     override fun toString(): String {
         return "LinearGradient(colors=$colors, " +
-                "stops=$stops, " +
-                "angle=$normalizedAngle, " +
-                "tileMode=$tileMode)"
+            "stops=$stops, " +
+            "angle=$normalizedAngle, " +
+            "tileMode=$tileMode)"
     }
 }

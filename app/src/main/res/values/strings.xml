@@ -37,4 +37,39 @@
     <string name="cont_desc_scene_add">Add Menu</string>
     <string name="cont_desc_menu_close">Close Menu</string>
     <string name="cont_desc_scene_remove">Remove Scene</string>
+
+    <string name="name">Name</string>
+    <string name="room">Room</string>
+    <string name="duration">Duration</string>
+    <string name="name_room">Name your scene</string>
+    <string name="select_room">Select a Room</string>
+    <string name="select_durations">Select a Duration</string>
+
+    <string name="add_device">Add Device</string>
+    <string name="add_scene">Add Scene</string>
+    <string name="add_routine">Add Routine</string>
+    <string name="add_widget">Add Widget</string>
+    <string name="edit_scene">Edit Scene</string>
+
+    <string name="delete_scene">Delete Scene</string>
+    <string name="save_scene">Save Scene</string>
+    <string name="new_scene">New Scene</string>
+
+    <string-array name="durations">
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>3 hours</item>
+        <item>4 hours</item>
+        <item>5 hours</item>
+        <item>6 hours</item>
+        <item>7 hours</item>
+        <item>8 hours</item>
+        <item>9 hours</item>
+        <item>10 hours</item>
+        <item>11 hours</item>
+        <item>12 hours</item>
+        <item>All Day</item>
+    </string-array>
+
 </resources>

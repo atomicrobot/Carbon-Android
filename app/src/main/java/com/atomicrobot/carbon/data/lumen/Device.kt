@@ -7,5 +7,8 @@ data class Device(
     val room: Room,
     val location: String = "Home",
     val active: Boolean = false,
-    val color: Int = Color.WHITE
-)
+    val color: Int = Color.WHITE,
+    val brightness: Int = 255
+) {
+    override fun toString(): String = name
+}
