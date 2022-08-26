@@ -34,9 +34,9 @@ import com.atomicrobot.carbon.ui.compose.AppScreensPreviewProvider
 @Preview
 @Composable
 fun Drawer(
-        @PreviewParameter(AppScreensPreviewProvider::class, limit = 1) screens: List<CarbonScreens>,
-        modifier: Modifier = Modifier,
-        onDestinationClicked: (route: String) -> Unit = { _ -> }
+    @PreviewParameter(AppScreensPreviewProvider::class, limit = 1) screens: List<CarbonScreens>,
+    modifier: Modifier = Modifier,
+    onDestinationClicked: (route: String) -> Unit = { _ -> }
 ) {
     Column(
         modifier
@@ -64,8 +64,8 @@ fun Drawer(
 @Preview
 @Composable
 fun DrawerAppScreenItem(
-        @PreviewParameter(AppScreenPreviewProvider::class, limit = 3) screen: CarbonScreens,
-        onDestinationClicked: (route: String) -> Unit = { _ -> }
+    @PreviewParameter(AppScreenPreviewProvider::class, limit = 3) screen: CarbonScreens,
+    onDestinationClicked: (route: String) -> Unit = { _ -> }
 ) {
     Row(
         Modifier

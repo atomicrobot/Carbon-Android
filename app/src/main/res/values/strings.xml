@@ -37,6 +37,10 @@
     <string name="cont_desc_scene_add">Add Menu</string>
     <string name="cont_desc_menu_close">Close Menu</string>
     <string name="cont_desc_scene_remove">Remove Scene</string>
+    <string name="cont_desc_scene_light">Scene Light</string>
+    <string name="cont_desc_light_bright">Light Brightness</string>
+    <string name="cont_desc_light_temp">Light Temperature</string>
+    <string name="cont_desc_light_duration">Light Duration</string>
 
     <string name="name">Name</string>
     <string name="room">Room</string>
@@ -54,6 +58,8 @@
     <string name="delete_scene">Delete Scene</string>
     <string name="save_scene">Save Scene</string>
     <string name="new_scene">New Scene</string>
+    <string name="favorites">Favorites</string>
+    <string name="lights">Lights</string>
 
     <string-array name="durations">
         <item>30 minutes</item>

@@ -22,12 +22,12 @@ class DesignLumenActivity : ComponentActivity() {
             LumenTheme {
 
                 val customTextSelectionColors = TextSelectionColors(
-                        handleColor = LightBlurple,
-                        backgroundColor = LightBlurple.copy(alpha = 0.4f)
+                    handleColor = LightBlurple,
+                    backgroundColor = LightBlurple.copy(alpha = 0.4f)
                 )
                 CompositionLocalProvider(
-                        LocalContentColor provides White100,
-                        LocalTextSelectionColors provides customTextSelectionColors
+                    LocalContentColor provides White100,
+                    LocalTextSelectionColors provides customTextSelectionColors
                 ) {
                     DesignLumenNavigation()
                 }

@@ -4,8 +4,10 @@ import com.atomicrobot.carbon.data.api.github.model.Author
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.data.api.github.model.CommitDetails
 import com.atomicrobot.carbon.data.lumen.Device
+import com.atomicrobot.carbon.data.lumen.LightType
 import com.atomicrobot.carbon.data.lumen.Room
 import com.atomicrobot.carbon.data.lumen.Scene
+import com.atomicrobot.carbon.data.lumen.SceneDevice
 
 val dummyCommits = listOf(
     Commit(commit = CommitDetails(message = "Sample github commit message #1", author = Author("Smitty Joe"))),
@@ -47,9 +49,7 @@ val dummyDevices: List<Device> = masterBedroomDevices
     .plus(livingRoomDevices)
     .plus(masterBathroomDevices)
 
-val gardenRoomScenes = listOf(
-    Scene("Grow Lights", room = dummyGardenRoom, duration = "8 Hours", favorite = true),
-)
+val gradenScene = Scene("Grow Lights", room = dummyGardenRoom, duration = "8 Hours", favorite = true)
 
 val livingRoomScenes = listOf(
     Scene("Movie Night", room = dummyLivingRoom, duration = "3hrs"),
@@ -71,10 +71,25 @@ val kitchenScenes: List<Scene> = listOf(
     Scene("Entertaining", room = dummyKitchenRoom, duration = "4hrs"),
 )
 
-val dummyScenes: List<Scene> = gardenRoomScenes
+val dummyScenes: List<Scene> = listOf(gradenScene)
     .plus(livingRoomScenes)
     .plus(studyScenes)
     .plus(kitchenScenes)
+
+val growSceneDevices: List<SceneDevice> = listOf(
+    SceneDevice(
+        gradenScene,
+        Device("Pathos", dummyGardenRoom, type = LightType.COLOR), brightness = .75F
+    ),
+    SceneDevice(
+        gradenScene,
+        Device("Palms", dummyGardenRoom, type = LightType.COLOR), brightness = 0F
+    ),
+    SceneDevice(
+        gradenScene,
+        Device("Seeds", dummyGardenRoom, type = LightType.COLOR), brightness = 0.5F
+    ),
+)
 
 val dummyRooms: List<Room> = listOf(
     dummyMasterBedroom.apply {
@@ -94,6 +109,10 @@ val dummyRooms: List<Room> = listOf(
         scenes.addAll(studyScenes)
     },
     dummyGardenRoom.apply {
-        scenes.addAll(gardenRoomScenes)
+        scenes.add(
+            gradenScene.apply {
+                devices.addAll(growSceneDevices)
+            }
+        )
     },
 )

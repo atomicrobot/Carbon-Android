@@ -24,7 +24,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.navigation.CarbonScreens
-import com.atomicrobot.carbon.navigation.DesignScreens
 import com.atomicrobot.carbon.navigation.LumenScreens
 import com.atomicrobot.carbon.ui.compose.AppScreensPreviewProvider
 import com.atomicrobot.carbon.ui.compose.LumenScreensPreviewProvider
@@ -37,11 +36,12 @@ import com.atomicrobot.carbon.ui.theme.White3
 @Preview
 @Composable
 fun BottomNavigationBar(
-        @PreviewParameter(
-            AppScreensPreviewProvider::class,
-            limit = 1) destinations: List<CarbonScreens>,
-        navController: NavController = rememberNavController(),
-        onDestinationClicked: (CarbonScreens) -> Unit = {}
+    @PreviewParameter(
+        AppScreensPreviewProvider::class,
+        limit = 1
+    ) destinations: List<CarbonScreens>,
+    navController: NavController = rememberNavController(),
+    onDestinationClicked: (CarbonScreens) -> Unit = {}
 ) {
     BottomNavigation {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -66,12 +66,13 @@ fun BottomNavigationBar(
 @Preview
 @Composable
 fun LumenBottomNavigationBar(
-        @PreviewParameter(
-            LumenScreensPreviewProvider::class,
-            limit = 1) destinations: List<LumenScreens>,
-        modifier: Modifier = Modifier,
-        navController: NavController = rememberNavController(),
-        onDestinationClicked: (LumenScreens) -> Unit = {}
+    @PreviewParameter(
+        LumenScreensPreviewProvider::class,
+        limit = 1
+    ) destinations: List<LumenScreens>,
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController(),
+    onDestinationClicked: (LumenScreens) -> Unit = {}
 ) {
     BottomNavigation(modifier = modifier) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -79,15 +80,15 @@ fun LumenBottomNavigationBar(
         destinations.forEach { destination ->
 
             val selected = currentDestination
-                    ?.hierarchy
-                    ?.any { it.route == destination.route } == true
+                ?.hierarchy
+                ?.any { it.route == destination.route } == true
 
             BottomNavigationItem(
                 selected = selected,
                 icon = {
                     // Tweak the background if the navigation item is currently selected
                     val backgroundMod =
-                        if(selected)
+                        if (selected)
                             Modifier
                                 .clip(CircleShape)
                                 .background(LightBlurple)
@@ -98,7 +99,8 @@ fun LumenBottomNavigationBar(
                                         angleInDegrees = 0F,
                                         useAsCssAngle = false
                                     ),
-                                    CircleShape)
+                                    CircleShape
+                                )
                         else
                             Modifier.clip(CircleShape)
                                 .background(Color.Transparent)
@@ -106,14 +108,15 @@ fun LumenBottomNavigationBar(
                         painterResource(id = destination.iconResourceId),
                         stringResource(id = destination.iconContentDescription),
                         modifier = Modifier
-                                .size(48.dp)
-                                .then(backgroundMod)
-                                .padding(
-                                    horizontal = 13.67.dp,
-                                    vertical = 14.dp)
+                            .size(48.dp)
+                            .then(backgroundMod)
+                            .padding(
+                                horizontal = 13.67.dp,
+                                vertical = 14.dp
+                            )
                     )
                 },
-                onClick = {  onDestinationClicked(destination) }
+                onClick = { onDestinationClicked(destination) }
             )
         }
     }

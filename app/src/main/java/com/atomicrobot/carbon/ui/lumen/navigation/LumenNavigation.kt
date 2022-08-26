@@ -45,11 +45,11 @@ import kotlinx.coroutines.launch
 
 sealed class LumenBottomSheetTask(val titleRes: Int) {
 
-    object AddDevice: LumenBottomSheetTask(R.string.add_device)
-    object AddScene: LumenBottomSheetTask(R.string.add_scene)
-    object AddRoutine: LumenBottomSheetTask(R.string.add_routine)
-    object AddWidget: LumenBottomSheetTask(R.string.add_widget)
-    data class EditScene(val scene: Scene): LumenBottomSheetTask(R.string.edit_scene)
+    object AddDevice : LumenBottomSheetTask(R.string.add_device)
+    object AddScene : LumenBottomSheetTask(R.string.add_scene)
+    object AddRoutine : LumenBottomSheetTask(R.string.add_routine)
+    object AddWidget : LumenBottomSheetTask(R.string.add_widget)
+    data class EditScene(val scene: Scene) : LumenBottomSheetTask(R.string.edit_scene)
 }
 
 val bottomSheetTasks = listOf(
@@ -64,7 +64,8 @@ class LumenAppState(
     val modalBottomSheetState: ModalBottomSheetState,
     val navController: NavHostController,
     val scaffoldState: ScaffoldState,
-    initialBottomSheetTask: LumenBottomSheetTask) {
+    initialBottomSheetTask: LumenBottomSheetTask
+) {
 
     var currentBottomSheetTask by mutableStateOf<LumenBottomSheetTask>(initialBottomSheetTask)
         private set
@@ -78,12 +79,13 @@ class LumenAppState(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun rememberLumenAppState(
-        modalBottomSheetState: ModalBottomSheetState = rememberModalBottomSheetState(
-                ModalBottomSheetValue.Hidden,
-                skipHalfExpanded = true),
-        navController: NavHostController = rememberNavController(),
-        scaffoldState: ScaffoldState = rememberScaffoldState(),
-        bottomSheetTask: LumenBottomSheetTask = remember { LumenBottomSheetTask.AddScene }
+    modalBottomSheetState: ModalBottomSheetState = rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
+    ),
+    navController: NavHostController = rememberNavController(),
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    bottomSheetTask: LumenBottomSheetTask = remember { LumenBottomSheetTask.AddScene }
 ) = remember(modalBottomSheetState, navController, scaffoldState, bottomSheetTask) {
     LumenAppState(modalBottomSheetState, navController, scaffoldState, bottomSheetTask)
 }
@@ -95,8 +97,8 @@ fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
     ModalBottomSheetLayout(
         sheetContent = { LumenBottomSheet(appState) },
         modifier = Modifier
-                .statusBarsPadding()
-                .fillMaxSize(),
+            .statusBarsPadding()
+            .fillMaxSize(),
         sheetState = appState.modalBottomSheetState
     ) {
         LumenMainContent(appState)
@@ -117,8 +119,8 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
 @Composable
 fun LumenMainContent(appState: LumenAppState) {
     val navBackStackEntry: NavBackStackEntry? by appState
-            .navController
-            .currentBackStackEntryAsState()
+        .navController
+        .currentBackStackEntryAsState()
 
     val showAppBarAction = navBackStackEntry?.destination?.route != LumenScreens.Settings.route
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
@@ -141,7 +143,7 @@ fun LumenMainContent(appState: LumenAppState) {
                 modifier = Modifier.height(88.dp),
                 destinations = lumenScreens,
                 navController = appState.navController,
-            ){
+            ) {
                 if (appState.navController.currentBackStackEntry?.destination?.route != it.route) {
                     appState.navController.navigate(it.route) {
                         // Make sure the back stack only consists of the current graphs main
@@ -156,11 +158,13 @@ fun LumenMainContent(appState: LumenAppState) {
                 }
             }
         },
-        backgroundColor = Color.Transparent) { innerPadding ->
+        backgroundColor = Color.Transparent
+    ) { innerPadding ->
         NavHost(
             modifier = Modifier.padding(innerPadding),
             navController = appState.navController,
-            startDestination = "Main") {
+            startDestination = "Main"
+        ) {
             mainLumenGraph(appState)
         }
     }
@@ -187,7 +191,7 @@ fun NavGraphBuilder.mainLumenGraph(appState: LumenAppState) {
 fun LumenBottomSheet(appState: LumenAppState) {
     val bottomSheetTask = appState.currentBottomSheetTask
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    when(bottomSheetTask) {
+    when (bottomSheetTask) {
         LumenBottomSheetTask.AddScene ->
             AddSceneTask()
         is LumenBottomSheetTask.EditScene ->

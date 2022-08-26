@@ -29,29 +29,36 @@ var designOptions = listOf<DesignScreens>(DesignScreens.Lumen)
 fun DesignScreen(onDesignScreenSelected: (DesignScreens) -> Unit = {}) {
     Column(
         modifier = Modifier.fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)) {
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
+    ) {
         designOptions.forEach {
             DesignRow(
                 Modifier.fillMaxWidth()
-                        .padding(horizontal = 10.dp), it,
-                onDesignScreenSelected)
+                    .padding(horizontal = 10.dp),
+                it,
+                onDesignScreenSelected
+            )
         }
     }
 }
 
 @Composable
 fun DesignRow(
-        modifier: Modifier = Modifier,
-        option: DesignScreens = DesignScreens.Lumen,
-        onDesignScreenSelected: (DesignScreens) -> Unit = {}) {
-    Surface(modifier = modifier
+    modifier: Modifier = Modifier,
+    option: DesignScreens = DesignScreens.Lumen,
+    onDesignScreenSelected: (DesignScreens) -> Unit = {}
+) {
+    Surface(
+        modifier = modifier
             .clip(shape = RoundedCornerShape(10.dp))
             .border(2.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
-            .clickable { onDesignScreenSelected(option) }) {
+            .clickable { onDesignScreenSelected(option) }
+    ) {
         Text(
             text = option.title,
             fontSize = 24.sp,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp))
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp)
+        )
     }
 }
