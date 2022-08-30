@@ -296,6 +296,15 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout-compose:${compose_constraint_version}"
     implementation "androidx.core:core-splashscreen:${splashVersion}"
+
+    // Room Rb
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+
+    implementation "androidx.room:room-ktx:$room_version"
 }
 
 

@@ -57,9 +57,13 @@
 
     <string name="delete_scene">Delete Scene</string>
     <string name="save_scene">Save Scene</string>
+    <string name="create_scene">Create Scene</string>
     <string name="new_scene">New Scene</string>
     <string name="favorites">Favorites</string>
     <string name="lights">Lights</string>
+
+    <string name="moody_title">Make it Mood</string>
+    <string name="moody_description">Customize individual light settings in a room when you want to set a certain mood.</string>
 
     <string-array name="durations">
         <item>30 minutes</item>

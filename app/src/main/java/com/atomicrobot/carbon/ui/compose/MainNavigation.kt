@@ -164,13 +164,6 @@ fun NavGraphBuilder.mainFlowGraph(
                     DesignScreens.Lumen -> {
                         activity.startActivity(Intent(activity, DesignLumenActivity::class.java))
                     }
-                    else -> {
-                        Toast.makeText(
-                            activity,
-                            "${it.title} is not supported currently!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
                 }
             }
         }

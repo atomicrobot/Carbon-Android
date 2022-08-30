@@ -39,10 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.data.lumen.Scene
-import com.atomicrobot.carbon.data.lumen.SceneDevice
 import com.atomicrobot.carbon.ui.compose.ScenePreviewProvider
 import com.atomicrobot.carbon.ui.lumen.LumenSwitch
+import com.atomicrobot.carbon.ui.lumen.model.LightModel
+import com.atomicrobot.carbon.ui.lumen.model.SceneModel
 import com.atomicrobot.carbon.ui.shader.AngledLinearGradient
 import com.atomicrobot.carbon.ui.theme.BrightBlurple
 import com.atomicrobot.carbon.ui.theme.CardBackgroundOff
@@ -69,7 +69,7 @@ fun SceneSectionHeader(
 
 @Composable
 fun SceneItem(
-    @PreviewParameter(ScenePreviewProvider::class, limit = 2) scene: Scene,
+    @PreviewParameter(ScenePreviewProvider::class, limit = 2) scene: SceneModel,
     modifier: Modifier = Modifier.fillMaxWidth(),
 ) {
     Row(
@@ -103,7 +103,7 @@ fun SceneItem(
                 // we only need to show the 'room' label for the favorite Scenes
                 if (scene.favorite)
                     Text(
-                        text = scene.room.name,
+                        text = scene.owningRoomName,
                         modifier = Modifier
                             .padding(bottom = 4.dp),
                         style = MaterialTheme.typography.body1
@@ -357,8 +357,8 @@ fun LeftAlignedIconText(
 }
 
 @Composable
-fun SceneDeviceItem(
-    device: SceneDevice,
+fun SceneLightItem(
+    device: LightModel,
     modifier: Modifier = Modifier.fillMaxWidth(),
 ) {
     ConstraintLayout(
@@ -408,7 +408,7 @@ fun SceneDeviceItem(
         )
 
         Text(
-            text = device.device.name,
+            text = device.name,
             modifier.constrainAs(lightLabel) {
                 start.linkTo(lightImage.end, 8.dp)
                 end.linkTo(switch.start, 8.dp)
@@ -418,7 +418,7 @@ fun SceneDeviceItem(
         )
 
         LeftAlignedIconText(
-            text = device.brightnessString,
+            text = "${ (100 * device.brightness) }$",
             iconPainter = painterResource(id = R.drawable.ic_lumen_bright_sun),
             iconContentDescription = stringResource(id = R.string.cont_desc_light_bright),
             modifier = Modifier.constrainAs(tempLabel) {

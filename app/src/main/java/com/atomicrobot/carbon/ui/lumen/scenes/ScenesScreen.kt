@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,12 +31,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.data.lumen.Room
-import com.atomicrobot.carbon.data.lumen.Scene
+import com.atomicrobot.carbon.data.lumen.dto.LumenRoom
 import com.atomicrobot.carbon.ui.compose.ScenePreviewProvider
 import com.atomicrobot.carbon.ui.compose.ScenesPreviewProvider
-import com.atomicrobot.carbon.ui.main.dummyRooms
-import com.atomicrobot.carbon.ui.main.dummyScenes
+import com.atomicrobot.carbon.ui.lumen.model.RoomModel
+import com.atomicrobot.carbon.ui.lumen.model.SceneModel
 import com.atomicrobot.carbon.ui.shader.AngledLinearGradient
 import com.atomicrobot.carbon.ui.theme.LightBlurple
 import com.atomicrobot.carbon.ui.theme.White3
@@ -44,9 +44,9 @@ import org.koin.androidx.compose.getViewModel
 
 @Preview
 @Composable
-fun ScenesScreen(onSceneSelected: (Scene) -> Unit = {}) {
+fun ScenesScreen(onSceneSelected: (SceneModel) -> Unit = {}) {
     ScenesList(
-        scenes = dummyScenes,
+        scenes = emptyList(),
         modifier = Modifier.fillMaxSize(),
         onSceneSelected = onSceneSelected
     )
@@ -55,9 +55,9 @@ fun ScenesScreen(onSceneSelected: (Scene) -> Unit = {}) {
 @Preview
 @Composable
 fun ScenesList(
-    @PreviewParameter(ScenesPreviewProvider::class, limit = 1) scenes: List<Scene>,
+    @PreviewParameter(ScenesPreviewProvider::class, limit = 1) scenes: List<SceneModel>,
     modifier: Modifier = Modifier.fillMaxSize(),
-    onSceneSelected: (Scene) -> Unit = {}
+    onSceneSelected: (SceneModel) -> Unit = {}
 ) {
     // Extract the favorite scenes because they will be displayed in a section at the top of the
     // list
@@ -70,9 +70,9 @@ fun ScenesList(
     val rooms = remember {
         scenes
             .filter { scene -> !scene.favorite }
-            .map { scene -> scene.room }
+            .map { scene -> scene.containingRoom!! }
             .distinct()
-            .sortedBy { it.name }
+            .sortedBy { it.roomName }
     }
 
     LazyColumn(
@@ -91,22 +91,22 @@ fun ScenesList(
                 SceneItem(
                     scene = scene,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onSceneSelected(scene) }
+                            .fillMaxWidth()
+                            .clickable { onSceneSelected(scene) }
                 )
             }
         }
 
         for (room in rooms) {
             item {
-                SceneSectionHeader(room.name)
+                SceneSectionHeader(room.roomName)
             }
             items(room.scenes) { scene ->
                 SceneItem(
                     scene = scene,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onSceneSelected(scene) }
+                            .fillMaxWidth()
+                            .clickable { onSceneSelected(scene) }
                 )
             }
         }
@@ -114,84 +114,39 @@ fun ScenesList(
 }
 
 @Composable
-fun AddSceneTask(onTaskComplete: () -> Unit = {}) {
-    AddSceneTask(onTaskComplete = onTaskComplete) {
-    }
-}
-
-@Preview
-@Composable
-fun AddSceneTask(
-    onTaskComplete: () -> Unit = {},
-    onSaveScene: (Scene) -> Unit = {}
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        DualActionRow(
-            title = stringResource(id = R.string.new_scene),
-            actionContextDescription = stringResource(id = R.string.delete_scene),
-            onClose = onTaskComplete
-        )
-
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
-        ) {
-        }
-
-        Button(
-            onClick = { },
-            modifier = Modifier
-                .border(
-                    width = 1.dp,
-                    brush = AngledLinearGradient(
-                        colors = listOf(White50, White3),
-                        angleInDegrees = -135F,
-                        useAsCssAngle = true
-                    ),
-                    shape = MaterialTheme.shapes.small
-                )
-                .fillMaxWidth()
-                .height(68.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = LightBlurple)
-        ) {
-            Text(
-                text = stringResource(id = R.string.save_scene),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h2
-            )
-        }
-    }
-}
-
-@Composable
-fun EditSceneTask(
-    scene: Scene,
-    onTaskComplete: () -> Unit = {}
-) {
+fun AddSceneTask(onDismissed: () -> Unit = {},) {
     val viewModel: ScenesViewModel = getViewModel()
-    EditScene(
-        scene = scene,
-        onTaskComplete = onTaskComplete,
-        onDeleteScene = viewModel::removeScene,
-        onSaveScene = viewModel::removeScene
-    )
+    SceneTask(scene = SceneModel(), onDismissed = onDismissed) {
+        viewModel.saveOrUpdateScene(it)
+        onDismissed()
+    }
+}
+
+@Composable
+fun EditSceneTask(scene: SceneModel, onDismissed: () -> Unit = {},) {
+    val viewModel: ScenesViewModel = getViewModel()
+    SceneTask(
+        scene = scene.copy(),
+        onDismissed = onDismissed,
+        onTaskAction = { // Delete action was invoked
+            viewModel.removeScene(it)
+        }
+    ) {
+        viewModel.saveOrUpdateScene(it)
+        onDismissed()
+    }
 }
 
 @Preview
 @Composable
-fun EditScene(
-    @PreviewParameter(ScenePreviewProvider::class, limit = 1) scene: Scene,
-    onTaskComplete: () -> Unit = {},
-    onDeleteScene: (Scene) -> Unit = {},
-    onSaveScene: (Scene) -> Unit = {},
+fun SceneTask(
+    @PreviewParameter(ScenePreviewProvider::class, limit = 1) scene: SceneModel,
+    newScene: Boolean = false,
+    onDismissed: () -> Unit = {},
+    onTaskAction: (SceneModel) -> Unit = {},
+    onSaveScene: (SceneModel) -> Unit = {},
 ) {
-    var tempScene by remember { mutableStateOf(scene.copy()) }
+    var tempScene by remember { mutableStateOf(scene) }
 
     Column(
         modifier = Modifier
@@ -199,79 +154,109 @@ fun EditScene(
     ) {
         DualActionRow(
             title = tempScene.name,
-            painter = painterResource(id = R.drawable.ic_lumen_trash),
-            actionContextDescription = stringResource(id = R.string.delete_scene),
-            onClose = onTaskComplete
+            painter = if(newScene) null
+                else painterResource(id = R.drawable.ic_lumen_trash),
+            actionContextDescription = if(newScene) null
+                else stringResource(id = R.string.cont_desc_scene_remove),
+            onClose = onDismissed
         ) {
-            onDeleteScene(tempScene)
-            // Task is complete
-            onTaskComplete()
+            onTaskAction(tempScene)
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
-        ) {
-            item {
-                TaskLabeledTextField(
-                    label = stringResource(id = R.string.name),
-                    text = tempScene.name,
-                    placeholder = stringResource(id = R.string.name_room)
+        if(newScene) {
+            Column(modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 40.dp)
+                    .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = R.string.moody_title),
+                    style = MaterialTheme.typography.h3
                 )
-
-                TaskLabeledDropDownMenu(
-                    label = stringResource(id = R.string.room),
-                    options = dummyRooms,
-                    selectedOption = tempScene.room,
-                    placeholder = stringResource(id = R.string.select_room),
-                    modifier = Modifier.padding(vertical = 16.dp)
-                ) {
-                    tempScene = tempScene.copy(room = it as Room)
-                }
-
-                TaskLabeledDropDownMenu(
-                    label = stringResource(id = R.string.duration),
-                    options = stringArrayResource(id = R.array.durations)
-                        .toList(),
-                    selectedOption = tempScene.duration,
-                    placeholder = stringResource(id = R.string.select_durations),
-                ) {
-                    tempScene = tempScene.copy(duration = it as String)
-                }
-            }
-
-            item {
-                SceneSectionHeader(stringResource(id = R.string.lights))
-            }
-            items(scene.devices) {
-                SceneDeviceItem(it, modifier = Modifier.fillMaxWidth())
+                Text(
+                    text = stringResource(id = R.string.moody_description),
+                    style = MaterialTheme.typography.body2
+                )
             }
         }
+
+        SceneTaskList(tempScene) { tempScene = it }
 
         Button(
             onClick = { onSaveScene(tempScene) },
             modifier = Modifier
-                .border(
-                    width = 1.dp,
-                    brush = AngledLinearGradient(
-                        colors = listOf(White50, White3),
-                        angleInDegrees = -135F,
-                        useAsCssAngle = true
-                    ),
-                    shape = MaterialTheme.shapes.small
-                )
-                .fillMaxWidth()
-                .height(68.dp),
+                    .border(
+                            width = 1.dp,
+                            brush = AngledLinearGradient(
+                                    colors = listOf(White50, White3),
+                                    angleInDegrees = -135F,
+                                    useAsCssAngle = true
+                            ),
+                            shape = MaterialTheme.shapes.small
+                    )
+                    .fillMaxWidth()
+                    .height(68.dp),
+
+            enabled = (tempScene.containingRoomId != 0L && tempScene.name.isNotEmpty()),
             colors = ButtonDefaults.buttonColors(backgroundColor = LightBlurple)
         ) {
             Text(
-                text = stringResource(id = R.string.save_scene),
+                text = if (newScene)
+                    stringResource(id = R.string.create_scene)
+                else
+                    stringResource(id = R.string.save_scene),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h2
             )
+        }
+    }
+}
+
+@Composable
+fun ColumnScope.SceneTaskList(
+    scene: SceneModel,
+    onSceneUpdated: (SceneModel) -> Unit = {},
+) {
+    LazyColumn(
+            modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
+    ) {
+        item {
+            TaskLabeledTextField(
+                    label = stringResource(id = R.string.name),
+                    text = scene.name,
+                    placeholder = stringResource(id = R.string.name_room)
+            )
+
+            TaskLabeledDropDownMenu(
+                    label = stringResource(id = R.string.room),
+                    options = emptyList<LumenRoom>(),
+                    selectedOption = scene.owningRoomName,
+                    placeholder = stringResource(id = R.string.select_room),
+                    modifier = Modifier.padding(vertical = 16.dp)
+            ) {
+                onSceneUpdated(scene.copy(containingRoom = (it as RoomModel)))
+            }
+
+            TaskLabeledDropDownMenu(
+                    label = stringResource(id = R.string.duration),
+                    options = stringArrayResource(id = R.array.durations)
+                            .toList(),
+                    selectedOption = scene.duration,
+                    placeholder = stringResource(id = R.string.select_durations),
+            ) {
+                onSceneUpdated(scene.copy(duration = (it as String)))
+            }
+        }
+
+        item {
+            SceneSectionHeader(stringResource(id = R.string.lights))
+        }
+        items(scene.lights) {
+            SceneLightItem(it, modifier = Modifier.fillMaxWidth())
         }
     }
 }

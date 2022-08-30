@@ -5,6 +5,7 @@ import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
+import com.atomicrobot.carbon.data.lumen.LumenDatabase
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
 import com.atomicrobot.carbon.ui.lumen.scenes.ScenesViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
@@ -99,6 +100,10 @@ class DataModule {
 
         viewModel {
             ScenesViewModel(app = androidApplication())
+        }
+
+        single {
+            LumenDatabase.getInstance(context = androidContext())
         }
     }
 

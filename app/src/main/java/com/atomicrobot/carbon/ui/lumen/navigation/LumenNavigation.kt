@@ -29,12 +29,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.data.lumen.Scene
 import com.atomicrobot.carbon.navigation.LumenScreens
 import com.atomicrobot.carbon.navigation.LumenTopAppBar
 import com.atomicrobot.carbon.navigation.lumenScreens
 import com.atomicrobot.carbon.ui.components.LumenBottomNavigationBar
 import com.atomicrobot.carbon.ui.lumen.home.LumenHomeScreen
+import com.atomicrobot.carbon.ui.lumen.model.SceneModel
 import com.atomicrobot.carbon.ui.lumen.routines.LumenRoutinesScreen
 import com.atomicrobot.carbon.ui.lumen.scenes.AddSceneTask
 import com.atomicrobot.carbon.ui.lumen.scenes.EditSceneTask
@@ -49,7 +49,7 @@ sealed class LumenBottomSheetTask(val titleRes: Int) {
     object AddScene : LumenBottomSheetTask(R.string.add_scene)
     object AddRoutine : LumenBottomSheetTask(R.string.add_routine)
     object AddWidget : LumenBottomSheetTask(R.string.add_widget)
-    data class EditScene(val scene: Scene) : LumenBottomSheetTask(R.string.edit_scene)
+    data class EditScene(val scene: SceneModel) : LumenBottomSheetTask(R.string.edit_scene)
 }
 
 val bottomSheetTasks = listOf(
@@ -97,8 +97,8 @@ fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
     ModalBottomSheetLayout(
         sheetContent = { LumenBottomSheet(appState) },
         modifier = Modifier
-            .statusBarsPadding()
-            .fillMaxSize(),
+                .statusBarsPadding()
+                .fillMaxSize(),
         sheetState = appState.modalBottomSheetState
     ) {
         LumenMainContent(appState)
@@ -193,7 +193,7 @@ fun LumenBottomSheet(appState: LumenAppState) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     when (bottomSheetTask) {
         LumenBottomSheetTask.AddScene ->
-            AddSceneTask()
+             AddSceneTask()
         is LumenBottomSheetTask.EditScene ->
             EditSceneTask(bottomSheetTask.scene) {
                 coroutineScope.launch {
