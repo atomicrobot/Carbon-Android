@@ -5,9 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class LumenRoom(
-    @PrimaryKey val roomId: Long,
-    val name: String,
+    @PrimaryKey(autoGenerate = true) val roomId: Long,
+    val roomName: String,
     val location: String = "Home"
 ) {
-    override fun toString(): String = name
+    override fun toString(): String = roomName
 }

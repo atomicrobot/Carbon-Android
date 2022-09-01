@@ -4,47 +4,57 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
 import androidx.room.Update
-import com.atomicrobot.carbon.data.lumen.dto.LumenRoomAndAllScenes
+import com.atomicrobot.carbon.data.lumen.dto.LumenLight
 import com.atomicrobot.carbon.data.lumen.dto.LumenScene
-import com.atomicrobot.carbon.data.lumen.dto.SceneWithLights
+import com.atomicrobot.carbon.data.lumen.dto.SceneAndLightsWithRoom
+import com.atomicrobot.carbon.data.lumen.dto.SceneAndRoomName
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SceneDao {
     @Update
-    fun update(scene: LumenScene): Int
+    suspend fun update(scene: LumenScene): Int
 
     @Update
-    fun update(scene: List<LumenScene>): Int
+    suspend fun update(scene: List<LumenScene>): Int
 
     @Insert
-    fun insert(scene: LumenScene): Long
+    suspend fun insert(scene: LumenScene): Long
 
     @Insert
-    fun insert(scene: List<LumenScene>): List<Long>
+    suspend fun insert(scene: List<LumenScene>): List<Long>
 
     @Delete
-    fun delete(scene: LumenScene): Int
+    suspend fun delete(scene: LumenScene): Int
 
     @Delete
-    fun delete(scene: List<LumenScene>): Int
+    suspend fun delete(scene: List<LumenScene>): Int
 
-    @Query("SELECT * FROM LumenScene WHERE favorite = 1")
-    fun getFavoriteScenes(): Flow<List<LumenScene>>
-
-    @Transaction
-    @Query("SELECT * FROM LumenScene WHERE favorite = 1")
-    fun getFavoriteScenesWithLights(): Flow<List<SceneWithLights>>
-
-    @Transaction
-    @Query("SELECT * FROM LumenScene")
-    fun getScenesWithLights(): Flow<List<SceneWithLights>>
+    @Query("DELETE FROM LumenScene WHERE sceneId = :sceneId")
+    suspend fun delete(sceneId: Long): Int
 
     @Query("SELECT * FROM LumenScene")
-    fun getAllScenes(): Flow<List<LumenScene>>
+    fun getScenes(): Flow<List<LumenScene>>
 
-    @Query("SELECT * FROM LumenScene WHERE containingRoomId = :roomId")
-    fun getRoomScenes(roomId: Long): Flow<List<LumenScene>>
+    @Query("SELECT * FROM LumenScene WHERE sceneId = :sceneId")
+    fun getScene(sceneId: Long): Flow<LumenScene>
+
+    @Query("SELECT * FROM LumenScene as scene " +
+            "INNER JOIN LumenSceneLightCrossRef crossRef ON crossRef.sceneId = scene.sceneId " +
+            "INNER JOIN LumenLight light ON light.lightId = crossRef.lightId WHERE scene.sceneId = :sceneId"
+    )
+    fun getSceneWithLights(sceneId: Long): Flow<Map<LumenScene, List<LumenLight>>>
+
+    @Transaction
+    @RewriteQueriesToDropUnusedColumns
+    @Query("SELECT * FROM LumenScene")
+    fun getScenesWithRoom(): Flow<List<SceneAndRoomName>>
+
+    @Transaction
+    @RewriteQueriesToDropUnusedColumns
+    @Query("SELECT * FROM LumenScene WHERE sceneId = :sceneId")
+    fun getSceneAndLightsWithRoom(sceneId: Long): Flow<SceneAndLightsWithRoom>
 }

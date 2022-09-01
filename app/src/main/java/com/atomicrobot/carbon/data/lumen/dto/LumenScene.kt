@@ -15,13 +15,13 @@ import androidx.room.PrimaryKey
     ]
 )
 data class LumenScene(
-    @PrimaryKey val sceneId: Long,
-    val name: String,
+    @PrimaryKey(autoGenerate = true) val sceneId: Long = 0L,
+    val sceneName: String = "New Scene",
     @ColumnInfo(index = true)
-    val containingRoomId: Long,
-    val duration: String,
+    val containingRoomId: Long = 0L,
+    val duration: String = "1 hour",
     val active: Boolean = false,
     val favorite: Boolean = false
 ) {
-    override fun toString(): String = name
+    override fun toString(): String = sceneName
 }

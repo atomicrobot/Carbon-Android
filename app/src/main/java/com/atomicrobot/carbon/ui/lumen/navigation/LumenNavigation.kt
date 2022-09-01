@@ -1,3 +1,4 @@
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,7 +35,6 @@ import com.atomicrobot.carbon.navigation.LumenTopAppBar
 import com.atomicrobot.carbon.navigation.lumenScreens
 import com.atomicrobot.carbon.ui.components.LumenBottomNavigationBar
 import com.atomicrobot.carbon.ui.lumen.home.LumenHomeScreen
-import com.atomicrobot.carbon.ui.lumen.model.SceneModel
 import com.atomicrobot.carbon.ui.lumen.routines.LumenRoutinesScreen
 import com.atomicrobot.carbon.ui.lumen.scenes.AddSceneTask
 import com.atomicrobot.carbon.ui.lumen.scenes.EditSceneTask
@@ -43,20 +43,16 @@ import com.atomicrobot.carbon.ui.lumen.settings.LumenSettingsScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-sealed class LumenBottomSheetTask(val titleRes: Int) {
-
-    object AddDevice : LumenBottomSheetTask(R.string.add_device)
-    object AddScene : LumenBottomSheetTask(R.string.add_scene)
-    object AddRoutine : LumenBottomSheetTask(R.string.add_routine)
-    object AddWidget : LumenBottomSheetTask(R.string.add_widget)
-    data class EditScene(val scene: SceneModel) : LumenBottomSheetTask(R.string.edit_scene)
+sealed class LumenBottomSheetTask {
+    // I can't think of a better way to blank the task sheet
+    object NoTask: LumenBottomSheetTask()
+    abstract class LumenMenuTask(val titleRes: Int): LumenBottomSheetTask()
+    object AddScene : LumenMenuTask(R.string.add_scene)
+    data class EditScene(val sceneId: Long) : LumenBottomSheetTask()
 }
 
-val bottomSheetTasks = listOf(
-    LumenBottomSheetTask.AddDevice,
+val bottomSheetTasks: List<LumenBottomSheetTask.LumenMenuTask> = listOf(
     LumenBottomSheetTask.AddScene,
-    LumenBottomSheetTask.AddRoutine,
-    LumenBottomSheetTask.AddWidget
 )
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -66,13 +62,17 @@ class LumenAppState(
     val scaffoldState: ScaffoldState,
     initialBottomSheetTask: LumenBottomSheetTask
 ) {
-
     var currentBottomSheetTask by mutableStateOf<LumenBottomSheetTask>(initialBottomSheetTask)
         private set
 
     suspend fun showBottomSheetForTask(bottomSheetTask: LumenBottomSheetTask) {
         currentBottomSheetTask = bottomSheetTask
         modalBottomSheetState.show()
+    }
+
+    suspend fun clearBottomSheetTask() {
+        modalBottomSheetState.hide()
+        currentBottomSheetTask = LumenBottomSheetTask.NoTask
     }
 }
 
@@ -186,20 +186,22 @@ fun NavGraphBuilder.mainLumenGraph(appState: LumenAppState) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LumenBottomSheet(appState: LumenAppState) {
     val bottomSheetTask = appState.currentBottomSheetTask
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    when (bottomSheetTask) {
-        LumenBottomSheetTask.AddScene ->
-             AddSceneTask()
-        is LumenBottomSheetTask.EditScene ->
-            EditSceneTask(bottomSheetTask.scene) {
-                coroutineScope.launch {
-                    appState.modalBottomSheetState.hide()
-                }
-            }
-        else -> { /* INTENTIONALLY LEFT BLANK */ }
+
+    val dismissBottomSheet: () -> Unit = {
+        coroutineScope.launch { appState.clearBottomSheetTask() }
+    }
+
+    Box(Modifier.fillMaxSize()) {
+        when (bottomSheetTask) {
+            LumenBottomSheetTask.AddScene -> AddSceneTask(onDismissed = dismissBottomSheet)
+            is LumenBottomSheetTask.EditScene -> EditSceneTask(bottomSheetTask.sceneId,
+                    onDismissed = dismissBottomSheet)
+            LumenBottomSheetTask.NoTask -> { /* INTENTIONALLY LEFT BLANK */ }
+            else -> { /* INTENTIONALLY LEFT BLANK */ }
+        }
     }
 }

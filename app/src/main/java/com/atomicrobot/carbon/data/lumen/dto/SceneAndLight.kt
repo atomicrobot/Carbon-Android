@@ -22,6 +22,7 @@ import androidx.room.Relation
         )
     )
 )
+
 data class LumenSceneLightCrossRef(
     @ColumnInfo(index = true)
     val sceneId: Long,
@@ -37,4 +38,37 @@ data class SceneWithLights(
         associateBy = Junction(LumenSceneLightCrossRef::class)
     )
     val lights: List<LumenLight>
+)
+
+data class RoomNameAndId(
+    val roomId: Long = 0L,
+    val roomName: String = ""
+)
+
+data class SceneAndRoomName(
+    @Embedded
+    val scene: LumenScene,
+    @Relation(
+        parentColumn = "containingRoomId",
+        entityColumn = "roomId",
+        entity = LumenRoom::class,
+    )
+    val room: RoomNameAndId
+)
+
+data class SceneAndLightsWithRoom(
+    @Embedded
+    val scene: LumenScene,
+    @Relation(
+        parentColumn = "sceneId",
+        entityColumn = "lightId",
+        associateBy = Junction(LumenSceneLightCrossRef::class)
+    )
+    val lights: List<LumenLight>,
+    @Relation(
+        parentColumn = "containingRoomId",
+        entityColumn = "roomId",
+        entity = LumenRoom::class,
+    )
+    val room: RoomNameAndId
 )

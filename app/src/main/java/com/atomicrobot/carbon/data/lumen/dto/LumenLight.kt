@@ -16,18 +16,27 @@ import androidx.room.PrimaryKey
     ]
 )
 data class LumenLight(
-    @PrimaryKey val lightId: Long,
-    val name: String,
+    @PrimaryKey(autoGenerate = true) val lightId: Long = 0L,
+    val lightName: String,
     @ColumnInfo(index = true)
-    val containingRoomId: Long,
+    val containingRoomId: Long = 0L,
     val type: LightType = LightType.WHITE,
     val color: Int = Color.WHITE,
     val brightness: Float = 1F
 ) {
-    override fun toString(): String = name
+    val active: Boolean
+        get() = brightness > 0.0F
+
+    val colorTemperature: String
+        get() = "Warm WHITE"
+
+    override fun toString(): String = lightName
 }
 
 enum class LightType {
     WHITE,
-    COLOR
+    WHITE_SMALL,
+    COLOR,
+    COLOR_SMALL,
+    COLOR_STRIP,
 }

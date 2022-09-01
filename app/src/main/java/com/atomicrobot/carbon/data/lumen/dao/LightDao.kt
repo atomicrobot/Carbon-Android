@@ -10,31 +10,32 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LightDao {
+    @Update
+    suspend fun update(light: LumenLight): Int
 
     @Update
-    fun update(light: LumenLight): Int
-
-    @Update
-    fun update(light: List<LumenLight>): Int
+    suspend fun update(light: List<LumenLight>): Int
 
     @Insert
-    fun insert(light: LumenLight): Long
+    suspend fun insert(light: LumenLight): Long
 
     @Insert
-    fun insert(light: List<LumenLight>): List<Long>
+    suspend fun insert(light: List<LumenLight>): List<Long>
 
     @Delete
-    fun delete(light: LumenLight): Int
+    suspend fun delete(light: LumenLight): Int
 
     @Delete
-    fun delete(light: List<LumenLight>): Int
+    suspend fun delete(light: List<LumenLight>): Int
 
     @Query("SELECT * FROM LumenLight")
     fun getAllLights(): Flow<List<LumenLight>>
 
-    @Query("SELECT lumenLight.* FROM lumenLight " +
+    @Query(
+        "SELECT lumenLight.* FROM lumenLight " +
             "INNER JOIN LumenSceneLightCrossRef sceneLight ON sceneLight.lightId = lumenLight.lightId " +
-            "WHERE sceneLight.sceneId = :sceneId")
+            "WHERE sceneLight.sceneId = :sceneId"
+    )
     fun getAllLightsForScene(sceneId: Long): Flow<List<LumenLight>>
 
     @Query("SELECT * FROM LumenLight WHERE containingRoomId = :roomId")

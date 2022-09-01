@@ -1,20 +1,81 @@
 package com.atomicrobot.carbon.ui.lumen.scenes
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
-import com.atomicrobot.carbon.ui.lumen.model.RoomModel
-import com.atomicrobot.carbon.ui.lumen.model.SceneModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import androidx.lifecycle.viewModelScope
+import com.atomicrobot.carbon.data.lumen.dao.SceneDao
+import com.atomicrobot.carbon.data.lumen.dto.LumenScene
+import com.atomicrobot.carbon.data.lumen.dto.RoomNameAndId
+import com.atomicrobot.carbon.data.lumen.dto.SceneAndLightsWithRoom
+import com.atomicrobot.carbon.data.lumen.dto.SceneAndRoomName
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class ScenesViewModel(private val app: Application) : ViewModel() {
+class ScenesViewModel(
+    private val sceneDao: SceneDao,
+) : ViewModel() {
 
-    val scenes: Flow<List<SceneModel>> = flow {}
+    sealed class Scenes {
+        object Loading : Scenes()
+        class Result(val scenes: List<SceneAndRoomName>) : Scenes()
+    }
 
-    val rooms: Flow<List<RoomModel>> = flow { }
+    sealed class SceneTask {
+        object LoadingScene: SceneTask()
+        class Result(val scene: SceneAndLightsWithRoom): SceneTask()
+    }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun removeScene(scene: SceneModel) = Unit
+    data class MainScenesScreenUiState(
+        val sceneTaskState: SceneTask = SceneTask.Result(
+            SceneAndLightsWithRoom(
+                scene = LumenScene(),
+                lights = emptyList(),
+                room = RoomNameAndId()
+            )
+        ),
+        val mainScreenState: Scenes = Scenes.Result(emptyList())
+    )
+
+    private val _mainUiState = MutableStateFlow(MainScenesScreenUiState())
+    val mainUiState: StateFlow<MainScenesScreenUiState>
+        get() = _mainUiState
+
+    suspend fun getScenes() {
+        // Update the UI state to indicate that we are loading.
+        _mainUiState.value = _mainUiState.value.copy(mainScreenState = Scenes.Loading)
+        viewModelScope.launch {
+            sceneDao.getScenesWithRoom().collect {
+                _mainUiState.value = _mainUiState.value.copy(mainScreenState = Scenes.Result(it))
+            }
+        }
+    }
+
+    suspend fun getScene(sceneId: Long) {
+        if(sceneId == 0L) {
+            _mainUiState.value = _mainUiState.value.copy(
+                sceneTaskState = SceneTask.Result(
+                    SceneAndLightsWithRoom(
+                        scene = LumenScene(),
+                        lights = emptyList(),
+                        room = RoomNameAndId()
+                    )
+                )
+            )
+            return
+        }
+
+        _mainUiState.value = _mainUiState.value.copy(sceneTaskState = SceneTask.LoadingScene)
+        viewModelScope.launch {
+            sceneDao.getSceneAndLightsWithRoom(sceneId).collect {
+                _mainUiState.value = _mainUiState.value.copy(sceneTaskState = SceneTask.Result(it))
+            }
+        }
+    }
+
+    suspend fun removeScene(sceneId: Long) {
+        viewModelScope.launch(Dispatchers.IO) { sceneDao.delete(sceneId) }
+    }
 
     @Suppress("UNUSED_PARAMETER")
     fun saveOrUpdateScene(scene: SceneModel) = Unit

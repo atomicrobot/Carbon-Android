@@ -57,10 +57,10 @@ fun TopBar(
 @Preview
 @Composable
 fun LumenTopAppBar(
-    title: String = LumenScreens.Home.title,
-    showAction: Boolean = true,
-    bottomSheetTasks: List<LumenBottomSheetTask> = emptyList(),
-    onTaskSelected: (LumenBottomSheetTask) -> Unit = {}
+        title: String = LumenScreens.Home.title,
+        showAction: Boolean = true,
+        bottomSheetTasks: List<LumenBottomSheetTask.LumenMenuTask> = emptyList(),
+        onTaskSelected: (LumenBottomSheetTask) -> Unit = {}
 ) = TopAppBar(
     title = {
         Text(

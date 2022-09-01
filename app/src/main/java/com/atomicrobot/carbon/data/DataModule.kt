@@ -6,6 +6,7 @@ import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.lumen.LumenDatabase
+import com.atomicrobot.carbon.data.lumen.dao.SceneDao
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
 import com.atomicrobot.carbon.ui.lumen.scenes.ScenesViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
@@ -98,12 +99,18 @@ class DataModule {
             ScannerViewModel(app = androidApplication())
         }
 
-        viewModel {
-            ScenesViewModel(app = androidApplication())
+        single {
+            provideLumenDatabase(androidContext())
         }
 
         single {
-            LumenDatabase.getInstance(context = androidContext())
+            provideSceneDao(get())
+        }
+
+        viewModel {
+            ScenesViewModel(
+                sceneDao = get()
+            )
         }
     }
 
@@ -143,6 +150,14 @@ class DataModule {
     ): GitHubInteractor {
         return GitHubInteractor(context, api)
     }
+
+    private fun provideLumenDatabase(
+        context: Context
+    ): LumenDatabase = LumenDatabase.getInstance(context = context)
+
+    private fun provideSceneDao(
+        database: LumenDatabase
+    ): SceneDao = database.sceneDao()
 
     companion object {
         private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
