@@ -70,8 +70,8 @@ allprojects {
 evaluationDependsOnChildren()
 
 val initialCleanup by tasks.registering {
-    val cleanTasks = getProjectTask(rootProject.project("Carbon-Android"), "clean")
-    val uninstallTasks = getProjectTask(rootProject.project("Carbon-Android"), "uninstallAll")
+    val cleanTasks = getProjectTask(rootProject, "clean")
+    val uninstallTasks = getProjectTask(rootProject, "uninstallAll")
     dependsOn(cleanTasks)
     dependsOn(uninstallTasks)
 }
@@ -108,6 +108,7 @@ val continuousIntegration by tasks.registering {
     dependsOn(initialCleanup)
     dependsOn(testing)
     dependsOn(release)
+
 
 //     InitialCleanup first, then testing, then release
 //    release {
