@@ -96,6 +96,10 @@ val release by tasks.registering {
     dependsOn(appTasks)
 }
 
+release {
+    mustRunAfter(testing)
+}
+
 fun getProjectTask(project: Project, taskName: String): MutableSet<Task> {
     val tasks = project.getTasksByName(taskName, true)
     if (tasks == null || tasks.isEmpty()) {
@@ -108,10 +112,4 @@ val continuousIntegration by tasks.registering {
     dependsOn(initialCleanup)
     dependsOn(testing)
     dependsOn(release)
-
-
-//     InitialCleanup first, then testing, then release
-//    release {
-//        mustRunAfter(testing)
-//    }
 }
