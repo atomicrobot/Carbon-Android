@@ -109,8 +109,8 @@ val continuousIntegration by tasks.registering {
     dependsOn(testing)
     dependsOn(release)
 
-    // InitialCleanup first, then testing, then release
-    release {
-        mustRunAfter(testing)
-    }
+//     InitialCleanup first, then testing, then release
+//    release {
+//        mustRunAfter(testing)
+//    }
 }

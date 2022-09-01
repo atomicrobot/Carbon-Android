@@ -307,7 +307,7 @@ private val executionDataTree = fileTree(project.buildDir) {
     include(
         "outputs/code_coverage/**/*.ec",
         "jacoco/jacocoTestReportDebug.exec",
-        "jacoco/testDebugUnitTest.exec",
+        "jacoco/testDevDebugUnitTest.exec",
         "jacoco/test.exec"
     )
 }
@@ -330,7 +330,7 @@ if (tasks.findByName("jacocoTestReport") == null) {
 
     tasks.register<JacocoReport>("jacocoTestReport") {
         description = "Code coverage report for both Android and Unit tests."
-        dependsOn("testDebugUnitTest", "createDebugCoverageReport")
+        dependsOn("testDevDebugUnitTest")
         reports {
             reports()
         }
@@ -340,7 +340,7 @@ if (tasks.findByName("jacocoTestReport") == null) {
 if (tasks.findByName("jacocoAndroidCoverageVerification") == null) {
     tasks.register<JacocoCoverageVerification>("jacocoAndroidCoverageVerification") {
         description = "Code coverage verification for Android both Android and Unit tests."
-        dependsOn("testDebugUnitTest", "createDebugCoverageReport")
+        dependsOn("testDevDebugUnitTest")
         violationRules {
             rule {
                 limit {
