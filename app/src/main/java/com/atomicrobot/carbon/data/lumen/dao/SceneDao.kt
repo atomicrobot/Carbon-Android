@@ -49,12 +49,14 @@ interface SceneDao {
     fun getSceneWithLights(sceneId: Long): Flow<Map<LumenScene, List<LumenLight>>>
 
     @Transaction
-    @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM LumenScene")
     fun getScenesWithRoom(): Flow<List<SceneAndRoomName>>
 
     @Transaction
-    @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM LumenScene WHERE sceneId = :sceneId")
-    fun getSceneAndLightsWithRoom(sceneId: Long): Flow<SceneAndLightsWithRoom>
+    suspend fun getSceneAndLightsWithRoom(sceneId: Long): SceneAndLightsWithRoom
+
+    @Transaction
+    @Query("SELECT * FROM LumenScene WHERE sceneId = :sceneId")
+    fun getSceneAndLightsWithRoomFlow(sceneId: Long): Flow<SceneAndLightsWithRoom>
 }

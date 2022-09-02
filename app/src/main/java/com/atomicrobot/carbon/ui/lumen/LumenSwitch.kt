@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -44,6 +45,7 @@ import kotlin.math.roundToInt
 
 private val AnimationSpec = TweenSpec<Float>(durationMillis = 100)
 
+@Preview
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LumenSwitch(

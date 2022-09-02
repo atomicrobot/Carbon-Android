@@ -28,7 +28,7 @@ data class LumenLight(
         get() = brightness > 0.0F
 
     val colorTemperature: String
-        get() = "Warm WHITE"
+        get() = "Warm White"
 
     override fun toString(): String = lightName
 }

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Ignore
 import androidx.room.Junction
 import androidx.room.Relation
 
@@ -43,7 +44,9 @@ data class SceneWithLights(
 data class RoomNameAndId(
     val roomId: Long = 0L,
     val roomName: String = ""
-)
+) {
+    override fun toString(): String = roomName
+}
 
 data class SceneAndRoomName(
     @Embedded
@@ -71,4 +74,17 @@ data class SceneAndLightsWithRoom(
         entity = LumenRoom::class,
     )
     val room: RoomNameAndId
-)
+) {
+    @Ignore
+    val sceneId = scene.sceneId
+    @Ignore
+    val sceneName = scene.sceneName
+    @Ignore
+    val favorite = scene.favorite
+    @Ignore
+    val duration = scene.duration
+    @Ignore
+    val roomId = room.roomId
+    @Ignore
+    val roomName = room.roomName
+}

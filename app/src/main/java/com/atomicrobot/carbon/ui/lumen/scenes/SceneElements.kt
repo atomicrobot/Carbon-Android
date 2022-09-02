@@ -4,9 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -29,6 +32,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,7 +53,7 @@ import androidx.constraintlayout.compose.Dimension
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.lumen.dto.LumenLight
 import com.atomicrobot.carbon.data.lumen.dto.LumenScene
-import com.atomicrobot.carbon.data.lumen.dto.SceneAndLightsWithRoom
+import com.atomicrobot.carbon.data.lumen.dto.RoomNameAndId
 import com.atomicrobot.carbon.ui.lumen.LumenSwitch
 import com.atomicrobot.carbon.ui.shader.AngledLinearGradient
 import com.atomicrobot.carbon.ui.theme.BrightBlurple
@@ -58,6 +64,7 @@ import com.atomicrobot.carbon.ui.theme.MediumBlurple
 import com.atomicrobot.carbon.ui.theme.White100
 import com.atomicrobot.carbon.ui.theme.White3
 import com.atomicrobot.carbon.ui.theme.White50
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SceneSectionHeader(
@@ -68,8 +75,8 @@ fun SceneSectionHeader(
     Text(
         text = headerTitle,
         modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 14.dp),
+                .fillMaxWidth()
+                .padding(top = 14.dp),
         style = MaterialTheme.typography.h2
     )
 }
@@ -79,23 +86,24 @@ fun SceneItem(
     scene: LumenScene,
     roomName: String = "",
     modifier: Modifier = Modifier.fillMaxWidth(),
+    onPlayClicked: () -> Unit
 ) {
     Row(
         modifier = modifier
-            .border(
-                width = 1.dp,
-                brush = AngledLinearGradient(
-                    colors = listOf(White50, White3),
-                    angleInDegrees = -135F,
-                    useAsCssAngle = true
-                ),
-                shape = MaterialTheme.shapes.medium
-            )
-            .background(
-                color = if (scene.active) CardBackgroundOn else CardBackgroundOff,
-                shape = MaterialTheme.shapes.medium
-            )
-            .padding(16.dp)
+                .border(
+                        width = 1.dp,
+                        brush = AngledLinearGradient(
+                                colors = listOf(White50, White3),
+                                angleInDegrees = -135F,
+                                useAsCssAngle = true
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                )
+                .background(
+                        color = if (scene.active) CardBackgroundOn else CardBackgroundOff,
+                        shape = MaterialTheme.shapes.medium
+                )
+                .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(
@@ -133,11 +141,13 @@ fun SceneItem(
             else
                 Pair(R.drawable.ic_lumen_play, R.string.cont_desc_start_scene)
 
-            Image(
-                painter = painterResource(imgData.first),
-                contentDescription = stringResource(imgData.second),
-                modifier = Modifier.size(48.dp)
-            )
+            IconButton(onClick = onPlayClicked) {
+                Icon(
+                    painter = painterResource(imgData.first),
+                    contentDescription = stringResource(imgData.second),
+                    modifier = Modifier.size(48.dp)
+                )
+            }
         }
     }
 }
@@ -147,24 +157,28 @@ fun DualActionRow(
     title: String,
     painter: Painter? = null,
     actionContextDescription: String? = null,
+    modifier: Modifier = Modifier,
     onClose: () -> Unit = {},
     onAction: () -> Unit = {},
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
             onClick = { onAction() },
-            modifier = Modifier.clip(CircleShape),
+            modifier = Modifier
+                    .clip(CircleShape),
             enabled = painter != null
         ) {
             painter?.let {
-                Image(
+                Icon(
                     painter = painter,
-                    contentDescription = actionContextDescription
+                    contentDescription = actionContextDescription,
+                    modifier = Modifier
+                            .size(48.dp)
+                            .padding(8.dp)
                 )
             }
         }
@@ -178,11 +192,13 @@ fun DualActionRow(
 
         IconButton(
             onClick = { onClose() },
-            modifier = Modifier.clip(CircleShape)
+            modifier = Modifier
+                    .clip(CircleShape),
         ) {
-            Image(
+            Icon(
                 painter = painterResource(id = R.drawable.ic_lumen_close),
-                contentDescription = stringResource(id = R.string.cont_desc_menu_close)
+                contentDescription = stringResource(id = R.string.cont_desc_menu_close),
+                modifier = Modifier.size(48.dp)
             )
         }
     }
@@ -208,20 +224,20 @@ fun TaskLabeledTextField(
             value = text,
             onValueChange = onTextChanged,
             modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    brush = AngledLinearGradient(
-                        colors = listOf(White50, White3),
-                        angleInDegrees = -135F,
-                        useAsCssAngle = true
+                    .fillMaxWidth()
+                    .border(
+                            width = 1.dp,
+                            brush = AngledLinearGradient(
+                                    colors = listOf(White50, White3),
+                                    angleInDegrees = -135F,
+                                    useAsCssAngle = true
+                            ),
+                            shape = MaterialTheme.shapes.medium
+                    )
+                    .background(
+                            color = CardBackgroundOn,
+                            shape = MaterialTheme.shapes.medium
                     ),
-                    shape = MaterialTheme.shapes.medium
-                )
-                .background(
-                    color = CardBackgroundOn,
-                    shape = MaterialTheme.shapes.medium
-                ),
             textStyle = MaterialTheme.typography.body1,
             placeholder = {
                 placeholder?.let {
@@ -270,20 +286,20 @@ fun TaskLabeledDropDownMenu(
                 value = selectedOption.toString(),
                 onValueChange = { /* Intentionally left blank */ },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .border(
-                        width = 1.dp,
-                        brush = AngledLinearGradient(
-                            colors = listOf(White50, White3),
-                            angleInDegrees = -135F,
-                            useAsCssAngle = true
+                        .fillMaxWidth()
+                        .border(
+                                width = 1.dp,
+                                brush = AngledLinearGradient(
+                                        colors = listOf(White50, White3),
+                                        angleInDegrees = -135F,
+                                        useAsCssAngle = true
+                                ),
+                                shape = MaterialTheme.shapes.medium
+                        )
+                        .background(
+                                color = CardBackgroundOn,
+                                shape = MaterialTheme.shapes.medium
                         ),
-                        shape = MaterialTheme.shapes.medium
-                    )
-                    .background(
-                        color = CardBackgroundOn,
-                        shape = MaterialTheme.shapes.medium
-                    ),
                 readOnly = true,
                 textStyle = MaterialTheme.typography.body1,
                 placeholder = {
@@ -354,8 +370,8 @@ fun LeftAlignedIconText(
             painter = iconPainter,
             contentDescription = iconContentDescription,
             modifier = Modifier
-                .size(24.dp)
-                .padding(end = 8.dp)
+                    .size(24.dp)
+                    .padding(end = 8.dp)
         )
         Text(
             text = text,
@@ -367,24 +383,26 @@ fun LeftAlignedIconText(
 @Composable
 fun SceneLightItem(
     device: LumenLight,
+    checked: Boolean = false,
     modifier: Modifier = Modifier.fillMaxWidth(),
 ) {
     ConstraintLayout(
-        modifier = Modifier.fillMaxWidth()
-            .border(
-                width = 1.dp,
-                brush = AngledLinearGradient(
-                    colors = listOf(White50, White3),
-                    angleInDegrees = -135F,
-                    useAsCssAngle = true
-                ),
-                shape = MaterialTheme.shapes.medium
-            )
-            .background(
-                color = if (device.active) CardBackgroundOn else CardBackgroundOff,
-                shape = MaterialTheme.shapes.medium
-            )
-            .padding(16.dp)
+        modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                        width = 1.dp,
+                        brush = AngledLinearGradient(
+                                colors = listOf(White50, White3),
+                                angleInDegrees = -135F,
+                                useAsCssAngle = true
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                )
+                .background(
+                        color = if (device.active) CardBackgroundOn else CardBackgroundOff,
+                        shape = MaterialTheme.shapes.medium
+                )
+                .padding(16.dp)
     ) {
         val (lightImage, lightLabel, brightnessLabel, tempLabel, timeLabel, switch) = createRefs()
 
@@ -392,21 +410,21 @@ fun SceneLightItem(
             painter = painterResource(id = R.drawable.ic_lumen_color_bulb),
             contentDescription = stringResource(id = R.string.cont_desc_scene_light),
             modifier = Modifier
-                .size(35.dp)
-                .constrainAs(lightImage) {
-                    start.linkTo(parent.start)
-                    top.linkTo(parent.top)
-                }
+                    .size(35.dp)
+                    .constrainAs(lightImage) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                    }
         )
         LumenSwitch(
-            checked = device.active,
+            checked = checked,
             onCheckedChange = {},
             modifier = Modifier
-                .size(32.dp, 56.dp)
-                .constrainAs(switch) {
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                },
+                    .size(32.dp, 56.dp)
+                    .constrainAs(switch) {
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                    },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = White100,
                 checkedTrackColor = BrightBlurple,
@@ -426,7 +444,7 @@ fun SceneLightItem(
         )
 
         LeftAlignedIconText(
-            text = "${ (100 * device.brightness) }$",
+            text = "${ (100 * device.brightness).toInt() }%",
             iconPainter = painterResource(id = R.drawable.ic_lumen_bright_sun),
             iconContentDescription = stringResource(id = R.string.cont_desc_light_bright),
             modifier = Modifier.constrainAs(tempLabel) {
@@ -467,8 +485,8 @@ fun SceneLightItem(
 fun SceneTaskDescription() {
     Column(
         modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 40.dp)
-            .fillMaxWidth(),
+                .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 40.dp)
+                .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -483,65 +501,81 @@ fun SceneTaskDescription() {
 }
 
 @Composable
-fun ColumnScope.SceneTaskList(
-    scene: SceneAndLightsWithRoom,
-    onSceneUpdated: (LumenScene) -> Unit = {},
+fun ColumnScope.SceneDetails(
+    scene: SceneModel,
+    viewModel: ScenesViewModel = getViewModel(),
+    rooms: List<RoomNameAndId> = emptyList(),
+    onSceneUpdated: (SceneModel) -> Unit = {},
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .weight(1f)
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
-    ) {
-        item {
-            TaskLabeledTextField(
-                label = stringResource(id = R.string.name),
-                text = scene.scene.sceneName,
-                placeholder = stringResource(id = R.string.name_room)
-            )
+    // Load the lights available in the current room
+    LaunchedEffect(scene.roomId) { viewModel.getLightsForRoom(scene.roomId) }
 
-            // We should load a list of rooms
+    Box(modifier = Modifier.weight(1f)
+        .padding(horizontal = 16.dp)
+        .fillMaxWidth()) {
 
-//            TaskLabeledDropDownMenu(
-//                label = stringResource(id = R.string.room),
-//                options = emptyList<LumenRoom>(),
-//                selectedOption = scene.room.roomName,
-//                placeholder = stringResource(id = R.string.select_room),
-//                modifier = Modifier.padding(vertical = 16.dp)
-//            ) {
-//                onSceneUpdated(scene.copy(containingRoom = (it as RoomModel)))
-//            }
-//
-//            TaskLabeledDropDownMenu(
-//                label = stringResource(id = R.string.duration),
-//                options = stringArrayResource(id = R.array.durations)
-//                    .toList(),
-//                selectedOption = scene.duration,
-//                placeholder = stringResource(id = R.string.select_durations),
-//            ) {
-//                onSceneUpdated(scene.copy(duration = (it as String)))
-//            }
-        }
+        val screenState by viewModel.sceneDetailsLightUIState.collectAsState()
+        val state: ScenesViewModel.SceneDetailsLights = screenState.sceneDetailsLightState
 
-        item {
-            SceneSectionHeader(stringResource(id = R.string.lights))
-        }
-        items(scene.lights) {
-            SceneLightItem(it, modifier = Modifier.fillMaxWidth())
-        }
+        var lights = if(state is ScenesViewModel.SceneDetailsLights.Result) { state.lights } else { emptyList<LumenLight>() }
 
-        item {
-            SceneTaskFavoriteButton(
-                favorite = scene.scene.favorite,
-                modifier = Modifier
-                    .padding(horizontal = 40.dp, vertical = 16.dp)
-                    .fillMaxWidth()
-                    .height(56.dp)
-            ) {
+        LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
+        ) {
+            item {
+                TaskLabeledTextField(
+                        label = stringResource(id = R.string.name),
+                        text = scene.name,
+                        placeholder = stringResource(id = R.string.name_room)
+                ) {
+                    onSceneUpdated(scene.copy(name = it))
+                }
 
+                // We should load a list of rooms
+                TaskLabeledDropDownMenu(
+                        label = stringResource(id = R.string.room),
+                        options = rooms,
+                        selectedOption = scene.roomName,
+                        placeholder = stringResource(id = R.string.select_room),
+                        modifier = Modifier.padding(vertical = 16.dp)
+                ) {
+                    onSceneUpdated(scene.copy(roomId = (it as RoomNameAndId).roomId))
+                }
+
+                TaskLabeledDropDownMenu(
+                        label = stringResource(id = R.string.duration),
+                        options = stringArrayResource(id = R.array.durations)
+                                .toList(),
+                        selectedOption = scene.duration,
+                        placeholder = stringResource(id = R.string.select_durations),
+                ) {
+                    onSceneUpdated(scene.copy(duration = (it as String)))
+                }
+            }
+
+            item { SceneSectionHeader(stringResource(id = R.string.lights)) }
+            items(lights) {
+                SceneLightItem(
+                        it,
+                        checked = scene.lights.contains(it.lightId),
+                        modifier = Modifier.fillMaxWidth())
+            }
+            item {
+                SceneTaskFavoriteButton(
+                        favorite = scene.favorite,
+                        modifier = Modifier
+                                .padding(horizontal = 40.dp, vertical = 16.dp)
+                                .fillMaxWidth()
+                                .height(56.dp)
+                ) {
+
+                }
             }
         }
+
+        if(state is ScenesViewModel.SceneDetailsLights.LoadingLights)
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
 }
 
@@ -554,12 +588,12 @@ fun SceneTaskFavoriteButton(
     Button(
         onClick = { onFavorited(!favorite) },
         modifier = modifier
-            .clip(shape = MaterialTheme.shapes.medium)
-            .border(
-                width = 1.dp,
-                color = LightBlurple,
-                shape = MaterialTheme.shapes.medium
-            ),
+                .clip(shape = MaterialTheme.shapes.medium)
+                .border(
+                        width = 1.dp,
+                        color = LightBlurple,
+                        shape = MaterialTheme.shapes.medium
+                ),
         elevation = null,
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
     ) {
@@ -587,17 +621,17 @@ fun SceneTaskSaveButton(
     Button(
         onClick = { onClick() },
         modifier = Modifier
-            .border(
-                width = 1.dp,
-                brush = AngledLinearGradient(
-                    colors = listOf(White50, White3),
-                    angleInDegrees = -135F,
-                    useAsCssAngle = true
-                ),
-                shape = MaterialTheme.shapes.small
-            )
-            .fillMaxWidth()
-            .height(68.dp),
+                .border(
+                        width = 1.dp,
+                        brush = AngledLinearGradient(
+                                colors = listOf(White50, White3),
+                                angleInDegrees = -135F,
+                                useAsCssAngle = true
+                        ),
+                        shape = MaterialTheme.shapes.small
+                )
+                .fillMaxWidth()
+                .height(68.dp),
 
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(backgroundColor = LightBlurple)
