@@ -175,7 +175,6 @@ constructor(
     val thumbPadding: Dp = DefaultSwitchPadding,
     val thumbElevation: Dp = DefaultThumbElevation
 ) {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -188,6 +187,7 @@ constructor(
         if (trackWidth != other.trackWidth) return false
         if (trackHeight != other.trackHeight) return false
         if (thumbPadding != other.thumbPadding) return false
+        if (thumbElevation != other.thumbElevation) return false
 
         return true
     }
@@ -199,6 +199,7 @@ constructor(
         result = 31 * result + trackWidth.hashCode()
         result = 31 * result + trackHeight.hashCode()
         result = 31 * result + thumbPadding.hashCode()
+        result = 31 * result + thumbElevation.hashCode()
         return result
     }
 }

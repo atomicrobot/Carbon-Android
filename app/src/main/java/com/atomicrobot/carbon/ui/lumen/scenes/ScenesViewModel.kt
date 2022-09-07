@@ -11,6 +11,7 @@ import com.atomicrobot.carbon.data.lumen.dto.RoomNameAndId
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndLightsWithRoom
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndRoomName
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -27,23 +28,23 @@ class ScenesViewModel(
     }
 
     sealed class SceneDetails {
-        object LoadingDetails: SceneDetails()
+        object LoadingDetails : SceneDetails()
         data class Result(
             val scene: SceneAndLightsWithRoom =
-                    SceneAndLightsWithRoom(
-                        scene = LumenScene(),
-                        lights = emptyList(),
-                        room = RoomNameAndId()
-                    ),
+                SceneAndLightsWithRoom(
+                    scene = LumenScene(),
+                    lights = emptyList(),
+                    room = RoomNameAndId()
+                ),
             val rooms: List<RoomNameAndId> = emptyList()
-        ): SceneDetails()
+        ) : SceneDetails()
     }
 
     sealed class SceneDetailsLights {
-        object LoadingLights: SceneDetailsLights()
+        object LoadingLights : SceneDetailsLights()
         data class Result(
-                val lights: List<LumenLight> = emptyList()
-        ): SceneDetailsLights()
+            val lights: List<LumenLight> = emptyList()
+        ) : SceneDetailsLights()
     }
 
     data class MainScenesScreenUiState(
@@ -51,11 +52,11 @@ class ScenesViewModel(
     )
 
     data class SceneDetailsUIState(
-            val sceneDetailsState: SceneDetails = SceneDetails.Result(),
+        val sceneDetailsState: SceneDetails = SceneDetails.Result(),
     )
 
     data class SceneDetailsLightsUIState(
-            val sceneDetailsLightState: SceneDetailsLights = SceneDetailsLights.Result(),
+        val sceneDetailsLightState: SceneDetailsLights = SceneDetailsLights.Result(),
     )
 
     private val _mainUiState = MutableStateFlow(MainScenesScreenUiState())
@@ -81,37 +82,51 @@ class ScenesViewModel(
     }
 
     suspend fun getScene(sceneId: Long) {
-        if(sceneId == 0L) {
+        if (sceneId == 0L) {
             viewModelScope.launch {
                 _sceneDetailsUIState.value =
-                        _sceneDetailsUIState.value.copy(SceneDetails.Result(
+                    _sceneDetailsUIState.value.copy(
+                        SceneDetails.Result(
                             scene = SceneAndLightsWithRoom(
                                 scene = LumenScene(),
                                 lights = emptyList(),
                                 room = RoomNameAndId()
                             ),
-                            rooms = roomDao.getRoomNamesAndIds()))
+                            rooms = roomDao.getRoomNamesAndIds()
+                        )
+                    )
             }
             return
         }
 
         _sceneDetailsUIState.value =
-                _sceneDetailsUIState.value.copy(sceneDetailsState = SceneDetails.LoadingDetails)
+            _sceneDetailsUIState.value.copy(sceneDetailsState = SceneDetails.LoadingDetails)
         viewModelScope.launch {
             val scene = sceneDao.getSceneAndLightsWithRoom(sceneId)
             val rooms = roomDao.getRoomNamesAndIds()
+            delay(2000)
             _sceneDetailsUIState.value =
-                    _sceneDetailsUIState.value.copy(sceneDetailsState = SceneDetails.Result(scene, rooms))
+                _sceneDetailsUIState.value.copy(sceneDetailsState = SceneDetails.Result(scene, rooms))
         }
     }
 
     suspend fun getLightsForRoom(roomId: Long) {
+        if(roomId == 0L) {
+            // Invalid room ID, use an empty light list for the state
+            _sceneDetailsLightUIState.value = _sceneDetailsLightUIState.value.copy(
+                sceneDetailsLightState = SceneDetailsLights.Result(emptyList())
+            )
+        }
+
         _sceneDetailsLightUIState.value = _sceneDetailsLightUIState.value.copy(
-                sceneDetailsLightState = SceneDetailsLights.LoadingLights)
+            sceneDetailsLightState = SceneDetailsLights.LoadingLights
+        )
         viewModelScope.launch {
             lightDao.getAllLightsForRoom(roomId).collect {
+                delay(2000)
                 _sceneDetailsLightUIState.value = _sceneDetailsLightUIState.value.copy(
-                        sceneDetailsLightState = SceneDetailsLights.Result(it))
+                    sceneDetailsLightState = SceneDetailsLights.Result(it)
+                )
             }
         }
     }

@@ -176,7 +176,7 @@ class DataModule {
     ): LightDao = database.lightDao()
 
     private fun provideRoomDao(
-            database: LumenDatabase
+        database: LumenDatabase
     ): RoomDao = database.roomDao()
 
     companion object {

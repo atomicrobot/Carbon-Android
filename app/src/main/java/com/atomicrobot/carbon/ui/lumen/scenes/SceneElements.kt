@@ -1,24 +1,23 @@
 package com.atomicrobot.carbon.ui.lumen.scenes
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -54,6 +53,7 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.lumen.dto.LumenLight
 import com.atomicrobot.carbon.data.lumen.dto.LumenScene
 import com.atomicrobot.carbon.data.lumen.dto.RoomNameAndId
+import com.atomicrobot.carbon.ui.lumen.LumenIndeterminateIndicator
 import com.atomicrobot.carbon.ui.lumen.LumenSwitch
 import com.atomicrobot.carbon.ui.shader.AngledLinearGradient
 import com.atomicrobot.carbon.ui.theme.BrightBlurple
@@ -169,7 +169,7 @@ fun DualActionRow(
         IconButton(
             onClick = { onAction() },
             modifier = Modifier
-                    .clip(CircleShape),
+                .clip(CircleShape),
             enabled = painter != null
         ) {
             painter?.let {
@@ -193,7 +193,7 @@ fun DualActionRow(
         IconButton(
             onClick = { onClose() },
             modifier = Modifier
-                    .clip(CircleShape),
+                .clip(CircleShape),
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_lumen_close),
@@ -500,82 +500,68 @@ fun SceneTaskDescription() {
     }
 }
 
-@Composable
-fun ColumnScope.SceneDetails(
-    scene: SceneModel,
-    viewModel: ScenesViewModel = getViewModel(),
-    rooms: List<RoomNameAndId> = emptyList(),
-    onSceneUpdated: (SceneModel) -> Unit = {},
-) {
-    // Load the lights available in the current room
-    LaunchedEffect(scene.roomId) { viewModel.getLightsForRoom(scene.roomId) }
-
-    Box(modifier = Modifier.weight(1f)
-        .padding(horizontal = 16.dp)
-        .fillMaxWidth()) {
-
-        val screenState by viewModel.sceneDetailsLightUIState.collectAsState()
-        val state: ScenesViewModel.SceneDetailsLights = screenState.sceneDetailsLightState
-
-        var lights = if(state is ScenesViewModel.SceneDetailsLights.Result) { state.lights } else { emptyList<LumenLight>() }
-
-        LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
+fun LazyListScope.sceneDetailsField(
+        scene: SceneModel,
+        rooms: List<RoomNameAndId> = emptyList(),
+        onSceneUpdated: (SceneModel) -> Unit = {}) {
+    item {
+        TaskLabeledTextField(
+                label = stringResource(id = R.string.name),
+                text = scene.name,
+                placeholder = stringResource(id = R.string.name_room)
         ) {
-            item {
-                TaskLabeledTextField(
-                        label = stringResource(id = R.string.name),
-                        text = scene.name,
-                        placeholder = stringResource(id = R.string.name_room)
-                ) {
-                    onSceneUpdated(scene.copy(name = it))
-                }
-
-                // We should load a list of rooms
-                TaskLabeledDropDownMenu(
-                        label = stringResource(id = R.string.room),
-                        options = rooms,
-                        selectedOption = scene.roomName,
-                        placeholder = stringResource(id = R.string.select_room),
-                        modifier = Modifier.padding(vertical = 16.dp)
-                ) {
-                    onSceneUpdated(scene.copy(roomId = (it as RoomNameAndId).roomId))
-                }
-
-                TaskLabeledDropDownMenu(
-                        label = stringResource(id = R.string.duration),
-                        options = stringArrayResource(id = R.array.durations)
-                                .toList(),
-                        selectedOption = scene.duration,
-                        placeholder = stringResource(id = R.string.select_durations),
-                ) {
-                    onSceneUpdated(scene.copy(duration = (it as String)))
-                }
-            }
-
-            item { SceneSectionHeader(stringResource(id = R.string.lights)) }
-            items(lights) {
-                SceneLightItem(
-                        it,
-                        checked = scene.lights.contains(it.lightId),
-                        modifier = Modifier.fillMaxWidth())
-            }
-            item {
-                SceneTaskFavoriteButton(
-                        favorite = scene.favorite,
-                        modifier = Modifier
-                                .padding(horizontal = 40.dp, vertical = 16.dp)
-                                .fillMaxWidth()
-                                .height(56.dp)
-                ) {
-
-                }
-            }
+            onSceneUpdated(scene.copy(name = it))
         }
 
-        if(state is ScenesViewModel.SceneDetailsLights.LoadingLights)
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        // We should load a list of rooms
+        TaskLabeledDropDownMenu(
+                label = stringResource(id = R.string.room),
+                options = rooms,
+                selectedOption = scene.roomName,
+                placeholder = stringResource(id = R.string.select_room),
+                modifier = Modifier.padding(vertical = 16.dp)
+        ) {
+            onSceneUpdated(scene.copy(roomId = (it as RoomNameAndId).roomId))
+        }
+
+        TaskLabeledDropDownMenu(
+                label = stringResource(id = R.string.duration),
+                options = stringArrayResource(id = R.array.durations)
+                        .toList(),
+                selectedOption = scene.duration,
+                placeholder = stringResource(id = R.string.select_durations),
+        ) {
+            onSceneUpdated(scene.copy(duration = (it as String)))
+        }
+    }
+}
+
+fun LazyListScope.sceneDetailsFavoriteButton(
+    scene: SceneModel,
+    onSceneUpdated: (SceneModel) -> Unit = {},
+) {
+    item {
+        SceneTaskFavoriteButton(
+                favorite = scene.favorite,
+                modifier = Modifier
+                        .padding(horizontal = 40.dp, vertical = 16.dp)
+                        .fillMaxWidth()
+                        .height(56.dp)
+        ) {
+        Log.d("DBUG","Favorite state changed: $it}")
+            onSceneUpdated(scene.copy(favorite = it))
+        }
+    }
+}
+
+fun LazyListScope.sceneDetailsLights(allLights: List<LumenLight>, sceneLights: List<Long>) {
+    item { SceneSectionHeader(stringResource(id = R.string.lights)) }
+    items(allLights, { it.lightId }) {
+        SceneLightItem(
+            it,
+            checked = sceneLights.contains(it.lightId),
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -583,16 +569,16 @@ fun ColumnScope.SceneDetails(
 fun SceneTaskFavoriteButton(
     favorite: Boolean,
     modifier: Modifier = Modifier,
-    onFavorited: (Boolean) -> Unit = {}
+    onFavorite: (Boolean) -> Unit = {}
 ) {
     Button(
-        onClick = { onFavorited(!favorite) },
+        onClick = { onFavorite(!favorite) },
         modifier = modifier
                 .clip(shape = MaterialTheme.shapes.medium)
                 .border(
-                        width = 1.dp,
-                        color = LightBlurple,
-                        shape = MaterialTheme.shapes.medium
+                    width = 1.dp,
+                    color = LightBlurple,
+                    shape = MaterialTheme.shapes.medium
                 ),
         elevation = null,
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
@@ -613,8 +599,8 @@ fun SceneTaskFavoriteButton(
 }
 
 @Composable
-fun SceneTaskSaveButton(
-    buttonText: String,
+fun SceneDetailsButton(
+    newScene: Boolean,
     enabled: Boolean = false,
     onClick: () -> Unit = {}
 ) {
@@ -636,8 +622,14 @@ fun SceneTaskSaveButton(
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(backgroundColor = LightBlurple)
     ) {
+
+        var text = if (newScene)
+            stringResource(id = R.string.create_scene)
+        else
+            stringResource(id = R.string.save_scene)
+
         Text(
-            text = buttonText,
+            text = text,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h2
         )

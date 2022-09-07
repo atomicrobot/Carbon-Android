@@ -42,6 +42,7 @@
     <string name="cont_desc_light_temp">Light Temperature</string>
     <string name="cont_desc_light_duration">Light Duration</string>
     <string name="cont_desc_scene_favorite">Add Scene to Favorites</string>
+    <string name="cont_desc_loading">Content loading</string>
 
     <string name="add_favorite">Add to Favorites</string>
 

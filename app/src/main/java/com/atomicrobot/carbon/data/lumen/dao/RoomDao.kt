@@ -4,12 +4,10 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
 import androidx.room.Update
 import com.atomicrobot.carbon.data.lumen.dto.LumenRoom
 import com.atomicrobot.carbon.data.lumen.dto.RoomNameAndId
-import com.atomicrobot.carbon.data.lumen.dto.SceneAndRoomName
 import kotlinx.coroutines.flow.Flow
 
 @Dao

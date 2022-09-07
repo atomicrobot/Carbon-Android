@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
 import androidx.room.Update
 import com.atomicrobot.carbon.data.lumen.dto.LumenLight
@@ -42,7 +41,8 @@ interface SceneDao {
     @Query("SELECT * FROM LumenScene WHERE sceneId = :sceneId")
     fun getScene(sceneId: Long): Flow<LumenScene>
 
-    @Query("SELECT * FROM LumenScene as scene " +
+    @Query(
+        "SELECT * FROM LumenScene as scene " +
             "INNER JOIN LumenSceneLightCrossRef crossRef ON crossRef.sceneId = scene.sceneId " +
             "INNER JOIN LumenLight light ON light.lightId = crossRef.lightId WHERE scene.sceneId = :sceneId"
     )

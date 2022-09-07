@@ -86,11 +86,13 @@ internal class LumenDatabaseCallback(private val appContext: Context) : RoomData
 
         val livingRoomId = roomDao.insert(LumenRoom(roomId = 0L, roomName = "Living Room"))
         // Insert the living room lights and use the Ids to create scene(s)
-        val livingRoomIds = lightDao.insert(listOf(
-            LumenLight(lightName = "TV Lamp L", containingRoomId = livingRoomId, type = LightType.WHITE_SMALL),
-            LumenLight(lightName = "TV Lamp R", containingRoomId = livingRoomId, type = LightType.WHITE_SMALL),
-            LumenLight(lightName = "Coffee Table", containingRoomId = livingRoomId, type = LightType.WHITE)
-        ))
+        val livingRoomIds = lightDao.insert(
+            listOf(
+                LumenLight(lightName = "TV Lamp L", containingRoomId = livingRoomId, type = LightType.WHITE_SMALL),
+                LumenLight(lightName = "TV Lamp R", containingRoomId = livingRoomId, type = LightType.WHITE_SMALL),
+                LumenLight(lightName = "Coffee Table", containingRoomId = livingRoomId, type = LightType.WHITE)
+            )
+        )
         // Create some initial scenes
         var sceneId = sceneDao.insert(LumenScene(sceneName = "Movie Night", containingRoomId = livingRoomId, duration = "8 hours", favorite = true))
         sceneLightDao.insert(LumenSceneLightCrossRef(sceneId = sceneId, lightId = livingRoomIds[0]))
@@ -99,15 +101,16 @@ internal class LumenDatabaseCallback(private val appContext: Context) : RoomData
         sceneId = sceneDao.insert(LumenScene(sceneName = "Couch Reading", containingRoomId = livingRoomId, duration = "1 hour", favorite = false))
         sceneLightDao.insert(LumenSceneLightCrossRef(sceneId = sceneId, lightId = livingRoomIds[2]))
 
-
         val bedRoomId = roomDao.insert(LumenRoom(roomId = 0L, roomName = "Master Bedroom"))
-        val bedroomIds = lightDao.insert(listOf(
-            LumenLight(lightName = "Floor Lamp", containingRoomId = bedRoomId, type = LightType.COLOR),
-            LumenLight(lightName = "Ceiling Fan", containingRoomId = bedRoomId, type = LightType.WHITE),
-            LumenLight(lightName = "Night Stand R", containingRoomId = bedRoomId, type = LightType.WHITE_SMALL),
-            LumenLight(lightName = "Night Stand L", containingRoomId = bedRoomId, type = LightType.WHITE_SMALL),
-            LumenLight(lightName = "Closet Light", containingRoomId = bedRoomId, type = LightType.WHITE_SMALL),
-        ))
+        val bedroomIds = lightDao.insert(
+            listOf(
+                LumenLight(lightName = "Floor Lamp", containingRoomId = bedRoomId, type = LightType.COLOR),
+                LumenLight(lightName = "Ceiling Fan", containingRoomId = bedRoomId, type = LightType.WHITE),
+                LumenLight(lightName = "Night Stand R", containingRoomId = bedRoomId, type = LightType.WHITE_SMALL),
+                LumenLight(lightName = "Night Stand L", containingRoomId = bedRoomId, type = LightType.WHITE_SMALL),
+                LumenLight(lightName = "Closet Light", containingRoomId = bedRoomId, type = LightType.WHITE_SMALL),
+            )
+        )
 
         sceneId = sceneDao.insert(LumenScene(sceneName = "Night Light", containingRoomId = bedRoomId, duration = "8 hours", favorite = false))
         sceneLightDao.insert(LumenSceneLightCrossRef(sceneId = sceneId, lightId = bedroomIds.last()))

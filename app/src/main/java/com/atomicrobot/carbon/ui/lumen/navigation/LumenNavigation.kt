@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,8 +45,8 @@ import kotlinx.coroutines.launch
 
 sealed class LumenBottomSheetTask {
     // I can't think of a better way to blank the task sheet
-    object NoTask: LumenBottomSheetTask()
-    abstract class LumenMenuTask(val titleRes: Int): LumenBottomSheetTask()
+    object NoTask : LumenBottomSheetTask()
+    abstract class LumenMenuTask(val titleRes: Int) : LumenBottomSheetTask()
     object AddScene : LumenMenuTask(R.string.add_scene)
     data class EditScene(val sceneId: Long) : LumenBottomSheetTask()
 }
@@ -86,7 +85,7 @@ fun rememberLumenAppState(
     ),
     navController: NavHostController = rememberNavController(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    bottomSheetTask: LumenBottomSheetTask = remember { LumenBottomSheetTask.AddScene }
+    bottomSheetTask: LumenBottomSheetTask = remember { LumenBottomSheetTask.NoTask }
 ) = remember(modalBottomSheetState, navController, scaffoldState, bottomSheetTask) {
     LumenAppState(modalBottomSheetState, navController, scaffoldState, bottomSheetTask)
 }
@@ -98,8 +97,8 @@ fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
     ModalBottomSheetLayout(
         sheetContent = { LumenBottomSheet(appState) },
         modifier = Modifier
-                .statusBarsPadding()
-                .fillMaxSize(),
+            .statusBarsPadding()
+            .fillMaxSize(),
         sheetState = appState.modalBottomSheetState,
         scrimColor = Color.Transparent
     ) {
@@ -200,8 +199,10 @@ fun LumenBottomSheet(appState: LumenAppState) {
     Box(Modifier.fillMaxSize()) {
         when (bottomSheetTask) {
             LumenBottomSheetTask.AddScene -> AddSceneTask(onDismissed = dismissBottomSheet)
-            is LumenBottomSheetTask.EditScene -> EditSceneTask(bottomSheetTask.sceneId,
-                    onDismissed = dismissBottomSheet)
+            is LumenBottomSheetTask.EditScene -> EditSceneTask(
+                bottomSheetTask.sceneId,
+                onDismissed = dismissBottomSheet
+            )
             LumenBottomSheetTask.NoTask -> { /* INTENTIONALLY LEFT BLANK */ }
             else -> { /* INTENTIONALLY LEFT BLANK */ }
         }
