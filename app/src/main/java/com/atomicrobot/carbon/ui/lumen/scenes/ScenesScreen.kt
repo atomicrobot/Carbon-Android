@@ -16,11 +16,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.data.lumen.dto.LumenLight
 import com.atomicrobot.carbon.data.lumen.dto.LumenScene
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndLightsWithRoom
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndRoomName
@@ -45,8 +42,7 @@ fun ScenesScreen(
 ) {
     LaunchedEffect(Unit) { viewModel.getScenes() }
     val screenState by viewModel.mainUiState.collectAsState()
-    var mainScreenstate = screenState.mainScreenState
-    when (mainScreenstate) {
+    when (val mainScreenState = screenState.mainScreenState) {
         is ScenesViewModel.Scenes.Loading -> {
             Box(Modifier.fillMaxSize()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -54,7 +50,7 @@ fun ScenesScreen(
         }
         is ScenesViewModel.Scenes.Result -> {
             ScenesList(
-                scenes = mainScreenstate.scenes,
+                scenes = mainScreenState.scenes,
                 modifier = Modifier.fillMaxSize(),
                 onSceneSelected = onSceneSelected
             )
@@ -120,10 +116,10 @@ fun AddSceneTask(
     onDismissed: () -> Unit
 ) {
     SceneDetailsList(
-            sceneId = 0L,
-            viewModel = viewModel,
-            newScene = true,
-            onDismissed = onDismissed
+        sceneId = 0L,
+        viewModel = viewModel,
+        newScene = true,
+        onDismissed = onDismissed
     ) {
         viewModel.saveOrUpdateScene(it)
         onDismissed()
@@ -136,14 +132,13 @@ fun EditSceneTask(
     viewModel: ScenesViewModel = getViewModel(),
     onDismissed: () -> Unit
 ) {
-
     val coroutine = rememberCoroutineScope()
     SceneDetailsList(
-            sceneId = sceneId,
-            viewModel = viewModel,
-            newScene = false,
-            onDismissed = onDismissed,
-            onDeleteAction = { coroutine.launch { viewModel.removeScene(sceneId) } }
+        sceneId = sceneId,
+        viewModel = viewModel,
+        newScene = false,
+        onDismissed = onDismissed,
+        onDeleteAction = { coroutine.launch { viewModel.removeScene(sceneId) } }
     ) {
         viewModel.saveOrUpdateScene(it)
         onDismissed()
@@ -165,16 +160,16 @@ fun SceneDetailsList(
         viewModel.getScene(sceneId)
     }
     val screenState by viewModel.sceneDetailsUIState.collectAsState()
-    var state: ScenesViewModel.SceneDetails = screenState.sceneDetailsState
+    val sceneDetailsState: ScenesViewModel.SceneDetails = screenState.sceneDetailsState
 
-    val rooms = when (state) {
+    val rooms = when (sceneDetailsState) {
         is ScenesViewModel.SceneDetails.LoadingDetails -> emptyList()
-        is ScenesViewModel.SceneDetails.Result -> state.rooms
+        is ScenesViewModel.SceneDetails.Result -> sceneDetailsState.rooms
     }
 
-    var scene: SceneModel by mutableStateOf(when (state) {
+    var scene: SceneModel by mutableStateOf(when (sceneDetailsState) {
         is ScenesViewModel.SceneDetails.LoadingDetails -> SceneModel()
-        is ScenesViewModel.SceneDetails.Result -> SceneModel(state.scene)
+        is ScenesViewModel.SceneDetails.Result -> SceneModel(sceneDetailsState.scene)
     })
 
     Box(Modifier.fillMaxSize()) {
@@ -186,12 +181,14 @@ fun SceneDetailsList(
 
             // Load the lights available in the current room, use the roomId as the key because if the room
             // isn't updated, we don't wanna query the database again on recompositions
-            LaunchedEffect(scene.roomId) { viewModel.getLightsForRoom(scene.roomId) }
+            LaunchedEffect(scene.roomId) {
+                viewModel.getLightsForRoom(scene.roomId)
+            }
 
-            val screenState by viewModel.sceneDetailsLightUIState.collectAsState()
-            val state: ScenesViewModel.SceneDetailsLights = screenState.sceneDetailsLightState
+            val lightsState by viewModel.sceneDetailsLightUIState.collectAsState()
+            val state: ScenesViewModel.SceneDetailsLights = lightsState.sceneDetailsLightState
 
-            var lights = if (state is ScenesViewModel.SceneDetailsLights.Result) state.lights
+            val lights = if (state is ScenesViewModel.SceneDetailsLights.Result) state.lights
             else emptyList()
 
             LazyColumn(
@@ -213,7 +210,7 @@ fun SceneDetailsList(
             ) { onSaveScene(scene) }
         }
 
-        if (state is ScenesViewModel.SceneDetails.LoadingDetails) {
+        if (sceneDetailsState is ScenesViewModel.SceneDetails.LoadingDetails) {
             if(showLoadingScrim) {
                 Canvas(
                     Modifier
@@ -224,8 +221,8 @@ fun SceneDetailsList(
             }
             LumenIndeterminateIndicator(
                 modifier = Modifier
-                .size(206.dp)
-                .align(Alignment.Center)
+                    .size(206.dp)
+                    .align(Alignment.Center)
             )
         }
     }
