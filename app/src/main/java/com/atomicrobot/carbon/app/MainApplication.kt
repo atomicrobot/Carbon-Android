@@ -1,8 +1,6 @@
 package com.atomicrobot.carbon.app
 
 import android.app.Application
-import com.atomicrobot.carbon.data.DataModule
-import com.atomicrobot.carbon.modules.crashReporterModule
 import com.atomicrobot.carbon.util.AppLogger
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext
@@ -20,14 +18,17 @@ open class MainApplication : Application() {
 
                 AppLogger()
 
+                val mods = Modules()
                 modules(
                     listOf(
-                        crashReporterModule,
-                        AppModule().appModule,
+                        mods.appModules,
+                        mods.crashReportModules,
+                        mods.dataModules,
+                        mods.viewModelModules,
                         variantModule,
-                        DataModule().dataModule
                     )
                 )
+
             }
         }
 

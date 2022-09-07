@@ -1,11 +1,11 @@
-package com.atomicrobot.carbon.data
+package com.atomicrobot.carbon.app
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
+import com.atomicrobot.carbon.monitoring.LoggingOnlyCrashReporter
 import com.atomicrobot.carbon.ui.main.MainViewModel
 import com.atomicrobot.carbon.ui.scanner.ScannerViewModel
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
@@ -24,12 +24,31 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 
-interface OkHttpSecurityModifier {
-    fun apply(builder: OkHttpClient.Builder)
-}
+class Modules {
 
-class DataModule {
-    val dataModule = module {
+    companion object {
+        private const val LOADING_DELAY_MS: Long = 500
+        private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
+        const val BASE_URL = "baseUrl"
+    }
+
+    val appModules = module {
+        single {
+            Settings(context = androidContext())
+        }
+
+        single(named("loading_delay_ms")) {
+            LOADING_DELAY_MS
+        }
+    }
+
+    val crashReportModules = module {
+        single {
+            LoggingOnlyCrashReporter()
+        }
+    }
+
+    val dataModules = module {
         single {
             val cacheDir = File(androidApplication().cacheDir, "http")
             Cache(cacheDir, DISK_CACHE_SIZE.toLong())
@@ -77,7 +96,9 @@ class DataModule {
         single {
             DeepLinkInteractor()
         }
+    }
 
+    val viewModelModules = module {
         viewModel {
             SplashViewModel(
                 deepLinkInteractor = get()
@@ -96,47 +117,45 @@ class DataModule {
             ScannerViewModel(app = androidApplication())
         }
     }
+}
 
-    private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-        builder.cache(cache)
-        securityModifier.apply(builder)
-        return builder.build()
-    }
+private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
+    val builder = OkHttpClient.Builder()
+    builder.cache(cache)
+    securityModifier.apply(builder)
+    return builder.build()
+}
 
-    private fun provideBaseUrl(settings: Settings): String {
-        return settings.baseUrl
-    }
+private fun provideBaseUrl(settings: Settings): String {
+    return settings.baseUrl
+}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun provideRetrofit(
-        client: OkHttpClient,
-        baseUrl: String,
-        converterFactory: Converter.Factory
-    ): Retrofit {
-        return Retrofit.Builder()
-            .client(client)
-            .baseUrl(baseUrl)
-            .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-    }
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun provideRetrofit(
+    client: OkHttpClient,
+    baseUrl: String,
+    converterFactory: Converter.Factory
+): Retrofit {
+    return Retrofit.Builder()
+        .client(client)
+        .baseUrl(baseUrl)
+        .addConverterFactory(converterFactory)
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .build()
+}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
-        return retrofit.create(GitHubApiService::class.java)
-    }
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
+    return retrofit.create(GitHubApiService::class.java)
+}
 
-    private fun provideGitHubService(
-        context: Context,
-        api: GitHubApiService
-    ): GitHubInteractor {
-        return GitHubInteractor(context, api)
-    }
+private fun provideGitHubService(
+    context: Context,
+    api: GitHubApiService
+): GitHubInteractor {
+    return GitHubInteractor(context, api)
+}
 
-    companion object {
-        private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
-
-        const val BASE_URL = "baseUrl"
-    }
+interface OkHttpSecurityModifier {
+    fun apply(builder: OkHttpClient.Builder)
 }
