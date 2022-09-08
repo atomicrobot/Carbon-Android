@@ -8,6 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.atomicrobot.carbon.data.lumen.dto.LumenLight
 import com.atomicrobot.carbon.data.lumen.dto.LumenScene
+import com.atomicrobot.carbon.data.lumen.dto.LumenSceneLightCrossRef
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndLightsWithRoom
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndRoomName
 import kotlinx.coroutines.flow.Flow
@@ -59,4 +60,7 @@ interface SceneDao {
     @Transaction
     @Query("SELECT * FROM LumenScene WHERE sceneId = :sceneId")
     fun getSceneAndLightsWithRoomFlow(sceneId: Long): Flow<SceneAndLightsWithRoom>
+
+    @Query("SELECT * FROM LumenSceneLightCrossRef WHERE sceneId = :sceneId")
+    suspend fun getSceneLightReferences(sceneId: Long): List<LumenSceneLightCrossRef>
 }

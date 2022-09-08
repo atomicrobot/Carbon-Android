@@ -9,6 +9,7 @@ import com.atomicrobot.carbon.data.lumen.LumenDatabase
 import com.atomicrobot.carbon.data.lumen.dao.LightDao
 import com.atomicrobot.carbon.data.lumen.dao.RoomDao
 import com.atomicrobot.carbon.data.lumen.dao.SceneDao
+import com.atomicrobot.carbon.data.lumen.dao.SceneLightDao
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
 import com.atomicrobot.carbon.ui.lumen.scenes.ScenesViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
@@ -101,6 +102,7 @@ class DataModule {
             ScannerViewModel(app = androidApplication())
         }
 
+        // Initialize the Lumen database and Dao'
         single {
             provideLumenDatabase(androidContext())
         }
@@ -117,11 +119,16 @@ class DataModule {
             provideRoomDao(get())
         }
 
+        single {
+            provideSceneLightDao(get())
+        }
+
         viewModel {
             ScenesViewModel(
                 sceneDao = get(),
                 lightDao = get(),
-                roomDao = get()
+                roomDao = get(),
+                sceneLightDao = get()
             )
         }
     }
@@ -178,6 +185,10 @@ class DataModule {
     private fun provideRoomDao(
         database: LumenDatabase
     ): RoomDao = database.roomDao()
+
+    private fun provideSceneLightDao(
+        database: LumenDatabase
+    ): SceneLightDao = database.sceneLightDao()
 
     companion object {
         private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB

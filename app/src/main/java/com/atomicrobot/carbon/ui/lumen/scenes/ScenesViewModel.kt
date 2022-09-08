@@ -2,16 +2,19 @@ package com.atomicrobot.carbon.ui.lumen.scenes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.atomicrobot.carbon.data.lumen.SceneModel
 import com.atomicrobot.carbon.data.lumen.dao.LightDao
 import com.atomicrobot.carbon.data.lumen.dao.RoomDao
 import com.atomicrobot.carbon.data.lumen.dao.SceneDao
+import com.atomicrobot.carbon.data.lumen.dao.SceneLightDao
 import com.atomicrobot.carbon.data.lumen.dto.LumenLight
 import com.atomicrobot.carbon.data.lumen.dto.LumenScene
+import com.atomicrobot.carbon.data.lumen.dto.LumenSceneLightCrossRef
 import com.atomicrobot.carbon.data.lumen.dto.RoomNameAndId
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndLightsWithRoom
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndRoomName
+import com.atomicrobot.carbon.data.lumen.toLumenScene
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -20,6 +23,7 @@ class ScenesViewModel(
     private val sceneDao: SceneDao,
     private val lightDao: LightDao,
     private val roomDao: RoomDao,
+    private val sceneLightDao: SceneLightDao
 ) : ViewModel() {
 
     sealed class Scenes {
@@ -104,14 +108,13 @@ class ScenesViewModel(
         viewModelScope.launch {
             val scene = sceneDao.getSceneAndLightsWithRoom(sceneId)
             val rooms = roomDao.getRoomNamesAndIds()
-            delay(2000)
             _sceneDetailsUIState.value =
                 _sceneDetailsUIState.value.copy(sceneDetailsState = SceneDetails.Result(scene, rooms))
         }
     }
 
     suspend fun getLightsForRoom(roomId: Long) {
-        if(roomId == 0L) {
+        if (roomId == 0L) {
             // Invalid room ID, use an empty light list for the state
             _sceneDetailsLightUIState.value = _sceneDetailsLightUIState.value.copy(
                 sceneDetailsLightState = SceneDetailsLights.Result(emptyList())
@@ -123,7 +126,6 @@ class ScenesViewModel(
         )
         viewModelScope.launch {
             lightDao.getAllLightsForRoom(roomId).collect {
-                delay(2000)
                 _sceneDetailsLightUIState.value = _sceneDetailsLightUIState.value.copy(
                     sceneDetailsLightState = SceneDetailsLights.Result(it)
                 )
@@ -131,10 +133,42 @@ class ScenesViewModel(
         }
     }
 
-    suspend fun removeScene(sceneId: Long) {
-        viewModelScope.launch(Dispatchers.IO) { sceneDao.delete(sceneId) }
+    fun resetSceneDetailsState() {
+        // Initialize the details state to loading...
+        _sceneDetailsUIState.value =
+            _sceneDetailsUIState.value
+                    .copy(sceneDetailsState = SceneDetails.LoadingDetails)
+        _sceneDetailsLightUIState.value =
+                _sceneDetailsLightUIState.value
+                        .copy(sceneDetailsLightState = SceneDetailsLights.LoadingLights)
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun saveOrUpdateScene(scene: SceneModel) = Unit
+    suspend fun removeScene(sceneId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            sceneDao.delete(sceneId)
+        }
+    }
+
+    suspend fun saveOrUpdateScene(scene: SceneModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val sceneId: Long = if(scene.sceneId < 1) {
+                // Insert scene
+                sceneDao.insert(scene.toLumenScene())
+            }
+            else {
+                sceneDao.update(scene.toLumenScene())
+                scene.sceneId
+            }
+            // Get a list of the lights in the scene so we can detect which lights were added, and
+            // which lights were removed
+            val sceneLights = sceneDao.getSceneLightReferences(scene.sceneId)
+            // Get the removed lights
+            val rmvLights = sceneLights.filterNot { scene.lights.contains(it.lightId) }
+            sceneLightDao.delete(rmvLights)
+            val newLights = scene.lights
+                    .filter { lightId -> !sceneLights.any { it.sceneId == lightId } }
+                    .map { LumenSceneLightCrossRef(sceneId = sceneId, lightId = it) }
+            sceneLightDao.insert(newLights)
+        }
+    }
 }

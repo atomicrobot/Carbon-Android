@@ -1,18 +1,14 @@
 package com.atomicrobot.carbon.ui.lumen.scenes
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -31,8 +27,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,10 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.data.lumen.SceneModel
 import com.atomicrobot.carbon.data.lumen.dto.LumenLight
 import com.atomicrobot.carbon.data.lumen.dto.LumenScene
 import com.atomicrobot.carbon.data.lumen.dto.RoomNameAndId
-import com.atomicrobot.carbon.ui.lumen.LumenIndeterminateIndicator
 import com.atomicrobot.carbon.ui.lumen.LumenSwitch
 import com.atomicrobot.carbon.ui.shader.AngledLinearGradient
 import com.atomicrobot.carbon.ui.theme.BrightBlurple
@@ -64,7 +58,6 @@ import com.atomicrobot.carbon.ui.theme.MediumBlurple
 import com.atomicrobot.carbon.ui.theme.White100
 import com.atomicrobot.carbon.ui.theme.White3
 import com.atomicrobot.carbon.ui.theme.White50
-import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SceneSectionHeader(
@@ -75,8 +68,8 @@ fun SceneSectionHeader(
     Text(
         text = headerTitle,
         modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 14.dp),
+            .fillMaxWidth()
+            .padding(top = 14.dp),
         style = MaterialTheme.typography.h2
     )
 }
@@ -90,20 +83,20 @@ fun SceneItem(
 ) {
     Row(
         modifier = modifier
-                .border(
-                        width = 1.dp,
-                        brush = AngledLinearGradient(
-                                colors = listOf(White50, White3),
-                                angleInDegrees = -135F,
-                                useAsCssAngle = true
-                        ),
-                        shape = MaterialTheme.shapes.medium
-                )
-                .background(
-                        color = if (scene.active) CardBackgroundOn else CardBackgroundOff,
-                        shape = MaterialTheme.shapes.medium
-                )
-                .padding(16.dp)
+            .border(
+                width = 1.dp,
+                brush = AngledLinearGradient(
+                    colors = listOf(White50, White3),
+                    angleInDegrees = -135F,
+                    useAsCssAngle = true
+                ),
+                shape = MaterialTheme.shapes.medium
+            )
+            .background(
+                color = if (scene.active) CardBackgroundOn else CardBackgroundOff,
+                shape = MaterialTheme.shapes.medium
+            )
+            .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(
@@ -177,8 +170,8 @@ fun DualActionRow(
                     painter = painter,
                     contentDescription = actionContextDescription,
                     modifier = Modifier
-                            .size(48.dp)
-                            .padding(8.dp)
+                        .size(48.dp)
+                        .padding(8.dp)
                 )
             }
         }
@@ -224,20 +217,20 @@ fun TaskLabeledTextField(
             value = text,
             onValueChange = onTextChanged,
             modifier = Modifier
-                    .fillMaxWidth()
-                    .border(
-                            width = 1.dp,
-                            brush = AngledLinearGradient(
-                                    colors = listOf(White50, White3),
-                                    angleInDegrees = -135F,
-                                    useAsCssAngle = true
-                            ),
-                            shape = MaterialTheme.shapes.medium
-                    )
-                    .background(
-                            color = CardBackgroundOn,
-                            shape = MaterialTheme.shapes.medium
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    brush = AngledLinearGradient(
+                        colors = listOf(White50, White3),
+                        angleInDegrees = -135F,
+                        useAsCssAngle = true
                     ),
+                    shape = MaterialTheme.shapes.medium
+                )
+                .background(
+                    color = CardBackgroundOn,
+                    shape = MaterialTheme.shapes.medium
+                ),
             textStyle = MaterialTheme.typography.body1,
             placeholder = {
                 placeholder?.let {
@@ -286,20 +279,20 @@ fun TaskLabeledDropDownMenu(
                 value = selectedOption.toString(),
                 onValueChange = { /* Intentionally left blank */ },
                 modifier = Modifier
-                        .fillMaxWidth()
-                        .border(
-                                width = 1.dp,
-                                brush = AngledLinearGradient(
-                                        colors = listOf(White50, White3),
-                                        angleInDegrees = -135F,
-                                        useAsCssAngle = true
-                                ),
-                                shape = MaterialTheme.shapes.medium
-                        )
-                        .background(
-                                color = CardBackgroundOn,
-                                shape = MaterialTheme.shapes.medium
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.dp,
+                        brush = AngledLinearGradient(
+                            colors = listOf(White50, White3),
+                            angleInDegrees = -135F,
+                            useAsCssAngle = true
                         ),
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .background(
+                        color = CardBackgroundOn,
+                        shape = MaterialTheme.shapes.medium
+                    ),
                 readOnly = true,
                 textStyle = MaterialTheme.typography.body1,
                 placeholder = {
@@ -370,8 +363,8 @@ fun LeftAlignedIconText(
             painter = iconPainter,
             contentDescription = iconContentDescription,
             modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 8.dp)
+                .size(24.dp)
+                .padding(end = 8.dp)
         )
         Text(
             text = text,
@@ -385,24 +378,25 @@ fun SceneLightItem(
     device: LumenLight,
     checked: Boolean = false,
     modifier: Modifier = Modifier.fillMaxWidth(),
+    onLightChecked: (Long, Boolean) -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                        width = 1.dp,
-                        brush = AngledLinearGradient(
-                                colors = listOf(White50, White3),
-                                angleInDegrees = -135F,
-                                useAsCssAngle = true
-                        ),
-                        shape = MaterialTheme.shapes.medium
-                )
-                .background(
-                        color = if (device.active) CardBackgroundOn else CardBackgroundOff,
-                        shape = MaterialTheme.shapes.medium
-                )
-                .padding(16.dp)
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                brush = AngledLinearGradient(
+                    colors = listOf(White50, White3),
+                    angleInDegrees = -135F,
+                    useAsCssAngle = true
+                ),
+                shape = MaterialTheme.shapes.medium
+            )
+            .background(
+                color = if (device.active) CardBackgroundOn else CardBackgroundOff,
+                shape = MaterialTheme.shapes.medium
+            )
+            .padding(16.dp)
     ) {
         val (lightImage, lightLabel, brightnessLabel, tempLabel, timeLabel, switch) = createRefs()
 
@@ -410,21 +404,21 @@ fun SceneLightItem(
             painter = painterResource(id = R.drawable.ic_lumen_color_bulb),
             contentDescription = stringResource(id = R.string.cont_desc_scene_light),
             modifier = Modifier
-                    .size(35.dp)
-                    .constrainAs(lightImage) {
-                        start.linkTo(parent.start)
-                        top.linkTo(parent.top)
-                    }
+                .size(35.dp)
+                .constrainAs(lightImage) {
+                    start.linkTo(parent.start)
+                    top.linkTo(parent.top)
+                }
         )
         LumenSwitch(
             checked = checked,
-            onCheckedChange = {},
+            onCheckedChange = { onLightChecked(device.lightId, it) },
             modifier = Modifier
-                    .size(32.dp, 56.dp)
-                    .constrainAs(switch) {
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top)
-                    },
+                .size(32.dp, 56.dp)
+                .constrainAs(switch) {
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = White100,
                 checkedTrackColor = BrightBlurple,
@@ -485,8 +479,8 @@ fun SceneLightItem(
 fun SceneTaskDescription() {
     Column(
         modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 40.dp)
-                .fillMaxWidth(),
+            .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 40.dp)
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -500,71 +494,6 @@ fun SceneTaskDescription() {
     }
 }
 
-fun LazyListScope.sceneDetailsField(
-        scene: SceneModel,
-        rooms: List<RoomNameAndId> = emptyList(),
-        onSceneUpdated: (SceneModel) -> Unit = {}) {
-    item {
-        TaskLabeledTextField(
-                label = stringResource(id = R.string.name),
-                text = scene.name,
-                placeholder = stringResource(id = R.string.name_room)
-        ) {
-            onSceneUpdated(scene.copy(name = it))
-        }
-
-        // We should load a list of rooms
-        TaskLabeledDropDownMenu(
-                label = stringResource(id = R.string.room),
-                options = rooms,
-                selectedOption = scene.roomName,
-                placeholder = stringResource(id = R.string.select_room),
-                modifier = Modifier.padding(vertical = 16.dp)
-        ) {
-            onSceneUpdated(scene.copy(roomId = (it as RoomNameAndId).roomId))
-        }
-
-        TaskLabeledDropDownMenu(
-                label = stringResource(id = R.string.duration),
-                options = stringArrayResource(id = R.array.durations)
-                        .toList(),
-                selectedOption = scene.duration,
-                placeholder = stringResource(id = R.string.select_durations),
-        ) {
-            onSceneUpdated(scene.copy(duration = (it as String)))
-        }
-    }
-}
-
-fun LazyListScope.sceneDetailsFavoriteButton(
-    scene: SceneModel,
-    onSceneUpdated: (SceneModel) -> Unit = {},
-) {
-    item {
-        SceneTaskFavoriteButton(
-                favorite = scene.favorite,
-                modifier = Modifier
-                        .padding(horizontal = 40.dp, vertical = 16.dp)
-                        .fillMaxWidth()
-                        .height(56.dp)
-        ) {
-        Log.d("DBUG","Favorite state changed: $it}")
-            onSceneUpdated(scene.copy(favorite = it))
-        }
-    }
-}
-
-fun LazyListScope.sceneDetailsLights(allLights: List<LumenLight>, sceneLights: List<Long>) {
-    item { SceneSectionHeader(stringResource(id = R.string.lights)) }
-    items(allLights, { it.lightId }) {
-        SceneLightItem(
-            it,
-            checked = sceneLights.contains(it.lightId),
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
 @Composable
 fun SceneTaskFavoriteButton(
     favorite: Boolean,
@@ -574,12 +503,12 @@ fun SceneTaskFavoriteButton(
     Button(
         onClick = { onFavorite(!favorite) },
         modifier = modifier
-                .clip(shape = MaterialTheme.shapes.medium)
-                .border(
-                    width = 1.dp,
-                    color = LightBlurple,
-                    shape = MaterialTheme.shapes.medium
-                ),
+            .clip(shape = MaterialTheme.shapes.medium)
+            .border(
+                width = 1.dp,
+                color = LightBlurple,
+                shape = MaterialTheme.shapes.medium
+            ),
         elevation = null,
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
     ) {
@@ -607,31 +536,103 @@ fun SceneDetailsButton(
     Button(
         onClick = { onClick() },
         modifier = Modifier
-                .border(
-                        width = 1.dp,
-                        brush = AngledLinearGradient(
-                                colors = listOf(White50, White3),
-                                angleInDegrees = -135F,
-                                useAsCssAngle = true
-                        ),
-                        shape = MaterialTheme.shapes.small
-                )
-                .fillMaxWidth()
-                .height(68.dp),
+            .border(
+                width = 1.dp,
+                brush = AngledLinearGradient(
+                    colors = listOf(White50, White3),
+                    angleInDegrees = -135F,
+                    useAsCssAngle = true
+                ),
+                shape = MaterialTheme.shapes.small
+            )
+            .fillMaxWidth()
+            .height(68.dp),
 
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(backgroundColor = LightBlurple)
     ) {
 
-        var text = if (newScene)
+        val buttonText = if (newScene)
             stringResource(id = R.string.create_scene)
         else
             stringResource(id = R.string.save_scene)
 
         Text(
-            text = text,
+            text = buttonText,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h2
+        )
+    }
+}
+
+fun LazyListScope.sceneDetailsFields(
+    scene: SceneModel,
+    rooms: List<RoomNameAndId> = emptyList(),
+    onSceneUpdated: (SceneModel) -> Unit
+) {
+    item {
+        TaskLabeledTextField(
+            label = stringResource(id = R.string.name),
+            text = scene.name,
+            placeholder = stringResource(id = R.string.name_room)
+        ) {
+            onSceneUpdated(scene.copy(name = it))
+        }
+
+        // We should load a list of rooms
+        TaskLabeledDropDownMenu(
+            label = stringResource(id = R.string.room),
+            options = rooms,
+            selectedOption = scene.roomName,
+            placeholder = stringResource(id = R.string.select_room),
+            modifier = Modifier.padding(vertical = 16.dp)
+        ) {
+            val room = (it as RoomNameAndId)
+            onSceneUpdated(scene.copy(roomId = room.roomId, roomName = room.roomName))
+        }
+
+        TaskLabeledDropDownMenu(
+            label = stringResource(id = R.string.duration),
+            options = stringArrayResource(id = R.array.durations)
+                .toList(),
+            selectedOption = scene.duration,
+            placeholder = stringResource(id = R.string.select_durations),
+        ) {
+            onSceneUpdated(scene.copy(duration = (it as String)))
+        }
+    }
+}
+
+fun LazyListScope.sceneDetailsFavoriteButton(
+    scene: SceneModel,
+    onFavorite: (Boolean) -> Unit
+) {
+    item {
+        SceneTaskFavoriteButton(
+            favorite = scene.favorite,
+            modifier = Modifier
+                .padding(horizontal = 40.dp, vertical = 16.dp)
+                .fillMaxWidth()
+                .height(56.dp),
+            onFavorite = onFavorite
+        )
+    }
+}
+
+fun LazyListScope.sceneDetailsLights(
+    allLights: List<LumenLight>,
+    sceneLights: List<Long>,
+    onLightChecked: (Long, Boolean) -> Unit
+) {
+    // light section header
+    item { SceneSectionHeader(stringResource(id = R.string.lights)) }
+    // Iterate over available light and check the ones enabled for the scene
+    items(allLights, { it.lightId }) {
+        SceneLightItem(
+            it,
+            checked = sceneLights.contains(it.lightId),
+            modifier = Modifier.fillMaxWidth(),
+            onLightChecked = onLightChecked
         )
     }
 }

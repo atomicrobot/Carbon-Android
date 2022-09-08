@@ -1,8 +1,10 @@
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
@@ -12,6 +14,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -94,6 +97,12 @@ fun rememberLumenAppState(
 @Preview()
 @Composable
 fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
+    LaunchedEffect(appState.modalBottomSheetState.currentValue){
+        if (appState.modalBottomSheetState.currentValue == ModalBottomSheetValue.Hidden){
+            appState.clearBottomSheetTask()
+        }
+    }
+
     ModalBottomSheetLayout(
         sheetContent = { LumenBottomSheet(appState) },
         modifier = Modifier
@@ -126,6 +135,7 @@ fun LumenMainContent(appState: LumenAppState) {
     val showAppBarAction = navBackStackEntry?.destination?.route != LumenScreens.Settings.route
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     Scaffold(
+        modifier = Modifier.navigationBarsPadding(),
         scaffoldState = appState.scaffoldState,
         topBar = {
             LumenTopAppBar(
@@ -196,7 +206,7 @@ fun LumenBottomSheet(appState: LumenAppState) {
         coroutineScope.launch { appState.clearBottomSheetTask() }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize().navigationBarsPadding()) {
         when (bottomSheetTask) {
             LumenBottomSheetTask.AddScene -> AddSceneTask(onDismissed = dismissBottomSheet)
             is LumenBottomSheetTask.EditScene -> EditSceneTask(

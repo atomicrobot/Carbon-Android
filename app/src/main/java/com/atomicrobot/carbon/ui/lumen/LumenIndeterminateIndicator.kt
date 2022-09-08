@@ -21,17 +21,17 @@ import com.atomicrobot.carbon.R
 fun LumenIndeterminateIndicator(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition()
     val rotation by infiniteTransition.animateFloat(
-            initialValue = 0F,
-            targetValue = 360F,
-            animationSpec = infiniteRepeatable(
-                    animation = tween(durationMillis = 1000, easing = LinearEasing)
-            )
+        initialValue = 0F,
+        targetValue = 360F,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000, easing = LinearEasing)
+        )
     )
     Image(
         painter = painterResource(id = R.drawable.ic_loading_icon),
         contentDescription = stringResource(id = R.string.cont_desc_loading),
         modifier = modifier
-                .progressSemantics()
-                .graphicsLayer { rotationZ = rotation }
+            .progressSemantics()
+            .graphicsLayer { rotationZ = rotation }
     )
 }
