@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.scanner
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.view.WindowManager
@@ -414,6 +415,7 @@ fun ScannerOverlay(
     }
 }
 
+@SuppressLint("RestrictedApi")
 @androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun CameraButton(
