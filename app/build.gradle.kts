@@ -53,8 +53,6 @@ android {
 
         buildConfigField("String", "VERSION_FINGERPRINT", versionFingerprint)
 
-//        proguardFile getDefaultProguardFile("proguard-android.txt")
-//        proguardFile "proguard-rules.pro"
         proguardFiles("proguard-android.txt", "proguard-rules.pro")
 
         testInstrumentationRunner = "com.atomicrobot.carbon.CustomAppTestRunner"
@@ -207,7 +205,7 @@ dependencies {
      * link: https://stackoverflow.com/a/64988522/3591491
      */
     /*implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"*/
-    kapt("androidx.databinding:databinding-compiler:$ext.android_plugin_version")
+    kapt("androidx.databinding:databinding-compiler:${Dependencies.androidPluginVersion}")
     // Need this because of Kotlin
 
     // Android/Google libraries
@@ -281,13 +279,13 @@ dependencies {
     androidTestImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
 }
 
-//
-//task pmd(type: Pmd, dependsOn: "assembleDebug") {
+//task("pmd")<Pmd> {
+//    dependsOn = "assembleDebug"
 //    ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
 //    ruleSets = []
 //    // See http://sourceforge.net/p/pmd/discussion/188193/thread/6e9c6017/ for why this is needed...
-//    source = fileTree('src/main/java/')
-//    exclude '**/gen/**'
+//    source = fileTree("src/main/java/")
+//    exclude "**/gen/**"
 //    reports {
 //        // html.enabled = true
 //        // xml.enabled = false
@@ -295,7 +293,8 @@ dependencies {
 //        html.required.set(true)
 //    }
 //}
-//
+
+
 //task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
 //    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
 //    source 'src'
@@ -312,62 +311,104 @@ dependencies {
 //            'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
 //    ]
 //}
-//
-//jacoco {
-//    toolVersion = ext.jacoco_version
-//}
-//
-//tasks.withType(Test) {
-//    jacoco.includeNoLocationClasses = true
-//    jacoco.excludes = ['jdk.internal.*']
-//}
-//
-//task jacocoTestReport(type: JacocoReport, dependsOn: ['testDevDebugUnitTest', 'createDevDebugCoverageReport']) {
-//    reports {
-//        // xml.enabled = true
-//        // html.enabled = true
-//        xml.required.set(true)
-//        html.required.set(true)
-//    }
-//
-//    def excludes = [
-//            '**/R.class',
-//            '**/R$*.class',
-//            '**/BuildConfig.*',
-//            '**/Manifest*.*',
-//            '**/*Test*.*',
-//            'android/**/*.*',
-//            /* Parcelize */
-//            '**/*Creator.*',
-//            /* Data binding */
-//            '**/*Binding*.*',
-//            '**/BR.**'
-//    ]
-//
-//    getClassDirectories().setFrom(fileTree(
-//            // Java generated classes on Android project (debug build)
-//            dir: "$buildDir/intermediates/classes/dev/debug",
-//            excludes: excludes
-//    ) + fileTree(
-//            // Kotlin generated classes on Android project (debug build)
-//            dir: "$buildDir/tmp/kotlin-classes/devDebug",
-//            excludes: excludes
-//    ))
-//
-//    getSourceDirectories().setFrom(files([
-//            "src/main/java",
-//            "src/main/kotlin"
-//    ]))
-//
-//    getExecutionData().setFrom(fileTree(dir: project.buildDir, includes: [
-//            'jacoco/testDevDebugUnitTest.exec',
-//            'outputs/code-coverage/connected/**/*coverage.ec'
-//    ]))
-//}
-//
-//// Kotlin plugin for testing
-//allOpen {
-//    annotation("com.atomicrobot.carbon.Mockable")
-//}
 
-//apply plugin: 'com.google.gms.google-services'
+jacoco {
+    toolVersion = Dependencies.jacocoVersion
+}
+
+tasks.withType<Test> {
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = mutableListOf("jdk.internal.*")
+    }
+}
+// would not build as a private val
+val fileFilter = mutableSetOf(
+    "**/R.class",
+    "**/R\$*.class",
+    "**/BuildConfig.*",
+    "**/Manifest*.*",
+    "**/*Test*.*",
+    "android/**/*.*",
+    /* Parcelize */
+    "**/*Creator.*",
+    /* Data binding */
+    "**/*Binding*.*",
+    "**/BR.**",
+    /* Dagger */
+    "**/*_MembersInjector.*",
+    "**/*_Factory.*",
+    "**/*_*Factory.*",
+    "**/Dagger*Component*.*",
+    "**/Dagger*Subcomponent*.*",
+    "**/devsettings/**/*.*"
+)
+private val classDirectoriesTree = fileTree(project.buildDir) {
+    include(
+        ""
+    )
+    exclude(fileFilter)
+}
+
+private val sourceDirectoriesTree = fileTree("${project.buildDir}") {
+    include(
+        "src/main/java/**",
+        "src/main/kotlin/**"
+    )
+}
+private val executionDataTree = fileTree(project.buildDir) {
+    include(
+        "outputs/code_coverage/**/*.ec",
+        "jacoco/jacocoTestReportDebug.exec",
+        "jacoco/testDevDebugUnitTest.exec",
+        "jacoco/test.exec"
+    )
+}
+fun JacocoReportsContainer.reports() {
+    xml.required.set(true)
+    html.required.set(true)
+}
+fun JacocoCoverageVerification.setDirectories() {
+    sourceDirectories.setFrom(sourceDirectoriesTree)
+    classDirectories.setFrom(classDirectoriesTree)
+    executionData.setFrom(executionDataTree)
+}
+fun JacocoReport.setDirectories() {
+    sourceDirectories.setFrom(sourceDirectoriesTree)
+    classDirectories.setFrom(classDirectoriesTree)
+    executionData.setFrom(executionDataTree)
+}
+
+if (tasks.findByName("jacocoTestReport") == null) {
+
+    tasks.register<JacocoReport>("jacocoTestReport") {
+        description = "Code coverage report for both Android and Unit tests."
+        dependsOn("testDevDebugUnitTest")
+        reports {
+            reports()
+        }
+        setDirectories()
+    }
+}
+if (tasks.findByName("jacocoAndroidCoverageVerification") == null) {
+    tasks.register<JacocoCoverageVerification>("jacocoAndroidCoverageVerification") {
+        description = "Code coverage verification for Android both Android and Unit tests."
+        dependsOn("testDevDebugUnitTest")
+        violationRules {
+            rule {
+                limit {
+                    counter = "INSTRUCTIONAL"
+                    value = "COVEREDRATIO"
+                    minimum = "0.5".toBigDecimal()
+                }
+            }
+        }
+        setDirectories()
+    }
+}
+// Kotlin plugin for testing
+allOpen {
+    annotation("com.atomicrobot.carbon.Mockable")
+}
+
+apply(plugin = "com.google.gms.google-services")
