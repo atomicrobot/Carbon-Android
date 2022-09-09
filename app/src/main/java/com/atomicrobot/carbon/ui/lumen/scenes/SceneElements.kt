@@ -629,10 +629,9 @@ fun LazyListScope.sceneDetailsLights(
     // Iterate over available light and check the ones enabled for the scene
     items(allLights, { it.lightId }) {
         SceneLightItem(
-            it,
-            checked = sceneLights.contains(it.lightId),
-            modifier = Modifier.fillMaxWidth(),
-            onLightChecked = onLightChecked
+                it,
+                checked = sceneLights.contains(it.lightId),
+                onLightChecked = onLightChecked
         )
     }
 }

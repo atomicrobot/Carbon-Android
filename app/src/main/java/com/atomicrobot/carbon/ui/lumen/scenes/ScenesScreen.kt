@@ -204,7 +204,8 @@ fun SceneDetailsList(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
+                verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 sceneDetailsFields(scene, rooms = rooms) { scene = it }
 
