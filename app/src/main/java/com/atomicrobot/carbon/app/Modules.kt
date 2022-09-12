@@ -42,12 +42,6 @@ class Modules {
         }
     }
 
-    val crashReportModules = module {
-        single {
-            LoggingOnlyCrashReporter()
-        }
-    }
-
     val dataModules = module {
         single {
             val cacheDir = File(androidApplication().cacheDir, "http")
