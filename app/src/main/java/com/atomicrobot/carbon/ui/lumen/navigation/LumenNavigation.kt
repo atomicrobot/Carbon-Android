@@ -1,10 +1,11 @@
+package com.atomicrobot.carbon.ui.lumen.navigation
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
@@ -94,11 +95,11 @@ fun rememberLumenAppState(
 }
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview()
+@Preview
 @Composable
 fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
-    LaunchedEffect(appState.modalBottomSheetState.currentValue){
-        if (appState.modalBottomSheetState.currentValue == ModalBottomSheetValue.Hidden){
+    LaunchedEffect(appState.modalBottomSheetState.currentValue) {
+        if (appState.modalBottomSheetState.currentValue == ModalBottomSheetValue.Hidden) {
             appState.clearBottomSheetTask()
         }
     }

@@ -194,7 +194,8 @@ fun SceneDetailsList(
             SceneDetailsToolbar(
                 title = scene.name,
                 newScene = newScene,
-                onDismissed = onDismissed) {
+                onDismissed = onDismissed
+            ) {
                 onDeleteAction(sceneId)
             }
 

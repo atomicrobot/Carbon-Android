@@ -11,17 +11,19 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 @Entity(
-    foreignKeys = [ForeignKey(
-        entity = LumenScene::class,
-        parentColumns = arrayOf("sceneId"),
-        childColumns = arrayOf("sceneId"),
-        onDelete = CASCADE
-    ), ForeignKey(
-        entity = LumenLight::class,
-        parentColumns = arrayOf("lightId"),
-        childColumns = arrayOf("lightId"),
-        onDelete = CASCADE
-    )]
+    foreignKeys = [
+        ForeignKey(
+            entity = LumenScene::class,
+            parentColumns = arrayOf("sceneId"),
+            childColumns = arrayOf("sceneId"),
+            onDelete = CASCADE
+        ), ForeignKey(
+            entity = LumenLight::class,
+            parentColumns = arrayOf("lightId"),
+            childColumns = arrayOf("lightId"),
+            onDelete = CASCADE
+        )
+    ]
 )
 data class LumenSceneLightCrossRef(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,

@@ -1,8 +1,8 @@
 package com.atomicrobot.carbon.navigation
 
-import LumenBottomSheetTask
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,7 +33,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.ui.lumen.navigation.LumenBottomSheetTask
 import com.atomicrobot.carbon.ui.theme.DarkBlurple
+import com.atomicrobot.carbon.ui.theme.LightBlurple
 import com.atomicrobot.carbon.ui.theme.ScreenHeading
 
 @Preview
@@ -59,7 +61,9 @@ fun TopBar(
 fun LumenTopAppBar(
     title: String = LumenScreens.Home.title,
     showAction: Boolean = true,
-    bottomSheetTasks: List<LumenBottomSheetTask.LumenMenuTask> = emptyList(),
+    bottomSheetTasks: List<LumenBottomSheetTask.LumenMenuTask> = listOf(
+        LumenBottomSheetTask.AddScene,
+    ),
     onTaskSelected: (LumenBottomSheetTask) -> Unit = {}
 ) = TopAppBar(
     title = {
@@ -81,6 +85,7 @@ fun LumenTopAppBar(
                     onClick = { expanded = true },
                     modifier = Modifier
                         .size(48.dp)
+                        .border(width = 2.dp, color = LightBlurple, shape = CircleShape)
                         .background(color = Color.White, shape = CircleShape)
                 ) {
                     Image(

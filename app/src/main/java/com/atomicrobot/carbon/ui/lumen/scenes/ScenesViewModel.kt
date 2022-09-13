@@ -137,10 +137,10 @@ class ScenesViewModel(
         // Initialize the details state to loading...
         _sceneDetailsUIState.value =
             _sceneDetailsUIState.value
-                    .copy(sceneDetailsState = SceneDetails.LoadingDetails)
+                .copy(sceneDetailsState = SceneDetails.LoadingDetails)
         _sceneDetailsLightUIState.value =
-                _sceneDetailsLightUIState.value
-                        .copy(sceneDetailsLightState = SceneDetailsLights.LoadingLights)
+            _sceneDetailsLightUIState.value
+                .copy(sceneDetailsLightState = SceneDetailsLights.LoadingLights)
     }
 
     suspend fun removeScene(sceneId: Long) {
@@ -151,11 +151,10 @@ class ScenesViewModel(
 
     suspend fun saveOrUpdateScene(scene: SceneModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            val sceneId: Long = if(scene.sceneId < 1) {
+            val sceneId: Long = if (scene.sceneId < 1) {
                 // Insert scene
                 sceneDao.insert(scene.toLumenScene())
-            }
-            else {
+            } else {
                 sceneDao.update(scene.toLumenScene())
                 scene.sceneId
             }
@@ -166,8 +165,8 @@ class ScenesViewModel(
             val rmvLights = sceneLights.filterNot { scene.lights.contains(it.lightId) }
             sceneLightDao.delete(rmvLights)
             val newLights = scene.lights
-                    .filter { lightId -> !sceneLights.any { it.sceneId == lightId } }
-                    .map { LumenSceneLightCrossRef(sceneId = sceneId, lightId = it) }
+                .filter { lightId -> !sceneLights.any { it.sceneId == lightId } }
+                .map { LumenSceneLightCrossRef(sceneId = sceneId, lightId = it) }
             sceneLightDao.insert(newLights)
         }
     }

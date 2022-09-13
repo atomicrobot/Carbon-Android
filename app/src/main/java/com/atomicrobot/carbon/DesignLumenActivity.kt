@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon
 
-import DesignLumenNavigation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,6 +8,7 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.view.WindowCompat
+import com.atomicrobot.carbon.ui.lumen.navigation.DesignLumenNavigation
 import com.atomicrobot.carbon.ui.theme.LightBlurple
 import com.atomicrobot.carbon.ui.theme.LumenTheme
 import com.atomicrobot.carbon.ui.theme.White100
