@@ -278,46 +278,24 @@ dependencies {
     androidTestImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
 }
 
-//tasks.named<Pmd>("pmd").configure {
-//    dependsOn("assembleDebug")
-//    ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
-//    ruleSets = mutableListOf()
-//    // See http://sourceforge.net/p/pmd/discussion/188193/thread/6e9c6017/ for why this is needed...
-//    source = fileTree("src/main/java/")
-//    exclude("**/gen/**")
-//    reports {
-//        // html.enabled = true
-//        // xml.enabled = false
-//        xml.required.set(false)
-//        html.required.set(true)
-//    }
-//}
-//
-//
-//tasks.named<Checkstyle>("Checkstyle") {
-//
-////(type: Checkstyle, dependsOn: "assembleDebug") {
-//    dependsOn("assembleDebug")
-//    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
-//    source = fileTree("src")
-//    include("**/*.java")
-//    exclude("**/gen/**", "**/test/**", "**/androidTest/**")
-//    reports {
-//        // xml.enabled false
-//        // html.enabled true
-//        xml.required.set(false)
-//        html.required.set(true)
-//    }
-//    classpath = files(file("${project.rootDir}/app/build/intermediates/classes"))
-////
-////    configProperties = [
-////
-//////        checkstyle.cache.file = rootProject.file("build/checstyle.cache")
-////    ]
-////    configProperties = [
-////            'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
-////    ]
-//}
+tasks.register<Pmd>("pmd") {
+
+}
+
+tasks.named<Pmd>("pmd").configure {
+    dependsOn("assembleDebug")
+    ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
+    ruleSets = mutableListOf()
+    // See http://sourceforge.net/p/pmd/discussion/188193/thread/6e9c6017/ for why this is needed...
+    source = fileTree("src/main/java/")
+    exclude("**/gen/**")
+    reports {
+        // html.enabled = true
+        // xml.enabled = false
+        xml.required.set(false)
+        html.required.set(true)
+    }
+}
 
 jacoco {
     toolVersion = Dependencies.jacocoVersion
