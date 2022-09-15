@@ -14,7 +14,6 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.firebase.crashlytics")
     id("pmd")
-    id("checkstyle")
     id("jacoco")
     id("com.google.gms.google-services")
 }
@@ -138,35 +137,6 @@ android {
     }
 }
 
-    // App dependency versions
-    val appCompatVersion = "1.4.1"
-    val supportVersion = "1.0.0"
-    val playServicesVersion = "18.0.1"
-    val lifecycleVersion = "2.0.0"
-    val lifecycleRuntimeVersion = "2.4.1"
-    val koinVersion = "3.2.0"
-    val retrofitVersion = "2.9.0"
-    val okHttpVersion = "4.9.1"
-    val moshiVersion = "1.13.0"
-    val coreVersion = "1.7.0"
-    val constraintLayoutVersion = "2.1.3"
-    val recyclerViewVersion = "1.2.1"
-    val materialVersion = "1.6.0"
-    val rxJavaVersion = "2.2.21"
-    val rxAndroidVersion = "2.1.1"
-    val timberVersion = "5.0.1"
-    val leakCanaryVersion = "2.7"
-
-    // Test dependency versions
-    val mockitoVersion = "4.4.0"
-    val mockitoKotlinVersion = "1.6.0"
-    val robolectricVersion = "4.7.3"
-    val androidTestSupportVersion = "1.4.0"
-    val espressoVersion = "3.4.0"
-    val junitVersion = "4.13.2"
-    val junitTestVersion = "1.1.3"
-
-
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:${Dependencies.firebaseBomVersion}"))
     implementation("com.google.firebase:firebase-analytics-ktx")
@@ -264,7 +234,6 @@ dependencies {
     testImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
     testImplementation("com.squareup.okhttp3:mockwebserver:${Dependencies.okHttpVersion}")
 
-
     // Android JUnit Runner, JUnit Rules, and Espresso
     // Android JUnit Runner, JUnit Rules, and Espresso
     androidTestImplementation("androidx.test:runner:${Dependencies.androidTestSupportVersion}")
@@ -278,9 +247,7 @@ dependencies {
     androidTestImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
 }
 
-tasks.register<Pmd>("pmd") {
-
-}
+tasks.register<Pmd>("pmd") {}
 
 tasks.named<Pmd>("pmd").configure {
     dependsOn("assembleDebug")
