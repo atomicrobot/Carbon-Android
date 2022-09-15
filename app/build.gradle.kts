@@ -108,7 +108,6 @@ android {
         }
     }
 
-
     dataBinding {
         isEnabled = true
     }
@@ -295,7 +294,10 @@ dependencies {
 //}
 
 
-//task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
+//tasks.register("Checkstyle") {
+//
+////(type: Checkstyle, dependsOn: "assembleDebug") {
+//    dependsOn(assembleDebug)
 //    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
 //    source 'src'
 //    include '**/*.java'
