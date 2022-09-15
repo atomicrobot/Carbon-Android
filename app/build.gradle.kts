@@ -278,13 +278,13 @@ dependencies {
     androidTestImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
 }
 
-//task("pmd")<Pmd> {
-//    dependsOn = "assembleDebug"
+//tasks.named<Pmd>("pmd").configure {
+//    dependsOn("assembleDebug")
 //    ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
-//    ruleSets = []
+//    ruleSets = mutableListOf()
 //    // See http://sourceforge.net/p/pmd/discussion/188193/thread/6e9c6017/ for why this is needed...
 //    source = fileTree("src/main/java/")
-//    exclude "**/gen/**"
+//    exclude("**/gen/**")
 //    reports {
 //        // html.enabled = true
 //        // xml.enabled = false
@@ -292,16 +292,16 @@ dependencies {
 //        html.required.set(true)
 //    }
 //}
-
-
-//tasks.register("Checkstyle") {
+//
+//
+//tasks.named<Checkstyle>("Checkstyle") {
 //
 ////(type: Checkstyle, dependsOn: "assembleDebug") {
-//    dependsOn(assembleDebug)
+//    dependsOn("assembleDebug")
 //    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
-//    source 'src'
-//    include '**/*.java'
-//    exclude '**/gen/**', '**/test/**', '**/androidTest/**'
+//    source = fileTree("src")
+//    include("**/*.java")
+//    exclude("**/gen/**", "**/test/**", "**/androidTest/**")
 //    reports {
 //        // xml.enabled false
 //        // html.enabled true
@@ -309,9 +309,14 @@ dependencies {
 //        html.required.set(true)
 //    }
 //    classpath = files(file("${project.rootDir}/app/build/intermediates/classes"))
-//    configProperties = [
-//            'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
-//    ]
+////
+////    configProperties = [
+////
+//////        checkstyle.cache.file = rootProject.file("build/checstyle.cache")
+////    ]
+////    configProperties = [
+////            'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
+////    ]
 //}
 
 jacoco {
