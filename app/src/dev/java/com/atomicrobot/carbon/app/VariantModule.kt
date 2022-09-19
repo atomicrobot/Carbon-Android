@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon.app
 
-import com.atomicrobot.carbon.data.OkHttpSecurityModifier
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 
