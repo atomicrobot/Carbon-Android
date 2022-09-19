@@ -19,12 +19,12 @@ open class MainApplication : Application() {
 
                 AppLogger()
 
-                val mods = Modules()
+                val mainModules = Modules()
                 modules(
                     listOf(
-                        mods.appModules,
-                        mods.dataModules,
-                        mods.viewModelModules,
+                        mainModules.appModules,
+                        mainModules.dataModules,
+                        mainModules.viewModelModules,
                         variantModule,
                         crashReporterModule
                     )
