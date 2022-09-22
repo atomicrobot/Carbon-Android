@@ -24,6 +24,11 @@ class DeepLinkInteractorTest {
         interactor = DeepLinkInteractor()
     }
 
+    @After
+    fun teardown() {
+        stopKoin()
+    }
+
     @Test
     fun testDeepLinkPath() {
         interactor.setDeepLinkUri(Uri.parse("https://www.atomicrobot.com/carbon-android/path1"))
