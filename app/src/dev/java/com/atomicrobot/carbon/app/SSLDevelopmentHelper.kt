@@ -34,7 +34,7 @@ object SSLDevelopmentHelper {
 
         try {
             val sc = SSLContext.getInstance("TLS") // NON-NLS
-            sc.init(null, trustAllCerts, java.security.SecureRandom())
+            sc.init(null, trustAllCerts, SecureRandom())
             return sc
         } catch (ex: Exception) {
             throw RuntimeException(ex)

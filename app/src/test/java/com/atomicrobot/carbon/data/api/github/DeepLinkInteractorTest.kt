@@ -4,10 +4,13 @@ import android.graphics.Color
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
+import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
 import org.mockito.MockitoAnnotations
 
 @RunWith(AndroidJUnit4::class)
@@ -17,7 +20,7 @@ class DeepLinkInteractorTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         interactor = DeepLinkInteractor()
     }
 

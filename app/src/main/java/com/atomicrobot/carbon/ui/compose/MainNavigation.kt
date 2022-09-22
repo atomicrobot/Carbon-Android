@@ -18,7 +18,7 @@ fun MainNavigation(isDeepLinkIntent: Boolean) {
 
     NavHost(navController = navController, startDestination = "splashScreen") {
         composable("splashScreen") {
-            SplashScreen() {
+            SplashScreen {
                 navController.popBackStack()
                 if (isDeepLinkIntent) {
                     navController.navigate(viewModel.getDeepLinkNavDestination())
