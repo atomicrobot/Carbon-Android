@@ -1,5 +1,9 @@
 package com.atomicrobot.carbon.ui.main
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,21 +11,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,9 +35,11 @@ import org.koin.androidx.compose.getViewModel
 fun MainScreen(scaffoldState: ScaffoldState) {
     val viewModel: MainViewModel = getViewModel()
     val screenState by viewModel.uiState.collectAsState()
+    val context: Context = LocalContext.current
 
     LaunchedEffect(true) {
         viewModel.fetchCommits()
+        createNotificationChannel(context)
     }
     MainContent(
         username = screenState.username,
@@ -64,7 +63,8 @@ fun MainContent(
     commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
-    onUserSelectedFetchCommits: () -> Unit = {}
+    onUserSelectedFetchCommits: () -> Unit = {},
+    context: Context = LocalContext.current
 ) {
     Column {
         /*
@@ -183,5 +183,21 @@ fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit
             )
             Text(text = stringResource(id = R.string.author_format, commit.author))
         }
+    }
+}
+
+private fun createNotificationChannel(context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val channelId = context.getString(R.string.default_notification_channel_id)
+        val name = "MyNotificationChannel"
+        val descriptionText = "My channel for receiving notifications"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId, name, importance).apply {
+            description = descriptionText
+        }
+
+        val notificationManager: NotificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

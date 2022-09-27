@@ -27,4 +27,6 @@
     <string name="camera_perm_rationale">The Camera permission is required to scan barcodes and QR codes.</string>
     <string name="camera_perm_denied">Camera permission not granted</string>
     <string name="camera_cont_desc">Snap a pic of a QrCode</string>
+
+    <string name="default_notification_channel_id">Default notification channel id</string>
 </resources>
