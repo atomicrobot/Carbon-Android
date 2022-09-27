@@ -106,43 +106,43 @@ class Modules {
             )
         }
     }
+}
 
-    private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-        builder.cache(cache)
-        securityModifier.apply(builder)
-        return builder.build()
-    }
+private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
+    val builder = OkHttpClient.Builder()
+    builder.cache(cache)
+    securityModifier.apply(builder)
+    return builder.build()
+}
 
-    private fun provideBaseUrl(settings: Settings): String {
-        return settings.baseUrl
-    }
+private fun provideBaseUrl(settings: Settings): String {
+    return settings.baseUrl
+}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun provideRetrofit(
-        client: OkHttpClient,
-        baseUrl: String,
-        converterFactory: Converter.Factory
-    ): Retrofit {
-        return Retrofit.Builder()
-            .client(client)
-            .baseUrl(baseUrl)
-            .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-    }
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun provideRetrofit(
+    client: OkHttpClient,
+    baseUrl: String,
+    converterFactory: Converter.Factory
+): Retrofit {
+    return Retrofit.Builder()
+        .client(client)
+        .baseUrl(baseUrl)
+        .addConverterFactory(converterFactory)
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .build()
+}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
-        return retrofit.create(GitHubApiService::class.java)
-    }
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
+    return retrofit.create(GitHubApiService::class.java)
+}
 
-    private fun provideGitHubService(
-        context: Context,
-        api: GitHubApiService
-    ): GitHubInteractor {
-        return GitHubInteractor(context, api)
-    }
+private fun provideGitHubService(
+    context: Context,
+    api: GitHubApiService
+): GitHubInteractor {
+    return GitHubInteractor(context, api)
 }
 
 interface OkHttpSecurityModifier {
