@@ -9,10 +9,12 @@ import com.atomicrobot.carbon.data.api.github.model.CommitTestHelper.stubCommit
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -29,10 +31,15 @@ class GitHubInteractorTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
 
         val context = ApplicationProvider.getApplicationContext<Application>()
         interactor = GitHubInteractor(context, api)
+    }
+
+    @After
+    fun teardown() {
+        stopKoin()
     }
 
     @Test
