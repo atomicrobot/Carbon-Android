@@ -9,11 +9,13 @@ import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
+import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
@@ -29,7 +31,7 @@ class MainViewModelTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
 
         val app = ApplicationProvider.getApplicationContext<Application>()
         viewModel = MainViewModel(
@@ -37,6 +39,11 @@ class MainViewModelTest {
             githubInteractor,
             0
         )
+    }
+
+    @After
+    fun teardown() {
+        stopKoin()
     }
 
     @Test

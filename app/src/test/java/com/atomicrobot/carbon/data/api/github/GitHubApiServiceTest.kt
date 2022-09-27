@@ -15,6 +15,7 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.koin.core.context.stopKoin
 import org.mockito.MockitoAnnotations
 import retrofit2.Converter
 import retrofit2.Response
@@ -28,7 +29,7 @@ class GitHubApiServiceTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         server = MockWebServer()
     }
 
@@ -36,6 +37,7 @@ class GitHubApiServiceTest {
     @Throws(Exception::class)
     fun tearDown() {
         server.shutdown()
+        stopKoin()
     }
 
     @Test
