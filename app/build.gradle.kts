@@ -234,6 +234,7 @@ dependencies {
     implementation("androidx.camera:camera-extensions:${Dependencies.cameraxVersion}")
 
     implementation("androidx.constraintlayout:constraintlayout-compose:${Dependencies.composeConstraintVersion}")
+    implementation("androidx.compose.material:material-icons-extended:${Dependencies.composeConstraintVersion}")
     implementation("androidx.core:core-splashscreen:${Dependencies.splashVersion}")
 
     // Monitoring - Timber (logging)
