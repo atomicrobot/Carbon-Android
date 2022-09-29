@@ -218,6 +218,24 @@ dependencies {
     implementation("com.squareup.retrofit2:adapter-rxjava2:${Dependencies.retrofitVersion}")
     implementation("com.squareup.retrofit2:converter-moshi:${Dependencies.retrofitVersion}")
 
+    // Use this dependency to bundle the barcode-scanner model with the app
+    implementation("com.google.mlkit:barcode-scanning:${Dependencies.mlBarcodeScannerVersion}")
+
+    // The following line is optional, as the core library is included indirectly by camera-camera2
+    implementation("androidx.camera:camera-core:${Dependencies.cameraxVersion}")
+    implementation("androidx.camera:camera-camera2:${Dependencies.cameraxVersion}")
+    // If you want to additionally use the CameraX Lifecycle library
+    implementation("androidx.camera:camera-lifecycle:${Dependencies.cameraxVersion}")
+    // If you want to additionally use the CameraX View class
+    implementation("androidx.camera:camera-view:${Dependencies.cameraxVersion}")
+    // If you want to additionally add CameraX ML Kit Vision Integration
+    implementation("androidx.camera:camera-mlkit-vision:${Dependencies.cameraxVersion}")
+    // If you want to additionally use the CameraX Extensions library
+    implementation("androidx.camera:camera-extensions:${Dependencies.cameraxVersion}")
+
+    implementation("androidx.constraintlayout:constraintlayout-compose:${Dependencies.composeConstraintVersion}")
+    implementation("androidx.core:core-splashscreen:${Dependencies.splashVersion}")
+
     // Monitoring - Timber (logging)
     implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
 

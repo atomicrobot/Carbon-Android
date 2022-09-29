@@ -1,10 +1,10 @@
 object Dependencies {
-    const val composeVersion = "1.1.1"
-    const val composeActVersion = "1.4.0"
-    const val composeVmVersion = "2.4.1"
-    const val composeFoundationVersion = "1.2.0-beta02"
+    const val composeVersion = "1.2.0"
+    const val composeActVersion = "1.5.1"
+    const val composeVmVersion = "2.5.1"
+    const val composeFoundationVersion = "1.3.0-alpha02"
     const val androidPluginVersion = "7.2.1"
-    const val kotlinVersion = "1.6.10"
+    const val kotlinVersion = "1.7.0"
     const val jacocoVersion = "0.8.6"
     const val navigationVersion = "1.0.0"
     const val firebaseBomVersion = "28.0.0"
@@ -30,7 +30,11 @@ object Dependencies {
     const val rxAndroidVersion = "2.1.1"
     const val timberVersion = "5.0.1"
     const val leakCanaryVersion = "2.7"
-    const val composeNavigationVersion = "2.4.2"
+    const val composeNavigationVersion = "2.5.1"
+    const val mlBarcodeScannerVersion = "17.0.2"
+    const val cameraxVersion = "1.2.0-alpha04"
+    const val splashVersion = "1.0.0"
+    const val composeConstraintVersion = "1.0.1"
 
     // Test dependency versions
     const val mockitoVersion = "4.4.0"
