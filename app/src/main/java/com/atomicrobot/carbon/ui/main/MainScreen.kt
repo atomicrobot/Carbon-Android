@@ -29,9 +29,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
-import com.atomicrobot.carbon.ui.components.TransparentTextField
-import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
+import com.atomicrobot.carbon.ui.components.AtomicRobotUI.TextField.TransparentTextField
+import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -123,14 +124,13 @@ fun GithubUserInput(
                 labelResId = R.string.repository
             ) { newRepo -> onUserInputChanged(username, newRepo) }
             // Fetch commits
-            OutlinedButton(
+            AtomicRobotUI.Button.Outlined(
+                text = stringResource(id = R.string.fetch_commits),
                 onClick = onUserSelectedFetchCommits,
                 // Make sure the button is disabled when loading or the input fields are empty
                 enabled = !isLoading && (username.isNotEmpty() && repository.isNotEmpty()),
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.fetch_commits))
-            }
+            )
         }
     }
 }

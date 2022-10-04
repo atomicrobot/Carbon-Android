@@ -1,10 +1,11 @@
-package com.atomicrobot.carbon.ui.compose
+package com.atomicrobot.carbon.ui.permission
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import com.atomicrobot.carbon.util.LocalActivity
 import com.atomicrobot.carbon.util.Common
 import kotlinx.coroutines.CoroutineScope
 
