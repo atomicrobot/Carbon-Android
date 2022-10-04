@@ -295,6 +295,8 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout-compose:${compose_constraint_version}"
     implementation "androidx.core:core-splashscreen:${splashVersion}"
+
+    implementation "com.google.firebase:firebase-messaging:$rootProject.ext.firebase_messaging_version"
 }
 
 
