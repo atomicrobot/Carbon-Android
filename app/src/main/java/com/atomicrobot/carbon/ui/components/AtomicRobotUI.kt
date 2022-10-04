@@ -87,10 +87,6 @@ object AtomicRobotUI {
         }
     }
 
-    object Text {
-
-    }
-
     object TextField {
         @Composable
         fun TransparentTextField(
