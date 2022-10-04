@@ -147,6 +147,8 @@ dependencies {
     // Recommended: Add the Google Analytics SDK.
     implementation("com.google.firebase:firebase-analytics:${Dependencies.firebaseAnalyticsVersion}")
 
+    implementation("com.google.firebase:firebase-messaging:${Dependencies.firebaseMessagingVersion}")
+
     implementation("androidx.compose.ui:ui:${Dependencies.composeVersion}")
     // Compose Material Design
     implementation("androidx.compose.material:material:${Dependencies.composeVersion}")
