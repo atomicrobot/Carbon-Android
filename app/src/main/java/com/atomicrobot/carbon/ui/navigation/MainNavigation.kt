@@ -26,11 +26,11 @@ import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.navigation.AppScreens
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
-import com.atomicrobot.carbon.util.LocalActivity
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
+import com.atomicrobot.carbon.util.LocalActivity
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.launch
 import timber.log.Timber

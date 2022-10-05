@@ -5,8 +5,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import com.atomicrobot.carbon.util.LocalActivity
 import com.atomicrobot.carbon.util.Common
+import com.atomicrobot.carbon.util.LocalActivity
 import kotlinx.coroutines.CoroutineScope
 
 @Composable

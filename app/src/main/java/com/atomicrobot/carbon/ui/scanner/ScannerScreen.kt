@@ -65,10 +65,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.util.LocalActivity
 import com.atomicrobot.carbon.ui.permission.PermissionRationaleResult
 import com.atomicrobot.carbon.ui.permission.PermissionRequestResult
 import com.atomicrobot.carbon.ui.permission.RequestPermission
+import com.atomicrobot.carbon.util.LocalActivity
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.getViewModel
