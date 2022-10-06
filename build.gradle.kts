@@ -25,20 +25,18 @@ plugins {
     idea
 }
 
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
+    }
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
         maven { url = uri("https://jitpack.io") }
-    }
-
-    // Automatically pull down javadocs and sources (if available)
-    apply(plugin = "idea")
-    idea {
-        module {
-            isDownloadJavadoc = true
-            isDownloadSources = true
-        }
     }
 
     // Verbose output for usage of deprecated APIs
