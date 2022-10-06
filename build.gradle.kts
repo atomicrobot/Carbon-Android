@@ -8,6 +8,7 @@ buildscript {
         }
     }
 
+
     dependencies {
         classpath("com.google.gms:google-services:${Dependencies.googleServicesVersion}")
         classpath("com.google.firebase:firebase-crashlytics-gradle:${Dependencies.firebaseCrashlyticsGradleVersion}")
@@ -20,6 +21,11 @@ buildscript {
     }
 }
 
+plugins{
+    java
+    idea
+}
+
 allprojects {
     repositories {
         google()
@@ -29,12 +35,12 @@ allprojects {
 
     // Automatically pull down javadocs and sources (if available)
     apply(plugin = "idea")
-//    idea {
-//        module {
-//            isDownloadJavadoc = true
-//            isDownloadSources = true
-//        }
-//    }
+    idea {
+        module {
+            isDownloadJavadoc = true
+            isDownloadSources = true
+        }
+    }
 
     // Verbose output for usage of deprecated APIs
     tasks.withType<JavaCompile> {
