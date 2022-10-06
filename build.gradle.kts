@@ -8,7 +8,6 @@ buildscript {
         }
     }
 
-
     dependencies {
         classpath("com.google.gms:google-services:${Dependencies.googleServicesVersion}")
         classpath("com.google.firebase:firebase-crashlytics-gradle:${Dependencies.firebaseCrashlyticsGradleVersion}")
