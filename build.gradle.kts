@@ -20,6 +20,11 @@ buildscript {
     }
 }
 
+plugins {
+    java
+    idea
+}
+
 allprojects {
     repositories {
         google()
@@ -29,12 +34,12 @@ allprojects {
 
     // Automatically pull down javadocs and sources (if available)
     apply(plugin = "idea")
-//    idea {
-//        module {
-//            isDownloadJavadoc = true
-//            isDownloadSources = true
-//        }
-//    }
+    idea {
+        module {
+            isDownloadJavadoc = true
+            isDownloadSources = true
+        }
+    }
 
     // Verbose output for usage of deprecated APIs
     tasks.withType<JavaCompile> {
