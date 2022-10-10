@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -34,9 +33,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
-import com.atomicrobot.carbon.ui.components.TransparentTextField
-import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
+import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -120,25 +119,24 @@ fun GithubUserInput(
                 .padding(16.dp)
         ) {
             // Username
-            TransparentTextField(
+            AtomicRobotUI.TextField.TransparentTextField(
                 value = username,
                 labelResId = R.string.username,
                 modifier = Modifier.padding(bottom = 8.dp)
             ) { newUsername -> onUserInputChanged(newUsername, repository) }
             // Repo
-            TransparentTextField(
+            AtomicRobotUI.TextField.TransparentTextField(
                 value = repository,
                 labelResId = R.string.repository
             ) { newRepo -> onUserInputChanged(username, newRepo) }
             // Fetch commits
-            OutlinedButton(
+            AtomicRobotUI.Button.Outlined(
+                text = stringResource(id = R.string.fetch_commits),
                 onClick = onUserSelectedFetchCommits,
                 // Make sure the button is disabled when loading or the input fields are empty
                 enabled = !isLoading && (username.isNotEmpty() && repository.isNotEmpty()),
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.fetch_commits))
-            }
+            )
         }
     }
 }
