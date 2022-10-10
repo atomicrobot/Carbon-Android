@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon.app
 
-import com.atomicrobot.carbon.data.OkHttpSecurityModifier
 import com.atomicrobot.carbon.ui.devsettings.DevSettingsViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
