@@ -9,7 +9,7 @@ buildscript {
         compose_constraint_version = '1.0.1'
         room_version = "2.4.3"
     }
-    ext.android_plugin_version = '7.2.2'
+    ext.android_plugin_version = '7.3.0'
     ext.kotlin_version = '1.7.10'
     ext.jacoco_version = '0.8.6'
     ext.navigation_version = '1.0.0'

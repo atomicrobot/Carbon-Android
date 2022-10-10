@@ -43,6 +43,9 @@
     <string name="cont_desc_light_duration">Light Duration</string>
     <string name="cont_desc_scene_favorite">Add Scene to Favorites</string>
     <string name="cont_desc_loading">Content loading</string>
+    <string name="cont_desc_shell">Carbon Shell Logo</string>
+    <string name="cont_desc_lumen">Lumen UI Kit project</string>
+    <string name="cont_desc_carbon">Carbon Android Reference project</string>
 
     <string name="add_favorite">Add to Favorites</string>
 
@@ -68,6 +71,11 @@
 
     <string name="moody_title">Make it Mood</string>
     <string name="moody_description">Customize individual light settings in a room when you want to set a certain mood.</string>
+
+    <string name="carbon_shell_title">Carbon\nAndroid</string>
+
+    <string name="main_app_title">Carbon Android</string>
+    <string name="lumen_title">Lumen</string>
 
     <string-array name="durations">
         <item>Manual</item>

@@ -10,6 +10,10 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 val pink700 = Color(0xFFFF4081)
 
+val Neutron = Color(0xFF101C1D)
+val Mono800 = Color(0xFF222C2D)
+val CarbonShellProjectItem = Color(0xFF222C2D)
+
 /*
 * Lumen Colors
 * */
