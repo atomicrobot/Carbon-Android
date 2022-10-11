@@ -1,4 +1,4 @@
-package com.atomicrobot.carbon.ui.compose
+package com.atomicrobot.carbon.util
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.atomicrobot.carbon.data.api.github.model.Commit

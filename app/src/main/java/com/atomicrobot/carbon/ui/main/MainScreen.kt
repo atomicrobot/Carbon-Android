@@ -13,8 +13,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,9 +35,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
-import com.atomicrobot.carbon.ui.components.TransparentTextField
-import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
+import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -111,25 +121,24 @@ fun GithubUserInput(
                 .padding(16.dp)
         ) {
             // Username
-            TransparentTextField(
+            AtomicRobotUI.TextField.TransparentTextField(
                 value = username,
                 labelResId = R.string.username,
                 modifier = Modifier.padding(bottom = 8.dp)
             ) { newUsername -> onUserInputChanged(newUsername, repository) }
             // Repo
-            TransparentTextField(
+            AtomicRobotUI.TextField.TransparentTextField(
                 value = repository,
                 labelResId = R.string.repository
             ) { newRepo -> onUserInputChanged(username, newRepo) }
             // Fetch commits
-            OutlinedButton(
+            AtomicRobotUI.Button.Outlined(
+                text = stringResource(id = R.string.fetch_commits),
                 onClick = onUserSelectedFetchCommits,
                 // Make sure the button is disabled when loading or the input fields are empty
                 enabled = !isLoading && (username.isNotEmpty() && repository.isNotEmpty()),
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.fetch_commits))
-            }
+            )
         }
     }
 }
@@ -180,7 +189,7 @@ fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit
             if(clicked) {
                 //do something
                 //navigate to new page
-                //placeholder 
+                //placeholder
                 Text(text = "clicked")
             }
             else {

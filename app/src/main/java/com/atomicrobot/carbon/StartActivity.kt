@@ -7,10 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.atomicrobot.carbon.ui.compose.LocalActivity
-import com.atomicrobot.carbon.ui.compose.MainNavigation
+import com.atomicrobot.carbon.ui.navigation.MainNavigation
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import com.atomicrobot.carbon.util.LocalActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
