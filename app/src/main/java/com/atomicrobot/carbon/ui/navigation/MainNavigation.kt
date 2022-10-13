@@ -23,10 +23,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.atomicrobot.carbon.data.api.github.model.Author
+import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.data.api.github.model.CommitDetails
 import com.atomicrobot.carbon.navigation.AppScreens
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
+import com.atomicrobot.carbon.ui.main.GitInfoScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
@@ -38,7 +42,7 @@ import timber.log.Timber
 private val screens = listOf(
     AppScreens.Home,
     AppScreens.Settings,
-    AppScreens.Scanner
+    AppScreens.Scanner,
 )
 
 @Composable
@@ -183,6 +187,9 @@ fun NavGraphBuilder.mainFlowGraph(
                 textSize = size
             )
         }
+        composable(AppScreens.GitInfo.route) {
+            GitInfoScreen(commit = Commit(CommitDetails("Hello World", author = Author("Anonymous"))))
+        }
     }
 }
 
@@ -193,6 +200,7 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
         AppScreens.Home.route -> AppScreens.Home.title
         AppScreens.Settings.route -> AppScreens.Settings.title
         AppScreens.Scanner.route -> AppScreens.Scanner.title
+        AppScreens.GitInfo.route -> AppScreens.GitInfo.title
         else -> ""
     }
 }

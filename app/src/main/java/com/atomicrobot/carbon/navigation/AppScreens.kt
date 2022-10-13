@@ -1,11 +1,9 @@
 package com.atomicrobot.carbon.navigation
 
+import android.accessibilityservice.AccessibilityService
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -18,6 +16,12 @@ sealed class AppScreens(val title: String, val route: String, val iconData: Scre
         "Home",
         "home",
         ScreenIcon(Icons.Filled.Home, R.string.cont_desc_home_icon)
+    )
+
+    object GitInfo : AppScreens(
+        "GitInfo",
+        "gitInfo",
+        ScreenIcon(Icons.Filled.Info, R.string.cont_desc_gitInfo_icon)
     )
 
     object Settings : AppScreens(

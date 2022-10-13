@@ -23,8 +23,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.navigation.AppScreens
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
 import com.atomicrobot.carbon.util.CommitPreviewProvider
@@ -153,7 +158,10 @@ fun GithubResponse(
 }
 
 @Composable
-fun CommitList(commits: List<Commit>) {
+fun CommitList(
+    commits: List<Commit>
+) {
+    var clicked by remember { mutableStateOf(false)}
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(commits) { commit ->
             CommitItem(commit)
@@ -161,9 +169,11 @@ fun CommitList(commits: List<Commit>) {
     }
 }
 
-@Preview(name = "Github Commit")
+//@Preview(name = "Github Commit")
 @Composable
-fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit) {
+fun CommitItem(
+    @PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit,
+) {
     var clicked by remember {mutableStateOf(false) }
     Card(
         modifier = Modifier

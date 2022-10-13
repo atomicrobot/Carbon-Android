@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.data.api.github.model.Author
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.util.CommitPreviewProvider
 
