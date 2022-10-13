@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="blue">#FF0000FF</color>
     <color name="appicon_background">#26A69A</color>
+
+    <!-- Carbon Shell -->
+    <color name="neutron">#FF101C1D</color>
 </resources>

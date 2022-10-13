@@ -13,9 +13,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -24,15 +26,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.atomicrobot.carbon.DesignLumenActivity
+import com.atomicrobot.carbon.CarbonShellActivity
 import com.atomicrobot.carbon.navigation.CarbonScreens
-import com.atomicrobot.carbon.navigation.DesignScreens
 import com.atomicrobot.carbon.navigation.Drawer
 import com.atomicrobot.carbon.navigation.TopBar
 import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
-import com.atomicrobot.carbon.ui.design.DesignScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.Settings
@@ -158,13 +158,10 @@ fun NavGraphBuilder.mainFlowGraph(
         }
 
         composable(CarbonScreens.Design.route) {
-            val activity = LocalActivity.current
-            DesignScreen {
-                when (it) {
-                    DesignScreens.Lumen -> {
-                        activity.startActivity(Intent(activity, DesignLumenActivity::class.java))
-                    }
-                }
+            val context = LocalContext.current
+            val scope = rememberCoroutineScope()
+            LaunchedEffect(scope) {
+                context.startActivity(Intent(context, CarbonShellActivity::class.java))
             }
         }
 

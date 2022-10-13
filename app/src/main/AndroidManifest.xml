@@ -57,6 +57,13 @@
 
         </activity>
         <!-- GENERATOR - MORE ACTIVITIES -->
+        <activity android:name=".CarbonShellActivity"
+            android:exported="false"
+            android:label="title_activity_carbon_shell"
+            android:theme="@style/CarbonShellTheme">
+
+        </activity>
+
         <activity android:name=".DesignLumenActivity"
             android:exported="false"
             android:icon="@mipmap/ic_launcher"
