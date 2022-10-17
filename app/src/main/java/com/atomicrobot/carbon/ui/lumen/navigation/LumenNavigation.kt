@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.lumen.navigation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -23,6 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
@@ -44,6 +46,8 @@ import com.atomicrobot.carbon.ui.lumen.scenes.AddSceneTask
 import com.atomicrobot.carbon.ui.lumen.scenes.EditSceneTask
 import com.atomicrobot.carbon.ui.lumen.scenes.ScenesScreen
 import com.atomicrobot.carbon.ui.lumen.settings.LumenSettingsScreen
+import com.atomicrobot.carbon.ui.shell.CarbonShellNestedAppBar
+import com.atomicrobot.carbon.ui.theme.LumenTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -95,7 +99,6 @@ fun rememberLumenAppState(
 }
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview
 @Composable
 fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
     LaunchedEffect(appState.modalBottomSheetState.currentValue) {
@@ -135,49 +138,52 @@ fun LumenMainContent(appState: LumenAppState) {
 
     val showAppBarAction = navBackStackEntry?.destination?.route != LumenScreens.Settings.route
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    Scaffold(
-        modifier = Modifier.navigationBarsPadding(),
-        scaffoldState = appState.scaffoldState,
-        topBar = {
-            LumenTopAppBar(
-                title = appBarTitle(navBackStackEntry = navBackStackEntry),
-                showAction = showAppBarAction,
-                bottomSheetTasks = bottomSheetTasks
-            ) {
-                coroutineScope.launch {
-                    appState.showBottomSheetForTask(it)
-                }
-            }
-        },
-        bottomBar =
-        {
-            LumenBottomNavigationBar(
-                modifier = Modifier.height(88.dp),
-                destinations = lumenScreens,
-                navController = appState.navController,
-            ) {
-                if (appState.navController.currentBackStackEntry?.destination?.route != it.route) {
-                    appState.navController.navigate(it.route) {
-                        // Make sure the back stack only consists of the current graphs main
-                        // destination
-                        popUpTo(LumenScreens.Scenes.route) {
-                            saveState = true
-                        }
-                        // Singular instance of destinations
-                        launchSingleTop = true
-                        restoreState = true
+    Column {
+        CarbonShellNestedAppBar(stringResource(id = R.string.lumen_title))
+        Scaffold(
+            modifier = Modifier.navigationBarsPadding(),
+            scaffoldState = appState.scaffoldState,
+            topBar = {
+                LumenTopAppBar(
+                    title = appBarTitle(navBackStackEntry = navBackStackEntry),
+                    showAction = showAppBarAction,
+                    bottomSheetTasks = bottomSheetTasks
+                ) {
+                    coroutineScope.launch {
+                        appState.showBottomSheetForTask(it)
                     }
                 }
+            },
+            bottomBar =
+            {
+                LumenBottomNavigationBar(
+                    modifier = Modifier.height(88.dp),
+                    destinations = lumenScreens,
+                    navController = appState.navController,
+                ) {
+                    if (appState.navController.currentBackStackEntry?.destination?.route != it.route) {
+                        appState.navController.navigate(it.route) {
+                            // Make sure the back stack only consists of the current graphs main
+                            // destination
+                            popUpTo(LumenScreens.Scenes.route) {
+                                saveState = true
+                            }
+                            // Singular instance of destinations
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
+            },
+            backgroundColor = Color.Transparent
+        ) { innerPadding ->
+            NavHost(
+                modifier = Modifier.padding(innerPadding),
+                navController = appState.navController,
+                startDestination = "Main"
+            ) {
+                mainLumenGraph(appState)
             }
-        },
-        backgroundColor = Color.Transparent
-    ) { innerPadding ->
-        NavHost(
-            modifier = Modifier.padding(innerPadding),
-            navController = appState.navController,
-            startDestination = "Main"
-        ) {
-            mainLumenGraph(appState)
         }
     }
 }
@@ -207,15 +213,29 @@ fun LumenBottomSheet(appState: LumenAppState) {
         coroutineScope.launch { appState.clearBottomSheetTask() }
     }
 
-    Box(Modifier.fillMaxSize().navigationBarsPadding()) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
+    ) {
         when (bottomSheetTask) {
             LumenBottomSheetTask.AddScene -> AddSceneTask(onDismissed = dismissBottomSheet)
             is LumenBottomSheetTask.EditScene -> EditSceneTask(
                 bottomSheetTask.sceneId,
                 onDismissed = dismissBottomSheet
             )
-            LumenBottomSheetTask.NoTask -> { /* INTENTIONALLY LEFT BLANK */ }
-            else -> { /* INTENTIONALLY LEFT BLANK */ }
+            LumenBottomSheetTask.NoTask -> { /* INTENTIONALLY LEFT BLANK */
+            }
+            else -> { /* INTENTIONALLY LEFT BLANK */
+            }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DesignLumenNavigationPreview() {
+    LumenTheme {
+        DesignLumenNavigation()
     }
 }

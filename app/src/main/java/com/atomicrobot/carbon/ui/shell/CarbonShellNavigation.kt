@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.shell
 
 import android.content.Intent
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,6 +54,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.DesignLumenActivity
 import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.StartActivity
 import com.atomicrobot.carbon.ui.theme.CarbonShellTheme
 import com.atomicrobot.carbon.ui.theme.Mono800
 import com.atomicrobot.carbon.ui.theme.Neutron
@@ -97,6 +99,10 @@ fun rememberCarbonShellAppState(
 
 @Composable
 fun CarbonShellNavigation(appState: CarbonShellAppState = rememberCarbonShellAppState()) {
+    val context = LocalContext.current
+    BackHandler {
+        context.startActivity(Intent(context, StartActivity::class.java))
+    }
     CarbonShellMainContent(appState)
 }
 
@@ -166,13 +172,13 @@ fun CarbonShellAppBar(
 
 @Composable
 fun CarbonShellNestedAppBar(
-    appState: CarbonShellAppState = rememberCarbonShellAppState()
+    projectName: String
 ) {
     TopAppBar(backgroundColor = Neutron, contentPadding = PaddingValues(horizontal = 16.dp)) {
         Row(Modifier.fillMaxWidth()) {
             // Set the text's weight to consume the remaining horizontal space
             Text(
-                text = stringResource(id = appState.currentProject.projectName),
+                text = projectName,
                 modifier = Modifier.weight(1f)
             )
             Icon(

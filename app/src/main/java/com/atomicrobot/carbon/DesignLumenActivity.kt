@@ -20,7 +20,6 @@ class DesignLumenActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             LumenTheme {
-
                 val customTextSelectionColors = TextSelectionColors(
                     handleColor = LightBlurple,
                     backgroundColor = LightBlurple.copy(alpha = 0.4f)

@@ -60,7 +60,6 @@ fun LumenTheme(
     @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-
     MaterialTheme(
         colors = LumenColorPalette,
         typography = LumenTypography,
