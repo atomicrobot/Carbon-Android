@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.scanner
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Application
 import android.os.SystemClock
 import androidx.camera.core.CameraSelector
@@ -78,6 +79,7 @@ class ScannerViewModel(private val app: Application) :
         get() = _barcodeStateState.value.barcode
 
     private val isFrontFacing
+        @SuppressLint("RestrictedApi")
         get() = _cameraSelectorState.value.lensFacing == CameraSelector.LENS_FACING_FRONT
 
     private var _elapsedMillis: Long = -1L
@@ -134,6 +136,7 @@ class ScannerViewModel(private val app: Application) :
         }
     }
 
+    @androidx.camera.core.ExperimentalGetImage
     override fun analyze(image: ImageProxy) {
         image.image?.let {
             val imageWidth: Int

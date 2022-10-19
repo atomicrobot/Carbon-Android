@@ -1,4 +1,4 @@
-package com.atomicrobot.carbon.ui.compose
+package com.atomicrobot.carbon.util
 
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.staticCompositionLocalOf

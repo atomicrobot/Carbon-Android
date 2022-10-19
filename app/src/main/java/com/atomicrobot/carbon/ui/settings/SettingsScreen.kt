@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun Settings() {
+fun SettingsScreen() {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

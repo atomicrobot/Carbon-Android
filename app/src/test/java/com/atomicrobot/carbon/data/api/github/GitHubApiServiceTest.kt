@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.data.api.github
 
-import com.atomicrobot.carbon.data.DataModule
+import com.atomicrobot.carbon.app.provideGitHubApiService
+import com.atomicrobot.carbon.app.provideRetrofit
 import com.atomicrobot.carbon.loadResourceAsString
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -91,12 +92,13 @@ class GitHubApiServiceTest {
 
     @Throws(Exception::class)
     private fun buildApi(baseUrl: String): GitHubApiService {
-        val module = DataModule()
         val client = OkHttpClient.Builder().build()
         // TODO - fix with koin tests?
         val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
         val converterFactory = MoshiConverterFactory.create(moshi) as Converter.Factory
-        val retrofit = module.provideRetrofit(client, baseUrl, converterFactory)
-        return module.provideGitHubApiService(retrofit)
+//        val retrofit = module.provideRetrofit(client, baseUrl, converterFactory)
+//        return module.provideGitHubApiService(retrofit)
+        val retrofit = provideRetrofit(client, baseUrl, converterFactory)
+        return provideGitHubApiService(retrofit)
     }
 }

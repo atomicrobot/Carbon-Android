@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.scanner
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.view.WindowManager
@@ -64,10 +65,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.ui.compose.LocalActivity
-import com.atomicrobot.carbon.ui.compose.PermissionRationaleResult
-import com.atomicrobot.carbon.ui.compose.PermissionRequestResult
-import com.atomicrobot.carbon.ui.compose.RequestPermission
+import com.atomicrobot.carbon.ui.permission.PermissionRationaleResult
+import com.atomicrobot.carbon.ui.permission.PermissionRequestResult
+import com.atomicrobot.carbon.ui.permission.RequestPermission
+import com.atomicrobot.carbon.util.LocalActivity
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.getViewModel
@@ -414,6 +415,7 @@ fun ScannerOverlay(
     }
 }
 
+@SuppressLint("RestrictedApi")
 @androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun CameraButton(

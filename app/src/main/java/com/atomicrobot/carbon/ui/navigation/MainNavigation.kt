@@ -1,4 +1,4 @@
-package com.atomicrobot.carbon.ui.compose
+package com.atomicrobot.carbon.ui.navigation
 
 import android.content.Intent
 import android.graphics.Color

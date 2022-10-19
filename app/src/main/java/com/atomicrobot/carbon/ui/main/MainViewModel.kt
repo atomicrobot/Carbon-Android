@@ -67,7 +67,6 @@ class MainViewModel(
     }
 
     companion object {
-        private const val STATE_KEY = "MainViewModelState" // NON-NLS
         const val DEFAULT_USERNAME = "madebyatomicrobot" // NON-NLS
         const val DEFAULT_REPO = "android-starter-project" // NON-NLS
     }

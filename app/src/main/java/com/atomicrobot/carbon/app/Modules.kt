@@ -1,8 +1,7 @@
-package com.atomicrobot.carbon.data
+package com.atomicrobot.carbon.app
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import com.atomicrobot.carbon.app.Settings
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.lumen.LumenDatabase
@@ -30,12 +29,25 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 
-interface OkHttpSecurityModifier {
-    fun apply(builder: OkHttpClient.Builder)
-}
+class Modules {
 
-class DataModule {
-    val dataModule = module {
+    companion object {
+        private const val LOADING_DELAY_MS: Long = 500
+        private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
+        const val BASE_URL = "baseUrl"
+    }
+
+    val appModules = module {
+        single {
+            Settings(context = androidContext())
+        }
+
+        single(named("loading_delay_ms")) {
+            LOADING_DELAY_MS
+        }
+    }
+
+    val dataModules = module {
         single {
             val cacheDir = File(androidApplication().cacheDir, "http")
             Cache(cacheDir, DISK_CACHE_SIZE.toLong())
@@ -84,24 +96,6 @@ class DataModule {
             DeepLinkInteractor()
         }
 
-        viewModel {
-            SplashViewModel(
-                deepLinkInteractor = get()
-            )
-        }
-
-        viewModel {
-            MainViewModel(
-                app = androidApplication(),
-                gitHubInteractor = get(),
-                loadingDelayMs = get(qualifier = named("loading_delay_ms"))
-            )
-        }
-
-        viewModel {
-            ScannerViewModel(app = androidApplication())
-        }
-
         // Initialize the Lumen database and Dao'
         single {
             provideLumenDatabase(androidContext())
@@ -122,6 +116,26 @@ class DataModule {
         single {
             provideSceneLightDao(get())
         }
+    }
+
+    val viewModelModules = module {
+        viewModel {
+            SplashViewModel(
+                deepLinkInteractor = get()
+            )
+        }
+
+        viewModel {
+            MainViewModel(
+                app = androidApplication(),
+                gitHubInteractor = get(),
+                loadingDelayMs = get(qualifier = named("loading_delay_ms"))
+            )
+        }
+
+        viewModel {
+            ScannerViewModel(app = androidApplication())
+        }
 
         viewModel {
             ScenesViewModel(
@@ -132,67 +146,65 @@ class DataModule {
             )
         }
     }
+}
 
-    private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-        builder.cache(cache)
-        securityModifier.apply(builder)
-        return builder.build()
-    }
+private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
+    val builder = OkHttpClient.Builder()
+    builder.cache(cache)
+    securityModifier.apply(builder)
+    return builder.build()
+}
 
-    private fun provideBaseUrl(settings: Settings): String {
-        return settings.baseUrl
-    }
+private fun provideBaseUrl(settings: Settings): String {
+    return settings.baseUrl
+}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun provideRetrofit(
-        client: OkHttpClient,
-        baseUrl: String,
-        converterFactory: Converter.Factory
-    ): Retrofit {
-        return Retrofit.Builder()
-            .client(client)
-            .baseUrl(baseUrl)
-            .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-    }
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun provideRetrofit(
+    client: OkHttpClient,
+    baseUrl: String,
+    converterFactory: Converter.Factory
+): Retrofit {
+    return Retrofit.Builder()
+        .client(client)
+        .baseUrl(baseUrl)
+        .addConverterFactory(converterFactory)
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .build()
+}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
-        return retrofit.create(GitHubApiService::class.java)
-    }
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
+    return retrofit.create(GitHubApiService::class.java)
+}
 
-    private fun provideGitHubService(
-        context: Context,
-        api: GitHubApiService
-    ): GitHubInteractor {
-        return GitHubInteractor(context, api)
-    }
+private fun provideGitHubService(
+    context: Context,
+    api: GitHubApiService
+): GitHubInteractor {
+    return GitHubInteractor(context, api)
+}
 
-    private fun provideLumenDatabase(
-        context: Context
-    ): LumenDatabase = LumenDatabase.getInstance(context = context)
+private fun provideLumenDatabase(
+    context: Context
+): LumenDatabase = LumenDatabase.getInstance(context = context)
 
-    private fun provideSceneDao(
-        database: LumenDatabase
-    ): SceneDao = database.sceneDao()
+private fun provideSceneDao(
+    database: LumenDatabase
+): SceneDao = database.sceneDao()
 
-    private fun provideLightDao(
-        database: LumenDatabase
-    ): LightDao = database.lightDao()
+private fun provideLightDao(
+    database: LumenDatabase
+): LightDao = database.lightDao()
 
-    private fun provideRoomDao(
-        database: LumenDatabase
-    ): RoomDao = database.roomDao()
+private fun provideRoomDao(
+    database: LumenDatabase
+): RoomDao = database.roomDao()
 
-    private fun provideSceneLightDao(
-        database: LumenDatabase
-    ): SceneLightDao = database.sceneLightDao()
+private fun provideSceneLightDao(
+    database: LumenDatabase
+): SceneLightDao = database.sceneLightDao()
 
-    companion object {
-        private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
-
-        const val BASE_URL = "baseUrl"
-    }
+interface OkHttpSecurityModifier {
+    fun apply(builder: OkHttpClient.Builder)
 }

@@ -1,4 +1,4 @@
-package com.atomicrobot.carbon.navigation
+package com.atomicrobot.carbon.ui.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.navigation.AppScreens
+import com.atomicrobot.carbon.util.AppScreenPreviewProvider
 import com.atomicrobot.carbon.ui.compose.AppScreenPreviewProvider
 import com.atomicrobot.carbon.ui.compose.AppScreensPreviewProvider
 
