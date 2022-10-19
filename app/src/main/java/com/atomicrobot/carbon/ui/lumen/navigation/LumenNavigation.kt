@@ -37,9 +37,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.navigation.LumenScreens
-import com.atomicrobot.carbon.navigation.LumenTopAppBar
 import com.atomicrobot.carbon.navigation.lumenScreens
 import com.atomicrobot.carbon.ui.components.LumenBottomNavigationBar
+import com.atomicrobot.carbon.ui.components.LumenTopAppBar
 import com.atomicrobot.carbon.ui.lumen.home.LumenHomeScreen
 import com.atomicrobot.carbon.ui.lumen.routines.LumenRoutinesScreen
 import com.atomicrobot.carbon.ui.lumen.scenes.AddSceneTask

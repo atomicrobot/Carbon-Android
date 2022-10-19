@@ -81,7 +81,7 @@ android {
         }
     }
 
-    flavorDimensions("app")
+    flavorDimensions.add("app")
     productFlavors {
         create("dev") {
             dimension = "app"
@@ -122,7 +122,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "${Dependencies.composeVersion}"
+        kotlinCompilerExtensionVersion = Dependencies.composeVersion
     }
     packagingOptions {
         resources {
@@ -242,6 +242,12 @@ dependencies {
     // Monitoring - Timber (logging)
     implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
 
+    // Room DB
+    implementation("androidx.room:room-runtime:${Dependencies.roomVersion}")
+    annotationProcessor("androidx.room:room-compiler:${Dependencies.roomVersion}")
+    kapt("androidx.room:room-compiler:${Dependencies.roomVersion}")
+    implementation("androidx.room:room-ktx:${Dependencies.roomVersion}")
+
     // Monitoring - Leak Canary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")
 
@@ -255,7 +261,6 @@ dependencies {
     testImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
     testImplementation("com.squareup.okhttp3:mockwebserver:${Dependencies.okHttpVersion}")
 
-    // Android JUnit Runner, JUnit Rules, and Espresso
     // Android JUnit Runner, JUnit Rules, and Espresso
     androidTestImplementation("androidx.test:runner:${Dependencies.androidTestSupportVersion}")
     androidTestImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")

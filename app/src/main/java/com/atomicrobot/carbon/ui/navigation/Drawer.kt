@@ -28,10 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.navigation.AppScreens
+import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.util.AppScreenPreviewProvider
-import com.atomicrobot.carbon.ui.compose.AppScreenPreviewProvider
-import com.atomicrobot.carbon.ui.compose.AppScreensPreviewProvider
+import com.atomicrobot.carbon.util.AppScreensPreviewProvider
 
 @Preview
 @Composable

@@ -28,14 +28,14 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.CarbonShellActivity
 import com.atomicrobot.carbon.navigation.CarbonScreens
-import com.atomicrobot.carbon.navigation.Drawer
-import com.atomicrobot.carbon.navigation.TopBar
 import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
+import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
-import com.atomicrobot.carbon.ui.settings.Settings
+import com.atomicrobot.carbon.ui.settings.SettingsScreen
+import com.atomicrobot.carbon.util.LocalActivity
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -129,7 +129,7 @@ fun NavGraphBuilder.mainFlowGraph(
             MainScreen(scaffoldState)
         }
         composable(CarbonScreens.Settings.route) {
-            Settings()
+            SettingsScreen()
         }
         composable(CarbonScreens.Scanner.route) {
             val activity = LocalActivity.current
