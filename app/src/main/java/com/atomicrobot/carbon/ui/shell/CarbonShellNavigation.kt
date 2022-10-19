@@ -23,7 +23,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -31,9 +30,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,41 +72,29 @@ sealed class CarbonShellProject(
     )
 }
 
-//val projects = listOf(CarbonShellProject.CarbonAndroid, CarbonShellProject.Lumen)
 val projects = listOf(CarbonShellProject.Lumen)
-val testProjects = listOf(
-    CarbonShellProject.Lumen,
-    CarbonShellProject.CarbonAndroid,
-    CarbonShellProject.Lumen,
-    CarbonShellProject.CarbonAndroid,
-    CarbonShellProject.Lumen
-)
-
-class CarbonShellAppState(val scaffoldState: ScaffoldState) {
-    val currentProject by mutableStateOf<CarbonShellProject>(CarbonShellProject.CarbonAndroid)
-}
+//val testProjects = listOf(
+//    CarbonShellProject.Lumen,
+//    CarbonShellProject.CarbonAndroid,
+//    CarbonShellProject.Lumen,
+//    CarbonShellProject.CarbonAndroid,
+//    CarbonShellProject.Lumen
+//)
 
 @Composable
-fun rememberCarbonShellAppState(
-    scaffoldState: ScaffoldState = rememberScaffoldState()
-) = remember {
-    CarbonShellAppState(scaffoldState)
-}
-
-@Composable
-fun CarbonShellNavigation(appState: CarbonShellAppState = rememberCarbonShellAppState()) {
+fun CarbonShellNavigation() {
     val context = LocalContext.current
     BackHandler {
         context.startActivity(Intent(context, StartActivity::class.java))
     }
-    CarbonShellMainContent(appState)
+    CarbonShellMainContent()
 }
 
 @Composable
-fun CarbonShellMainContent(appState: CarbonShellAppState) {
+fun CarbonShellMainContent() {
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
-        scaffoldState = appState.scaffoldState,
+        scaffoldState = rememberScaffoldState(),
         topBar = {
             CarbonShellAppBar()
         },
@@ -142,7 +126,7 @@ fun CarbonShellMainContent(appState: CarbonShellAppState) {
                     )
                 }
 
-                items(testProjects) {
+                items(projects) {
                     ShellProjectItem(it) {
                         when (it.projectName) {
                             R.string.lumen_title -> {
