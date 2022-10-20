@@ -73,13 +73,15 @@ sealed class CarbonShellProject(
 }
 
 val projects = listOf(CarbonShellProject.Lumen)
-//val testProjects = listOf(
-//    CarbonShellProject.Lumen,
-//    CarbonShellProject.CarbonAndroid,
-//    CarbonShellProject.Lumen,
-//    CarbonShellProject.CarbonAndroid,
-//    CarbonShellProject.Lumen
-//)
+/*
+val testProjects = listOf(
+    CarbonShellProject.Lumen,
+    CarbonShellProject.CarbonAndroid,
+    CarbonShellProject.Lumen,
+    CarbonShellProject.CarbonAndroid,
+    CarbonShellProject.Lumen
+)
+*/
 
 @Composable
 fun CarbonShellNavigation() {
@@ -98,10 +100,7 @@ fun CarbonShellMainContent() {
         topBar = {
             CarbonShellAppBar()
         },
-        bottomBar =
-        {
-
-        },
+        bottomBar = {},
         backgroundColor = Color.Transparent
     ) { innerPadding ->
         val context = LocalContext.current
