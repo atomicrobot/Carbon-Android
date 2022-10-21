@@ -72,7 +72,7 @@ fun MainNavigation() {
                 navController = navController,
                 onDestinationClicked = {
                     if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                        if(it.route == CarbonScreens.Design.route) {
+                        if (it.route == CarbonScreens.Design.route) {
                             context.startActivity(Intent(context, CarbonShellActivity::class.java))
                             navController.popBackStack()
                         } else {
