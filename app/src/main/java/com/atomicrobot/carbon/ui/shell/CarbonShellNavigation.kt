@@ -54,6 +54,7 @@ import com.atomicrobot.carbon.ui.theme.Mono800
 import com.atomicrobot.carbon.ui.theme.Neutron
 import com.atomicrobot.carbon.ui.theme.White100
 import com.atomicrobot.carbon.ui.theme.carbonShapes
+import com.atomicrobot.carbon.util.LocalActivity
 
 sealed class CarbonShellProject(
     val projectName: Int,
@@ -83,18 +84,20 @@ val testProjects = listOf(
 
 @Composable
 fun CarbonShellNavigation() {
-    CarbonShellMainContent()
+    val activityContext = LocalActivity.current
+    CarbonShellMainContent(onBackClicked = {
+        // Remove this logic once we've moved away from nested Activities
+        activityContext.finish()
+    })
 }
 
 @Composable
-fun CarbonShellMainContent() {
+fun CarbonShellMainContent(onBackClicked: () -> Unit) {
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
         scaffoldState = rememberScaffoldState(),
         topBar = {
-            CarbonShellAppBar(onButtonClicked = {
-
-            })
+            CarbonShellAppBar(onButtonClicked = onBackClicked)
         },
         bottomBar = {},
         backgroundColor = Color.Transparent
@@ -251,9 +254,9 @@ class ProjectItemParamPreview : PreviewParameterProvider<CarbonShellProject> {
 
 @Preview
 @Composable
-fun CarbonShellNavigationPreview() {
+fun CarbonShellMainContentPreview() {
     CarbonShellTheme {
-        CarbonShellNavigation()
+        CarbonShellMainContent(onBackClicked = {})
     }
 }
 
