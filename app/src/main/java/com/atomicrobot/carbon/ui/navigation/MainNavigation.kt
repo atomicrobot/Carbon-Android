@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -46,6 +45,7 @@ fun MainNavigation() {
     val scope = rememberCoroutineScope()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
+    val context = LocalContext.current
 
     BackHandler(enabled = scaffoldState.drawerState.isOpen) {
         scope.launch {
@@ -72,15 +72,20 @@ fun MainNavigation() {
                 navController = navController,
                 onDestinationClicked = {
                     if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                        navController.navigate(it.route) {
-                            // Make sure the back stack only consists of the current graphs main
-                            // destination
-                            popUpTo(CarbonScreens.Home.route) {
-                                saveState = true
+                        if(it.route == CarbonScreens.Design.route) {
+                            context.startActivity(Intent(context, CarbonShellActivity::class.java))
+                            navController.popBackStack()
+                        } else {
+                            navController.navigate(it.route) {
+                                // Make sure the back stack only consists of the current graphs main
+                                // destination
+                                popUpTo(CarbonScreens.Home.route) {
+                                    saveState = true
+                                }
+                                // Singular instance of destinations
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            // Singular instance of destinations
-                            launchSingleTop = true
-                            restoreState = true
                         }
                     }
                 }
@@ -154,14 +159,6 @@ fun NavGraphBuilder.mainFlowGraph(
                     "Barcode clicked: ${it.displayValue}",
                     Toast.LENGTH_SHORT
                 ).show()
-            }
-        }
-
-        composable(CarbonScreens.Design.route) {
-            val context = LocalContext.current
-            val scope = rememberCoroutineScope()
-            LaunchedEffect(scope) {
-                context.startActivity(Intent(context, CarbonShellActivity::class.java))
             }
         }
 

@@ -1,7 +1,6 @@
 package com.atomicrobot.carbon.ui.shell
 
 import android.content.Intent
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,7 +26,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -50,7 +49,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.DesignLumenActivity
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.StartActivity
 import com.atomicrobot.carbon.ui.theme.CarbonShellTheme
 import com.atomicrobot.carbon.ui.theme.Mono800
 import com.atomicrobot.carbon.ui.theme.Neutron
@@ -85,10 +83,6 @@ val testProjects = listOf(
 
 @Composable
 fun CarbonShellNavigation() {
-    val context = LocalContext.current
-    BackHandler {
-        context.startActivity(Intent(context, StartActivity::class.java))
-    }
     CarbonShellMainContent()
 }
 
@@ -98,7 +92,9 @@ fun CarbonShellMainContent() {
         modifier = Modifier.navigationBarsPadding(),
         scaffoldState = rememberScaffoldState(),
         topBar = {
-            CarbonShellAppBar()
+            CarbonShellAppBar(onButtonClicked = {
+
+            })
         },
         bottomBar = {},
         backgroundColor = Color.Transparent
@@ -142,7 +138,8 @@ fun CarbonShellMainContent() {
 @Composable
 fun CarbonShellAppBar(
     onButtonClicked: () -> Unit = {},
-    buttonIcon: ImageVector = Icons.Filled.Menu
+//    buttonIcon: ImageVector = Icons.Filled.Menu
+    buttonIcon: ImageVector = Icons.Filled.ArrowBack // Back arrow until redesign, then back to Menu
 ) {
     TopAppBar(backgroundColor = Neutron, contentPadding = PaddingValues(horizontal = 16.dp)) {
         Row(Modifier.fillMaxWidth()) {
