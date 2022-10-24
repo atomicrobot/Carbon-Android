@@ -100,9 +100,14 @@ fun MainNavigation() {
                         scaffoldState.drawerState.close()
                     }
                     if (navController.currentBackStackEntry?.destination?.route != route) {
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId)
-                            launchSingleTop = true
+                        if (route == CarbonScreens.Design.route) {
+                            context.startActivity(Intent(context, CarbonShellActivity::class.java))
+                            navController.popBackStack()
+                        } else {
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId)
+                                launchSingleTop = true
+                            }
                         }
                     }
                 }
