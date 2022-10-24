@@ -15,7 +15,10 @@ class CommitPreviewProvider : PreviewParameterProvider<Commit> {
 
 class AppScreenPreviewProvider : PreviewParameterProvider<CarbonScreens> {
     override val values: Sequence<CarbonScreens>
-        get() = listOf(CarbonScreens.Home, CarbonScreens.Settings, CarbonScreens.Scanner)
+        get() = listOf(
+            CarbonScreens.Home,
+            CarbonScreens.Settings
+        )
             .asSequence()
 }
 

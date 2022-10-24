@@ -48,6 +48,25 @@ fun CarbonAndroidTheme(
     )
 }
 
+private val CarbonShellPalette = lightColors(
+    primary = Neutron,
+    onPrimary = White100,
+    surface = Mono800,
+    onSurface = White100
+)
+
+@Composable
+fun CarbonShellTheme(
+    @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colors = CarbonShellPalette,
+        shapes = carbonShellShapes,
+        content = content
+    )
+}
+
 private val LumenColorPalette = lightColors(
     primary = DarkBlurple,
     onPrimary = White100,
@@ -68,7 +87,7 @@ fun LumenTheme(
     )
 }
 
-private val CarbonShellPalette = lightColors(
+private val ScannerColorPalette = lightColors(
     primary = Neutron,
     onPrimary = White100,
     surface = Mono800,
@@ -76,13 +95,13 @@ private val CarbonShellPalette = lightColors(
 )
 
 @Composable
-fun CarbonShellTheme(
+fun ScannerTheme(
     @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colors = CarbonShellPalette,
-        shapes = carbonShellShapes,
+        colors = ScannerColorPalette,
+        typography = Typography,
         content = content
     )
 }
