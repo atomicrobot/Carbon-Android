@@ -77,6 +77,12 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
             },
         )
     }
+
+    object Scanner : CarbonScreens(
+        "Scanner",
+        "scanner",
+        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
+    )
 }
 
 val appScreens = listOf(
