@@ -108,7 +108,7 @@ android {
     }
 
     dataBinding {
-        isEnabled = true
+        enable = true
     }
 
     testOptions {
@@ -167,17 +167,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:${Dependencies.composeVersion}")
 
     implementation("androidx.compose.foundation:foundation:${Dependencies.composeFoundationVersion}")
-
-    /*
-     * Starting from Kotlin 1.4 the Kotlin standard library dependency doesn't need to be added
-     * explicitly. An implicit dep. w/ the same version as the Kotlin Gradle plugin will
-     * implicitly be added.
-     *
-     * link: https://stackoverflow.com/a/64988522/3591491
-     */
-    /*implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"*/
-    kapt("androidx.databinding:databinding-compiler:${Dependencies.androidPluginVersion}")
-    // Need this because of Kotlin
 
     // Android/Google libraries
     implementation("androidx.core:core-ktx:${Dependencies.coreVersion}")

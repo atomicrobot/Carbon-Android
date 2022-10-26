@@ -1,7 +1,7 @@
 /*The dependencies are organized in alphabetical order so they are easy to quickly locate,
 please add accordingly*/
 object Dependencies {
-    const val androidPluginVersion = "7.2.1"
+    const val androidPluginVersion = "7.3.1"
     const val appCompatVersion = "1.4.1"
     const val cameraxVersion = "1.2.0-alpha04"
     const val composeActVersion = "1.5.1"
