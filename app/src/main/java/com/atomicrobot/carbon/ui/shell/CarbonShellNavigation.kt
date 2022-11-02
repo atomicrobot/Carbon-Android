@@ -89,7 +89,7 @@ val testProjects = listOf(
 @Composable
 fun CarbonShellNavigation(navController: NavController) {
     CarbonShellMainContent(navController, onBackClicked = {
-        // TODO - some on back logic here plz
+        navController.navigateUp()
     })
 }
 
