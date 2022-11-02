@@ -97,7 +97,8 @@ android {
         getByName("debug") {
             isMinifyEnabled = false
             isShrinkResources = false
-            isTestCoverageEnabled = true
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
         }
 
         getByName("release") {
@@ -236,6 +237,9 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:${Dependencies.roomVersion}")
     kapt("androidx.room:room-compiler:${Dependencies.roomVersion}")
     implementation("androidx.room:room-ktx:${Dependencies.roomVersion}")
+
+    // System Bars UI Controller
+    implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
 
     // Monitoring - Leak Canary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")

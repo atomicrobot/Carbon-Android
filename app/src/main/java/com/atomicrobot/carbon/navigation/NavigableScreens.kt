@@ -78,6 +78,12 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         )
     }
 
+    object Lumen : CarbonScreens(
+        "Lumen",
+        "lumen",
+        ScreenIcon(Icons.Filled.Home, R.string.lumen_title)
+    )
+
     object Scanner : CarbonScreens(
         "Scanner",
         "scanner",

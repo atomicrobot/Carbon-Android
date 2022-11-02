@@ -4,6 +4,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
+val AndroidColorPrimary = Color(0xFF3F51B5)
+val AndroidColorPrimaryDark = Color(0xFF303F9F)
+val AndroidColorAccent = Color(0xFFFF4081)
+
 val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)
 val Purple700 = Color(0xFF3700B3)
@@ -81,8 +85,7 @@ val PresetSwatches by lazy {
 
 val BlurpleRadial = Brush.radialGradient(
     colors = listOf(LumenBlue, LumenPurple),
-    center = Offset(74.5F, 65.5F),
-    radius = 37.25F
+    center = Offset(Float.POSITIVE_INFINITY, 0.0f)
 )
 
 val CardStrokeLinear = Brush.linearGradient(

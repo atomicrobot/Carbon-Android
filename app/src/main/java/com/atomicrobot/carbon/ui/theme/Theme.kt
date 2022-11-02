@@ -5,7 +5,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -41,6 +43,16 @@ fun CarbonAndroidTheme(
         LightColorPalette
     }
 
+    val systemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setStatusBarColor(
+            color = AndroidColorPrimaryDark
+        )
+        systemUiController.setNavigationBarColor(
+            color = Color.Black
+        )
+    }
+
     MaterialTheme(
         colors = colors,
         typography = Typography,
@@ -60,6 +72,16 @@ fun CarbonShellTheme(
     @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val systemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setStatusBarColor(
+            color = Neutron
+        )
+        systemUiController.setNavigationBarColor(
+            color = Neutron
+        )
+    }
+
     MaterialTheme(
         colors = CarbonShellPalette,
         shapes = carbonShellShapes,
@@ -79,6 +101,16 @@ fun LumenTheme(
     @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val systemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setStatusBarColor(
+            color = Neutron
+        )
+        systemUiController.setNavigationBarColor(
+            color = Neutron
+        )
+    }
+
     MaterialTheme(
         colors = LumenColorPalette,
         typography = LumenTypography,
@@ -99,6 +131,14 @@ fun ScannerTheme(
     @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(
+        color = Neutron
+    )
+    systemUiController.setNavigationBarColor(
+        color = Neutron
+    )
+
     MaterialTheme(
         colors = ScannerColorPalette,
         typography = Typography,

@@ -17,6 +17,7 @@ object Dependencies {
     const val firebaseCrashlyticsGradleVersion = "2.6.1"
     const val firebaseCrashlyticsVersion = "18.2.10"
     const val firebaseMessagingVersion = "23.0.8"
+    const val googleAccompanistVersion = "0.27.0"
     const val googleServicesVersion = "4.3.10"
     const val jacocoVersion = "0.8.6"
     const val koinVersion = "3.2.0"
@@ -52,7 +53,7 @@ object Dependencies {
 
 object ConfigVals {
     const val appVersion = "1.0"
-    const val compileSdkVersion = 32
+    const val compileSdkVersion = 33
     const val minSdkVersion = 29
-    const val targetSdkVersion = 32
+    const val targetSdkVersion = 33
 }

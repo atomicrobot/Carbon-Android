@@ -1,5 +1,6 @@
 package com.atomicrobot.carbon.ui.lumen.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,6 +48,7 @@ import com.atomicrobot.carbon.ui.lumen.scenes.EditSceneTask
 import com.atomicrobot.carbon.ui.lumen.scenes.ScenesScreen
 import com.atomicrobot.carbon.ui.lumen.settings.LumenSettingsScreen
 import com.atomicrobot.carbon.ui.shell.CarbonShellNestedAppBar
+import com.atomicrobot.carbon.ui.theme.BlurpleRadial
 import com.atomicrobot.carbon.ui.theme.LumenTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -138,51 +140,57 @@ fun LumenMainContent(appState: LumenAppState) {
 
     val showAppBarAction = navBackStackEntry?.destination?.route != LumenScreens.Settings.route
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    Column {
-        CarbonShellNestedAppBar(stringResource(id = R.string.lumen_title))
-        Scaffold(
-            modifier = Modifier.navigationBarsPadding(),
-            scaffoldState = appState.scaffoldState,
-            topBar = {
-                LumenTopAppBar(
-                    title = appBarTitle(navBackStackEntry = navBackStackEntry),
-                    showAction = showAppBarAction,
-                    bottomSheetTasks = bottomSheetTasks
-                ) {
-                    coroutineScope.launch {
-                        appState.showBottomSheetForTask(it)
-                    }
-                }
-            },
-            bottomBar =
-            {
-                LumenBottomNavigationBar(
-                    modifier = Modifier.height(88.dp),
-                    destinations = lumenScreens,
-                    navController = appState.navController,
-                ) {
-                    if (appState.navController.currentBackStackEntry?.destination?.route != it.route) {
-                        appState.navController.navigate(it.route) {
-                            // Make sure the back stack only consists of the current graphs main
-                            // destination
-                            popUpTo(LumenScreens.Scenes.route) {
-                                saveState = true
-                            }
-                            // Singular instance of destinations
-                            launchSingleTop = true
-                            restoreState = true
+
+    // Box representing Lumen blurple radial gradient background
+    Box(
+        modifier = Modifier.background(brush = BlurpleRadial)
+    ) {
+        Column {
+            CarbonShellNestedAppBar(stringResource(id = R.string.lumen_title))
+            Scaffold(
+                modifier = Modifier.navigationBarsPadding(),
+                scaffoldState = appState.scaffoldState,
+                topBar = {
+                    LumenTopAppBar(
+                        title = appBarTitle(navBackStackEntry = navBackStackEntry),
+                        showAction = showAppBarAction,
+                        bottomSheetTasks = bottomSheetTasks
+                    ) {
+                        coroutineScope.launch {
+                            appState.showBottomSheetForTask(it)
                         }
                     }
+                },
+                bottomBar =
+                {
+                    LumenBottomNavigationBar(
+                        modifier = Modifier.height(88.dp),
+                        destinations = lumenScreens,
+                        navController = appState.navController,
+                    ) {
+                        if (appState.navController.currentBackStackEntry?.destination?.route != it.route) {
+                            appState.navController.navigate(it.route) {
+                                // Make sure the back stack only consists of the current graphs main
+                                // destination
+                                popUpTo(LumenScreens.Scenes.route) {
+                                    saveState = true
+                                }
+                                // Singular instance of destinations
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    }
+                },
+                backgroundColor = Color.Transparent
+            ) { innerPadding ->
+                NavHost(
+                    modifier = Modifier.padding(innerPadding),
+                    navController = appState.navController,
+                    startDestination = "Main"
+                ) {
+                    mainLumenGraph(appState)
                 }
-            },
-            backgroundColor = Color.Transparent
-        ) { innerPadding ->
-            NavHost(
-                modifier = Modifier.padding(innerPadding),
-                navController = appState.navController,
-                startDestination = "Main"
-            ) {
-                mainLumenGraph(appState)
             }
         }
     }
