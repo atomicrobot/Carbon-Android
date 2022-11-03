@@ -37,12 +37,15 @@ fun CarbonAndroidTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
-
+    /**
+     * This will allow you to address the system bars (status bar and navigation bar) without
+     * needing to define it within the styles.xml
+     *
+     * IMPORTANT NOTE:
+     * This remember call will persist the system bar changes across all screens. If you need
+     * different colors for your system bars in other themes, you will need to override the colors
+     * in that theme, as well.
+     */
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setStatusBarColor(
@@ -54,7 +57,7 @@ fun CarbonAndroidTheme(
     }
 
     MaterialTheme(
-        colors = colors,
+        colors = if (darkTheme) { DarkColorPalette } else { LightColorPalette },
         typography = Typography,
         content = content
     )
