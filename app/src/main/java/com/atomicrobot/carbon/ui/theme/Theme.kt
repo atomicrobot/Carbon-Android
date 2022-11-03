@@ -74,10 +74,7 @@ fun CarbonShellTheme(
 ) {
     val systemUiController = rememberSystemUiController()
     SideEffect {
-        systemUiController.setStatusBarColor(
-            color = Neutron
-        )
-        systemUiController.setNavigationBarColor(
+        systemUiController.setSystemBarsColor(
             color = Neutron
         )
     }
@@ -103,10 +100,7 @@ fun LumenTheme(
 ) {
     val systemUiController = rememberSystemUiController()
     SideEffect {
-        systemUiController.setStatusBarColor(
-            color = Neutron
-        )
-        systemUiController.setNavigationBarColor(
+        systemUiController.setSystemBarsColor(
             color = Neutron
         )
     }
@@ -132,12 +126,11 @@ fun ScannerTheme(
     content: @Composable () -> Unit
 ) {
     val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(
-        color = Neutron
-    )
-    systemUiController.setNavigationBarColor(
-        color = Neutron
-    )
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = Neutron
+        )
+    }
 
     MaterialTheme(
         colors = ScannerColorPalette,
