@@ -2,8 +2,6 @@ package com.atomicrobot.carbon.ui.navigation
 
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -32,10 +30,7 @@ import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
-import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
-import com.atomicrobot.carbon.util.LocalActivity
-import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -141,32 +136,6 @@ fun NavGraphBuilder.mainFlowGraph(
         composable(CarbonScreens.Settings.route) {
             SettingsScreen()
         }
-        composable(CarbonScreens.Scanner.route) {
-            val activity = LocalActivity.current
-            ScannerScreen(scaffoldState) {
-                when (it.valueType) {
-                    Barcode.TYPE_URL -> {
-                        val uri = Uri.parse(it.url!!.url)
-                        when {
-                            (
-                                uri.scheme.equals("atomicrobot") ||
-                                    uri.host?.contains(".atomicrobot.com") == true
-                                ) -> {
-                                navController.navigate(uri)
-                                return@ScannerScreen
-                            }
-                        }
-                    }
-                    else -> { /* Intentionally left blank */ }
-                }
-                Toast.makeText(
-                    activity,
-                    "Barcode clicked: ${it.displayValue}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-
         composable(
             route = CarbonScreens.DeepLink.routeWithArgs,
             arguments = CarbonScreens.DeepLink.arguments,
@@ -201,7 +170,6 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
     return when (navBackStackEntry?.destination?.route) {
         CarbonScreens.Home.route -> CarbonScreens.Home.title
         CarbonScreens.Settings.route -> CarbonScreens.Settings.title
-        CarbonScreens.Scanner.route -> CarbonScreens.Scanner.title
         else -> ""
     }
 }

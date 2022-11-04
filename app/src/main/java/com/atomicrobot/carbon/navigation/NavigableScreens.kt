@@ -31,12 +31,6 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         ScreenIcon(Icons.Filled.Settings, R.string.cont_desc_settings_icon)
     )
 
-    object Scanner : CarbonScreens(
-        "Scanner",
-        "scanner",
-        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
-    )
-
     object Design : CarbonScreens(
         "Design Projects",
         "design",
@@ -83,18 +77,19 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
             },
         )
     }
+
+    object Scanner : CarbonScreens(
+        "Scanner",
+        "scanner",
+        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
+    )
 }
 
 val appScreens = listOf(
     CarbonScreens.Home,
     CarbonScreens.Settings,
-    CarbonScreens.Scanner,
     CarbonScreens.Design,
 )
-
-sealed class DesignScreens(val title: String, val route: String) {
-    object Lumen : DesignScreens("Lumen", "")
-}
 
 sealed class LumenScreens(
     val title: String,

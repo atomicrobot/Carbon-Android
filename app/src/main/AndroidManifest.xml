@@ -60,17 +60,18 @@
         <activity android:name=".CarbonShellActivity"
             android:exported="false"
             android:label="title_activity_carbon_shell"
-            android:theme="@style/CarbonShellTheme">
-
-        </activity>
+            android:theme="@style/CarbonShellTheme"/>
 
         <activity android:name=".DesignLumenActivity"
             android:exported="false"
             android:icon="@mipmap/ic_launcher"
             android:label="title_activity_lumen_design"
-            android:theme="@style/LumenTheme">
+            android:theme="@style/LumenTheme"/>
 
-        </activity>
+        <activity android:name=".ScannerActivity"
+            android:exported="false"
+            android:label="title_activity_scanner"
+            android:theme="@style/ScannerTheme"/>
 
         <activity-alias
             android:name=".Launcher"

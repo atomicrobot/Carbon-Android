@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.DesignLumenActivity
 import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.ScannerActivity
 import com.atomicrobot.carbon.ui.theme.CarbonShellTheme
 import com.atomicrobot.carbon.ui.theme.Mono800
 import com.atomicrobot.carbon.ui.theme.Neutron
@@ -69,9 +70,14 @@ sealed class CarbonShellProject(
         projectName = R.string.lumen_title,
         projectImageRes = R.drawable.lumen_project
     )
+
+    object Scanner : CarbonShellProject(
+        projectName = R.string.scanner_title,
+        projectImageRes = R.drawable.ic_baseline_qr_code_scanner
+    )
 }
 
-val projects = listOf(CarbonShellProject.Lumen)
+val projects = listOf(CarbonShellProject.Lumen, CarbonShellProject.Scanner)
 /*
 val testProjects = listOf(
     CarbonShellProject.Lumen,
@@ -129,6 +135,9 @@ fun CarbonShellMainContent(onBackClicked: () -> Unit) {
                         when (it.projectName) {
                             R.string.lumen_title -> {
                                 context.startActivity(Intent(context, DesignLumenActivity::class.java))
+                            }
+                            R.string.scanner_title -> {
+                                context.startActivity(Intent(context, ScannerActivity::class.java))
                             }
                         }
                     }

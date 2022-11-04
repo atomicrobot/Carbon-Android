@@ -78,6 +78,7 @@
 
     <string name="main_app_title">Carbon Android</string>
     <string name="lumen_title">Lumen</string>
+    <string name="scanner_title">Scanner</string>
 
     <string-array name="durations">
         <item>Manual</item>

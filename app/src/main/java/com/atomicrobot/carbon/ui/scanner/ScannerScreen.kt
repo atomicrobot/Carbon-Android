@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -30,6 +31,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarResult
@@ -68,6 +70,7 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.permission.PermissionRationaleResult
 import com.atomicrobot.carbon.ui.permission.PermissionRequestResult
 import com.atomicrobot.carbon.ui.permission.RequestPermission
+import com.atomicrobot.carbon.ui.shell.CarbonShellNestedAppBar
 import com.atomicrobot.carbon.util.LocalActivity
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.flow.StateFlow
@@ -104,7 +107,16 @@ fun ScannerScreen(
             }
         }
     )
-    CameraContent(viewModel, onBarcodeSelected)
+    Column {
+        CarbonShellNestedAppBar(stringResource(id = R.string.scanner_title))
+        Scaffold(
+            modifier = Modifier.navigationBarsPadding(),
+            topBar = {},
+            bottomBar = {}
+        ) {
+            CameraContent(viewModel, onBarcodeSelected)
+        }
+    }
 }
 @Composable
 fun CameraContent(
