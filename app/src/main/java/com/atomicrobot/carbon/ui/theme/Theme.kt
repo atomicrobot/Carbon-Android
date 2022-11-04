@@ -47,3 +47,42 @@ fun CarbonAndroidTheme(
         content = content
     )
 }
+
+private val LumenColorPalette = lightColors(
+    primary = DarkBlurple,
+    onPrimary = White100,
+    surface = DarkBlurple,
+    onSurface = White100
+)
+
+@Composable
+fun LumenTheme(
+    @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colors = LumenColorPalette,
+        typography = LumenTypography,
+        shapes = carbonShapes,
+        content = content
+    )
+}
+
+private val CarbonShellPalette = lightColors(
+    primary = Neutron,
+    onPrimary = White100,
+    surface = Mono800,
+    onSurface = White100
+)
+
+@Composable
+fun CarbonShellTheme(
+    @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colors = CarbonShellPalette,
+        shapes = carbonShellShapes,
+        content = content
+    )
+}

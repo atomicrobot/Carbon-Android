@@ -28,14 +28,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.navigation.AppScreens
+import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.util.AppScreenPreviewProvider
+import com.atomicrobot.carbon.util.AppScreensPreviewProvider
 
 @Preview
 @Composable
 fun Drawer(
+    @PreviewParameter(AppScreensPreviewProvider::class, limit = 1) screens: List<CarbonScreens>,
     modifier: Modifier = Modifier,
-    screens: List<AppScreens> = emptyList(),
     onDestinationClicked: (route: String) -> Unit = { _ -> }
 ) {
     Column(
@@ -64,7 +65,7 @@ fun Drawer(
 @Preview
 @Composable
 fun DrawerAppScreenItem(
-    @PreviewParameter(AppScreenPreviewProvider::class, limit = 3) screen: AppScreens,
+    @PreviewParameter(AppScreenPreviewProvider::class, limit = 3) screen: CarbonScreens,
     onDestinationClicked: (route: String) -> Unit = { _ -> }
 ) {
     Row(
@@ -77,7 +78,7 @@ fun DrawerAppScreenItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            screen.iconData.icon,
+            screen.iconData.vectorData,
             stringResource(id = screen.iconData.iconContentDescription),
             modifier = Modifier.size(45.dp)
                 .padding(8.dp)

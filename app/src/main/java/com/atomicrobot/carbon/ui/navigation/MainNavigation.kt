@@ -1,5 +1,6 @@
 package com.atomicrobot.carbon.ui.navigation
 
+import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.widget.Toast
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -23,7 +25,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.atomicrobot.carbon.navigation.AppScreens
+import com.atomicrobot.carbon.CarbonShellActivity
+import com.atomicrobot.carbon.navigation.CarbonScreens
+import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
@@ -35,18 +39,13 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-private val screens = listOf(
-    AppScreens.Home,
-    AppScreens.Settings,
-    AppScreens.Scanner
-)
-
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
+    val context = LocalContext.current
 
     BackHandler(enabled = scaffoldState.drawerState.isOpen) {
         scope.launch {
@@ -69,19 +68,24 @@ fun MainNavigation() {
         bottomBar =
         {
             BottomNavigationBar(
+                destinations = appScreens,
                 navController = navController,
-                destinations = screens,
                 onDestinationClicked = {
                     if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                        navController.navigate(it.route) {
-                            // Make sure the back stack only consists of the current graphs main
-                            // destination
-                            popUpTo(AppScreens.Home.route) {
-                                saveState = true
+                        if (it.route == CarbonScreens.Design.route) {
+                            context.startActivity(Intent(context, CarbonShellActivity::class.java))
+                            navController.popBackStack()
+                        } else {
+                            navController.navigate(it.route) {
+                                // Make sure the back stack only consists of the current graphs main
+                                // destination
+                                popUpTo(CarbonScreens.Home.route) {
+                                    saveState = true
+                                }
+                                // Singular instance of destinations
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            // Singular instance of destinations
-                            launchSingleTop = true
-                            restoreState = true
                         }
                     }
                 }
@@ -90,15 +94,20 @@ fun MainNavigation() {
         drawerContent =
         {
             Drawer(
-                screens = screens,
+                screens = appScreens,
                 onDestinationClicked = { route ->
                     scope.launch {
                         scaffoldState.drawerState.close()
                     }
                     if (navController.currentBackStackEntry?.destination?.route != route) {
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId)
-                            launchSingleTop = true
+                        if (route == CarbonScreens.Design.route) {
+                            context.startActivity(Intent(context, CarbonShellActivity::class.java))
+                            navController.popBackStack()
+                        } else {
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId)
+                                launchSingleTop = true
+                            }
                         }
                     }
                 }
@@ -125,14 +134,14 @@ fun NavGraphBuilder.mainFlowGraph(
     navController: NavHostController,
     scaffoldState: ScaffoldState
 ) {
-    navigation(startDestination = AppScreens.Home.route, route = "Main") {
-        composable(AppScreens.Home.route) {
+    navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
+        composable(CarbonScreens.Home.route) {
             MainScreen(scaffoldState)
         }
-        composable(AppScreens.Settings.route) {
+        composable(CarbonScreens.Settings.route) {
             SettingsScreen()
         }
-        composable(AppScreens.Scanner.route) {
+        composable(CarbonScreens.Scanner.route) {
             val activity = LocalActivity.current
             ScannerScreen(scaffoldState) {
                 when (it.valueType) {
@@ -157,10 +166,11 @@ fun NavGraphBuilder.mainFlowGraph(
                 ).show()
             }
         }
+
         composable(
-            route = AppScreens.DeepLink.routeWithArgs,
-            arguments = AppScreens.DeepLink.arguments,
-            deepLinks = AppScreens.DeepLink.deepLink
+            route = CarbonScreens.DeepLink.routeWithArgs,
+            arguments = CarbonScreens.DeepLink.arguments,
+            deepLinks = CarbonScreens.DeepLink.deepLink
         ) {
             val textColor = it.arguments?.getString("textColor")
             var color = Color.BLACK
@@ -189,10 +199,9 @@ fun NavGraphBuilder.mainFlowGraph(
 @Composable
 fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
     return when (navBackStackEntry?.destination?.route) {
-        AppScreens.SplashScreen.route -> AppScreens.SplashScreen.title
-        AppScreens.Home.route -> AppScreens.Home.title
-        AppScreens.Settings.route -> AppScreens.Settings.title
-        AppScreens.Scanner.route -> AppScreens.Scanner.title
+        CarbonScreens.Home.route -> CarbonScreens.Home.title
+        CarbonScreens.Settings.route -> CarbonScreens.Settings.title
+        CarbonScreens.Scanner.route -> CarbonScreens.Scanner.title
         else -> ""
     }
 }
