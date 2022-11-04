@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon.ui.shell
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -47,15 +45,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.atomicrobot.carbon.DesignLumenActivity
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.ScannerActivity
+import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.theme.CarbonShellTheme
 import com.atomicrobot.carbon.ui.theme.Mono800
 import com.atomicrobot.carbon.ui.theme.Neutron
 import com.atomicrobot.carbon.ui.theme.White100
 import com.atomicrobot.carbon.ui.theme.carbonShapes
-import com.atomicrobot.carbon.util.LocalActivity
 
 sealed class CarbonShellProject(
     val projectName: Int,
@@ -89,16 +87,14 @@ val testProjects = listOf(
 */
 
 @Composable
-fun CarbonShellNavigation() {
-    val activityContext = LocalActivity.current
-    CarbonShellMainContent(onBackClicked = {
-        // Remove this logic once we've moved away from nested Activities
-        activityContext.finish()
+fun CarbonShellNavigation(navController: NavController) {
+    CarbonShellMainContent(navController, onBackClicked = {
+        navController.navigateUp()
     })
 }
 
 @Composable
-fun CarbonShellMainContent(onBackClicked: () -> Unit) {
+fun CarbonShellMainContent(navController: NavController, onBackClicked: () -> Unit) {
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
         scaffoldState = rememberScaffoldState(),
@@ -108,7 +104,6 @@ fun CarbonShellMainContent(onBackClicked: () -> Unit) {
         bottomBar = {},
         backgroundColor = Color.Transparent
     ) { innerPadding ->
-        val context = LocalContext.current
         Box(
             modifier = Modifier
                 .background(Neutron)
@@ -134,10 +129,10 @@ fun CarbonShellMainContent(onBackClicked: () -> Unit) {
                     ShellProjectItem(it) {
                         when (it.projectName) {
                             R.string.lumen_title -> {
-                                context.startActivity(Intent(context, DesignLumenActivity::class.java))
+                                navController.navigate(CarbonScreens.Lumen.route)
                             }
                             R.string.scanner_title -> {
-                                context.startActivity(Intent(context, ScannerActivity::class.java))
+                                navController.navigate(CarbonScreens.Scanner.route)
                             }
                         }
                     }
@@ -265,7 +260,7 @@ class ProjectItemParamPreview : PreviewParameterProvider<CarbonShellProject> {
 @Composable
 fun CarbonShellMainContentPreview() {
     CarbonShellTheme {
-        CarbonShellMainContent(onBackClicked = {})
+        CarbonShellMainContent(navController = rememberNavController(), onBackClicked = {})
     }
 }
 

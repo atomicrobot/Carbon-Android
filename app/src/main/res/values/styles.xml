@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- Base application theme. Will apply to any screen not using a Compose theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -9,70 +9,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
+    <!-- Theme for handling the splash screen -->
     <style name="AppTheme.App.Starting" parent="Theme.SplashScreen.IconBackground">
         <item name="windowSplashScreenIconBackgroundColor">@color/appicon_background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/AppTheme</item>
-    </style>
-
-    <style name="CarbonShellTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@color/neutron</item>
-
-        <item name="android:navigationBarColor">
-            @android:color/transparent
-        </item>
-
-        <!-- Optional: set to transparent if your app is drawing behind the status bar. -->
-        <item name="android:statusBarColor">
-            @android:color/transparent
-        </item>
-
-        <!-- Optional: set the status bar light and content dark. -->
-        <item name="android:windowLightStatusBar">
-            false
-        </item>
-    </style>
-
-    <style name="LumenTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/blurple</item>
-        <item name="android:navigationBarColor">
-            @android:color/transparent
-        </item>
-
-        <!-- Optional: set to transparent if your app is drawing behind the status bar. -->
-        <item name="android:statusBarColor">
-            @color/neutron
-        </item>
-
-        <!-- Optional: set the status bar light and content dark. -->
-        <item name="android:windowLightStatusBar">
-            false
-        </item>
-    </style>
-
-    <style name="ScannerTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@color/neutron</item>
-        <item name="android:navigationBarColor">
-            @android:color/transparent
-        </item>
-
-        <!-- Optional: set to transparent if your app is drawing behind the status bar. -->
-        <item name="android:statusBarColor">
-            @color/neutron
-        </item>
-
-        <!-- Optional: set the status bar light and content dark. -->
-        <item name="android:windowLightStatusBar">
-            false
-        </item>
     </style>
 </resources>
