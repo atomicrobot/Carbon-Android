@@ -57,24 +57,19 @@ fun MainNavigation() {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
 
-    val showTopBar = rememberSaveable { mutableStateOf(true) }
     val showBottomBar = rememberSaveable { mutableStateOf(true) }
 
     when (navBackStackEntry?.destination?.route) {
         (CarbonScreens.Design.route) -> {
-            showTopBar.value = false
             showBottomBar.value = false
         }
         CarbonScreens.Lumen.route -> {
-            showTopBar.value = false
             showBottomBar.value = false
         }
         CarbonScreens.Scanner.route -> {
-            showTopBar.value = false
             showBottomBar.value = false
         }
         else -> {
-            showTopBar.value = true
             showBottomBar.value = true
         }
     }
@@ -87,17 +82,15 @@ fun MainNavigation() {
     Scaffold(
         topBar =
         {
-            if (showTopBar.value) {
-                TopBar(
-                    title = appBarTitle(navBackStackEntry),
-                    buttonIcon = Icons.Filled.Menu,
-                    onButtonClicked = {
-                        scope.launch {
-                            scaffoldState.drawerState.open()
-                        }
+            TopBar(
+                title = appBarTitle(navBackStackEntry),
+                buttonIcon = Icons.Filled.Menu,
+                onButtonClicked = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
                     }
-                )
-            }
+                }
+            )
         },
         bottomBar =
         {
@@ -250,6 +243,9 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
     return when (navBackStackEntry?.destination?.route) {
         CarbonScreens.Home.route -> CarbonScreens.Home.title
         CarbonScreens.Settings.route -> CarbonScreens.Settings.title
+        CarbonScreens.DeepLink.route -> CarbonScreens.DeepLink.title
+        CarbonScreens.Lumen.route -> CarbonScreens.Lumen.title
+        CarbonScreens.Scanner.route -> CarbonScreens.Scanner.title
         else -> ""
     }
 }
