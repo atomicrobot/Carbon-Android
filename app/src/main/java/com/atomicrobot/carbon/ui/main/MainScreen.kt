@@ -72,7 +72,7 @@ fun MainContent(
 ) {
     Column {
         /*
-        * Main Screen is split into two chunks
+        * Main Screen is split into three chunks
         * (1) User Input
         *       user name Textfield
         *       repo Textfield
