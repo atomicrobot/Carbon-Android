@@ -63,23 +63,6 @@ allprojects {
     apply(rootProject.file("distribution/keys/sample.gradle"))
 }
 
-// Prevent wildcard dependencies
-// Code in groovy below
-// https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
-// modified Wharton's code for kts
-allprojects {
-    afterEvaluate() {
-        project.configurations.all {
-            resolutionStrategy.eachDependency {
-                if (requested.version!!.contains("+")) {
-                    throw GradleException("Wildcard dependency forbidden: ${requested.group}:" +
-                            "${requested.name}:${requested.version}")
-                }
-            }
-        }
-    }
-}
-
 evaluationDependsOnChildren()
 
 val initialCleanup by tasks.registering {
