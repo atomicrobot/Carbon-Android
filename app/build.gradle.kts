@@ -64,12 +64,10 @@ android {
         // If you are creating signing keys, consider setting up Google Play App Signing!
         // See: https://developer.android.com/studio/publish/app-signing.html#google-play-app-signing
         create("release") {
-            apply(rootProject.file("distribution/keys/sample.gradle"))
-
-            storeFile = rootProject.file("sampleKeystore")
-            storePassword = "sampleKeystorePassword"
-            keyAlias = "sampleKeyAlias"
-            keyPassword = "sampleKeyPassword"
+            storeFile = rootProject.file(rootProject.extra.get("sampleKeystore") as String)
+            storePassword = rootProject.extra.get("sampleKeystorePassword") as String
+            keyAlias = rootProject.extra.get("sampleKeyAlias") as String
+            keyPassword = rootProject.extra.get("sampleKeyPassword") as String
         }
         // Use debug.keystore in this project so that debug version works with AR"s Carbon web link
         // setup. You can safely remove this section if you are not using web linking within your app
