@@ -31,9 +31,11 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.navigation.appScreens
+import com.atomicrobot.carbon.navigation.drawerScreens
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
+import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.lumen.navigation.DesignLumenNavigation
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
@@ -85,8 +87,7 @@ fun MainNavigation() {
         }
     }
     Scaffold(
-        topBar =
-        {
+        topBar = {
             if (showTopBar.value) {
                 TopBar(
                     title = appBarTitle(navBackStackEntry),
@@ -99,8 +100,7 @@ fun MainNavigation() {
                 )
             }
         },
-        bottomBar =
-        {
+        bottomBar = {
             if (showBottomBar.value) {
                 BottomNavigationBar(
                     destinations = appScreens,
@@ -122,10 +122,9 @@ fun MainNavigation() {
                 )
             }
         },
-        drawerContent =
-        {
+        drawerContent = {
             Drawer(
-                screens = appScreens,
+                screens = drawerScreens,
                 onDestinationClicked = { route ->
                     scope.launch {
                         scaffoldState.drawerState.close()
@@ -242,6 +241,11 @@ fun NavGraphBuilder.mainFlowGraph(
                 }
             }
         }
+        composable(CarbonScreens.License.route) {
+            CarbonAndroidTheme {
+                LicenseScreen()
+            }
+        }
     }
 }
 
@@ -250,6 +254,7 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
     return when (navBackStackEntry?.destination?.route) {
         CarbonScreens.Home.route -> CarbonScreens.Home.title
         CarbonScreens.Settings.route -> CarbonScreens.Settings.title
+        CarbonScreens.License.route -> CarbonScreens.License.title
         else -> ""
     }
 }
