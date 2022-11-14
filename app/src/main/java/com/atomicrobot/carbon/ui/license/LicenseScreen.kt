@@ -63,6 +63,5 @@ fun ReadDataFile() {
         }.onFailure {
             dataText = "error"
         }
-
     }
 }
