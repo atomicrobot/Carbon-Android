@@ -359,7 +359,7 @@
 
 <br/>
 
-## Nhaarman's Mockito-Kotlin Dependency
+## Niek Haarman's Mockito-Kotlin Dependency
 
 - com.nhaarman:mockito-kotlin-kt1.1
 
