@@ -239,6 +239,9 @@ dependencies {
     // System Bars UI Controller
     implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
 
+    // Rich Text / Markdown Support
+    implementation("com.halilibo.compose-richtext:richtext-commonmark:0.15.0")
+
     // Monitoring - Leak Canary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")
 
