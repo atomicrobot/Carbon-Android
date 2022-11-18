@@ -19,6 +19,7 @@ object Dependencies {
     const val firebaseMessagingVersion = "23.0.8"
     const val googleAccompanistVersion = "0.27.0"
     const val googleServicesVersion = "4.3.10"
+    const val halilRichtext = "0.15.0"
     const val jacocoVersion = "0.8.6"
     const val koinVersion = "3.2.0"
     const val kotlinVersion = "1.7.0"

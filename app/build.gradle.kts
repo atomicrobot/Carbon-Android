@@ -240,7 +240,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
 
     // Rich Text / Markdown Support
-    implementation("com.halilibo.compose-richtext:richtext-commonmark:0.15.0")
+    implementation("com.halilibo.compose-richtext:richtext-commonmark:${Dependencies.halilRichtext}")
 
     // Monitoring - Leak Canary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")
