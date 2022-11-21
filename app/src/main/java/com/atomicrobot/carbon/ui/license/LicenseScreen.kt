@@ -1,5 +1,8 @@
 package com.atomicrobot.carbon.ui.license
 
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +19,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
-import com.halilibo.richtext.markdown.Markdown
-import com.halilibo.richtext.ui.RichText
+import io.noties.markwon.Markwon
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -69,11 +73,18 @@ fun LicensesResponse(
 
 @Composable
 fun LicensesList(licenses: String) {
+    val context = LocalContext.current
+    val markwon = Markwon.create(context)
+    val markdown = markwon.toMarkdown(licenses)
     LazyColumn {
         item {
-            RichText(modifier = Modifier) {
-                Markdown(content = licenses)
-            }
+            AndroidView(factory = {
+                TextView(it).apply {
+                    layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+                }
+            }, update = {
+                it.text = markdown
+            })
         }
     }
 }
