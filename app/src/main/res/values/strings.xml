@@ -81,6 +81,8 @@
     <string name="lumen_title">Lumen</string>
     <string name="scanner_title">Scanner</string>
 
+    <string name="licenses_error">An error occurred while trying to read the licenses file</string>
+
     <string-array name="durations">
         <item>Manual</item>
         <item>30 minutes</item>

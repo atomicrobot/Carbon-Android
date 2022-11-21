@@ -10,6 +10,7 @@ import com.atomicrobot.carbon.data.lumen.dao.RoomDao
 import com.atomicrobot.carbon.data.lumen.dao.SceneDao
 import com.atomicrobot.carbon.data.lumen.dao.SceneLightDao
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
+import com.atomicrobot.carbon.ui.license.LicenseViewModel
 import com.atomicrobot.carbon.ui.lumen.scenes.ScenesViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
 import com.atomicrobot.carbon.ui.scanner.ScannerViewModel
@@ -144,6 +145,10 @@ class Modules {
                 roomDao = get(),
                 sceneLightDao = get()
             )
+        }
+
+        viewModel {
+            LicenseViewModel(app = androidApplication())
         }
     }
 }
