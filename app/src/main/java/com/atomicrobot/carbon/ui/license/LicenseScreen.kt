@@ -1,5 +1,6 @@
 package com.atomicrobot.carbon.ui.license
 
+import android.text.method.LinkMovementMethod
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -81,6 +82,7 @@ fun LicensesList(licenses: String) {
             AndroidView(factory = {
                 TextView(it).apply {
                     layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+                    movementMethod = LinkMovementMethod.getInstance()
                 }
             }, update = {
                 it.text = markdown
