@@ -70,7 +70,6 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.permission.PermissionRationaleResult
 import com.atomicrobot.carbon.ui.permission.PermissionRequestResult
 import com.atomicrobot.carbon.ui.permission.RequestPermission
-import com.atomicrobot.carbon.ui.shell.CarbonShellNestedAppBar
 import com.atomicrobot.carbon.util.LocalActivity
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.flow.StateFlow
@@ -108,7 +107,6 @@ fun ScannerScreen(
         }
     )
     Column {
-        CarbonShellNestedAppBar(stringResource(id = R.string.scanner_title))
         Scaffold(
             modifier = Modifier.navigationBarsPadding(),
             topBar = {},
