@@ -1,5 +1,3 @@
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
-
 buildscript {
     repositories {
         google()
@@ -14,11 +12,12 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-allopen")
     id("kotlin-parcelize")
-    id("dagger.hilt.android.plugin")
     id("com.google.firebase.crashlytics")
+    id("pmd")
     id("jacoco")
     id("com.google.gms.google-services")
 }
+
 var versionCode = 1
 if (project.hasProperty("buildNumber")) {
     versionCode = Integer.parseInt(project.property("buildNumber").toString())
@@ -38,34 +37,37 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    compileSdk = ConfigVals.compileSdkVersion
+
     defaultConfig {
         applicationId = "com.atomicrobot.carbon"
 
         minSdk = ConfigVals.minSdkVersion
         targetSdk = ConfigVals.targetSdkVersion
-        compileSdk = ConfigVals.compileSdkVersion
+
         multiDexEnabled = true
+
         versionCode = version
-        versionName = "\"${ConfigVals.appVersion} b$version\""
 
         buildConfigField("String", "VERSION_FINGERPRINT", versionFingerprint)
-        /*versionName requires null check while versionFingerprint does not, not sure why this is
-        the behavior if someone knows what's up here or wants something to investigate*/
-        buildConfigField("String", "VERSION_NAME", versionName!!)
 
         proguardFiles("proguard-android.txt", "proguard-rules.pro")
+
         testInstrumentationRunner = "com.atomicrobot.carbon.CustomAppTestRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     signingConfigs {
         // If you are creating signing keys, consider setting up Google Play App Signing!
         // See: https://developer.android.com/studio/publish/app-signing.html#google-play-app-signing
         create("release") {
-            apply(rootProject.file("distribution/keys/sample.gradle"))
-            storeFile = rootProject.file("sampleKeystore")
-            storePassword = "sampleKeystorePassword"
-            keyAlias = "sampleKeyAlias"
-            keyPassword = "sampleKeyPassword"
+            storeFile = rootProject.file(rootProject.extra.get("sampleKeystore") as String)
+            storePassword = rootProject.extra.get("sampleKeystorePassword") as String
+            keyAlias = rootProject.extra.get("sampleKeyAlias") as String
+            keyPassword = rootProject.extra.get("sampleKeyPassword") as String
         }
         // Use debug.keystore in this project so that debug version works with AR"s Carbon web link
         // setup. You can safely remove this section if you are not using web linking within your app
@@ -77,7 +79,7 @@ android {
         }
     }
 
-    flavorDimensions("app")
+    flavorDimensions.add("app")
     productFlavors {
         create("dev") {
             dimension = "app"
@@ -88,35 +90,26 @@ android {
             applicationId = "com.atomicrobot.carbon"
         }
     }
+
     buildTypes {
         getByName("debug") {
             isMinifyEnabled = false
             isShrinkResources = false
-            isTestCoverageEnabled = true
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
         }
 
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            isTestCoverageEnabled = true
             signingConfig = signingConfigs.getByName("release")
         }
     }
 
-    buildFeatures {
-        dataBinding = true
-        compose = true
+    dataBinding {
+        enable = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.1"
-    }
-    packagingOptions {
-        resources {
-            excludes += ("/META-INF/{AL2.0,LGPL2.1}")
-        }
-    }
-    namespace = "com.atomicrobot.carbon"
     testOptions {
         animationsDisabled = true
 
@@ -124,39 +117,60 @@ android {
             isIncludeAndroidResources = true
         }
     }
-}
-
-kapt {
-    correctErrorTypes = true
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Dependencies.composeVersion
+    }
+    packagingOptions {
+        resources {
+            excludes += ("/META-INF/{AL2.0,LGPL2.1}")
+        }
+    }
+    namespace = "com.atomicrobot.carbon"
+    lint {
+        abortOnError = true
+        htmlReport = true
+//        lintConfig file("lint.xml")
+    }
 }
 
 dependencies {
-    implementation(
-        platform("com.google.firebase:firebase-bom:${Dependencies.firebase_bom_version}")
-    )
+    implementation(platform("com.google.firebase:firebase-bom:${Dependencies.firebaseBomVersion}"))
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Add the Firebase Crashlytics SDK.
-    implementation(
-        "com.google.firebase:firebase-crashlytics:${Dependencies.firebase_crashlytics_version}"
-    )
+    implementation("com.google.firebase:firebase-crashlytics:${Dependencies.firebaseCrashlyticsVersion}")
 
     // Recommended: Add the Google Analytics SDK.
-    implementation(
-        "com.google.firebase:firebase-analytics:${Dependencies.firebase_analytics_version}"
-    )
+    implementation("com.google.firebase:firebase-analytics:${Dependencies.firebaseAnalyticsVersion}")
 
-    implementation("org.jacoco:org.jacoco.core:${Dependencies.jacoco_version}")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Dependencies.kotlin_version}")
-    implementation("androidx.test.ext:junit-ktx:1.1.3")
+    implementation("com.google.firebase:firebase-messaging:${Dependencies.firebaseMessagingVersion}")
+
+    implementation("androidx.compose.ui:ui:${Dependencies.composeVersion}")
+    // Compose Material Design
+    implementation("androidx.compose.material:material:${Dependencies.composeVersion}")
+    // Animations
+    implementation("androidx.compose.animation:animation:${Dependencies.composeVersion}")
+    implementation("androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}")
+    // Integration with activities
+    implementation("androidx.activity:activity-compose:${Dependencies.composeActVersion}")
+
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Dependencies.composeVersion}")
+    // Tooling support (Previews, etc.)
+    debugImplementation("androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}")
+    // Integration with ViewModels
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Dependencies.composeVmVersion}")
+    // UI Tests
+    debugImplementation("androidx.compose.ui:ui-test-manifest:${Dependencies.composeVersion}")
+
+    implementation("androidx.compose.foundation:foundation:${Dependencies.composeFoundationVersion}")
 
     // Android/Google libraries
     implementation("androidx.core:core-ktx:${Dependencies.coreVersion}")
-    implementation(
-        "androidx.constraintlayout:constraintlayout:${Dependencies.constraintLayoutVersion}"
-    )
+    implementation("androidx.constraintlayout:constraintlayout:${Dependencies.constraintLayoutVersion}")
     implementation("androidx.appcompat:appcompat:${Dependencies.appCompatVersion}")
-    implementation("androidx.fragment:fragment-ktx:${Dependencies.appCompatVersion}")
     implementation("androidx.recyclerview:recyclerview:${Dependencies.recyclerViewVersion}")
     implementation("androidx.cardview:cardview:${Dependencies.supportVersion}")
     implementation("androidx.annotation:annotation:${Dependencies.supportVersion}")
@@ -164,53 +178,26 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-base:${Dependencies.playServicesVersion}")
 
-    implementation(
-        "androidx.lifecycle:lifecycle-runtime-ktx:${Dependencies.lifecycleRuntimeVersion}"
-    )
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Dependencies.lifecycleRuntimeVersion}")
     implementation("androidx.lifecycle:lifecycle-extensions:${Dependencies.lifecycleVersion}")
     implementation("androidx.lifecycle:lifecycle-common-java8:${Dependencies.lifecycleVersion}")
-    implementation(
-        "androidx.lifecycle:lifecycle-viewmodel-ktx:${Dependencies.lifecycleRuntimeVersion}"
-    )
 
-    // Integration with activities
-    implementation("androidx.activity:activity-compose:${Dependencies.composeActVersion}")
-    // Compose Material Design
-    implementation("androidx.compose.material:material:${Dependencies.composeVersion}")
-    // Animations
-    implementation("androidx.compose.animation:animation:${Dependencies.composeVersion}")
-    // Tooling support (Previews, etc.)
-    implementation("androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}")
-    // Integration with ViewModels
-    implementation(
-        "androidx.lifecycle:lifecycle-viewmodel-compose:${Dependencies.composeVmVersion}"
-    )
-    // UI Tests
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Dependencies.composeVersion}")
+    // App architecture - Koin
+    implementation("io.insert-koin:koin-android:${Dependencies.koinVersion}")
+    implementation("io.insert-koin:koin-androidx-compose:${Dependencies.koinVersion}")
 
-    implementation(
-        "androidx.compose.foundation:foundation:${Dependencies.composeFoundationVersion}"
-    )
-
-    // App architecture - Hilt
-    implementation("com.google.dagger:hilt-android:${Dependencies.hilt_version}")
-    kapt("com.google.dagger:hilt-android-compiler:${Dependencies.hilt_version}")
-    androidTestImplementation("com.google.dagger:hilt-android-testing:${Dependencies.hilt_version}")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${Dependencies.hilt_version}")
+    // App architecture - RxJava
+    implementation("io.reactivex.rxjava2:rxjava:${Dependencies.rxJavaVersion}")
+    implementation("io.reactivex.rxjava2:rxandroid:${Dependencies.rxAndroidVersion}")
 
     // JSON
     implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshiVersion}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshiVersion}")
 
     // Navigation
-    implementation(
-        "android.arch.navigation:navigation-fragment-ktx:${Dependencies.navigation_version}"
-    )
-    implementation("android.arch.navigation:navigation-ui-ktx:${Dependencies.navigation_version}")
-    implementation("androidx.navigation:navigation-compose:${Dependencies.androidNavVersion}")
-    implementation(
-        "androidx.hilt:hilt-navigation-compose:${Dependencies.composeHiltNavigationVersion}"
-    )
+    implementation("androidx.navigation:navigation-compose:${Dependencies.composeNavigationVersion}")
+    implementation("android.arch.navigation:navigation-fragment-ktx:${Dependencies.navigationVersion}")
+    implementation("android.arch.navigation:navigation-ui-ktx:${Dependencies.navigationVersion}")
 
     // Networking - HTTP
     implementation("com.squareup.okhttp3:okhttp:${Dependencies.okHttpVersion}")
@@ -218,15 +205,45 @@ dependencies {
 
     // Networking - REST
     implementation("com.squareup.retrofit2:retrofit:${Dependencies.retrofitVersion}")
+    implementation("com.squareup.retrofit2:adapter-rxjava2:${Dependencies.retrofitVersion}")
     implementation("com.squareup.retrofit2:converter-moshi:${Dependencies.retrofitVersion}")
+
+    // Use this dependency to bundle the barcode-scanner model with the app
+    implementation("com.google.mlkit:barcode-scanning:${Dependencies.mlBarcodeScannerVersion}")
+
+    // The following line is optional, as the core library is included indirectly by camera-camera2
+    implementation("androidx.camera:camera-core:${Dependencies.cameraxVersion}")
+    implementation("androidx.camera:camera-camera2:${Dependencies.cameraxVersion}")
+    // If you want to additionally use the CameraX Lifecycle library
+    implementation("androidx.camera:camera-lifecycle:${Dependencies.cameraxVersion}")
+    // If you want to additionally use the CameraX View class
+    implementation("androidx.camera:camera-view:${Dependencies.cameraxVersion}")
+    // If you want to additionally add CameraX ML Kit Vision Integration
+    implementation("androidx.camera:camera-mlkit-vision:${Dependencies.cameraxVersion}")
+    // If you want to additionally use the CameraX Extensions library
+    implementation("androidx.camera:camera-extensions:${Dependencies.cameraxVersion}")
+
+    implementation("androidx.constraintlayout:constraintlayout-compose:${Dependencies.composeConstraintVersion}")
+    implementation("androidx.compose.material:material-icons-extended:${Dependencies.composeConstraintVersion}")
+    implementation("androidx.core:core-splashscreen:${Dependencies.splashVersion}")
 
     // Monitoring - Timber (logging)
     implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
 
+    // Room DB
+    implementation("androidx.room:room-runtime:${Dependencies.roomVersion}")
+    annotationProcessor("androidx.room:room-compiler:${Dependencies.roomVersion}")
+    kapt("androidx.room:room-compiler:${Dependencies.roomVersion}")
+    implementation("androidx.room:room-ktx:${Dependencies.roomVersion}")
+
+    // System Bars UI Controller
+    implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
+
+    // Markdown Support
+    implementation("io.noties.markwon:core:${Dependencies.markwonVersion}")
+
     // Monitoring - Leak Canary
-    debugImplementation(
-        "com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}"
-    )
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")
 
     // Unit test
     testImplementation("junit:junit:${Dependencies.junitVersion}")
@@ -243,24 +260,32 @@ dependencies {
     androidTestImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")
     androidTestImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
     androidTestImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
-    androidTestImplementation(
-        "androidx.test.espresso:espresso-core:${Dependencies.espressoVersion}"
-    )
-    androidTestImplementation(
-        "androidx.test.espresso:espresso-contrib:${Dependencies.espressoVersion}"
-    )
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Dependencies.espressoVersion}")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:${Dependencies.espressoVersion}")
 
     androidTestImplementation("org.mockito:mockito-android:${Dependencies.mockitoVersion}")
-    androidTestImplementation(
-        "com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}"
-    )
-    androidTestImplementation(
-        "com.github.fabioCollini:DaggerMock:${Dependencies.daggerMockVersion}"
-    )
+    androidTestImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
+}
+
+tasks.register<Pmd>("pmd") {}
+
+tasks.named<Pmd>("pmd").configure {
+    dependsOn("assembleDebug")
+    ruleSetFiles = files("${project.rootDir}/config/pmd/pmd-ruleset.xml")
+    ruleSets = mutableListOf()
+    // See http://sourceforge.net/p/pmd/discussion/188193/thread/6e9c6017/ for why this is needed...
+    source = fileTree("src/main/java/")
+    exclude("**/gen/**")
+    reports {
+        // html.enabled = true
+        // xml.enabled = false
+        xml.required.set(false)
+        html.required.set(true)
+    }
 }
 
 jacoco {
-    toolVersion = Dependencies.jacoco_version
+    toolVersion = Dependencies.jacocoVersion
 }
 
 tasks.withType<Test> {
@@ -353,35 +378,9 @@ if (tasks.findByName("jacocoAndroidCoverageVerification") == null) {
         setDirectories()
     }
 }
-
 // Kotlin plugin for testing
 allOpen {
-    annotation("dagger.Module")
     annotation("com.atomicrobot.carbon.Mockable")
 }
+
 apply(plugin = "com.google.gms.google-services")
-//
-
-ktlint {
-    debug.set(true)
-    android.set(true)
-    outputToConsole.set(true)
-    outputColorName.set("RED")
-    disabledRules.set(setOf("final-newline"))
-    reporters {
-        reporter(ReporterType.PLAIN)
-        reporter(ReporterType.CHECKSTYLE)
-        reporter(ReporterType.SARIF)
-    }
-    kotlinScriptAdditionalPaths {
-        include(fileTree("scripts/"))
-    }
-    filter {
-        exclude("**/generated/**")
-        include("**/kotlin/**")
-    }
-}
-
-repositories {
-    mavenCentral()
-}
