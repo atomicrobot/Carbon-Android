@@ -26,6 +26,7 @@ object Dependencies {
     const val leakCanaryVersion = "2.7"
     const val lifecycleRuntimeVersion = "2.4.1"
     const val lifecycleVersion = "2.0.0"
+    const val markwonVersion = "4.6.2"
     const val materialVersion = "1.6.0"
     const val mlBarcodeScannerVersion = "17.0.2"
     const val moshiVersion = "1.13.0"
