@@ -7,25 +7,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,7 +29,6 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -88,19 +80,15 @@ val testProjects = listOf(
 
 @Composable
 fun CarbonShellNavigation(navController: NavController) {
-    CarbonShellMainContent(navController, onBackClicked = {
-        navController.navigateUp()
-    })
+    CarbonShellMainContent(navController)
 }
 
 @Composable
-fun CarbonShellMainContent(navController: NavController, onBackClicked: () -> Unit) {
+fun CarbonShellMainContent(navController: NavController) {
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
         scaffoldState = rememberScaffoldState(),
-        topBar = {
-            CarbonShellAppBar(onButtonClicked = onBackClicked)
-        },
+        topBar = {},
         bottomBar = {},
         backgroundColor = Color.Transparent
     ) { innerPadding ->
@@ -138,42 +126,6 @@ fun CarbonShellMainContent(navController: NavController, onBackClicked: () -> Un
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun CarbonShellAppBar(
-    onButtonClicked: () -> Unit = {},
-//    buttonIcon: ImageVector = Icons.Filled.Menu
-    buttonIcon: ImageVector = Icons.Filled.ArrowBack // Back arrow until redesign, then back to Menu
-) {
-    TopAppBar(backgroundColor = Neutron, contentPadding = PaddingValues(horizontal = 16.dp)) {
-        Row(Modifier.fillMaxWidth()) {
-            IconButton(onClick = { onButtonClicked() }) {
-                Icon(buttonIcon, contentDescription = "")
-            }
-        }
-    }
-}
-
-@Composable
-fun CarbonShellNestedAppBar(
-    projectName: String
-) {
-    TopAppBar(backgroundColor = Neutron, contentPadding = PaddingValues(horizontal = 16.dp)) {
-        Row(Modifier.fillMaxWidth()) {
-            // Set the text's weight to consume the remaining horizontal space
-            Text(
-                text = projectName,
-                modifier = Modifier.weight(1f)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.carbon_android_logo),
-                contentDescription = stringResource(id = R.string.cont_desc_shell),
-                modifier = Modifier.size(24.dp),
-                tint = Color.Unspecified
-            )
         }
     }
 }
@@ -260,14 +212,8 @@ class ProjectItemParamPreview : PreviewParameterProvider<CarbonShellProject> {
 @Composable
 fun CarbonShellMainContentPreview() {
     CarbonShellTheme {
-        CarbonShellMainContent(navController = rememberNavController(), onBackClicked = {})
+        CarbonShellMainContent(navController = rememberNavController())
     }
-}
-
-@Preview
-@Composable
-fun CarbonShellAppBarPreview() {
-    CarbonShellAppBar()
 }
 
 @Preview
