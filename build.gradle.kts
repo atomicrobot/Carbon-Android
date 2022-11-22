@@ -43,13 +43,11 @@ allprojects {
     tasks.withType<JavaCompile> {
         options.compilerArgs = mutableListOf("-Xlint:deprecation")
     }
-}
 
-// Prevent wildcard dependencies
-// Code in groovy below
-// https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
-// modified Wharton's code for kts
-allprojects {
+    // Prevent wildcard dependencies
+    // Code in groovy below
+    // https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
+    // modified Wharton's code for kts
     afterEvaluate() {
         project.configurations.all {
             resolutionStrategy.eachDependency {
@@ -60,6 +58,9 @@ allprojects {
             }
         }
     }
+
+    // Apply sample.gradle with project ext values
+    apply(rootProject.file("distribution/keys/sample.gradle"))
 }
 
 evaluationDependsOnChildren()
@@ -97,7 +98,7 @@ release {
 
 fun getProjectTask(project: Project, taskName: String): MutableSet<Task> {
     val tasks = project.getTasksByName(taskName, true)
-    if (tasks == null || tasks.isEmpty()) {
+    if (tasks.isEmpty()) {
         throw IllegalArgumentException("Task $taskName not found")
     }
     return tasks

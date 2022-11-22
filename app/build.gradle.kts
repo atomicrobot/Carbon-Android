@@ -64,12 +64,10 @@ android {
         // If you are creating signing keys, consider setting up Google Play App Signing!
         // See: https://developer.android.com/studio/publish/app-signing.html#google-play-app-signing
         create("release") {
-            apply(rootProject.file("distribution/keys/sample.gradle"))
-
-            storeFile = rootProject.file("sampleKeystore")
-            storePassword = "sampleKeystorePassword"
-            keyAlias = "sampleKeyAlias"
-            keyPassword = "sampleKeyPassword"
+            storeFile = rootProject.file(rootProject.extra.get("sampleKeystore") as String)
+            storePassword = rootProject.extra.get("sampleKeystorePassword") as String
+            keyAlias = rootProject.extra.get("sampleKeyAlias") as String
+            keyPassword = rootProject.extra.get("sampleKeyPassword") as String
         }
         // Use debug.keystore in this project so that debug version works with AR"s Carbon web link
         // setup. You can safely remove this section if you are not using web linking within your app
@@ -81,7 +79,7 @@ android {
         }
     }
 
-    flavorDimensions("app")
+    flavorDimensions.add("app")
     productFlavors {
         create("dev") {
             dimension = "app"
@@ -97,7 +95,8 @@ android {
         getByName("debug") {
             isMinifyEnabled = false
             isShrinkResources = false
-            isTestCoverageEnabled = true
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
         }
 
         getByName("release") {
@@ -108,7 +107,7 @@ android {
     }
 
     dataBinding {
-        isEnabled = true
+        enable = true
     }
 
     testOptions {
@@ -122,7 +121,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "${Dependencies.composeVersion}"
+        kotlinCompilerExtensionVersion = Dependencies.composeVersion
     }
     packagingOptions {
         resources {
@@ -147,6 +146,8 @@ dependencies {
     // Recommended: Add the Google Analytics SDK.
     implementation("com.google.firebase:firebase-analytics:${Dependencies.firebaseAnalyticsVersion}")
 
+    implementation("com.google.firebase:firebase-messaging:${Dependencies.firebaseMessagingVersion}")
+
     implementation("androidx.compose.ui:ui:${Dependencies.composeVersion}")
     // Compose Material Design
     implementation("androidx.compose.material:material:${Dependencies.composeVersion}")
@@ -165,17 +166,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:${Dependencies.composeVersion}")
 
     implementation("androidx.compose.foundation:foundation:${Dependencies.composeFoundationVersion}")
-
-    /*
-     * Starting from Kotlin 1.4 the Kotlin standard library dependency doesn't need to be added
-     * explicitly. An implicit dep. w/ the same version as the Kotlin Gradle plugin will
-     * implicitly be added.
-     *
-     * link: https://stackoverflow.com/a/64988522/3591491
-     */
-    /*implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"*/
-    kapt("androidx.databinding:databinding-compiler:${Dependencies.androidPluginVersion}")
-    // Need this because of Kotlin
 
     // Android/Google libraries
     implementation("androidx.core:core-ktx:${Dependencies.coreVersion}")
@@ -218,8 +208,39 @@ dependencies {
     implementation("com.squareup.retrofit2:adapter-rxjava2:${Dependencies.retrofitVersion}")
     implementation("com.squareup.retrofit2:converter-moshi:${Dependencies.retrofitVersion}")
 
+    // Use this dependency to bundle the barcode-scanner model with the app
+    implementation("com.google.mlkit:barcode-scanning:${Dependencies.mlBarcodeScannerVersion}")
+
+    // The following line is optional, as the core library is included indirectly by camera-camera2
+    implementation("androidx.camera:camera-core:${Dependencies.cameraxVersion}")
+    implementation("androidx.camera:camera-camera2:${Dependencies.cameraxVersion}")
+    // If you want to additionally use the CameraX Lifecycle library
+    implementation("androidx.camera:camera-lifecycle:${Dependencies.cameraxVersion}")
+    // If you want to additionally use the CameraX View class
+    implementation("androidx.camera:camera-view:${Dependencies.cameraxVersion}")
+    // If you want to additionally add CameraX ML Kit Vision Integration
+    implementation("androidx.camera:camera-mlkit-vision:${Dependencies.cameraxVersion}")
+    // If you want to additionally use the CameraX Extensions library
+    implementation("androidx.camera:camera-extensions:${Dependencies.cameraxVersion}")
+
+    implementation("androidx.constraintlayout:constraintlayout-compose:${Dependencies.composeConstraintVersion}")
+    implementation("androidx.compose.material:material-icons-extended:${Dependencies.composeConstraintVersion}")
+    implementation("androidx.core:core-splashscreen:${Dependencies.splashVersion}")
+
     // Monitoring - Timber (logging)
     implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
+
+    // Room DB
+    implementation("androidx.room:room-runtime:${Dependencies.roomVersion}")
+    annotationProcessor("androidx.room:room-compiler:${Dependencies.roomVersion}")
+    kapt("androidx.room:room-compiler:${Dependencies.roomVersion}")
+    implementation("androidx.room:room-ktx:${Dependencies.roomVersion}")
+
+    // System Bars UI Controller
+    implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
+
+    // Markdown Support
+    implementation("io.noties.markwon:core:${Dependencies.markwonVersion}")
 
     // Monitoring - Leak Canary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")
@@ -234,7 +255,6 @@ dependencies {
     testImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
     testImplementation("com.squareup.okhttp3:mockwebserver:${Dependencies.okHttpVersion}")
 
-    // Android JUnit Runner, JUnit Rules, and Espresso
     // Android JUnit Runner, JUnit Rules, and Espresso
     androidTestImplementation("androidx.test:runner:${Dependencies.androidTestSupportVersion}")
     androidTestImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")
