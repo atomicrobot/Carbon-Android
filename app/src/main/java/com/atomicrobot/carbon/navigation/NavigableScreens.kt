@@ -96,6 +96,18 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         "license",
         ScreenIcon(Icons.Filled.Description, R.string.cont_desc_license_icon)
     )
+
+    object About : CarbonScreens(
+        "About",
+        "about",
+        ScreenIcon(Icons.Filled.Home, R.string.cont_desc_about_icon) // Icon value here is a filler
+    )
+
+    object AboutHtml : CarbonScreens(
+        "AboutHtml",
+        "abouthtml",
+        ScreenIcon(Icons.Filled.Home, R.string.cont_desc_about_icon) // Icon value here is a filler
+    )
 }
 
 val appScreens = listOf(
@@ -108,6 +120,8 @@ val drawerScreens = listOf(
     CarbonScreens.Home,
     CarbonScreens.Settings,
     CarbonScreens.Design,
+    CarbonScreens.About,
+    CarbonScreens.AboutHtml,
     CarbonScreens.License
 )
 
