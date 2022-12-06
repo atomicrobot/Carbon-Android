@@ -104,7 +104,7 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
     )
 
     object AboutHtml : CarbonScreens(
-        "AboutHtml",
+        "About HTML",
         "abouthtml",
         ScreenIcon(Icons.Filled.Home, R.string.cont_desc_about_icon) // Icon value here is a filler
     )
