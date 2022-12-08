@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -55,6 +56,7 @@ import com.atomicrobot.carbon.ui.lumen.navigation.LumenBottomSheetTask
 import com.atomicrobot.carbon.ui.shader.AngledLinearGradient
 import com.atomicrobot.carbon.ui.theme.DarkBlurple
 import com.atomicrobot.carbon.ui.theme.LightBlurple
+import com.atomicrobot.carbon.ui.theme.Neutron
 import com.atomicrobot.carbon.ui.theme.ScreenHeading
 import com.atomicrobot.carbon.ui.theme.White15
 import com.atomicrobot.carbon.ui.theme.White25
@@ -68,17 +70,18 @@ fun TopBar(
     title: String = CarbonScreens.Home.title,
     buttonIcon: ImageVector = Icons.Filled.Menu,
     onButtonClicked: () -> Unit = {}
-) = TopAppBar(
-    title = {
-        Text(text = title)
-    },
-    navigationIcon = {
-        IconButton(onClick = { onButtonClicked() }) {
-            Icon(buttonIcon, contentDescription = "")
-        }
-    },
-    backgroundColor = MaterialTheme.colors.primaryVariant
-)
+) = TopAppBar(backgroundColor = Neutron, contentColor = Color.White, contentPadding = PaddingValues(end = 12.dp)) {
+    IconButton(onClick = { onButtonClicked() }) {
+        Icon(imageVector = buttonIcon, contentDescription = "")
+    }
+    Text(text = title, modifier = Modifier.weight(1f))
+    Icon(
+        painter = painterResource(id = R.drawable.carbon_android_logo),
+        contentDescription = stringResource(id = R.string.cont_desc_shell),
+        modifier = Modifier.size(24.dp),
+        tint = Color.Unspecified
+    )
+}
 
 @Composable
 fun TopBar(title: String = "") = TopAppBar(title = { Text(text = title) })
@@ -218,7 +221,8 @@ fun LumenTopAppBar(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                     modifier = Modifier
-                        .width(450.dp).padding(32.dp)
+                        .width(450.dp)
+                        .padding(32.dp)
                 ) {
                     bottomSheetTasks.forEach {
                         DropdownMenuItem(
@@ -281,7 +285,8 @@ fun LumenBottomNavigationBar(
                                     CircleShape
                                 )
                         else
-                            Modifier.clip(CircleShape)
+                            Modifier
+                                .clip(CircleShape)
                                 .background(Color.Transparent)
                     Image(
                         painterResource(id = destination.iconResourceId),

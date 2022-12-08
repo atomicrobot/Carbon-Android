@@ -31,9 +31,11 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.navigation.appScreens
+import com.atomicrobot.carbon.navigation.drawerScreens
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
+import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.lumen.navigation.DesignLumenNavigation
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
@@ -57,24 +59,19 @@ fun MainNavigation() {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
 
-    val showTopBar = rememberSaveable { mutableStateOf(true) }
     val showBottomBar = rememberSaveable { mutableStateOf(true) }
 
     when (navBackStackEntry?.destination?.route) {
         (CarbonScreens.Design.route) -> {
-            showTopBar.value = false
             showBottomBar.value = false
         }
         CarbonScreens.Lumen.route -> {
-            showTopBar.value = false
             showBottomBar.value = false
         }
         CarbonScreens.Scanner.route -> {
-            showTopBar.value = false
             showBottomBar.value = false
         }
         else -> {
-            showTopBar.value = true
             showBottomBar.value = true
         }
     }
@@ -85,22 +82,18 @@ fun MainNavigation() {
         }
     }
     Scaffold(
-        topBar =
-        {
-            if (showTopBar.value) {
-                TopBar(
-                    title = appBarTitle(navBackStackEntry),
-                    buttonIcon = Icons.Filled.Menu,
-                    onButtonClicked = {
-                        scope.launch {
-                            scaffoldState.drawerState.open()
-                        }
+        topBar = {
+            TopBar(
+                title = appBarTitle(navBackStackEntry),
+                buttonIcon = Icons.Filled.Menu,
+                onButtonClicked = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
                     }
-                )
-            }
+                }
+            )
         },
-        bottomBar =
-        {
+        bottomBar = {
             if (showBottomBar.value) {
                 BottomNavigationBar(
                     destinations = appScreens,
@@ -122,10 +115,9 @@ fun MainNavigation() {
                 )
             }
         },
-        drawerContent =
-        {
+        drawerContent = {
             Drawer(
-                screens = appScreens,
+                screens = drawerScreens,
                 onDestinationClicked = { route ->
                     scope.launch {
                         scaffoldState.drawerState.close()
@@ -242,6 +234,11 @@ fun NavGraphBuilder.mainFlowGraph(
                 }
             }
         }
+        composable(CarbonScreens.License.route) {
+            CarbonAndroidTheme {
+                LicenseScreen()
+            }
+        }
     }
 }
 
@@ -250,6 +247,10 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
     return when (navBackStackEntry?.destination?.route) {
         CarbonScreens.Home.route -> CarbonScreens.Home.title
         CarbonScreens.Settings.route -> CarbonScreens.Settings.title
+        CarbonScreens.DeepLink.route -> CarbonScreens.DeepLink.title
+        CarbonScreens.Lumen.route -> CarbonScreens.Lumen.title
+        CarbonScreens.Scanner.route -> CarbonScreens.Scanner.title
+        CarbonScreens.License.route -> CarbonScreens.License.title
         else -> ""
     }
 }

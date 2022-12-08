@@ -25,6 +25,7 @@
     <string name="cont_desc_settings_icon">Settings</string>
     <string name="cont_desc_scanner_icon">Scanner</string>
     <string name="cont_desc_view_icon">Design</string>
+    <string name="cont_desc_license_icon">License</string>
     <string name="camera_perm_rationale">The Camera permission is required to scan barcodes and QR codes.</string>
     <string name="camera_perm_denied">Camera permission not granted</string>
     <string name="camera_cont_desc">Snap a pic of a QrCode</string>
@@ -79,6 +80,8 @@
     <string name="main_app_title">Carbon Android</string>
     <string name="lumen_title">Lumen</string>
     <string name="scanner_title">Scanner</string>
+
+    <string name="licenses_error">An error occurred while trying to read the licenses file</string>
 
     <string-array name="durations">
         <item>Manual</item>

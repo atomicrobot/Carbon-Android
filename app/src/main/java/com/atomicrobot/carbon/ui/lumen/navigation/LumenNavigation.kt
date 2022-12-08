@@ -25,7 +25,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
@@ -47,7 +46,6 @@ import com.atomicrobot.carbon.ui.lumen.scenes.AddSceneTask
 import com.atomicrobot.carbon.ui.lumen.scenes.EditSceneTask
 import com.atomicrobot.carbon.ui.lumen.scenes.ScenesScreen
 import com.atomicrobot.carbon.ui.lumen.settings.LumenSettingsScreen
-import com.atomicrobot.carbon.ui.shell.CarbonShellNestedAppBar
 import com.atomicrobot.carbon.ui.theme.BlurpleRadial
 import com.atomicrobot.carbon.ui.theme.LumenTheme
 import kotlinx.coroutines.CoroutineScope
@@ -146,7 +144,6 @@ fun LumenMainContent(appState: LumenAppState) {
         modifier = Modifier.background(brush = BlurpleRadial)
     ) {
         Column {
-            CarbonShellNestedAppBar(stringResource(id = R.string.lumen_title))
             Scaffold(
                 modifier = Modifier.navigationBarsPadding(),
                 scaffoldState = appState.scaffoldState,

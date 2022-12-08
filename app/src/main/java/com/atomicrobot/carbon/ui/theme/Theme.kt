@@ -48,11 +48,8 @@ fun CarbonAndroidTheme(
      */
     val systemUiController = rememberSystemUiController()
     SideEffect {
-        systemUiController.setStatusBarColor(
-            color = AndroidColorPrimaryDark
-        )
-        systemUiController.setNavigationBarColor(
-            color = Color.Black
+        systemUiController.setSystemBarsColor(
+            color = Neutron
         )
     }
 
