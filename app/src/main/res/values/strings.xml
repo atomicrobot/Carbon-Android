@@ -97,4 +97,7 @@
         <item>12 hours</item>
         <item>All Day</item>
     </string-array>
+
+
+    <string name="cont_desc_info_icon">More Info</string>
 </resources>

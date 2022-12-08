@@ -6,30 +6,23 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
-import com.atomicrobot.carbon.navigation.AppScreens
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
 import com.atomicrobot.carbon.util.CommitPreviewProvider
@@ -169,7 +162,7 @@ fun CommitList(
     }
 }
 
-//@Preview(name = "Github Commit")
+@Preview(name = "Github Commit")
 @Composable
 fun CommitItem(
     @PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit,
@@ -178,8 +171,16 @@ fun CommitItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        onClick = { clicked = !clicked }
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onLongPress = {
+                                        //can I call nav host here?
+                                        //call some function here
+                                        clicked = !clicked
+                                    }
+                                )
+            },
     ) {
         Column(
             modifier = Modifier
@@ -187,10 +188,8 @@ fun CommitItem(
                 .padding(16.dp)
         ) {
             if(clicked) {
-                //do something
-                //navigate to new page
-                //placeholder
-                Text(text = "clicked")
+                //Goal is to navigate to commit details Rather than just display some text
+                Text(text = "Long Pressed")
             }
             else {
                 Text(
