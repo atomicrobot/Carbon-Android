@@ -1,19 +1,15 @@
 package com.atomicrobot.carbon.ui.main
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -32,20 +28,19 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
-import com.atomicrobot.carbon.ui.components.CustomSnackbar
-import com.atomicrobot.carbon.ui.components.TopBar
-import com.atomicrobot.carbon.ui.components.TransparentTextField
-import com.atomicrobot.carbon.ui.compose.CommitPreviewProvider
+import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MainScreen() {
+fun MainScreen(scaffoldState: ScaffoldState) {
     val viewModel: MainViewModel = getViewModel()
-    viewModel.initializeViewModel()
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
     val screenState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(true) {
+        viewModel.fetchCommits()
+    }
     MainContent(
         username = screenState.username,
         repository = screenState.repository,
@@ -70,33 +65,29 @@ fun MainContent(
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {}
 ) {
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .imePadding(),
-        scaffoldState = scaffoldState,
-        topBar = { TopBar() },
-        bottomBar = { BottomBar() },
-        snackbarHost = { CustomSnackbar(hostState = scaffoldState.snackbarHostState) }
-    ) { padding -> /* Must use padding arg otherwise causes compiler issue */
-        Column(modifier = Modifier.padding(padding)) {
-            /*
-            * Main Screen is split into two chunks
-            * (1) User Input
-            *       user name Textfield
-            *       repo Textfield
-            *       fetch commits button
-            * (2) Commit List / Circular Progress when loading
-            */
-            GithubUserInput(
-                username = username,
-                repository = repository,
-                isLoading = false,
-                onUserInputChanged = onUserInputChanged,
-                onUserSelectedFetchCommits = onUserSelectedFetchCommits
-            )
-            GithubResponse(commitsState = commitsState, scaffoldState = scaffoldState)
-        }
+    Column {
+        /*
+        * Main Screen is split into three chunks
+        * (1) User Input
+        *       user name Textfield
+        *       repo Textfield
+        *       fetch commits button
+        * (2) Commit List / Circular Progress when loading
+        * (3) App Info Bottom Bar
+        */
+        GithubUserInput(
+            username = username,
+            repository = repository,
+            isLoading = false,
+            onUserInputChanged = onUserInputChanged,
+            onUserSelectedFetchCommits = onUserSelectedFetchCommits
+        )
+        GithubResponse(
+            commitsState = commitsState,
+            scaffoldState = scaffoldState,
+            modifier = Modifier.weight(1f)
+        )
+        BottomBar()
     }
 }
 
@@ -120,25 +111,24 @@ fun GithubUserInput(
                 .padding(16.dp)
         ) {
             // Username
-            TransparentTextField(
+            AtomicRobotUI.TextField.TransparentTextField(
                 value = username,
                 labelResId = R.string.username,
                 modifier = Modifier.padding(bottom = 8.dp)
             ) { newUsername -> onUserInputChanged(newUsername, repository) }
             // Repo
-            TransparentTextField(
+            AtomicRobotUI.TextField.TransparentTextField(
                 value = repository,
                 labelResId = R.string.repository
             ) { newRepo -> onUserInputChanged(username, newRepo) }
             // Fetch commits
-            OutlinedButton(
+            AtomicRobotUI.Button.Outlined(
+                text = stringResource(id = R.string.fetch_commits),
                 onClick = onUserSelectedFetchCommits,
                 // Make sure the button is disabled when loading or the input fields are empty
                 enabled = !isLoading && (username.isNotEmpty() && repository.isNotEmpty()),
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.fetch_commits))
-            }
+            )
         }
     }
 }
@@ -149,16 +139,10 @@ fun GithubResponse(
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         when (commitsState) {
             is MainViewModel.Commits.Loading ->
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+                CircularProgressIndicator()
             is MainViewModel.Commits.Error ->
                 LaunchedEffect(scaffoldState.snackbarHostState) {
                     scaffoldState.snackbarHostState.showSnackbar(message = commitsState.message)

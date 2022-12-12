@@ -3,7 +3,6 @@ package com.atomicrobot.carbon.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.DesignServices
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
@@ -30,12 +29,6 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         "Settings",
         "settings",
         ScreenIcon(Icons.Filled.Settings, R.string.cont_desc_settings_icon)
-    )
-
-    object Design : CarbonScreens(
-        "Design Projects",
-        "design",
-        ScreenIcon(Icons.Filled.DesignServices, R.string.cont_desc_view_icon)
     )
 
     object DeepLink : CarbonScreens(
@@ -79,18 +72,6 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         )
     }
 
-    object Lumen : CarbonScreens(
-        "Lumen",
-        "lumen",
-        ScreenIcon(Icons.Filled.Home, R.string.lumen_title)
-    )
-
-    object Scanner : CarbonScreens(
-        "Scanner",
-        "scanner",
-        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
-    )
-
     object License : CarbonScreens(
         "License",
         "license",
@@ -112,55 +93,13 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
 
 val appScreens = listOf(
     CarbonScreens.Home,
-    CarbonScreens.Settings,
-    CarbonScreens.Design
+    CarbonScreens.Settings
 )
 
 val drawerScreens = listOf(
     CarbonScreens.Home,
     CarbonScreens.Settings,
-    CarbonScreens.Design,
     CarbonScreens.About,
     CarbonScreens.AboutHtml,
     CarbonScreens.License
-)
-
-sealed class LumenScreens(
-    val title: String,
-    val route: String,
-    val iconResourceId: Int,
-    val iconContentDescription: Int
-) {
-
-    val displayTitle: String
-        get() = "Lumen -- $title"
-
-    object Home : LumenScreens(
-        "Home",
-        "home",
-        iconResourceId = R.drawable.ic_lumen_home_icon,
-        iconContentDescription = R.string.cont_desc_home_icon
-    )
-    object Routines : LumenScreens(
-        "Routines", "routines",
-        iconResourceId = R.drawable.ic_lumen_schedule_icon,
-        iconContentDescription = R.string.cont_desc_schedule_icon
-    )
-    object Scenes : LumenScreens(
-        "Scenes", "scene",
-        iconResourceId = R.drawable.ic_lumen_scene_icon,
-        iconContentDescription = R.string.cont_desc_scene_icon
-    )
-    object Settings : LumenScreens(
-        "Settings", "settings",
-        iconResourceId = R.drawable.ic_lumen_meatball,
-        iconContentDescription = R.string.cont_desc_settings_icon
-    )
-}
-
-val lumenScreens = listOf(
-    LumenScreens.Home,
-    LumenScreens.Routines,
-    LumenScreens.Scenes,
-    LumenScreens.Settings,
 )

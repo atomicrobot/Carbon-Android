@@ -4,16 +4,9 @@ import android.content.Context
 import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
-import com.atomicrobot.carbon.data.lumen.LumenDatabase
-import com.atomicrobot.carbon.data.lumen.dao.LightDao
-import com.atomicrobot.carbon.data.lumen.dao.RoomDao
-import com.atomicrobot.carbon.data.lumen.dao.SceneDao
-import com.atomicrobot.carbon.data.lumen.dao.SceneLightDao
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
 import com.atomicrobot.carbon.ui.license.LicenseViewModel
-import com.atomicrobot.carbon.ui.lumen.scenes.ScenesViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
-import com.atomicrobot.carbon.ui.scanner.ScannerViewModel
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -96,32 +89,12 @@ class Modules {
         single {
             DeepLinkInteractor()
         }
-
-        // Initialize the Lumen database and Dao'
-        single {
-            provideLumenDatabase(androidContext())
-        }
-
-        single {
-            provideSceneDao(get())
-        }
-
-        single {
-            provideLightDao(get())
-        }
-
-        single {
-            provideRoomDao(get())
-        }
-
-        single {
-            provideSceneLightDao(get())
-        }
     }
 
     val viewModelModules = module {
         viewModel {
             SplashViewModel(
+                app = androidApplication(),
                 deepLinkInteractor = get()
             )
         }
@@ -131,19 +104,6 @@ class Modules {
                 app = androidApplication(),
                 gitHubInteractor = get(),
                 loadingDelayMs = get(qualifier = named("loading_delay_ms"))
-            )
-        }
-
-        viewModel {
-            ScannerViewModel(app = androidApplication())
-        }
-
-        viewModel {
-            ScenesViewModel(
-                sceneDao = get(),
-                lightDao = get(),
-                roomDao = get(),
-                sceneLightDao = get()
             )
         }
 
@@ -189,26 +149,6 @@ private fun provideGitHubService(
 ): GitHubInteractor {
     return GitHubInteractor(context, api)
 }
-
-private fun provideLumenDatabase(
-    context: Context
-): LumenDatabase = LumenDatabase.getInstance(context = context)
-
-private fun provideSceneDao(
-    database: LumenDatabase
-): SceneDao = database.sceneDao()
-
-private fun provideLightDao(
-    database: LumenDatabase
-): LightDao = database.lightDao()
-
-private fun provideRoomDao(
-    database: LumenDatabase
-): RoomDao = database.roomDao()
-
-private fun provideSceneLightDao(
-    database: LumenDatabase
-): SceneLightDao = database.sceneLightDao()
 
 interface OkHttpSecurityModifier {
     fun apply(builder: OkHttpClient.Builder)
