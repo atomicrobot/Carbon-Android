@@ -18,70 +18,16 @@
     <string name="error_unexpected">We encountered an unexpected error. Please try again.</string>
     <string name="error_get_commits_error">Could not find the requested commits</string>
     <string name="title_activity_compose_start">ComposeStartActivity</string>
-    <string name="title_activity_delete_me">DeleteMeActivity</string>
-    <string name="title_activity_lumen_design">LumenDesignActivity</string>
 
     <string name="cont_desc_home_icon">Home</string>
     <string name="cont_desc_settings_icon">Settings</string>
     <string name="cont_desc_scanner_icon">Scanner</string>
-    <string name="cont_desc_view_icon">Design</string>
     <string name="cont_desc_license_icon">License</string>
     <string name="cont_desc_about_icon">About</string>
     <string name="cont_desc_about_html_icon">About HTML</string>
-    <string name="camera_perm_rationale">The Camera permission is required to scan barcodes and QR codes.</string>
-    <string name="camera_perm_denied">Camera permission not granted</string>
-    <string name="camera_cont_desc">Snap a pic of a QrCode</string>
-
-    <string name="default_notification_channel_id">Default notification channel id</string>
-
-    <string name="cont_desc_start_scene">Start Scene</string>
-    <string name="cont_desc_stop_scene">Stop Scene</string>
-
-    <string name="cont_desc_schedule_icon">Routines</string>
-    <string name="cont_desc_scene_icon">Scene</string>
-    <string name="cont_desc_scene_add">Add Menu</string>
-    <string name="cont_desc_menu_close">Close Menu</string>
-    <string name="cont_desc_scene_remove">Remove Scene</string>
-    <string name="cont_desc_scene_light">Scene Light</string>
-    <string name="cont_desc_light_bright">Light Brightness</string>
-    <string name="cont_desc_light_temp">Light Temperature</string>
-    <string name="cont_desc_light_duration">Light Duration</string>
-    <string name="cont_desc_scene_favorite">Add Scene to Favorites</string>
-    <string name="cont_desc_loading">Content loading</string>
     <string name="cont_desc_shell">Carbon Shell Logo</string>
-    <string name="cont_desc_lumen">Lumen UI Kit project</string>
-    <string name="cont_desc_carbon">Carbon Android Reference project</string>
-
-    <string name="add_favorite">Add to Favorites</string>
-
-    <string name="name">Name</string>
-    <string name="room">Room</string>
-    <string name="duration">Duration</string>
-    <string name="name_room">Name your scene</string>
-    <string name="select_room">Select a Room</string>
-    <string name="select_durations">Select a Duration</string>
-
-    <string name="add_device">Add Device</string>
-    <string name="add_scene">Add Scene</string>
-    <string name="add_routine">Add Routine</string>
-    <string name="add_widget">Add Widget</string>
-    <string name="edit_scene">Edit Scene</string>
-
-    <string name="delete_scene">Delete Scene</string>
-    <string name="save_scene">Save Scene</string>
-    <string name="create_scene">Create Scene</string>
-    <string name="new_scene">New Scene</string>
-    <string name="favorites">Favorites</string>
-    <string name="lights">Lights</string>
-
-    <string name="moody_title">Make it Mood</string>
-    <string name="moody_description">Customize individual light settings in a room when you want to set a certain mood.</string>
-
-    <string name="carbon_shell_title">Carbon\nAndroid</string>
 
     <string name="main_app_title">Carbon Android</string>
-    <string name="lumen_title">Lumen</string>
-    <string name="scanner_title">Scanner</string>
 
     <string name="licenses_error">An error occurred while trying to read the licenses file</string>
 
@@ -114,22 +60,4 @@
     <string name="about_awards_and_recognition">Awards &amp; Recognition</string>
     <string name="about_awards_and_recognition_apps_created_for_impact">Apps Created for Impact</string>
     <string name="about_awards_and_recognition_apps_created_for_impact_desc">Atomic Robot’s mobile solutions have been recognized by industry experts — including MUX Awards, W3 Awards, Goodfirms, and Clutch — for their impact and innovation.</string>
-
-    <string-array name="durations">
-        <item>Manual</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>2 hours</item>
-        <item>3 hours</item>
-        <item>4 hours</item>
-        <item>5 hours</item>
-        <item>6 hours</item>
-        <item>7 hours</item>
-        <item>8 hours</item>
-        <item>9 hours</item>
-        <item>10 hours</item>
-        <item>11 hours</item>
-        <item>12 hours</item>
-        <item>All Day</item>
-    </string-array>
 </resources>
