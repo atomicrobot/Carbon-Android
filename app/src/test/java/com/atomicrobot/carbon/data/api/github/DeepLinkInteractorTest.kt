@@ -19,12 +19,13 @@ class DeepLinkInteractorTest {
 
     @Before
     fun setup() {
+        stopKoin()
         MockitoAnnotations.openMocks(this)
         interactor = DeepLinkInteractor()
     }
 
     @After
-    fun teardown() {
+    fun tearDown() {
         stopKoin()
     }
 
