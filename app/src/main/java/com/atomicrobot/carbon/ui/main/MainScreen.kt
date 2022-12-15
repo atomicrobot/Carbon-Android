@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
@@ -173,13 +174,11 @@ fun CommitItem(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp)
             .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onLongPress = {
-                                        //can I call nav host here?
-                                        //call some function here
-                                        clicked = !clicked
-                                    }
-                                )
+                detectTapGestures(
+                    onLongPress = {
+                        clicked = !clicked
+                    }
+                )
             },
     ) {
         Column(
@@ -189,7 +188,7 @@ fun CommitItem(
         ) {
             if(clicked) {
                 //Goal is to navigate to commit details Rather than just display some text
-                Text(text = "Long Pressed")
+//                GitInfoNavigation()
             }
             else {
                 Text(

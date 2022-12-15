@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.data.api.github.model.DetailedCommit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -21,6 +22,12 @@ class MainViewModel(
         object Loading : Commits()
         class Result(val commits: List<Commit>) : Commits()
         class Error(val message: String) : Commits()
+    }
+
+    sealed class DetailedCommit {
+        object Loading: DetailedCommit()
+        class Result(val commit: DetailedCommit)
+        class Error(val message: String) : DetailedCommit()
     }
 
     data class MainScreenUiState(
@@ -64,6 +71,11 @@ class MainViewModel(
                 )
             }
         }
+    }
+
+    fun fetchDetailedCommit() {
+//        _uiState.value = _uiState.value.copy(commitsState = DetailedCommit.Loading)
+
     }
 
     companion object {
