@@ -28,10 +28,10 @@ object AtomicRobotUI {
     object Button {
         @Composable
         fun Outlined(
+            modifier: Modifier = Modifier,
             text: String? = null,
             onClick: () -> Unit,
-            enabled: Boolean = true,
-            modifier: Modifier = Modifier
+            enabled: Boolean = true
         ) {
             OutlinedButton(
                 onClick = onClick,
@@ -50,12 +50,12 @@ object AtomicRobotUI {
          */
         @Composable
         fun Icon(
+            modifier: Modifier = Modifier,
             painter: Painter? = null,
             imageBitmap: ImageBitmap? = null,
             imageVector: ImageVector? = null,
             contentDescription: String? = null,
             onClick: () -> Unit,
-            modifier: Modifier = Modifier,
             enabled: Boolean = true,
             interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
         ) {

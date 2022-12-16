@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.app.LoadingDelayMs
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -78,5 +77,4 @@ class MainViewModel @Inject constructor(
         const val DEFAULT_USERNAME = "madebyatomicrobot" // NON-NLS
         const val DEFAULT_REPO = "android-starter-project" // NON-NLS
     }
-
 }
