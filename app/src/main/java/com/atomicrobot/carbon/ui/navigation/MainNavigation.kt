@@ -180,6 +180,8 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
         CarbonScreens.Home.route -> CarbonScreens.Home.title
         CarbonScreens.Settings.route -> CarbonScreens.Settings.title
         CarbonScreens.DeepLink.route -> CarbonScreens.DeepLink.title
+        CarbonScreens.About.route -> CarbonScreens.About.title
+        CarbonScreens.AboutHtml.route -> CarbonScreens.AboutHtml.title
         CarbonScreens.License.route -> CarbonScreens.License.title
         else -> ""
     }
