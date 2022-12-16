@@ -4,13 +4,16 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.InputStream
+import javax.inject.Inject
 
-class LicenseViewModel(
+@HiltViewModel
+class LicenseViewModel @Inject constructor(
     private val app: Application
 ) : ViewModel() {
     sealed class Licenses {

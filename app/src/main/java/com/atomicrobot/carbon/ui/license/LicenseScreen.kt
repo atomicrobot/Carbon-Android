@@ -24,15 +24,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import io.noties.markwon.Markwon
-import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun LicenseScreen(
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-    val viewModel: LicenseViewModel = getViewModel()
+    val viewModel: LicenseViewModel = hiltViewModel()
     val screenState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(true) {

@@ -30,8 +30,7 @@ class MainViewModelTest {
         val app = ApplicationProvider.getApplicationContext<Application>()
         viewModel = MainViewModel(
             app,
-            githubInteractor,
-            0,
+            githubInteractor
         )
     }
 
@@ -60,7 +59,7 @@ class MainViewModelTest {
 
         assertTrue(
             (
-                viewModel.viewState.value.commitsState as?
+                viewModel.uiState.value.commitsState as?
                     MainViewModel.Commits.Result
                 )?.commits?.isEmpty()
                 ?: false
@@ -68,7 +67,7 @@ class MainViewModelTest {
         viewModel.fetchCommits()
         assertTrue(
             (
-                viewModel.viewState.value.commitsState as?
+                viewModel.uiState.value.commitsState as?
                     MainViewModel.Commits.Result
                 )?.commits?.size == 1
         )

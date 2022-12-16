@@ -6,9 +6,12 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.atomicrobot.carbon.ui.compose.MainNavigation
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.atomicrobot.carbon.ui.navigation.MainNavigation
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import com.atomicrobot.carbon.util.LocalActivity
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -17,12 +20,17 @@ class StartActivity : AppCompatActivity() {
     private val splashViewModel: SplashViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
-        val isDeepLinkIntent = handleIntent(intent)
+        handleIntent(intent)
 
         setContent {
             CarbonAndroidTheme {
-                MainNavigation(isDeepLinkIntent)
+                // Wrap the composable in a LocalActivity provider so our composable 'environment'
+                // has access to Activity context/scope which is required for requesting permissions
+                CompositionLocalProvider(LocalActivity provides this) {
+                    MainNavigation()
+                }
             }
         }
     }
@@ -47,7 +55,6 @@ class StartActivity : AppCompatActivity() {
 
     companion object {
         const val mainPage = "mainScreen"
-        const val splashPage = "splashScreen"
         const val deepLinkPath1 = "deepLinkPath1"
     }
 }

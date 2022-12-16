@@ -12,6 +12,7 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-allopen")
     id("kotlin-parcelize")
+    id("dagger.hilt.android.plugin")
     id("com.google.firebase.crashlytics")
     id("pmd")
     id("jacoco")
@@ -182,13 +183,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-extensions:${Dependencies.lifecycleVersion}")
     implementation("androidx.lifecycle:lifecycle-common-java8:${Dependencies.lifecycleVersion}")
 
-    // App architecture - Koin
-    implementation("io.insert-koin:koin-android:${Dependencies.koinVersion}")
-    implementation("io.insert-koin:koin-androidx-compose:${Dependencies.koinVersion}")
-
     // App architecture - RxJava
     implementation("io.reactivex.rxjava2:rxjava:${Dependencies.rxJavaVersion}")
     implementation("io.reactivex.rxjava2:rxandroid:${Dependencies.rxAndroidVersion}")
+
+    // App architecture - Hilt
+    implementation("com.google.dagger:hilt-android:${Dependencies.hiltVersion}")
+    kapt("com.google.dagger:hilt-compiler:${Dependencies.hiltVersion}")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:${Dependencies.hiltVersion}")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${Dependencies.hiltVersion}")
+    implementation("androidx.hilt:hilt-navigation-compose:${Dependencies.composeHiltNavigationVersion}")
 
     // JSON
     implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshiVersion}")
