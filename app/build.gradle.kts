@@ -175,10 +175,8 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:${Dependencies.koinVersion}")
     implementation("io.noties.markwon:core:${Dependencies.markwonVersion}")
 
-
     kapt("androidx.room:room-compiler:${Dependencies.roomVersion}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshiVersion}")
-
 
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Dependencies.composeVersion}")
     androidTestImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
@@ -201,7 +199,6 @@ dependencies {
     testImplementation("org.mockito:mockito-core:${Dependencies.mockitoVersion}")
     testImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
     testImplementation("com.squareup.okhttp3:mockwebserver:${Dependencies.okHttpVersion}")
-
 }
 
 tasks.register<Pmd>("pmd") {}
