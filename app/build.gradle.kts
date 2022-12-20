@@ -198,6 +198,7 @@ dependencies {
     testImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
     testImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
     testImplementation("org.mockito:mockito-core:${Dependencies.mockitoVersion}")
+    testImplementation("org.robolectric:robolectric:${Dependencies.robolectricVersion}")
     testImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
     testImplementation("com.squareup.okhttp3:mockwebserver:${Dependencies.okHttpVersion}")
 }

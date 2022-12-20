@@ -35,6 +35,7 @@ object Dependencies {
     const val junitVersion = "4.13.2"
     const val mockitoKotlinVersion = "1.6.0"
     const val mockitoVersion = "4.4.0"
+    const val robolectricVersion = "4.7.3"
 }
 
 object ConfigVals {
