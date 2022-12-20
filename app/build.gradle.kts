@@ -174,6 +174,7 @@ dependencies {
     implementation("io.insert-koin:koin-android:${Dependencies.koinVersion}")
     implementation("io.insert-koin:koin-androidx-compose:${Dependencies.koinVersion}")
     implementation("io.noties.markwon:core:${Dependencies.markwonVersion}")
+    implementation("io.reactivex.rxjava2:rxandroid:${Dependencies.rxAndroidVersion}")
 
     kapt("androidx.room:room-compiler:${Dependencies.roomVersion}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshiVersion}")

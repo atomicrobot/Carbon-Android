@@ -24,6 +24,7 @@ object Dependencies {
     const val playServicesVersion = "18.0.1"
     const val retrofitVersion = "2.9.0"
     const val roomVersion = "2.4.3"
+    const val rxAndroidVersion = "2.1.1"
     const val splashVersion = "1.0.0"
     const val timberVersion = "5.0.1"
 
