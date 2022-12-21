@@ -3,10 +3,10 @@ package com.atomicrobot.carbon
 import android.view.View
 import android.widget.TextView
 import androidx.test.espresso.matcher.BoundedMatcher
-import java.util.regex.Pattern
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import java.util.regex.Pattern
 
 object EspressoMatchers {
     fun regex(regex: String): Matcher<String> {
