@@ -5,8 +5,8 @@ import android.app.Application
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import com.atomicrobot.carbon.ui.RiseAndShine
-import javax.inject.Inject
 import timber.log.Timber.Tree
+import javax.inject.Inject
 
 /**
  * Specific to the debug variant.
