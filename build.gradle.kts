@@ -11,15 +11,15 @@ buildscript {
 
     //Non-core plugins?
     dependencies {
-        classpath("com.google.gms:google-services:${Dependencies.google_services_version}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:${Dependencies.firebase_crashlytics_gradle_version}")
-        classpath("com.android.tools.build:gradle:${Dependencies.android_plugin_version}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.kotlin_version}")
-        classpath("android.arch.navigation:navigation-safe-args-gradle-plugin:${Dependencies.navigation_version}")
-        classpath("org.jetbrains.kotlin:kotlin-allopen:${Dependencies.kotlin_version}")
-        classpath("org.jacoco:org.jacoco.core:${Dependencies.jacoco_version}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:${Dependencies.hilt_version}")
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:${Dependencies.ktlint_version}")
+        classpath("com.google.gms:google-services:${Dependencies.googleServicesVersion}")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:${Dependencies.firebaseCrashlyticsGradleVersion}")
+        classpath("com.android.tools.build:gradle:${Dependencies.androidPluginVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.kotlinVersion}")
+        classpath("android.arch.navigation:navigation-safe-args-gradle-plugin:${Dependencies.navigationVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${Dependencies.kotlinVersion}")
+        classpath("org.jacoco:org.jacoco.core:${Dependencies.jacocoVersion}")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:${Dependencies.hiltVersion}")
+        classpath("org.jlleitschuh.gradle:ktlint-gradle:${Dependencies.ktlintVersion}")
     }
 }
 
@@ -35,7 +35,7 @@ allprojects {
         maven { url = uri("https://jitpack.io") }
     }
 
-//    Automatically pull down javadocs and sources (if available)
+    // Automatically pull down javadocs and sources (if available)
     apply(plugin = "idea")
     idea {
         module {
@@ -48,14 +48,12 @@ allprojects {
     tasks.withType<JavaCompile> {
         options.compilerArgs = mutableListOf("-Xlint:deprecation")
     }
-}
 
-// Prevent wildcard dependencies
-// Code in groovy below
-// https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
-// modified Wharton's code for kts
-allprojects {
-    afterEvaluate() {
+    // Prevent wildcard dependencies
+    // Code in groovy below
+    // https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
+    // modified Wharton's code for kts
+    afterEvaluate {
         project.configurations.all {
             resolutionStrategy.eachDependency {
                 if (requested.version!!.contains("+")) {
@@ -65,6 +63,9 @@ allprojects {
             }
         }
     }
+
+    // Apply sample.gradle with project ext values
+    apply(rootProject.file("distribution/keys/sample.gradle"))
 }
 
 evaluationDependsOnChildren()
@@ -102,7 +103,7 @@ release {
 
 fun getProjectTask(project: Project, taskName: String): MutableSet<Task> {
     val tasks = project.getTasksByName(taskName, true)
-    if (tasks == null || tasks.isEmpty()) {
+    if (tasks.isEmpty()) {
         throw IllegalArgumentException("Task $taskName not found")
     }
     return tasks

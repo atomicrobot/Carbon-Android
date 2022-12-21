@@ -1,26 +1,23 @@
 package com.atomicrobot.carbon.ui.main
 
 import android.app.Application
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.app.LoadingDelayMs
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
-import com.atomicrobot.carbon.util.CoroutineUtils.delayAtLeast
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val app: Application,
-    private val gitHubInteractor: GitHubInteractor,
-    @LoadingDelayMs private val loadingDelayMs: Long,
+    private val gitHubInteractor: GitHubInteractor
 ) : ViewModel() {
 
     sealed class Commits {
@@ -29,45 +26,46 @@ class MainViewModel @Inject constructor(
         class Error(val message: String) : Commits()
     }
 
-    data class MainScreenViewState(
-        var username: String = "madebyatomicrobot", // NON-NLS
-        var repository: String = "android-starter-project", // NON-NLS
-        var commitsState: Commits = Commits.Result(emptyList())
+    data class MainScreenUiState(
+        val username: String = DEFAULT_USERNAME, // NON-NLS
+        val repository: String = DEFAULT_REPO, // NON-NLS
+        val commitsState: Commits = Commits.Result(emptyList())
     )
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val _viewState = MutableStateFlow(MainScreenViewState())
-    val viewState = _viewState.asStateFlow()
+    private val _uiState = MutableStateFlow(MainScreenUiState())
+    val uiState: StateFlow<MainScreenUiState>
+        get() = _uiState
 
     fun updateUserInput(username: String?, repository: String?) {
-        _viewState.value = _viewState.value.copy(
-            username = username ?: _viewState.value.username,
-            repository = repository ?: _viewState.value.repository,
+        _uiState.value = _uiState.value.copy(
+            username = username ?: _uiState.value.username,
+            repository = repository ?: _uiState.value.repository
         )
     }
 
     fun fetchCommits() {
+        // Update the UI state to indicate that we are loading.
+        _uiState.value = _uiState.value.copy(commitsState = Commits.Loading)
+        // Try and fetching the commit records
         viewModelScope.launch {
-            _viewState.value = _viewState.value.copy(commitsState = Commits.Loading)
-
-            _viewState.value = _viewState.value.copy(
-                commitsState = delayAtLeast(loadingDelayMs) {
-                    try {
-                        Commits.Result(
-                            gitHubInteractor.loadCommits(
-                                GitHubInteractor.LoadCommitsRequest(
-                                    viewState.value.username,
-                                    viewState.value.repository
-                                )
-                            ).commits
-                        )
-                    } catch (e: Exception) {
-                        Commits.Error(
-                            e.message ?: app.getString(R.string.error_unexpected)
-                        )
-                    }
+            try {
+                gitHubInteractor.loadCommits(
+                    GitHubInteractor.LoadCommitsRequest(
+                        uiState.value.username,
+                        uiState.value.repository
+                    )
+                ).let {
+                    _uiState.value = _uiState.value.copy(commitsState = Commits.Result(it.commits))
                 }
-            )
+            } catch (error: Exception) {
+                Timber.e(error)
+                _uiState.value = _uiState.value.copy(
+                    commitsState = Commits.Error(
+                        error.message
+                            ?: app.getString(R.string.error_unexpected)
+                    )
+                )
+            }
         }
     }
 

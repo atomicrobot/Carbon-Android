@@ -3,9 +3,9 @@ package com.atomicrobot.carbon.ui.deeplink
 import android.graphics.Color
 import android.net.Uri
 import com.atomicrobot.carbon.StartActivity
+import timber.log.Timber
 import java.lang.NumberFormatException
 import javax.inject.Inject
-import timber.log.Timber
 
 class DeepLinkInteractor @Inject constructor() {
     private var deepLinkUri: Uri? = null

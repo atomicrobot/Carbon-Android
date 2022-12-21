@@ -4,7 +4,6 @@ import com.atomicrobot.carbon.data.DataModule
 import com.atomicrobot.carbon.loadResourceAsString
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import java.net.UnknownHostException
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
@@ -18,6 +17,7 @@ import org.junit.Test
 import org.mockito.MockitoAnnotations
 import retrofit2.Converter
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.net.UnknownHostException
 
 class GitHubApiServiceTest {
 
