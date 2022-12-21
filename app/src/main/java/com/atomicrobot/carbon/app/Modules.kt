@@ -5,6 +5,7 @@ import androidx.annotation.VisibleForTesting
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
+import com.atomicrobot.carbon.ui.license.LicenseViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import com.squareup.moshi.Moshi
@@ -104,6 +105,10 @@ class Modules {
                 gitHubInteractor = get(),
                 loadingDelayMs = get(qualifier = named("loading_delay_ms"))
             )
+        }
+
+        viewModel {
+            LicenseViewModel(app = androidApplication())
         }
     }
 }
