@@ -1,9 +1,10 @@
 package com.atomicrobot.carbon
 
-import java.io.File
-import java.nio.charset.Charset
 import okio.buffer
 import okio.source
+import java.io.File
+import java.nio.charset.Charset
+
 object TestExtensions
 
 @Throws(Exception::class)
