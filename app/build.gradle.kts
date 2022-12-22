@@ -147,10 +147,10 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:${Dependencies.composeNavigationVersion}")
 
     implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
+    implementation("com.google.android.gms:play-services-base:${Dependencies.playServicesVersion}")
     implementation(platform("com.google.firebase:firebase-bom:${Dependencies.firebaseBomVersion}"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.android.gms:play-services-base:${Dependencies.playServicesVersion}")
 
     implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
 

@@ -12,20 +12,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ### Android / Androidx Specific Dependencies
 
-- android.arch.navigation:navigation-fragment-ktx
-- android.arch.navigation:navigation-ui-ktx
-- androidx.activity:activity-compose
-- androidx.annotation:annotation
-- androidx.appcompat:appcompat
-- androidx.camera:camera-camera2
-- androidx.camera:camera-core
-- androidx.camera:camera-extensions
-- androidx.camera:camera-lifecycle
-- androidx.camera:camera-mlkit-vision
-- androidx.camera:camera-view
-- androidx.cardview:cardview
-- androidx.compose.animation:animation
-- androidx.compose.foundation:foundation
 - androidx.compose.material:material
 - androidx.compose.material:material-icons-extended
 - androidx.compose.ui:ui
@@ -33,19 +19,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - androidx.compose.ui:ui-test-manifest
 - androidx.compose.ui:ui-tooling
 - androidx.compose.ui:ui-tooling-preview
-- androidx.constraintlayout:constraintlayout
-- androidx.constraintlayout:constraintlayout-compose
 - androidx.core:core-ktx
 - androidx.core:core-splashscreen
-- androidx.lifecycle:lifecycle-common-java8
-- androidx.lifecycle:lifecycle-extensions
-- androidx.lifecycle:lifecycle-runtime-ktx
-- androidx.lifecycle:lifecycle-viewmodel-compose
 - androidx.navigation:navigation-compose
-- androidx.recyclerview:recyclerview
-- androidx.room:room-compiler
-- androidx.room:room-ktx
-- androidx.room:room-runtime
 - androidx.test:core
 - androidx.test.ext:junit
 - androidx.test:rules
@@ -70,13 +46,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - com.google.accompanist:accompanist-systemuicontroller
 - com.google.android.gms:play-services-base
-- com.google.android.material:material
 - com.google.firebase:firebase-analytics
-- com.google.firebase:firebase-analytics-ktx
 - com.google.firebase:firebase-bom
 - com.google.firebase:firebase-crashlytics
-- com.google.firebase:firebase-messaging
-- com.google.mlkit:barcode-scanning
 
 <br/>
 
@@ -185,7 +157,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 ### RX Java Dependencies
 
 - io.reactivex.rxjava2:rxandroid
-- io.reactivex.rxjava2:rxjava
 
 <br/>
 
