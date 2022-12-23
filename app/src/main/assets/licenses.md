@@ -12,20 +12,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ### Android / Androidx Specific Dependencies
 
-- android.arch.navigation:navigation-fragment-ktx
-- android.arch.navigation:navigation-ui-ktx
-- androidx.activity:activity-compose
-- androidx.annotation:annotation
-- androidx.appcompat:appcompat
-- androidx.camera:camera-camera2
-- androidx.camera:camera-core
-- androidx.camera:camera-extensions
-- androidx.camera:camera-lifecycle
-- androidx.camera:camera-mlkit-vision
-- androidx.camera:camera-view
-- androidx.cardview:cardview
-- androidx.compose.animation:animation
-- androidx.compose.foundation:foundation
 - androidx.compose.material:material
 - androidx.compose.material:material-icons-extended
 - androidx.compose.ui:ui
@@ -33,19 +19,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - androidx.compose.ui:ui-test-manifest
 - androidx.compose.ui:ui-tooling
 - androidx.compose.ui:ui-tooling-preview
-- androidx.constraintlayout:constraintlayout
-- androidx.constraintlayout:constraintlayout-compose
 - androidx.core:core-ktx
 - androidx.core:core-splashscreen
-- androidx.lifecycle:lifecycle-common-java8
-- androidx.lifecycle:lifecycle-extensions
-- androidx.lifecycle:lifecycle-runtime-ktx
-- androidx.lifecycle:lifecycle-viewmodel-compose
-- androidx.navigation:navigation-compose
-- androidx.recyclerview:recyclerview
-- androidx.room:room-compiler
-- androidx.room:room-ktx
-- androidx.room:room-runtime
+- androidx.hilt:hilt-navigation-compose
 - androidx.test:core
 - androidx.test.ext:junit
 - androidx.test:rules
@@ -71,12 +47,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - com.google.accompanist:accompanist-systemuicontroller
 - com.google.android.gms:play-services-base
 - com.google.android.material:material
+- com.google.daggger:hilt-android
 - com.google.firebase:firebase-analytics
-- com.google.firebase:firebase-analytics-ktx
 - com.google.firebase:firebase-bom
 - com.google.firebase:firebase-crashlytics
-- com.google.firebase:firebase-messaging
-- com.google.mlkit:barcode-scanning
 
 <br/>
 
@@ -149,9 +123,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - com.squareup.okhttp3:mockwebserver
 - com.squareup.okhttp3:okhttp
 - com.squareup.okhttp3:okhttp-urlconnection
-- com.squareup.retrofit2:retrofit
 - com.squareup.retrofit2:adapter-rxjava2
 - com.squareup.retrofit2:converter-moshi
+- com.squareup.retrofit2:retrofit
 
 <br/>
 
@@ -165,27 +139,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 <br/>
 
-### Koin Dependencies
-
-- io.insert-koin:koin-android
-- io.insert-koin:koin-androidx-compose
-
-<br/>
-
-Copyright 2017 Arnaud GIULIANI, Laurent BARESSE
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-
-[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-<br/>
-
 ### RX Java Dependencies
 
 - io.reactivex.rxjava2:rxandroid
-- io.reactivex.rxjava2:rxjava
 
 <br/>
 
