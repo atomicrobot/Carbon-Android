@@ -197,7 +197,6 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:${Dependencies.okHttpVersion}")
     testImplementation("org.mockito:mockito-core:${Dependencies.mockitoVersion}")
     testImplementation("org.robolectric:robolectric:${Dependencies.robolectricVersion}")
-
 }
 
 tasks.register<Pmd>("pmd") {}
