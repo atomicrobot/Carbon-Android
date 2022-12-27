@@ -22,6 +22,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - androidx.core:core-ktx
 - androidx.core:core-splashscreen
 - androidx.hilt:hilt-navigation-compose
+- androidx.navigaion:navigation-compose
 - androidx.test:core
 - androidx.test.ext:junit
 - androidx.test:rules

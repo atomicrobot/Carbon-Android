@@ -146,6 +146,7 @@ dependencies {
     implementation("androidx.core:core-ktx:${Dependencies.coreVersion}")
     implementation("androidx.core:core-splashscreen:${Dependencies.splashVersion}")
     implementation("androidx.hilt:hilt-navigation-compose:${Dependencies.composeHiltNavigationVersion}")
+    implementation("androidx.navigation:navigation-compose:${Dependencies.composeNavigationVersion}")
 
     implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
     implementation("com.google.android.gms:play-services-base:${Dependencies.playServicesVersion}")
