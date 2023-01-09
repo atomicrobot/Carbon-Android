@@ -15,7 +15,6 @@ buildscript {
         classpath("com.google.firebase:firebase-crashlytics-gradle:${Dependencies.firebaseCrashlyticsGradleVersion}")
         classpath("com.android.tools.build:gradle:${Dependencies.androidPluginVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.kotlinVersion}")
-        classpath("android.arch.navigation:navigation-safe-args-gradle-plugin:${Dependencies.navigationVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${Dependencies.kotlinVersion}")
         classpath("org.jacoco:org.jacoco.core:${Dependencies.jacocoVersion}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${Dependencies.hiltVersion}")
