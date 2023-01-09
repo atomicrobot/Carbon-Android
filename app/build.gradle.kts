@@ -31,7 +31,7 @@ if (project.hasProperty("buildNumber")) {
 }
 
 if (project.hasProperty("fingerprint")) {
-    versionFingerprint = "\"${project.property("fingerprint").toString()}\""
+    versionFingerprint = "\"${project.property("fingerprint")}\""
 }
 
 /**
