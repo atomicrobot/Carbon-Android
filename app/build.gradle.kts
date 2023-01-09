@@ -26,20 +26,19 @@ var versionFingerprint = "\"DEV\""
 /**
  * This implementation assumes versions being provided as arguments, perhaps by a build server
  */
-/*
 if (project.hasProperty("buildNumber")) {
     buildNumber = Integer.parseInt(project.property("buildNumber").toString())
 }
 
 if (project.hasProperty("fingerprint")) {
-    fingerprint = "\"${project.property("fingerprint").toString()}\""
+    versionFingerprint = "\"${project.property("fingerprint").toString()}\""
 }
-*/
 
 /**
  * Could also consider setting up and using system environment variables from the build server
  * Test by adding these system environment variables to your local machine
  */
+/*
 if (System.getenv("BITRISE_BUILD_NUMBER") != null) {
     buildNumber = Integer.parseInt(System.getenv("BITRISE_BUILD_NUMBER"))
 }
@@ -47,6 +46,7 @@ if (System.getenv("BITRISE_BUILD_NUMBER") != null) {
 if (System.getenv("BITRISE_VERSION_FINGERPRINT") != null) {
     versionFingerprint = "\"${System.getenv("BITRISE_VERSION_FINGERPRINT")}\""
 }
+*/
 
 android {
     compileOptions {
