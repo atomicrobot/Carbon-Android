@@ -103,7 +103,7 @@ fun getProjectTask(project: Project, taskName: String): MutableSet<Task> {
     return tasks
 }
 
-tasks.create("continuousIntegration") {
+val continuousIntegration by tasks.registering {
     dependsOn(initialCleanup)
     dependsOn(testing)
     dependsOn(release)
