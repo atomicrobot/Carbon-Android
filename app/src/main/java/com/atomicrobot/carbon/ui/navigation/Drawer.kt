@@ -23,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -45,7 +44,8 @@ fun Drawer(
             .padding(start = 24.dp, top = 48.dp)
     ) {
         Box(
-            Modifier.clip(CircleShape)
+            Modifier
+                .clip(CircleShape)
                 .background(
                     Color.Gray
                 )
@@ -77,16 +77,26 @@ fun DrawerAppScreenItem(
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            screen.iconData.vectorData,
-            stringResource(id = screen.iconData.iconContentDescription),
-            modifier = Modifier.size(45.dp)
-                .padding(8.dp)
-                .align(Alignment.CenterVertically)
-        )
+        val contentDesc = stringResource(id = screen.iconData.iconContentDescription)
+        val modifier = Modifier
+            .size(45.dp)
+            .padding(8.dp)
+            .align(Alignment.CenterVertically)
+        if (screen.route == CarbonScreens.About.route || screen.route == CarbonScreens.AboutHtml.route) {
+            Icon(
+                painter = painterResource(id = R.drawable.carbon_android_logo), // Use custom icon
+                contentDescription = contentDesc,
+                modifier = modifier
+            )
+        } else {
+            Icon(
+                imageVector = screen.iconData.vectorData,
+                contentDescription = contentDesc,
+                modifier = modifier
+            )
+        }
         Text(
             text = screen.title,
-            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h4,
         )
     }

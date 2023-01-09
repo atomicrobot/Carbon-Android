@@ -32,6 +32,8 @@ import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.navigation.drawerScreens
+import com.atomicrobot.carbon.ui.about.AboutHtmlScreen
+import com.atomicrobot.carbon.ui.about.AboutScreen
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
@@ -233,6 +235,16 @@ fun NavGraphBuilder.mainFlowGraph(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+            }
+        }
+        composable(CarbonScreens.About.route) {
+            CarbonAndroidTheme {
+                AboutScreen()
+            }
+        }
+        composable(CarbonScreens.AboutHtml.route) {
+            CarbonAndroidTheme {
+                AboutHtmlScreen()
             }
         }
         composable(CarbonScreens.License.route) {

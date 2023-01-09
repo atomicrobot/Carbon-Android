@@ -26,6 +26,8 @@
     <string name="cont_desc_scanner_icon">Scanner</string>
     <string name="cont_desc_view_icon">Design</string>
     <string name="cont_desc_license_icon">License</string>
+    <string name="cont_desc_about_icon">About</string>
+    <string name="cont_desc_about_html_icon">About HTML</string>
     <string name="camera_perm_rationale">The Camera permission is required to scan barcodes and QR codes.</string>
     <string name="camera_perm_denied">Camera permission not granted</string>
     <string name="camera_cont_desc">Snap a pic of a QrCode</string>
@@ -84,6 +86,36 @@
     <string name="git_info">Additional Commit Details</string>
 
     <string name="licenses_error">An error occurred while trying to read the licenses file</string>
+
+    <string name="about">About</string>
+    <string name="about_desc">Atomic Robot brings together the best developers and creators to deliver custom-crafted mobile solutions for iOS, Android, and emerging technologies.</string>
+    <string name="about_flexible_solutions">Flexible Solutions</string>
+    <string name="about_flexible_solutions_sub_header">Leverage our deep mobile expertise to reimagine digital experiences.</string>
+    <string name="about_flexible_solutions_desc">When you partner with Atomic Robot, you gain access to our innovative team of experts and allies. Our proven process allows us to remain at the forefront of design and development techniques and to deliver custom, scalable solutions that move both business and people forward.</string>
+    <string name="about_ten_plus">10+</string>
+    <string name="about_years_in_business">Years in Business</string>
+    <string name="about_forty_plus">40+</string>
+    <string name="about_employees">Employees</string>
+    <string name="about_one_hundred_fifty_plus">150+</string>
+    <string name="about_apps_shipped">Apps Shipped</string>
+    <string name="about_what_makes_us_different">What Makes Us Different</string>
+    <string name="about_what_makes_us_different_craft">Craft</string>
+    <string name="about_what_makes_us_different_craft_desc">We take great pride in our craft and place a premium on quality solutions.</string>
+    <string name="about_what_makes_us_different_collaboration">Collaboration</string>
+    <string name="about_what_makes_us_different_collaboration_desc">We grow, learn, and problem solve as a team with shared accountability for success.</string>
+    <string name="about_what_makes_us_different_curiosity">Curiosity</string>
+    <string name="about_what_makes_us_different_curiosity_desc">Our shared passion for learning and teaching drives us to never stop improving.</string>
+    <string name="about_what_makes_us_different_impact">Impact</string>
+    <string name="about_what_makes_us_different_impact_desc">We strive to use our talents and voice to make the world a little better every day.</string>
+    <string name="about_what_makes_us_different_partnership">Partnership</string>
+    <string name="about_what_makes_us_different_partnership_desc">We believe that trusting relationships build the foundation for great work.</string>
+    <string name="about_what_makes_us_different_transparency">Transparency</string>
+    <string name="about_what_makes_us_different_transparency_desc">Open and honest communication in everything we do fosters trust and growth for both our team and our clients.</string>
+    <string name="about_our_success">Our success is powered by a team of talented creators.</string>
+    <string name="about_join_our_team">Join our Team</string>
+    <string name="about_awards_and_recognition">Awards &amp; Recognition</string>
+    <string name="about_awards_and_recognition_apps_created_for_impact">Apps Created for Impact</string>
+    <string name="about_awards_and_recognition_apps_created_for_impact_desc">Atomic Robot’s mobile solutions have been recognized by industry experts — including MUX Awards, W3 Awards, Goodfirms, and Clutch — for their impact and innovation.</string>
 
     <string-array name="durations">
         <item>Manual</item>
