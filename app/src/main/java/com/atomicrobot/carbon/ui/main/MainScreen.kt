@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
@@ -51,11 +52,12 @@ fun MainScreen(scaffoldState: ScaffoldState) {
         },
         onUserSelectedFetchCommits = {
             viewModel.fetchCommits()
-        }
+        },
+        buildVersion = viewModel.getVersion(),
+        fingerprint = viewModel.getVersionFingerprint()
     )
 }
 
-@Preview(name = "Main Screen")
 @Composable
 fun MainContent(
     username: String = MainViewModel.DEFAULT_USERNAME,
@@ -63,7 +65,9 @@ fun MainContent(
     commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
-    onUserSelectedFetchCommits: () -> Unit = {}
+    onUserSelectedFetchCommits: () -> Unit = {},
+    buildVersion: String,
+    fingerprint: String
 ) {
     Column {
         /*
@@ -87,8 +91,29 @@ fun MainContent(
             scaffoldState = scaffoldState,
             modifier = Modifier.weight(1f)
         )
-        BottomBar()
+        BottomBar(
+            buildVersion = buildVersion,
+            fingerprint = fingerprint
+        )
     }
+}
+
+@Preview(name = "Main Screen")
+@Composable
+fun MainContentPreview(
+    username: String = MainViewModel.DEFAULT_USERNAME,
+    repository: String = MainViewModel.DEFAULT_REPO,
+    commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    onUserInputChanged: (String, String) -> Unit = { _, _ -> },
+    onUserSelectedFetchCommits: () -> Unit = {},
+    buildVersion: String = BuildConfig.VERSION_NAME,
+    fingerprint: String = BuildConfig.VERSION_FINGERPRINT
+) {
+    MainContent(
+        buildVersion = buildVersion,
+        fingerprint = fingerprint
+    )
 }
 
 @Preview(name = "User Input")
