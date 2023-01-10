@@ -71,7 +71,7 @@ class MainViewModel @Inject constructor(
 
     fun getVersion(): String = BuildConfig.VERSION_NAME
 
-    fun getFingerprint(): String = BuildConfig.VERSION_FINGERPRINT
+    fun getVersionFingerprint(): String = BuildConfig.VERSION_FINGERPRINT
 
     companion object {
         const val DEFAULT_USERNAME = "madebyatomicrobot" // NON-NLS
