@@ -73,7 +73,8 @@ class MainViewModelTest {
 
     @Test
     fun testGetVersionFingerprint() {
-        val expectedPattern = "[a-zA-Z]+".toRegex()
+        val expectedPattern = "[a-zA-Z0-9]+".toRegex()
+        assertTrue("0569b5cd8".matches(expectedPattern))
         assertTrue("DEV".matches(expectedPattern))
         assertTrue(viewModel.getVersionFingerprint().matches(expectedPattern))
     }
