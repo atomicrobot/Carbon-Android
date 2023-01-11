@@ -18,15 +18,34 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-var versionCode = 1
-if (project.hasProperty("buildNumber")) {
-    versionCode = Integer.parseInt(project.property("buildNumber").toString())
-}
-val version = versionCode
+// Version variables
+var appVersion = "1.0"
+var buildNumber = 1
 var versionFingerprint = "\"DEV\""
-if (project.hasProperty("fingerprint")) {
-    versionFingerprint = "\"" + project.property("fingerprint").toString() + "\""
+
+/**
+ * This implementation assumes versions being provided as arguments, perhaps by a build server
+ */
+if (project.hasProperty("buildNumber")) {
+    buildNumber = Integer.parseInt(project.property("buildNumber").toString())
 }
+
+if (project.hasProperty("fingerprint")) {
+    versionFingerprint = "\"${project.property("fingerprint")}\""
+}
+
+/**
+ * Could also consider setting up and using system environment variables from the build server
+ * Test by adding these system environment variables to your local machine
+ */
+/*
+if (System.getenv("BITRISE_BUILD_NUMBER") != null) {
+    buildNumber = Integer.parseInt(System.getenv("BITRISE_BUILD_NUMBER"))
+}
+if (System.getenv("BITRISE_VERSION_FINGERPRINT") != null) {
+    versionFingerprint = "\"${System.getenv("BITRISE_VERSION_FINGERPRINT")}\""
+}
+*/
 
 android {
     compileOptions {
@@ -48,7 +67,8 @@ android {
 
         multiDexEnabled = true
 
-        versionCode = version
+        versionCode = buildNumber
+        versionName = "$appVersion b$buildNumber"
 
         buildConfigField("String", "VERSION_FINGERPRINT", versionFingerprint)
 

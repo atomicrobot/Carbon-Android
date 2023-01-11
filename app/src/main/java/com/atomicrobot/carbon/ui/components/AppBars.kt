@@ -62,9 +62,12 @@ fun TopBar(
 @Composable
 fun TopBar(title: String = "") = TopAppBar(title = { Text(text = title) })
 
-@Preview
 @Composable
-fun BottomBar(modifier: Modifier = Modifier) {
+fun BottomBar(
+    modifier: Modifier = Modifier,
+    buildVersion: String,
+    fingerprint: String
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -75,17 +78,22 @@ fun BottomBar(modifier: Modifier = Modifier) {
             .padding(16.dp)
     ) {
         Text(
-            text = stringResource(
-                id = R.string.version_format, BuildConfig.VERSION_NAME
-            ),
+            text = stringResource(id = R.string.version_format, buildVersion),
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = stringResource(
-                id = R.string.fingerprint_format, BuildConfig.VERSION_FINGERPRINT
-            )
+            text = stringResource(id = R.string.fingerprint_format, fingerprint)
         )
     }
+}
+
+@Preview
+@Composable
+fun BottomBarPreview() {
+    BottomBar(
+        buildVersion = BuildConfig.VERSION_NAME,
+        fingerprint = BuildConfig.VERSION_FINGERPRINT
+    )
 }
 
 @Preview
