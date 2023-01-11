@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon.ui.main
 
-import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,13 +21,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
@@ -53,11 +52,12 @@ fun MainScreen(scaffoldState: ScaffoldState) {
         },
         onUserSelectedFetchCommits = {
             viewModel.fetchCommits()
-        }
+        },
+        buildVersion = viewModel.getVersion(),
+        fingerprint = viewModel.getVersionFingerprint()
     )
 }
 
-@Preview(name = "Main Screen")
 @Composable
 fun MainContent(
     username: String = MainViewModel.DEFAULT_USERNAME,
@@ -66,7 +66,8 @@ fun MainContent(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
-    context: Context = LocalContext.current
+    buildVersion: String,
+    fingerprint: String
 ) {
     Column {
         /*
@@ -90,8 +91,29 @@ fun MainContent(
             scaffoldState = scaffoldState,
             modifier = Modifier.weight(1f)
         )
-        BottomBar()
+        BottomBar(
+            buildVersion = buildVersion,
+            fingerprint = fingerprint
+        )
     }
+}
+
+@Preview(name = "Main Screen")
+@Composable
+fun MainContentPreview(
+    username: String = MainViewModel.DEFAULT_USERNAME,
+    repository: String = MainViewModel.DEFAULT_REPO,
+    commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    onUserInputChanged: (String, String) -> Unit = { _, _ -> },
+    onUserSelectedFetchCommits: () -> Unit = {},
+    buildVersion: String = BuildConfig.VERSION_NAME,
+    fingerprint: String = BuildConfig.VERSION_FINGERPRINT
+) {
+    MainContent(
+        buildVersion = buildVersion,
+        fingerprint = fingerprint
+    )
 }
 
 @Preview(name = "User Input")

@@ -34,23 +34,6 @@ class MainViewModelTest {
         )
     }
 
-    // TODO - Need to revisit and fix versioning in separate bugfix
-//    @Test
-//    fun testGetVersion() {
-//        // CI systems can change the build number so we are a little more flexible on what to expect
-//        val expectedPattern = "1.0 b[1-9][0-9]*".toRegex()
-//        assertTrue("1.0 b123".matches(expectedPattern))
-//        assertTrue(viewModel.getVersion().matches(expectedPattern))
-//    }
-
-    @Test
-    fun testGetFingerprint() {
-        // CI systems can change the build number so we are a little more flexible on what to expect
-        val expectedPattern = "[a-zA-Z0-9]+".toRegex()
-        assertTrue("0569b5cd8".matches(expectedPattern))
-        assertTrue(viewModel.getFingerprint().matches(expectedPattern))
-    }
-
     @Test
     fun testFetchCommits() = runBlocking {
         val mockResult = mock(GitHubInteractor.LoadCommitsResponse::class.java)
@@ -72,5 +55,21 @@ class MainViewModelTest {
                     MainViewModel.Commits.Result
                 )?.commits?.size == 1
         )
+    }
+
+    @Test
+    fun testGetVersion() {
+        // CI systems can change the build number so we are a little more flexible on what to expect
+        val expectedPattern = "1.0 b[1-9][0-9]*".toRegex()
+        assertTrue("1.0 b123".matches(expectedPattern))
+        assertTrue(viewModel.getVersion().matches(expectedPattern))
+    }
+
+    @Test
+    fun testGetVersionFingerprint() {
+        val expectedPattern = "[a-zA-Z0-9]+".toRegex()
+        assertTrue("0569b5cd8".matches(expectedPattern))
+        assertTrue("DEV".matches(expectedPattern))
+        assertTrue(viewModel.getVersionFingerprint().matches(expectedPattern))
     }
 }
