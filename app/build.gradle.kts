@@ -18,16 +18,6 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-//var versionCode = 1
-//if (project.hasProperty("buildNumber")) {
-//    versionCode = Integer.parseInt(project.property("buildNumber").toString())
-//}
-//val version = versionCode
-//var versionFingerprint = "\"DEV\""
-//if (project.hasProperty("fingerprint")) {
-//    versionFingerprint = "\"" + project.property("fingerprint").toString() + "\""
-//}
-
 // Version variables
 var appVersion = "1.0"
 var buildNumber = 1
