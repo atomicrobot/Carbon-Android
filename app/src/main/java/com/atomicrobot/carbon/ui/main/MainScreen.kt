@@ -52,8 +52,7 @@ fun MainScreen(scaffoldState: ScaffoldState) {
         },
         onUserSelectedFetchCommits = {
             viewModel.fetchCommits()
-        }
-        ,
+        },
         buildVersion = viewModel.getVersion(),
         fingerprint = viewModel.getVersionFingerprint()
     )
