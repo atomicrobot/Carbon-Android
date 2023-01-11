@@ -70,7 +70,7 @@ class MainViewModelTest {
         assertTrue("1.0 b123".matches(expectedPattern))
         assertTrue(viewModel.getVersion().matches(expectedPattern))
     }
-    
+
     @Test
     fun testGetVersionFingerprint() {
         val expectedPattern = "[a-zA-Z0-9]+".toRegex()
