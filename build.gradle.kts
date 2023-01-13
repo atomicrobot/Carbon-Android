@@ -1,3 +1,6 @@
+import org.gradle.internal.os.OperatingSystem
+import java.util.Properties
+
 buildscript {
 
     repositories {
@@ -107,4 +110,64 @@ val continuousIntegration by tasks.registering {
     dependsOn(initialCleanup)
     dependsOn(testing)
     dependsOn(release)
+}
+
+/**
+ * Git Hooks Tasks
+ */
+tasks.register("setHooksPath", Exec::class) {
+    description = "Sets the project's git config's core.hooksPath to the project's git directory"
+    commandLine = listOf("git")
+    setArgs(listOf("config", "--local", "core.hooksPath", "$rootDir/.git/hooks"))
+}
+
+
+tasks.register("copyGitHooks", Copy::class) {
+    description = "Copy's the git tracked githooks to the project's untracked git/hooks directory"
+    from("$rootDir/githooks/")
+    include("**/*.sh")
+    rename { fileName -> fileName.replace(".sh", "") }
+    into("$rootDir/.git/hooks")
+
+    dependsOn(setOf("setHooksPath"))
+}
+
+/**
+ * This task is specific to unix based systems, we don't have execute permission by default
+ * and need to explicitly add it in order for the hooks to run.
+ */
+tasks.register("installGitHooksOsX", Exec::class) {
+    description = "Installs git hooks for OsX machines giving +x permissions to the .git/hooks folder"
+    workingDir = rootDir
+    commandLine = listOf("chmod")
+    setArgs(listOf( "-R", "+wrx", ".git/hooks"))
+    dependsOn(setOf("copyGitHooks"))
+}
+
+/**
+ * In order to better evaluate the cost/effect of pre-push linting we want the ability to selectively
+ * enable the git hooks. In order to do this we need the key to not be kept in version control.
+ *
+ * As such, in order to enable said hooks you MUST create a local.properties file in the buildSrc module
+ * and add "shouldInstallGitHooks=true".
+ *
+ * If you wish to disable the hooks you'll need to do the following:
+ * 1. Delete your local.properties file OR set "shouldInstallGitHooks=false"
+ * AND
+ * 2. Delete the [pre-push] file from .git/hooks OR
+ *      run "git config --local --unset core.hooksPath" from a terminal in the project directory
+ *
+ * Failing to do either of these 2 steps will not stop the hooks from running.
+ */
+val localProps = rootProject.file("local.properties")
+if (localProps.exists()) {
+    val props = Properties().apply {
+        load(localProps.inputStream())
+    }
+    val shouldInstallGitHooks: Boolean = props.getProperty("shouldInstallGitHooks").toBoolean()
+    if (shouldInstallGitHooks) {
+        tasks["build"].dependsOn(
+            if (OperatingSystem.current().isWindows) "copyGitHooks" else "installGitHooksOsX"
+        )
+    }
 }

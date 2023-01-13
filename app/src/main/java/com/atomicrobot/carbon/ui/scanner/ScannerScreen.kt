@@ -112,12 +112,13 @@ fun ScannerScreen(
             topBar = {},
             bottomBar = {}
         ) {
-            CameraContent(viewModel, onBarcodeSelected)
+            CameraContent(Modifier.padding(it), viewModel, onBarcodeSelected)
         }
     }
 }
 @Composable
 fun CameraContent(
+    modifier: Modifier,
     viewModel: ScannerViewModel = getViewModel(),
     onBarcodeSelected: (Barcode) -> Unit = {}
 ) {
