@@ -159,7 +159,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.compose.material:material:${Dependencies.composeVersion}")
+    implementation("androidx.compose.material3:material3:${Dependencies.mThreeVersion}")
     implementation("androidx.compose.material:material-icons-extended:${Dependencies.composeMaterialIconsExtVersion}")
     implementation("androidx.compose.ui:ui:${Dependencies.composeVersion}")
     implementation("androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}")

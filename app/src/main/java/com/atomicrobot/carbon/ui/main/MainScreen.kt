@@ -7,18 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,7 +25,7 @@ import com.atomicrobot.carbon.ui.components.BottomBar
 import com.atomicrobot.carbon.util.CommitPreviewProvider
 
 @Composable
-fun MainScreen(scaffoldState: ScaffoldState) {
+fun MainScreen(snackbarHostState: SnackbarHostState) {
     val viewModel: MainViewModel = hiltViewModel()
     val screenState by viewModel.uiState.collectAsState()
 
@@ -46,7 +36,7 @@ fun MainScreen(scaffoldState: ScaffoldState) {
         username = screenState.username,
         repository = screenState.repository,
         commitsState = screenState.commitsState,
-        scaffoldState = scaffoldState,
+        snackbarHostState = snackbarHostState,
         onUserInputChanged = { username, repository ->
             viewModel.updateUserInput(username, repository)
         },
@@ -63,7 +53,7 @@ fun MainContent(
     username: String = MainViewModel.DEFAULT_USERNAME,
     repository: String = MainViewModel.DEFAULT_REPO,
     commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
     buildVersion: String,
@@ -88,7 +78,7 @@ fun MainContent(
         )
         GithubResponse(
             commitsState = commitsState,
-            scaffoldState = scaffoldState,
+            snackbarHostState = snackbarHostState,
             modifier = Modifier.weight(1f)
         )
         BottomBar(
@@ -104,7 +94,7 @@ fun MainContentPreview(
     username: String = MainViewModel.DEFAULT_USERNAME,
     repository: String = MainViewModel.DEFAULT_REPO,
     commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
     buildVersion: String = BuildConfig.VERSION_NAME,
@@ -126,9 +116,10 @@ fun GithubUserInput(
     onUserSelectedFetchCommits: () -> Unit = {}
 ) {
     Surface(
-        color = MaterialTheme.colors.onSurface.copy(
+        //TODO not sure what replaces this BackgroundOpacity value
+        color = MaterialTheme.colorScheme.onSurface/*.copy(
             alpha = TextFieldDefaults.BackgroundOpacity
-        )
+        )*/
     ) {
         Column(
             modifier = Modifier
@@ -161,7 +152,7 @@ fun GithubUserInput(
 @Composable
 fun GithubResponse(
     commitsState: MainViewModel.Commits,
-    scaffoldState: ScaffoldState,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -169,8 +160,8 @@ fun GithubResponse(
             is MainViewModel.Commits.Loading ->
                 CircularProgressIndicator()
             is MainViewModel.Commits.Error ->
-                LaunchedEffect(scaffoldState.snackbarHostState) {
-                    scaffoldState.snackbarHostState.showSnackbar(message = commitsState.message)
+                LaunchedEffect(snackbarHostState) {
+                    snackbarHostState.showSnackbar(message = commitsState.message)
                 }
             is MainViewModel.Commits.Result -> CommitList(commits = commitsState.commits)
         }

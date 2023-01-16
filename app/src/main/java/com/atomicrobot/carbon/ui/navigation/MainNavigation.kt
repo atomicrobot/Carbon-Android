@@ -3,14 +3,12 @@ package com.atomicrobot.carbon.ui.navigation
 import android.graphics.Color
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarHost
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
@@ -36,77 +34,89 @@ import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavigation() {
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
 
-    BackHandler(enabled = scaffoldState.drawerState.isOpen) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
+    BackHandler(enabled = drawerState.isOpen) {
         scope.launch {
-            scaffoldState.drawerState.close()
+            drawerState.close()
         }
     }
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = appBarTitle(navBackStackEntry),
-                buttonIcon = Icons.Filled.Menu,
-                onButtonClicked = {
-                    scope.launch {
-                        scaffoldState.drawerState.open()
-                    }
-                }
-            )
-        },
-        bottomBar = {
-            BottomNavigationBar(
-                destinations = appScreens,
-                navController = navController,
-                onDestinationClicked = {
-                    if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                        navController.navigate(it.route) {
-                            // Make sure the back stack only consists of the current graphs main
-                            // destination
-                            popUpTo(CarbonScreens.Home.route) {
-                                saveState = true
-                            }
-                            // Singular instance of destinations
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                }
-            )
-        },
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
         drawerContent = {
-            Drawer(
-                screens = drawerScreens,
-                onDestinationClicked = { route ->
-                    scope.launch {
-                        scaffoldState.drawerState.close()
-                    }
-                    if (navController.currentBackStackEntry?.destination?.route != route) {
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId)
-                            launchSingleTop = true
+            ModalDrawerSheet(
+                content = {
+                    Drawer(
+                        screens = drawerScreens,
+                        onDestinationClicked = { route ->
+                            scope.launch {
+                                drawerState.close()
+                            }
+                            if (navController.currentBackStackEntry?.destination?.route != route) {
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.startDestinationId)
+                                    launchSingleTop = true
+                                }
+                            }
                         }
-                    }
+                    )
                 }
             )
         },
-        snackbarHost = { SnackbarHost(scaffoldState.snackbarHostState) },
-        scaffoldState = scaffoldState
-    ) { innerPadding ->
-        NavHost(
-            modifier = Modifier.padding(innerPadding),
-            navController = navController,
-            startDestination = "Main"
-        ) {
-            mainFlowGraph(navController, scaffoldState)
+        content = {
+            Scaffold(
+                topBar = {
+                    TopBar(
+                        title = appBarTitle(navBackStackEntry),
+                        buttonIcon = Icons.Filled.Menu,
+                        onButtonClicked = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        }
+                    )
+                },
+                bottomBar = {
+                    BottomNavigationBar(
+                        destinations = appScreens,
+                        navController = navController,
+                        onDestinationClicked = {
+                            if (navController.currentBackStackEntry?.destination?.route != it.route) {
+                                navController.navigate(it.route) {
+                                    // Make sure the back stack only consists of the current graphs main
+                                    // destination
+                                    popUpTo(CarbonScreens.Home.route) {
+                                        saveState = true
+                                    }
+                                    // Singular instance of destinations
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        }
+                    )
+                },
+                snackbarHost = { SnackbarHost(snackbarHostState) }
+            ) { innerPadding ->
+                NavHost(
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController,
+                    startDestination = "Main"
+                ) {
+                    mainFlowGraph(navController, snackbarHostState)
+                }
+            }
         }
-    }
+    )
 }
 
 /**
@@ -115,12 +125,12 @@ fun MainNavigation() {
 @Suppress("UNUSED_PARAMETER")
 fun NavGraphBuilder.mainFlowGraph(
     navController: NavHostController,
-    scaffoldState: ScaffoldState
+    snackbarHostState: SnackbarHostState
 ) {
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
         composable(CarbonScreens.Home.route) {
             CarbonAndroidTheme {
-                MainScreen(scaffoldState)
+                MainScreen(snackbarHostState)
             }
         }
         composable(CarbonScreens.Settings.route) {

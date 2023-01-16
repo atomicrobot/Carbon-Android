@@ -6,6 +6,7 @@ object Dependencies {
     const val composeHiltNavigationVersion = "1.0.0"
     const val composeNavigationVersion = "2.5.1"
     const val composeVersion = "1.2.0"
+    const val mThreeVersion = "1.0.1"
     const val coreVersion = "1.7.0"
     const val firebaseBomVersion = "28.0.0"
     const val firebaseCrashlyticsGradleVersion = "2.6.1"

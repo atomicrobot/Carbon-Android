@@ -1,26 +1,76 @@
 package com.atomicrobot.carbon.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-private val DarkColorPalette = darkColors(
+private val DarkColorPalette = darkColorScheme(
     primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = pink700,
+    secondary = Purple700,
+    tertiary = pink700,
     onPrimary = Color.White,
-    onSurface = Color.White
+    onSurface = Color.White,
+//    primaryContainer = ,
+//    onPrimaryContainer = ,
+//    inversePrimary = ,
+//    onSecondary = ,
+//    secondaryContainer = ,
+//    onSecondaryContainer = ,
+//    onTertiary = ,
+//    tertiaryContainer = ,
+//    onTertiaryContainer = ,
+//    background = ,
+//    onBackground = ,
+//    surface = ,
+//    surfaceVariant = ,
+//    onSurfaceVariant = ,
+//    surfaceTint = ,
+//    inverseSurface = ,
+//    inverseOnSurface = ,
+//    error = ,
+//    onError = ,
+//    errorContainer = ,
+//    onErrorContainer = ,
+//    outline = ,
+//    outlineVariant = ,
+//    scrim =
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorPalette = lightColorScheme(
     primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = pink700
+    secondary = Purple700,
+    tertiary = pink700,
+//    onPrimary = Color.White,
+//    onSurface = Color.Black,
+//    primaryContainer = ,
+//    onPrimaryContainer = ,
+//    inversePrimary = ,
+//    onSecondary = ,
+//    secondaryContainer = ,
+//    onSecondaryContainer = ,
+//    onTertiary = ,
+//    tertiaryContainer = ,
+//    onTertiaryContainer = ,
+//    background = ,
+//    onBackground = ,
+//    surface = ,
+//    surfaceVariant = ,
+//    onSurfaceVariant = ,
+//    surfaceTint = ,
+//    inverseSurface = ,
+//    inverseOnSurface = ,
+//    error = ,
+//    onError = ,
+//    errorContainer = ,
+//    onErrorContainer = ,
+//    outline = ,
+//    outlineVariant = ,
+//    scrim =
 
     /* Other default colors to override
     background = Color.White,
@@ -54,7 +104,7 @@ fun CarbonAndroidTheme(
     }
 
     MaterialTheme(
-        colors = if (darkTheme) { DarkColorPalette } else { LightColorPalette },
+        colorScheme = if (darkTheme) { DarkColorPalette } else { LightColorPalette },
         typography = Typography,
         content = content
     )

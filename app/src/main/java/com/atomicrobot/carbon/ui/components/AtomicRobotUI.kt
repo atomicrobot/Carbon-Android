@@ -3,11 +3,9 @@ package com.atomicrobot.carbon.ui.components
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Icon as MaterialIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
-import androidx.compose.material.Icon as MaterialIcon
+
 
 /**
  * Reusable UI components for the Carbon-Android app
@@ -67,7 +65,7 @@ object AtomicRobotUI {
                 content = {
                     when {
                         painter != null -> {
-                            MaterialIcon(painter = painter, contentDescription = contentDescription)
+                            Icon(painter = painter, contentDescription = contentDescription)
                         }
                         imageBitmap != null -> {
                             MaterialIcon(
@@ -76,7 +74,7 @@ object AtomicRobotUI {
                             )
                         }
                         imageVector != null -> {
-                            MaterialIcon(
+                            Icon(
                                 imageVector = imageVector,
                                 contentDescription = contentDescription
                             )
@@ -88,6 +86,7 @@ object AtomicRobotUI {
     }
 
     object TextField {
+        @OptIn(ExperimentalMaterial3Api::class)
         @Composable
         fun TransparentTextField(
             modifier: Modifier = Modifier,
@@ -102,7 +101,7 @@ object AtomicRobotUI {
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent)
+                colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent)
             )
         }
     }

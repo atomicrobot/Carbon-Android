@@ -18,10 +18,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,8 +60,8 @@ fun aboutBody() {
     val context = LocalContext.current
     LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
         item {
-            Text(text = stringResource(R.string.about), style = MaterialTheme.typography.h4)
-            Text(text = stringResource(R.string.about_desc), style = MaterialTheme.typography.body1)
+            Text(text = stringResource(R.string.about), style = MaterialTheme.typography.headlineMedium)
+            Text(text = stringResource(R.string.about_desc), style = MaterialTheme.typography.bodyLarge)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -79,15 +79,15 @@ fun aboutBody() {
 
             Text(
                 text = stringResource(R.string.about_flexible_solutions),
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.headlineMedium
             )
             Text(
                 text = stringResource(R.string.about_flexible_solutions_sub_header),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = stringResource(R.string.about_flexible_solutions_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -124,34 +124,34 @@ fun aboutBody() {
 
                         Text(
                             text = stringResource(R.string.about_ten_plus),
-                            style = MaterialTheme.typography.h3,
+                            style = MaterialTheme.typography.displaySmall,
                             color = Color.White
                         )
                         Text(
                             text = stringResource(R.string.about_years_in_business),
-                            style = MaterialTheme.typography.body1,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = Color.White
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = stringResource(R.string.about_forty_plus),
-                            style = MaterialTheme.typography.h3,
+                            style = MaterialTheme.typography.displaySmall,
                             color = Color.White
                         )
                         Text(
                             text = stringResource(R.string.about_employees),
-                            style = MaterialTheme.typography.body1,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = Color.White
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = stringResource(R.string.about_one_hundred_fifty_plus),
-                            style = MaterialTheme.typography.h3,
+                            style = MaterialTheme.typography.displaySmall,
                             color = Color.White
                         )
                         Text(
                             text = stringResource(R.string.about_apps_shipped),
-                            style = MaterialTheme.typography.body1,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = Color.White
                         )
                     }
@@ -162,7 +162,7 @@ fun aboutBody() {
 
             Text(
                 text = stringResource(R.string.about_what_makes_us_different),
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -171,11 +171,11 @@ fun aboutBody() {
                 text = stringResource(R.string.about_what_makes_us_different_craft).toUpperCase(
                     Locale.current
                 ),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_craft_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -184,11 +184,11 @@ fun aboutBody() {
                 text = stringResource(R.string.about_what_makes_us_different_collaboration).toUpperCase(
                     Locale.current
                 ),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_collaboration_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -197,11 +197,11 @@ fun aboutBody() {
                 text = stringResource(R.string.about_what_makes_us_different_curiosity).toUpperCase(
                     Locale.current
                 ),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_curiosity_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -210,11 +210,11 @@ fun aboutBody() {
                 text = stringResource(R.string.about_what_makes_us_different_impact).toUpperCase(
                     Locale.current
                 ),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_impact_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -223,11 +223,11 @@ fun aboutBody() {
                 text = stringResource(R.string.about_what_makes_us_different_partnership).toUpperCase(
                     Locale.current
                 ),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_partnership_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -236,11 +236,11 @@ fun aboutBody() {
                 text = stringResource(R.string.about_what_makes_us_different_transparency).toUpperCase(
                     Locale.current
                 ),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_transparency_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -257,12 +257,12 @@ fun aboutBody() {
             ) {
                 Text(
                     text = stringResource(R.string.about_our_success),
-                    style = MaterialTheme.typography.h4,
+                    style = MaterialTheme.typography.headlineMedium,
                     color = Color.White
                 )
 
                 Button(
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Orange),
+                    colors = ButtonDefaults.buttonColors(containerColor = Orange),
                     onClick = {
                         val uri = Uri.parse("https://atomicrobot.com/careers/")
                         val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -271,7 +271,7 @@ fun aboutBody() {
                 ) {
                     Text(
                         text = stringResource(R.string.about_join_our_team),
-                        style = MaterialTheme.typography.body1,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = Color.White
                     )
                 }
@@ -281,15 +281,15 @@ fun aboutBody() {
 
             Text(
                 text = stringResource(R.string.about_awards_and_recognition),
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.headlineMedium
             )
             Text(
                 text = stringResource(R.string.about_awards_and_recognition_apps_created_for_impact),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = stringResource(R.string.about_awards_and_recognition_apps_created_for_impact_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
         }
     }
