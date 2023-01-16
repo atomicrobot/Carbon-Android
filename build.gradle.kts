@@ -116,6 +116,7 @@ val continuousIntegration by tasks.registering {
  * Git Hooks Tasks
  */
 tasks.register("setHooksPath", Exec::class) {
+    println("KAB TESTING - setHooksPath")
     description = "Sets the project's git config's core.hooksPath to the project's git directory"
     commandLine = listOf("git")
     setArgs(listOf("config", "--local", "core.hooksPath", "$rootDir/.git/hooks"))
@@ -123,11 +124,14 @@ tasks.register("setHooksPath", Exec::class) {
 
 
 tasks.register("copyGitHooks", Copy::class) {
+    println("KAB TESTING - copyGitHooks")
     description = "Copy's the git tracked githooks to the project's untracked git/hooks directory"
     from("$rootDir/githooks/")
     include("**/*.sh")
     rename { fileName -> fileName.replace(".sh", "") }
     into("$rootDir/.git/hooks")
+
+    println("KAB TESTING - rootDir = $rootDir")
 
     dependsOn(setOf("setHooksPath"))
 }
@@ -137,6 +141,7 @@ tasks.register("copyGitHooks", Copy::class) {
  * and need to explicitly add it in order for the hooks to run.
  */
 tasks.register("installGitHooksOsX", Exec::class) {
+    println("KAB TESTING - installGitHooksOsX")
     description = "Installs git hooks for OsX machines giving +x permissions to the .git/hooks folder"
     workingDir = rootDir
     commandLine = listOf("chmod")
@@ -165,6 +170,7 @@ if (localProps.exists()) {
         load(localProps.inputStream())
     }
     val shouldInstallGitHooks: Boolean = props.getProperty("shouldInstallGitHooks").toBoolean()
+    println("KAB TESTING - shouldInstallGitHooks = $shouldInstallGitHooks")
     if (shouldInstallGitHooks) {
         tasks["build"].dependsOn(
             if (OperatingSystem.current().isWindows) "copyGitHooks" else "installGitHooksOsX"
