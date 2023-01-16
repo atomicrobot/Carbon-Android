@@ -1,6 +1,3 @@
-import org.gradle.internal.os.OperatingSystem
-import java.util.Properties
-
 buildscript {
 
     repositories {
@@ -50,7 +47,7 @@ allprojects {
     // Code in groovy below
     // https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
     // modified Wharton's code for kts
-    afterEvaluate() {
+    afterEvaluate {
         project.configurations.all {
             resolutionStrategy.eachDependency {
                 if (requested.version!!.contains("+")) {
@@ -112,68 +109,29 @@ val continuousIntegration by tasks.registering {
     dependsOn(release)
 }
 
-/**
- * Git Hooks Tasks
- */
-tasks.register("setHooksPath", Exec::class) {
-    println("KAB TESTING - setHooksPath")
-    description = "Sets the project's git config's core.hooksPath to the project's git directory"
-    commandLine = listOf("git")
-    setArgs(listOf("config", "--local", "core.hooksPath", "$rootDir/.git/hooks"))
-}
-
-
 tasks.register("copyGitHooks", Copy::class) {
-    println("KAB TESTING - copyGitHooks")
-    description = "Copy's the git tracked githooks to the project's untracked git/hooks directory"
-    from("$rootDir/githooks/")
-    include("**/*.sh")
-    rename { fileName -> fileName.replace(".sh", "") }
-    into("$rootDir/.git/hooks")
-
-    println("KAB TESTING - rootDir = $rootDir")
-
-    dependsOn(setOf("setHooksPath"))
+    description = "Copies the git hooks from /git-hooks to the .git folder."
+    from("${rootDir}/githooks/") {
+        include("**/*.sh")
+        rename("(.*).sh", "$1")
+    }
+    into("${rootDir}/.git/hooks")
 }
 
-/**
- * This task is specific to unix based systems, we don't have execute permission by default
- * and need to explicitly add it in order for the hooks to run.
- */
-tasks.register("installGitHooksOsX", Exec::class) {
-    println("KAB TESTING - installGitHooksOsX")
-    description = "Installs git hooks for OsX machines giving +x permissions to the .git/hooks folder"
+tasks.register("installGitHooks", Exec::class) {
+    description = "Installs the pre-commit git hooks from /githooks."
+    group = "git hooks"
     workingDir = rootDir
     commandLine = listOf("chmod")
-    setArgs(listOf( "-R", "+wrx", ".git/hooks"))
+    setArgs(listOf( "-R", "+wrx", ".git/hooks/"))
     dependsOn(setOf("copyGitHooks"))
+    doLast {
+        logger.info("Git hook installed successfully")
+    }
 }
 
-/**
- * In order to better evaluate the cost/effect of pre-push linting we want the ability to selectively
- * enable the git hooks. In order to do this we need the key to not be kept in version control.
- *
- * As such, in order to enable said hooks you MUST create a local.properties file in the buildSrc module
- * and add "shouldInstallGitHooks=true".
- *
- * If you wish to disable the hooks you'll need to do the following:
- * 1. Delete your local.properties file OR set "shouldInstallGitHooks=false"
- * AND
- * 2. Delete the [pre-push] file from .git/hooks OR
- *      run "git config --local --unset core.hooksPath" from a terminal in the project directory
- *
- * Failing to do either of these 2 steps will not stop the hooks from running.
- */
-val localProps = rootProject.file("local.properties")
-if (localProps.exists()) {
-    val props = Properties().apply {
-        load(localProps.inputStream())
-    }
-    val shouldInstallGitHooks: Boolean = props.getProperty("shouldInstallGitHooks").toBoolean()
-    println("KAB TESTING - shouldInstallGitHooks = $shouldInstallGitHooks")
-    if (shouldInstallGitHooks) {
-        tasks["build"].dependsOn(
-            if (OperatingSystem.current().isWindows) "copyGitHooks" else "installGitHooksOsX"
-        )
-    }
+afterEvaluate {
+    // We install the hook at the first occasion
+    tasks["clean"].setDependsOn(setOf("installGitHooks"))
+//    tasks["assembleDebug"].setDependsOn(setOf("installGitHooks"))
 }
