@@ -110,7 +110,7 @@ val continuousIntegration by tasks.registering {
 }
 
 tasks.register("copyGitHooks", Copy::class) {
-    description = "Copies the git hooks from /git-hooks to the .git folder."
+    description = "Copies the git hooks from /githooks to the .git folder."
     from("${rootDir}/githooks/") {
         include("**/*.sh")
         rename("(.*).sh", "$1")
