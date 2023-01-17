@@ -9,5 +9,8 @@ val pink700 = Color(0xFFFF4081)
 
 val Neutron = Color(0xFF101C1D)
 val Orange = Color(0xFFE25C33)
+val LightGray = Color(0xFFEEEEEE)
+val MediumGray = Color(0xFFE0E0E0)
+val FullGray = Color(0xFF888888)
 val Mono800 = Color(0xFF222C2D)
 val White100 = Color(0xFFFFFFFF)

@@ -117,7 +117,7 @@ fun GithubUserInput(
 ) {
     Surface(
         //TODO not sure what replaces this BackgroundOpacity value
-        color = MaterialTheme.colorScheme.onSurface/*.copy(
+        color = MaterialTheme.colorScheme.primaryContainer/*.copy(
             alpha = TextFieldDefaults.BackgroundOpacity
         )*/
     ) {
@@ -193,9 +193,13 @@ fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit
             Text(
                 text = commit.commitMessage,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
-            Text(text = stringResource(id = R.string.author_format, commit.author))
+            Text(
+                text = stringResource(id = R.string.author_format, commit.author),
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
     }
 }

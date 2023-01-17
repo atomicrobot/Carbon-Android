@@ -18,16 +18,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
@@ -41,7 +37,6 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.ui.theme.Neutron
 import com.atomicrobot.carbon.ui.theme.Orange
 
 @Preview(showBackground = true)
@@ -96,7 +91,7 @@ fun aboutBody() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = Neutron,
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
                         shape = RoundedCornerShape(
                             topStart = 0.dp,
                             topEnd = 5.dp,
@@ -125,34 +120,34 @@ fun aboutBody() {
                         Text(
                             text = stringResource(R.string.about_ten_plus),
                             style = MaterialTheme.typography.displaySmall,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Text(
                             text = stringResource(R.string.about_years_in_business),
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = stringResource(R.string.about_forty_plus),
                             style = MaterialTheme.typography.displaySmall,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Text(
                             text = stringResource(R.string.about_employees),
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = stringResource(R.string.about_one_hundred_fifty_plus),
                             style = MaterialTheme.typography.displaySmall,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Text(
                             text = stringResource(R.string.about_apps_shipped),
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     }
                 }
@@ -249,7 +244,7 @@ fun aboutBody() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = Neutron,
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
                         shape = RoundedCornerShape(5.dp)
                     )
                     .height(IntrinsicSize.Max)
@@ -258,11 +253,10 @@ fun aboutBody() {
                 Text(
                     text = stringResource(R.string.about_our_success),
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
 
-                Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = Orange),
+                FilledTonalButton(
                     onClick = {
                         val uri = Uri.parse("https://atomicrobot.com/careers/")
                         val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -272,7 +266,6 @@ fun aboutBody() {
                     Text(
                         text = stringResource(R.string.about_join_our_team),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
                     )
                 }
             }

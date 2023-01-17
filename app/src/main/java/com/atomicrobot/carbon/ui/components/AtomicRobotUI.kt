@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon as MaterialIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -39,7 +38,10 @@ object AtomicRobotUI {
                     text?.let {
                         Text(text = text)
                     }
-                }
+                },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.onSecondaryContainer
+                )
             )
         }
 
@@ -97,11 +99,19 @@ object AtomicRobotUI {
             TextField(
                 value = value,
                 onValueChange = onValueChanged,
-                label = { Text(text = stringResource(id = labelResId)) },
+                label = {
+                    Text(
+                        text = stringResource(id = labelResId),
+                    )
+                },
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent)
+                colors = TextFieldDefaults.textFieldColors(
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
         }
     }

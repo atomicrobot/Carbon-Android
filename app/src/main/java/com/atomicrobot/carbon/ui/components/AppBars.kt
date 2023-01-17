@@ -1,10 +1,7 @@
 package com.atomicrobot.carbon.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
@@ -45,7 +42,7 @@ fun TopBar(
         Icon(
             painter = painterResource(id = R.drawable.carbon_android_logo),
             contentDescription = stringResource(id = R.string.cont_desc_shell),
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.padding(end = 12.dp).size(24.dp),
             tint = Color.Unspecified
         )
     }
@@ -60,7 +57,7 @@ fun BottomBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.onSurface)
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
             .padding(16.dp)
     ) {
         Text(
@@ -92,7 +89,10 @@ fun BottomNavigationBar(
     navController: NavController = rememberNavController(),
     onDestinationClicked: (CarbonScreens) -> Unit = {}
 ) {
-    NavigationBar(){
+    NavigationBar(
+        modifier = Modifier.height(64.dp),
+        tonalElevation = 0.dp
+    ){
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         destinations.forEach { destination ->

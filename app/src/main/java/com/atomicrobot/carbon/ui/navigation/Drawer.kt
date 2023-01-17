@@ -46,9 +46,7 @@ fun Drawer(
         Box(
             Modifier
                 .clip(CircleShape)
-                .background(
-                    Color.Gray
-                )
+                .background(color = Color.Gray)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
@@ -71,8 +69,7 @@ fun DrawerAppScreenItem(
     Row(
         Modifier
             .fillMaxWidth()
-            .clickable
-            {
+            .clickable {
                 onDestinationClicked(screen.route)
             },
         verticalAlignment = Alignment.CenterVertically
