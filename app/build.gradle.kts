@@ -158,8 +158,8 @@ android {
 
 dependencies {
 
-    implementation("androidx.compose.material:material:${Dependencies.composeVersion}")
-    implementation("androidx.compose.material:material-icons-extended:${Dependencies.composeConstraintVersion}")
+    implementation("androidx.compose.material3:material3:${Dependencies.composeMat3Version}")
+    implementation("androidx.compose.material:material-icons-extended:${Dependencies.composeMat3Version}")
     implementation("androidx.compose.ui:ui:${Dependencies.composeVersion}")
     implementation("androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}")
     implementation("androidx.core:core-ktx:${Dependencies.coreVersion}")

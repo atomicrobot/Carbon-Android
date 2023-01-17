@@ -3,11 +3,12 @@ package com.atomicrobot.carbon.ui.components
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
-import androidx.compose.material.Icon as MaterialIcon
+import androidx.compose.material3.Icon as MaterialIcon
 
 /**
  * Reusable UI components for the Carbon-Android app
@@ -28,10 +29,10 @@ object AtomicRobotUI {
     object Button {
         @Composable
         fun Outlined(
+            modifier: Modifier = Modifier,
             text: String? = null,
             onClick: () -> Unit,
             enabled: Boolean = true,
-            modifier: Modifier = Modifier
         ) {
             OutlinedButton(
                 onClick = onClick,
@@ -50,12 +51,12 @@ object AtomicRobotUI {
          */
         @Composable
         fun Icon(
+            modifier: Modifier = Modifier,
             painter: Painter? = null,
             imageBitmap: ImageBitmap? = null,
             imageVector: ImageVector? = null,
             contentDescription: String? = null,
             onClick: () -> Unit,
-            modifier: Modifier = Modifier,
             enabled: Boolean = true,
             interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
         ) {
@@ -87,6 +88,7 @@ object AtomicRobotUI {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     object TextField {
         @Composable
         fun TransparentTextField(
@@ -102,7 +104,7 @@ object AtomicRobotUI {
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent)
+                colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent)
             )
         }
     }

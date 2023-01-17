@@ -47,7 +47,7 @@ allprojects {
     // Code in groovy below
     // https://gist.github.com/JakeWharton/2066f5e4f08fbaaa68fd
     // modified Wharton's code for kts
-    afterEvaluate() {
+    afterEvaluate {
         project.configurations.all {
             resolutionStrategy.eachDependency {
                 if (requested.version!!.contains("+")) {

@@ -1,10 +1,11 @@
 /*The dependencies are organized in alphabetical order so they are easy to quickly locate,
 please add accordingly*/
 object Dependencies {
-    const val androidPluginVersion = "7.3.1"
+    const val androidPluginVersion = "7.4.0"
     const val composeConstraintVersion = "1.0.1"
     const val composeNavigationVersion = "2.5.1"
     const val composeVersion = "1.2.0"
+    const val composeMat3Version = "1.0.0"
     const val coreVersion = "1.7.0"
     const val firebaseBomVersion = "28.0.0"
     const val firebaseCrashlyticsGradleVersion = "2.6.1"

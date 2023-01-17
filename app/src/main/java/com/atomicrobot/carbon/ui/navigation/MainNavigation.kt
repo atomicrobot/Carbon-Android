@@ -3,17 +3,24 @@ package com.atomicrobot.carbon.ui.navigation
 import android.graphics.Color
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarHost
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,35 +34,74 @@ import com.atomicrobot.carbon.navigation.drawerScreens
 import com.atomicrobot.carbon.ui.about.AboutHtmlScreen
 import com.atomicrobot.carbon.ui.about.AboutScreen
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
-import com.atomicrobot.carbon.ui.components.TopBar
+import com.atomicrobot.carbon.ui.components.CustomSnackbar
+import com.atomicrobot.carbon.ui.components.NavigationTopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+//region Composables
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavigation() {
-    val navController = rememberNavController()
-    val scope = rememberCoroutineScope()
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
-    val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
-
-    BackHandler(enabled = scaffoldState.drawerState.isOpen) {
+    val scope: CoroutineScope = rememberCoroutineScope()
+    val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
+    val navController: NavHostController = rememberNavController()
+    BackHandler(enabled = drawerState.isOpen) {
         scope.launch {
-            scaffoldState.drawerState.close()
+            drawerState.close()
         }
     }
+
+    ModalNavigationDrawer(
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerContent(scope, navController, drawerState)
+            }
+        },
+        drawerState = drawerState,
+    ) {
+        MainContent(scope, navController, drawerState)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DrawerContent(scope: CoroutineScope, navController: NavController, drawerState: DrawerState) {
+    Drawer(
+        screens = drawerScreens,
+        onDestinationClicked = { route ->
+            scope.launch {
+                drawerState.close()
+            }
+            if (navController.currentBackStackEntry?.destination?.route != route) {
+                navController.navigate(route) {
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
+                }
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainContent(scope: CoroutineScope, navController: NavHostController, drawerState: DrawerState) {
+    val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         topBar = {
-            TopBar(
+            NavigationTopBar(
                 title = appBarTitle(navBackStackEntry),
-                buttonIcon = Icons.Filled.Menu,
+                navigationIcon = Icons.Filled.Menu,
                 onButtonClicked = {
                     scope.launch {
-                        scaffoldState.drawerState.open()
+                        drawerState.open()
                     }
                 }
             )
@@ -80,31 +126,14 @@ fun MainNavigation() {
                 }
             )
         },
-        drawerContent = {
-            Drawer(
-                screens = drawerScreens,
-                onDestinationClicked = { route ->
-                    scope.launch {
-                        scaffoldState.drawerState.close()
-                    }
-                    if (navController.currentBackStackEntry?.destination?.route != route) {
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId)
-                            launchSingleTop = true
-                        }
-                    }
-                }
-            )
-        },
-        snackbarHost = { SnackbarHost(scaffoldState.snackbarHostState) },
-        scaffoldState = scaffoldState
+        snackbarHost = { CustomSnackbar(snackbarHostState) },
     ) { innerPadding ->
         NavHost(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
             startDestination = "Main"
         ) {
-            mainFlowGraph(navController, scaffoldState)
+            mainFlowGraph(navController, snackbarHostState)
         }
     }
 }
@@ -115,12 +144,12 @@ fun MainNavigation() {
 @Suppress("UNUSED_PARAMETER")
 fun NavGraphBuilder.mainFlowGraph(
     navController: NavHostController,
-    scaffoldState: ScaffoldState
+    snackbarHostState: SnackbarHostState,
 ) {
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
         composable(CarbonScreens.Home.route) {
             CarbonAndroidTheme {
-                MainScreen(scaffoldState)
+                MainScreen(snackbarHostState)
             }
         }
         composable(CarbonScreens.Settings.route) {
@@ -168,7 +197,7 @@ fun NavGraphBuilder.mainFlowGraph(
         }
         composable(CarbonScreens.License.route) {
             CarbonAndroidTheme {
-                LicenseScreen()
+                LicenseScreen(snackbarHostState)
             }
         }
     }
@@ -184,3 +213,30 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
         else -> ""
     }
 }
+//endregion
+
+//region Composable Previews
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun DrawerContentPreview() {
+    CarbonAndroidTheme() {
+        val scope: CoroutineScope = rememberCoroutineScope()
+        val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
+        val navController: NavHostController = rememberNavController()
+        DrawerContent(scope = scope, navController = navController, drawerState = drawerState)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun MainContentPreview() {
+    CarbonAndroidTheme {
+        val scope: CoroutineScope = rememberCoroutineScope()
+        val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
+        val navController: NavHostController = rememberNavController()
+        MainContent(scope = scope, navController = navController, drawerState = drawerState)
+    }
+}
+//endregion
