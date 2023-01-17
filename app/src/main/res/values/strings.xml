@@ -26,6 +26,7 @@
     <string name="cont_desc_about_icon">About</string>
     <string name="cont_desc_about_html_icon">About HTML</string>
     <string name="cont_desc_shell">Carbon Shell Logo</string>
+    <string name="cont_desc_debug">Debug</string>
 
     <string name="main_app_title">Carbon Android</string>
 

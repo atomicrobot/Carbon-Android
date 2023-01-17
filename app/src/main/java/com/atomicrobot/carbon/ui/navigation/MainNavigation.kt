@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.navigation
 
 import android.graphics.Color
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -14,10 +15,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -36,16 +39,35 @@ import com.atomicrobot.carbon.ui.about.AboutScreen
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.components.NavigationTopBar
+import com.atomicrobot.carbon.ui.debug.DebugScreen
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import com.atomicrobot.carbon.util.LocalActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 //region Composables
+@Composable
+fun CarbonApp() {
+    CarbonAndroidTheme {
+        if(LocalContext.current is ComponentActivity) {
+            // Wrap the composable in a LocalActivity provider so our composable 'environment'
+            // has access to Activity context/scope which is required for requesting permissions
+            val parentActivity = LocalContext.current as ComponentActivity
+            CompositionLocalProvider(LocalActivity provides parentActivity) {
+                MainNavigation()
+            }
+        }
+        else {
+            MainNavigation()
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavigation() {
@@ -148,14 +170,10 @@ fun NavGraphBuilder.mainFlowGraph(
 ) {
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
         composable(CarbonScreens.Home.route) {
-            CarbonAndroidTheme {
-                MainScreen(snackbarHostState)
-            }
+            MainScreen(snackbarHostState)
         }
         composable(CarbonScreens.Settings.route) {
-            CarbonAndroidTheme {
-                SettingsScreen()
-            }
+            SettingsScreen()
         }
         composable(
             route = CarbonScreens.DeepLink.routeWithArgs,
@@ -178,27 +196,22 @@ fun NavGraphBuilder.mainFlowGraph(
                     Timber.e("Unsupported value for size")
                 }
             }
-            CarbonAndroidTheme {
-                DeepLinkSampleScreen(
-                    textColor = color,
-                    textSize = size
-                )
-            }
+            DeepLinkSampleScreen(
+                textColor = color,
+                textSize = size
+            )
         }
         composable(CarbonScreens.About.route) {
-            CarbonAndroidTheme {
-                AboutScreen()
-            }
+            AboutScreen()
         }
         composable(CarbonScreens.AboutHtml.route) {
-            CarbonAndroidTheme {
-                AboutHtmlScreen()
-            }
+            AboutHtmlScreen()
         }
         composable(CarbonScreens.License.route) {
-            CarbonAndroidTheme {
-                LicenseScreen(snackbarHostState)
-            }
+            LicenseScreen(snackbarHostState)
+        }
+        composable(CarbonScreens.Debug.route) {
+            DebugScreen()
         }
     }
 }
