@@ -204,6 +204,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}")
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")
 
+    debugImplementation("com.google.accompanist:accompanist-pager:${Dependencies.googleAccompanistVersion}")
+    debugImplementation("com.google.accompanist:accompanist-pager-indicators:${Dependencies.googleAccompanistVersion}")
+
     testImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
     testImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
     testImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")

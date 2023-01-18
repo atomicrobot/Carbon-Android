@@ -155,7 +155,7 @@ fun MainContent(scope: CoroutineScope, navController: NavHostController, drawerS
             navController = navController,
             startDestination = "Main"
         ) {
-            mainFlowGraph(navController, snackbarHostState)
+            mainFlowGraph(snackbarHostState)
         }
     }
 }
@@ -165,7 +165,6 @@ fun MainContent(scope: CoroutineScope, navController: NavHostController, drawerS
  */
 @Suppress("UNUSED_PARAMETER")
 fun NavGraphBuilder.mainFlowGraph(
-    navController: NavHostController,
     snackbarHostState: SnackbarHostState,
 ) {
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
@@ -233,7 +232,7 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
 @Preview
 @Composable
 fun DrawerContentPreview() {
-    CarbonAndroidTheme() {
+    CarbonAndroidTheme {
         val scope: CoroutineScope = rememberCoroutineScope()
         val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
         val navController: NavHostController = rememberNavController()
