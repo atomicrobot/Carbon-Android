@@ -2,10 +2,7 @@ package com.atomicrobot.carbon.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -89,6 +86,12 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         "abouthtml",
         ScreenIcon(Icons.Filled.Home, R.string.cont_desc_about_icon) // Icon value here is a filler
     )
+
+    object DesignSystems : CarbonScreens(
+        "Design Systems",
+        "designSystems",
+        ScreenIcon(Icons.Filled.Build, R.string.cont_desc_design_systems) // Icon value here is a filler
+    )
 }
 
 val appScreens = listOf(
@@ -99,7 +102,8 @@ val appScreens = listOf(
 val drawerScreens = listOf(
     CarbonScreens.Home,
     CarbonScreens.Settings,
+    CarbonScreens.DesignSystems,
     CarbonScreens.About,
     CarbonScreens.AboutHtml,
-    CarbonScreens.License
+    CarbonScreens.License,
 )

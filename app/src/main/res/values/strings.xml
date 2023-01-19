@@ -28,6 +28,9 @@
     <string name="cont_desc_license_icon">License</string>
     <string name="cont_desc_about_icon">About</string>
     <string name="cont_desc_about_html_icon">About HTML</string>
+    <string name="cont_desc_design_systems">Design Systems</string>
+    <string name="design_systems_framework">Framework Components</string>
+    <string name="design_systems_custom">Custom Components</string>
     <string name="camera_perm_rationale">The Camera permission is required to scan barcodes and QR codes.</string>
     <string name="camera_perm_denied">Camera permission not granted</string>
     <string name="camera_cont_desc">Snap a pic of a QrCode</string>

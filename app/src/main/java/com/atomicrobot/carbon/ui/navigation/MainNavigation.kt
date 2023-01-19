@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.navigation
 
 import android.graphics.Color
+import android.provider.CalendarContract
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -27,6 +28,7 @@ import com.atomicrobot.carbon.ui.about.AboutScreen
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
+import com.atomicrobot.carbon.ui.designSystems.DesignSystemsScreen
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
@@ -129,14 +131,10 @@ fun NavGraphBuilder.mainFlowGraph(
 ) {
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
         composable(CarbonScreens.Home.route) {
-            CarbonAndroidTheme {
-                MainScreen(snackbarHostState)
-            }
+            MainScreen(snackbarHostState)
         }
         composable(CarbonScreens.Settings.route) {
-            CarbonAndroidTheme {
-                SettingsScreen()
-            }
+            SettingsScreen()
         }
         composable(
             route = CarbonScreens.DeepLink.routeWithArgs,
@@ -159,27 +157,22 @@ fun NavGraphBuilder.mainFlowGraph(
                     Timber.e("Unsupported value for size")
                 }
             }
-            CarbonAndroidTheme {
-                DeepLinkSampleScreen(
-                    textColor = color,
-                    textSize = size
-                )
-            }
+            DeepLinkSampleScreen(
+                textColor = color,
+                textSize = size
+            )
         }
         composable(CarbonScreens.About.route) {
-            CarbonAndroidTheme {
-                AboutScreen()
-            }
+            AboutScreen()
         }
         composable(CarbonScreens.AboutHtml.route) {
-            CarbonAndroidTheme {
-                AboutHtmlScreen()
-            }
+            AboutHtmlScreen()
         }
         composable(CarbonScreens.License.route) {
-            CarbonAndroidTheme {
-                LicenseScreen()
-            }
+            LicenseScreen()
+        }
+        composable(CarbonScreens.DesignSystems.route){
+            DesignSystemsScreen()
         }
     }
 }
@@ -193,6 +186,7 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
         CarbonScreens.About.route -> CarbonScreens.About.title
         CarbonScreens.AboutHtml.route -> CarbonScreens.AboutHtml.title
         CarbonScreens.License.route -> CarbonScreens.License.title
+        CarbonScreens.DesignSystems.route -> CarbonScreens.DesignSystems.title
         else -> ""
     }
 }
