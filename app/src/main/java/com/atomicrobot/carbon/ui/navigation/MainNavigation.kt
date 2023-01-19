@@ -1,7 +1,6 @@
 package com.atomicrobot.carbon.ui.navigation
 
 import android.graphics.Color
-import android.provider.CalendarContract
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -28,11 +27,10 @@ import com.atomicrobot.carbon.ui.about.AboutScreen
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
-import com.atomicrobot.carbon.ui.designSystems.DesignSystemsScreen
+import com.atomicrobot.carbon.ui.designSystems.DesignSystemScreen
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
-import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -172,7 +170,9 @@ fun NavGraphBuilder.mainFlowGraph(
             LicenseScreen()
         }
         composable(CarbonScreens.DesignSystems.route){
-            DesignSystemsScreen()
+            DesignSystemScreen(
+                onDismiss = navController::navigateUp
+            )
         }
     }
 }

@@ -88,7 +88,7 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
     )
 
     object DesignSystems : CarbonScreens(
-        "Design Systems",
+        "Design System",
         "designSystems",
         ScreenIcon(Icons.Filled.Build, R.string.cont_desc_design_systems) // Icon value here is a filler
     )
