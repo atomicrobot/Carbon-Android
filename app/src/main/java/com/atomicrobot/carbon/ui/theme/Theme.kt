@@ -7,27 +7,38 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.Black100
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.MediumGray
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.Neutron
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.Orange
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.Pink700
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.Purple200
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.Purple500
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.Purple700
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.Transparent
+import com.atomicrobot.carbon.ui.theme.CarbonColors.Companion.White100
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColorScheme(
     primary = Purple200,
     secondary = Purple700,
-    tertiary = pink700,
-    onPrimary = Color.White,
-    onSurface = Color.White,
+    tertiary = Pink700,
+    onPrimary = White100,
+    onSurface = MediumGray,
     primaryContainer = MediumGray,
-    onPrimaryContainer = Color.Black,
+    onPrimaryContainer = Black100,
 //    inversePrimary = ,
 //    onSecondary = ,
     secondaryContainer = Orange,
-    onSecondaryContainer = Color.White,
+    onSecondaryContainer = White100,
 //    onTertiary = ,
     tertiaryContainer = Neutron,
-    onTertiaryContainer = Color.White,
-    background = Color.Black,
-    onBackground = Color.White,
+    onTertiaryContainer = White100,
+    background = Black100,
+    onBackground = White100,
     surface = Neutron,
-    surfaceVariant = Color.Transparent,
+    surfaceVariant = Transparent,
     onSurfaceVariant = LightGray,
 //    surfaceTint = ,
 //    inverseSurface = ,
@@ -44,22 +55,22 @@ private val DarkColorPalette = darkColorScheme(
 private val LightColorPalette = lightColorScheme(
     primary = Purple500,
     secondary = Purple700,
-    tertiary = pink700,
+    tertiary = Pink700,
 //    onPrimary = Color.White,
-    onSurface = Color.White,
+    onSurface = MediumGray,
     primaryContainer = MediumGray,
-    onPrimaryContainer = Color.Black,
+    onPrimaryContainer = Black100,
 //    inversePrimary = ,
 //    onSecondary = ,
     secondaryContainer = Orange,
-    onSecondaryContainer = Color.White,
+    onSecondaryContainer = White100,
 //    onTertiary = ,
     tertiaryContainer = Neutron,
-    onTertiaryContainer = Color.White,
-    background = Color.White,
-    onBackground = Color.Black,
+    onTertiaryContainer = White100,
+    background = White100,
+    onBackground = Black100,
     surface = Neutron,
-    surfaceVariant = Color.Transparent,
+    surfaceVariant = Transparent,
     onSurfaceVariant = LightGray,
 //    surfaceTint = ,
 //    inverseSurface = ,

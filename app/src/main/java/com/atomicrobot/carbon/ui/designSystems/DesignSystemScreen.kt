@@ -47,12 +47,6 @@ fun DesignSystemScreen(
         }
     )
 
-    MaterialTheme.colorScheme::class.members.forEach {
-        Timber.tag("pppp").d(it.name)
-        Timber.tag("pppp")
-            .d((it.returnType.toString() == "androidx.compose.ui.graphics.Color").toString())
-    }
-
     CarbonAndroidTheme(darkTheme = darkModeChecked) {
         Column(
             modifier = Modifier
@@ -101,7 +95,7 @@ fun DesignSystemScreen(
                         ) {
                             this.atomsGroup(
                                 onAtomClicked = {
-                                    screenState = DetailState(listOf())
+                                    screenState = DetailState(it.category)
                                 }
                             )
 
@@ -113,14 +107,14 @@ fun DesignSystemScreen(
 
                             this.moleculesGroup(
                                 onMoleculeClicked = {
-                                    screenState = DetailState(listOf())
+                                    screenState = DetailState(it.category)
                                 }
                             )
                         }
                     }
                     is DetailState -> {
 
-                        val composables = getColorSchemeComposables()
+                        val composables = selectedComposableSet(screenState.category)
 
                         LazyColumn(
                             modifier = Modifier
@@ -301,6 +295,20 @@ fun AdjustmentsRow(
     }
 }
 
+@Composable
+fun selectedComposableSet(
+    category: String?
+): List<@Composable () -> Unit> {
+
+    return when (category){
+        Atom.COLORS.category -> getColorSchemeComposables()
+        Atom.TYPOGRAPHY.category -> getTypographyComposables()
+        Atom.FONTS.category -> getFontComposables()
+        Molecule.BUTTONS.category -> getButtonComposables()
+        else -> listOf()
+    }
+}
+
 enum class Atom(val category: String) {
     COLORS(category = "Colors"),
     TYPOGRAPHY(category = "Typography"),
@@ -320,7 +328,7 @@ enum class Molecule(val category: String) {
     BARS(category = "Bars")
 }
 
-sealed class DesignSystemScreenState {
+sealed class DesignSystemScreenState(val category: String? = null) {
     object OverviewState : DesignSystemScreenState()
-    class DetailState(val composables: List<@Composable () -> Unit>) : DesignSystemScreenState()
+    class DetailState(detail: String) : DesignSystemScreenState(detail)
 }
