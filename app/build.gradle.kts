@@ -164,7 +164,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}")
     implementation("androidx.core:core-ktx:${Dependencies.coreVersion}")
     implementation("androidx.core:core-splashscreen:${Dependencies.splashVersion}")
-    implementation("androidx.navigation:navigation-compose:${Dependencies.composeNavigationVersion}")
 
     implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
     implementation("com.google.android.gms:play-services-base:${Dependencies.playServicesVersion}")
@@ -206,6 +205,8 @@ dependencies {
 
     debugImplementation("com.google.accompanist:accompanist-pager:${Dependencies.googleAccompanistVersion}")
     debugImplementation("com.google.accompanist:accompanist-pager-indicators:${Dependencies.googleAccompanistVersion}")
+    debugImplementation("com.google.accompanist:accompanist-navigation-animation:${Dependencies.googleAccompanistVersion}")
+
 
     testImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
     testImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")

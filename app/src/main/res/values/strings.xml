@@ -26,7 +26,7 @@
     <string name="cont_desc_about_icon">About</string>
     <string name="cont_desc_about_html_icon">About HTML</string>
     <string name="cont_desc_shell">Carbon Shell Logo</string>
-    <string name="cont_desc_debug">Debug</string>
+    <string name="cont_desc_design_sys">Design System</string>
 
     <string name="main_app_title">Carbon Android</string>
 
@@ -61,4 +61,28 @@
     <string name="about_awards_and_recognition">Awards &amp; Recognition</string>
     <string name="about_awards_and_recognition_apps_created_for_impact">Apps Created for Impact</string>
     <string name="about_awards_and_recognition_apps_created_for_impact_desc">Atomic Robot’s mobile solutions have been recognized by industry experts — including MUX Awards, W3 Awards, Goodfirms, and Clutch — for their impact and innovation.</string>
+    <string name="title_activity_design_system">Design System</string>
+
+    <string name="design_atoms">Atoms</string>
+    <string name="design_molecule">Molecules</string>
+    <string name="design_organisms">Organisms</string>
+    <string name="design_radio_dis_act">"Radio (Disabled/Active)"</string>
+    <string name="design_radio_dis_inact">"Radio (Disabled/Inactive)"</string>
+
+
+    <string name="design_home">Design System</string>
+    <string name="design_colors">Colors</string>
+    <string name="design_icons_logos">Icons &amp; Logos</string>
+    <string name="design_typography">Typography</string>
+    <string name="design_buttons">Buttons</string>
+    <string name="design_checkboxes">Checkboxes</string>
+    <string name="design_radios">Radios</string>
+    <string name="design_sliders">Sliders</string>
+    <string name="design_switches">Switches</string>
+
+    <string-array name="design_radio_options">
+        <item>Apple</item>
+        <item>Banana</item>
+        <item>Cherry</item>
+    </string-array>
 </resources>

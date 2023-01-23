@@ -39,13 +39,14 @@ import com.atomicrobot.carbon.ui.about.AboutScreen
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.components.NavigationTopBar
-import com.atomicrobot.carbon.ui.debug.DebugScreen
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
+import com.atomicrobot.carbon.ui.designsystem.DesignSystemActivity
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import com.atomicrobot.carbon.util.LocalActivity
+import com.atomicrobot.carbon.util.startComponentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -95,6 +96,7 @@ fun MainNavigation() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrawerContent(scope: CoroutineScope, navController: NavController, drawerState: DrawerState) {
+    val parentActivity = LocalActivity.current
     Drawer(
         screens = drawerScreens,
         onDestinationClicked = { route ->
@@ -102,9 +104,16 @@ fun DrawerContent(scope: CoroutineScope, navController: NavController, drawerSta
                 drawerState.close()
             }
             if (navController.currentBackStackEntry?.destination?.route != route) {
-                navController.navigate(route) {
-                    popUpTo(navController.graph.startDestinationId)
-                    launchSingleTop = true
+                when(route) {
+                    CarbonScreens.DesignSystem.route -> {
+                        parentActivity.startComponentActivity<DesignSystemActivity>()
+                    }
+                    else -> {
+                        navController.navigate(route) {
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
+                    }
                 }
             }
         }
@@ -116,6 +125,7 @@ fun DrawerContent(scope: CoroutineScope, navController: NavController, drawerSta
 fun MainContent(scope: CoroutineScope, navController: NavHostController, drawerState: DrawerState) {
     val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val parentActivity = LocalActivity.current
     Scaffold(
         topBar = {
             NavigationTopBar(
@@ -134,15 +144,22 @@ fun MainContent(scope: CoroutineScope, navController: NavHostController, drawerS
                 navController = navController,
                 onDestinationClicked = {
                     if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                        navController.navigate(it.route) {
-                            // Make sure the back stack only consists of the current graphs main
-                            // destination
-                            popUpTo(CarbonScreens.Home.route) {
-                                saveState = true
+                        when(it.route) {
+                            CarbonScreens.DesignSystem.route -> {
+                                parentActivity.startComponentActivity<DesignSystemActivity>()
                             }
-                            // Singular instance of destinations
-                            launchSingleTop = true
-                            restoreState = true
+                            else -> {
+                                navController.navigate(it.route) {
+                                    // Make sure the back stack only consists of the current graphs main
+                                    // destination
+                                    popUpTo(CarbonScreens.Home.route) {
+                                        saveState = true
+                                    }
+                                    // Singular instance of destinations
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
                         }
                     }
                 }
@@ -208,9 +225,6 @@ fun NavGraphBuilder.mainFlowGraph(
         }
         composable(CarbonScreens.License.route) {
             LicenseScreen(snackbarHostState)
-        }
-        composable(CarbonScreens.Debug.route) {
-            DebugScreen()
         }
     }
 }

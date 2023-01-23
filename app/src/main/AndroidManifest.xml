@@ -11,6 +11,11 @@
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.designsystem.DesignSystemActivity"
+            android:exported="false"
+            android:label="@string/title_activity_design_system"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".StartActivity"
             android:exported="true"
             android:label="@string/title_activity_compose_start"
