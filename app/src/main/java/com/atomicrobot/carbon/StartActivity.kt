@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.atomicrobot.carbon.ui.navigation.CarbonApp
+import com.atomicrobot.carbon.ui.navigation.CarbonAndroidApp
 import com.atomicrobot.carbon.ui.splash.SplashViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -19,7 +19,7 @@ class StartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         handleIntent(intent)
         setContent {
-            CarbonApp()
+            CarbonAndroidApp()
         }
     }
 

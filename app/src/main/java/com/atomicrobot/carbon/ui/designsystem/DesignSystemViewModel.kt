@@ -1,17 +1,14 @@
 package com.atomicrobot.carbon.ui.designsystem
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class DesignSystemViewModel(
-    private val app: Application,
-): ViewModel() {
-
+class DesignSystemViewModel(): ViewModel() {
     data class ScreenState(
         val darkMode: Boolean = false,
         val useDynamicColor: Boolean = false,
+        val fontScale: FontScale = FontScale.Normal,
     )
 
     private val _uiState = MutableStateFlow(ScreenState())
@@ -21,6 +18,12 @@ class DesignSystemViewModel(
     fun enabledDarkMode(enabled: Boolean) {
         _uiState.value = _uiState.value.copy(
             darkMode = enabled
+        )
+    }
+
+    fun updateFontScale(fontScale: FontScale) {
+        _uiState.value = _uiState.value.copy(
+            fontScale = fontScale
         )
     }
 

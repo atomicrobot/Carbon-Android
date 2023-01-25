@@ -20,25 +20,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
-import com.atomicrobot.carbon.util.AppScreensPreviewProvider
 
 //region Composables
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,14 +41,14 @@ import com.atomicrobot.carbon.util.AppScreensPreviewProvider
 fun NavigationTopBar(
     title: String = CarbonScreens.Home.title,
     navigationIcon: ImageVector = Icons.Filled.Menu,
-    onButtonClicked: () -> Unit = {}
+    onNavigationIconClicked: () -> Unit = {}
 ) = TopAppBar(
     title = {
         Text(text = title)
     },
     navigationIcon = {
-        IconButton(onClick = onButtonClicked) {
-            Icon(imageVector = navigationIcon, contentDescription = "")
+        IconButton(onClick = onNavigationIconClicked) {
+            Icon(imageVector = navigationIcon, contentDescription = navigationIcon.name)
         }
     },
     actions = {
@@ -97,24 +92,21 @@ fun BottomBar(
 
 @Composable
 fun BottomNavigationBar(
-    @PreviewParameter(
-        AppScreensPreviewProvider::class,
-        limit = 1
-    ) destinations: List<CarbonScreens>,
-    navController: NavController = rememberNavController(),
+    destinations: List<CarbonScreens>,
+    currentDestination: NavDestination?,
     onDestinationClicked: (CarbonScreens) -> Unit = {}
 ) {
     NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
         destinations.forEach { destination ->
+            val selected = currentDestination
+                ?.hierarchy
+                ?.any { it.route == destination.route } == true
             NavigationBarItem(
-                selected = currentDestination
-                    ?.hierarchy
-                    ?.any { it.route == destination.route } == true,
+                selected = selected,
                 icon = {
                     Icon(
-                        destination.iconData.vectorData,
+                        if(selected) destination.iconData.selectedIcon
+                        else destination.iconData.unselectedIcon,
                         stringResource(id = destination.iconData.iconContentDescription)
                     )
                 },
@@ -175,7 +167,7 @@ fun BottomBarPreview() {
 @Composable
 fun BottomNavigationBarPreview() {
     CarbonAndroidTheme {
-        BottomNavigationBar(appScreens)
+        BottomNavigationBar(appScreens, null)
     }
 }
 

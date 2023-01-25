@@ -6,13 +6,9 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
@@ -36,13 +32,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.designsystem.theme.DesignRadiosScreen
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -51,37 +48,78 @@ import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import org.koin.androidx.compose.getViewModel
 
-val textScalingOptions = listOf("0.75 Text Scale", "1.0 Text Scale", "1.5 Text Scale", "2.0 Text Scale",)
-
 //region Composables
 @Composable
 fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
-    return when (navBackStackEntry?.destination?.route) {
-        DesignSystemScreens.Home.route -> stringResource(id = DesignSystemScreens.Home.title)
-        DesignSystemScreens.Colors.route -> stringResource(id = DesignSystemScreens.Colors.title)
-        DesignSystemScreens.Typography.route -> stringResource(id = DesignSystemScreens.Typography.title)
-        DesignSystemScreens.Buttons.route -> stringResource(id = DesignSystemScreens.Buttons.title)
-        DesignSystemScreens.Checkboxes.route -> stringResource(id = DesignSystemScreens.Buttons.title)
-        DesignSystemScreens.Radios.route -> stringResource(id = DesignSystemScreens.Buttons.title)
-        DesignSystemScreens.Sliders.route -> stringResource(id = DesignSystemScreens.Switches.title)
-        DesignSystemScreens.Switches.route -> stringResource(id = DesignSystemScreens.Switches.title)
-        else -> ""
+    navBackStackEntry?.destination?.route?.let { currentRoute ->
+        val destination = CarbonScreens.values().find { currentRoute == it.route}
+        return destination?.title ?: ""
+    }
+    return ""
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@Composable
+fun DesignScreen() {
+    val viewModel: DesignSystemViewModel = getViewModel()
+    val screenState: DesignSystemViewModel.ScreenState by viewModel.uiState.collectAsState()
+    val navController: NavHostController = rememberAnimatedNavController()
+
+    val onBackPressedDispatcherOwner = LocalOnBackPressedDispatcherOwner.current
+
+    CarbonAndroidTheme(
+        darkTheme = screenState.darkMode,
+        fontScale = screenState.fontScale.scale,
+    ) {
+        Scaffold(
+            topBar = {
+                val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
+                DesignScreenAppBar(
+                    title = appBarTitle(navBackStackEntry = navBackStackEntry),
+                    screenState.darkMode,
+                    selectedFontScale = screenState.fontScale,
+                    onBackPressed = {
+                        onBackPressedDispatcherOwner?.onBackPressedDispatcher?.onBackPressed()
+                    },
+                    onFontScaleChanged = {
+                        viewModel.updateFontScale(it)
+                    },
+                    onDarkModeChanged = {
+                        viewModel.enabledDarkMode(it)
+                    }
+                )
+            },
+            modifier = Modifier.fillMaxSize()
+        ) { innerPadding ->
+            AnimatedNavHost(
+                modifier = Modifier.padding(innerPadding),
+                navController = navController,
+                startDestination = "design_system"
+            ) {
+                designSystemGraph {
+                    navController.navigate(it)
+                }
+            }
+        }
     }
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DesignScreenAppBar(
-    navBackStackEntry: NavBackStackEntry?,
-    darkModeEnabled: Boolean,
+    title: String,
+    darkModeEnabled: Boolean = false,
+    selectedFontScale: FontScale = FontScale.Normal,
     onBackPressed:() -> Unit = {},
-    onDarkModeChanged: (Boolean) -> Unit,
+    onFontScaleChanged: (FontScale) -> Unit = {},
+    onDarkModeChanged: (Boolean) -> Unit = {},
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(textScalingOptions[1]) }
     TopAppBar(
         title = {
-            Text(text = appBarTitle(navBackStackEntry))
+            Text(text = title)
         },
         navigationIcon = {
             IconButton(onClick = onBackPressed) {
@@ -97,17 +135,17 @@ fun DesignScreenAppBar(
                     // The `menuAnchor` modifier must be passed to the text field for correctness.
                     modifier = Modifier.menuAnchor(),
                     readOnly = true,
-                    value = selectedOptionText,
+                    value = selectedFontScale.label(LocalContext.current),
                     onValueChange = {},
                     trailingIcon = { TrailingIcon(expanded = expanded) },
                     colors = ExposedDropdownMenuDefaults.textFieldColors(),
                 )
                 ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    textScalingOptions.forEach {
+                    fontScales.forEach {
                         DropdownMenuItem(
-                            text = { Text(it) },
+                            text = { Text(it.label(LocalContext.current)) },
                             onClick = {
-                                selectedOptionText = it
+                                onFontScaleChanged(it)
                                 expanded = false
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -120,8 +158,8 @@ fun DesignScreenAppBar(
                 checked = darkModeEnabled,
                 onCheckedChange = onDarkModeChanged) {
                 Icon(
-                   imageVector = if(darkModeEnabled) Icons.Filled.DarkMode
-                   else Icons.Filled.LightMode,
+                    imageVector = if(darkModeEnabled) Icons.Filled.DarkMode
+                    else Icons.Filled.LightMode,
                     if(darkModeEnabled) "Enable Light mode"
                     else "Enable Dark mode"
                 )
@@ -130,45 +168,11 @@ fun DesignScreenAppBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
-@Composable
-fun DesignScreen() {
-    val viewModel: DesignSystemViewModel = getViewModel()
-    val screenState: DesignSystemViewModel.ScreenState by viewModel.uiState.collectAsState()
-    val navController: NavHostController = rememberAnimatedNavController()
-    val onBackPressedDispatcherOwner = LocalOnBackPressedDispatcherOwner.current
-
-    CarbonAndroidTheme(darkTheme = screenState.darkMode) {
-        Scaffold(
-            topBar = {
-                val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
-                DesignScreenAppBar(
-                    navBackStackEntry,
-                    screenState.darkMode,
-                    onBackPressed = {
-                        onBackPressedDispatcherOwner?.onBackPressedDispatcher?.onBackPressed()
-                    }
-                ) {
-                    viewModel.enabledDarkMode(it)
-                }
-            },
-            modifier = Modifier.fillMaxSize()
-        ) { innerPadding ->
-            AnimatedNavHost(
-                modifier = Modifier.padding(innerPadding),
-                navController = navController,
-                startDestination = "design"
-            ) {
-                designSystemGraphFlow {
-                    navController.navigate(it)
-                }
-            }
-        }
-    }
-}
-
+//region NavGraphBuilder extension
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.designSystemGraphFlow(onNavigateTo: (String) -> Unit = {}) {
+fun NavGraphBuilder.designSystemGraph(
+    onNavigateTo: (String) -> Unit = {}
+) {
     val onEnterTransition: AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition? = {
         when (targetState.destination.route) {
             DesignSystemScreens.Home.route ->
@@ -186,7 +190,7 @@ fun NavGraphBuilder.designSystemGraphFlow(onNavigateTo: (String) -> Unit = {}) {
     }
     navigation(
         startDestination = DesignSystemScreens.Home.route,
-        route = "design",
+        route = "design_system",
         enterTransition = onEnterTransition,
         exitTransition = onExitTransition,
     ) {
@@ -243,11 +247,10 @@ fun NavGraphBuilder.designSystemGraphFlow(onNavigateTo: (String) -> Unit = {}) {
     }
 }
 //endregion
+//endregion
 
 @Preview
 @Composable
 fun DesignScreenAppBarPreview() {
-    DesignScreenAppBar(null, false) {
-
-    }
+    DesignScreenAppBar(title = "Carbon Android")
 }

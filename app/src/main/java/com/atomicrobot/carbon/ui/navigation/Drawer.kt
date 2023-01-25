@@ -24,19 +24,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.navigation.CarbonScreens
-import com.atomicrobot.carbon.util.AppScreenPreviewProvider
-import com.atomicrobot.carbon.util.AppScreensPreviewProvider
 
-@Preview
+//region Drawer Composables
 @Composable
 fun Drawer(
-    @PreviewParameter(AppScreensPreviewProvider::class, limit = 1) screens: List<CarbonScreens>,
+    screens: List<CarbonScreens>,
     modifier: Modifier = Modifier,
-    onDestinationClicked: (route: String) -> Unit = { _ -> }
+    onDestinationClicked: (route: CarbonScreens) -> Unit = { _ -> }
 ) {
     Column(
         modifier
@@ -57,24 +54,22 @@ fun Drawer(
         }
         screens.forEach { screen ->
             Spacer(Modifier.height(24.dp))
-            DrawerAppScreenItem(screen, onDestinationClicked)
+            DrawerAppScreenItem(screen) {
+                onDestinationClicked(screen)
+            }
         }
     }
 }
 
-@Preview
 @Composable
 fun DrawerAppScreenItem(
-    @PreviewParameter(AppScreenPreviewProvider::class, limit = 3) screen: CarbonScreens,
-    onDestinationClicked: (route: String) -> Unit = { _ -> }
+    screen: CarbonScreens,
+    onClicked: () -> Unit = { }
 ) {
     Row(
         Modifier
             .fillMaxWidth()
-            .clickable
-            {
-                onDestinationClicked(screen.route)
-            },
+            .clickable { onClicked() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         val contentDesc = stringResource(id = screen.iconData.iconContentDescription)
@@ -82,7 +77,8 @@ fun DrawerAppScreenItem(
             .size(45.dp)
             .padding(8.dp)
             .align(Alignment.CenterVertically)
-        if (screen.route == CarbonScreens.About.route || screen.route == CarbonScreens.AboutHtml.route) {
+        if (screen.route == CarbonScreens.About.route
+            || screen.route == CarbonScreens.AboutHtml.route) {
             Icon(
                 painter = painterResource(id = R.drawable.carbon_android_logo), // Use custom icon
                 contentDescription = contentDesc,
@@ -90,7 +86,7 @@ fun DrawerAppScreenItem(
             )
         } else {
             Icon(
-                imageVector = screen.iconData.vectorData,
+                imageVector = screen.iconData.unselectedIcon,
                 contentDescription = contentDesc,
                 modifier = modifier
             )
@@ -101,3 +97,18 @@ fun DrawerAppScreenItem(
         )
     }
 }
+//endregion
+
+//region Drawer Composable Previews
+@Preview
+@Composable
+fun DrawerPreview() {
+    Drawer(screens = CarbonScreens.values(), onDestinationClicked = { })
+}
+
+@Preview
+@Composable
+fun DrawerAppScreenItemPreview() {
+    DrawerAppScreenItem(CarbonScreens.Home)
+}
+//endregion

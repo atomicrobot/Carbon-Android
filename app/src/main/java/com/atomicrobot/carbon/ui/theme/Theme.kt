@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import com.atomicrobot.carbon.util.scale
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val darkColorScheme = darkColorScheme(
@@ -28,6 +29,7 @@ private val lightColorScheme = lightColorScheme(
 @Composable
 fun CarbonAndroidTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    fontScale: Float = 1.0f,
     useDynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -58,6 +60,9 @@ fun CarbonAndroidTheme(
             )
         }
     }
+
+    val typography = if(fontScale == 1.0f) carbonTypography
+    else carbonTypography.scale(scaleFactor = fontScale)
 
     MaterialTheme(
         colorScheme = colorScheme,

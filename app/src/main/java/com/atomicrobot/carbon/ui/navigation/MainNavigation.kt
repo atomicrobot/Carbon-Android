@@ -2,9 +2,17 @@ package com.atomicrobot.carbon.ui.navigation
 
 import android.graphics.Color
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -16,14 +24,12 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,7 +37,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.atomicrobot.carbon.navigation.CarbonScreens
+import com.atomicrobot.carbon.navigation.CarbonScreens.DeepLink.getTextColor
+import com.atomicrobot.carbon.navigation.CarbonScreens.DeepLink.getTextSize
 import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.navigation.drawerScreens
 import com.atomicrobot.carbon.ui.about.AboutHtmlScreen
@@ -40,148 +49,106 @@ import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.components.NavigationTopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
-import com.atomicrobot.carbon.ui.designsystem.DesignSystemActivity
+import com.atomicrobot.carbon.ui.designsystem.DesignScreen
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import com.atomicrobot.carbon.util.LocalActivity
-import com.atomicrobot.carbon.util.startComponentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
-//region Composables
+//region Carbon Composables
 @Composable
-fun CarbonApp() {
+fun CarbonAndroidApp() {
     CarbonAndroidTheme {
-        if(LocalContext.current is ComponentActivity) {
-            // Wrap the composable in a LocalActivity provider so our composable 'environment'
-            // has access to Activity context/scope which is required for requesting permissions
-            val parentActivity = LocalContext.current as ComponentActivity
-            CompositionLocalProvider(LocalActivity provides parentActivity) {
-                MainNavigation()
-            }
-        }
-        else {
-            MainNavigation()
+        val parentActivity = LocalContext.current as ComponentActivity
+        // Wrap the composable in a LocalActivity provider so our composable 'environment'
+        // has access to Activity context/scope which is required for requesting permissions
+        CompositionLocalProvider(LocalActivity provides parentActivity) {
+            CarbonAndroid()
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun MainNavigation() {
-    val scope: CoroutineScope = rememberCoroutineScope()
-    val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
-    val navController: NavHostController = rememberNavController()
-    BackHandler(enabled = drawerState.isOpen) {
-        scope.launch {
-            drawerState.close()
-        }
-    }
-
+fun CarbonAndroid(
+    appState: CarbonAndroidAppState = rememberCarbonAndroidAppState(),
+) {
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
-                DrawerContent(scope, navController, drawerState)
+                Drawer(screens = drawerScreens) { screen ->
+                    appState.navigateToCarbonScreen(screen)
+                }
             }
         },
-        drawerState = drawerState,
+        drawerState = appState.drawerState,
     ) {
-        MainContent(scope, navController, drawerState)
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DrawerContent(scope: CoroutineScope, navController: NavController, drawerState: DrawerState) {
-    val parentActivity = LocalActivity.current
-    Drawer(
-        screens = drawerScreens,
-        onDestinationClicked = { route ->
-            scope.launch {
-                drawerState.close()
-            }
-            if (navController.currentBackStackEntry?.destination?.route != route) {
-                when(route) {
-                    CarbonScreens.DesignSystem.route -> {
-                        parentActivity.startComponentActivity<DesignSystemActivity>()
-                    }
-                    else -> {
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId)
-                            launchSingleTop = true
-                        }
-                    }
+        Scaffold(
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            topBar = {
+                if(appState.shouldShowAppTopBar) {
+                    NavigationTopBar(
+                        title = appState.destinationTitle,
+                        navigationIcon = if(appState.shouldShowMenuIcon)
+                            Icons.Filled.Menu
+                        else
+                            Icons.Filled.ArrowBack,
+                        onNavigationIconClicked = appState::onNavIconClicked
+                    )
                 }
-            }
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MainContent(scope: CoroutineScope, navController: NavHostController, drawerState: DrawerState) {
-    val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val parentActivity = LocalActivity.current
-    Scaffold(
-        topBar = {
-            NavigationTopBar(
-                title = appBarTitle(navBackStackEntry),
-                navigationIcon = Icons.Filled.Menu,
-                onButtonClicked = {
-                    scope.launch {
-                        drawerState.open()
-                    }
+            },
+            bottomBar = {
+                if(appState.shouldShowBottomBar) {
+                    BottomNavigationBar(
+                        destinations = appScreens,
+                        currentDestination = appState.currentDestination,
+                        onDestinationClicked = appState::navigateToCarbonScreen,
+                    )
                 }
+            },
+            snackbarHost = { CustomSnackbar(appState.snackbarHostState) },
+        ) { innerPadding ->
+            CarbonAndroidNavHost(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .consumedWindowInsets(innerPadding)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Horizontal
+                        )
+                    ),
+                navController = appState.navController,
+                snackbarHostState = appState.snackbarHostState,
+                onBackClick = appState::onBackClicked
             )
-        },
-        bottomBar = {
-            BottomNavigationBar(
-                destinations = appScreens,
-                navController = navController,
-                onDestinationClicked = {
-                    if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                        when(it.route) {
-                            CarbonScreens.DesignSystem.route -> {
-                                parentActivity.startComponentActivity<DesignSystemActivity>()
-                            }
-                            else -> {
-                                navController.navigate(it.route) {
-                                    // Make sure the back stack only consists of the current graphs main
-                                    // destination
-                                    popUpTo(CarbonScreens.Home.route) {
-                                        saveState = true
-                                    }
-                                    // Singular instance of destinations
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
-                        }
-                    }
-                }
-            )
-        },
-        snackbarHost = { CustomSnackbar(snackbarHostState) },
-    ) { innerPadding ->
-        NavHost(
-            modifier = Modifier.padding(innerPadding),
-            navController = navController,
-            startDestination = "Main"
-        ) {
-            mainFlowGraph(snackbarHostState)
         }
     }
 }
 
-/**
- * Nested nav. graph dedicated to displaying 'main' app content.
- */
-@Suppress("UNUSED_PARAMETER")
-fun NavGraphBuilder.mainFlowGraph(
+@Composable
+fun CarbonAndroidNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
+    onBackClick: () -> Unit,
+) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = "Main"
+    ) {
+        carbonNavGraph(snackbarHostState)
+        composable(route = CarbonScreens.DesignSystem.route) {
+            DesignScreen()
+        }
+    }
+}
+
+fun NavGraphBuilder.carbonNavGraph(
     snackbarHostState: SnackbarHostState,
 ) {
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
@@ -196,25 +163,11 @@ fun NavGraphBuilder.mainFlowGraph(
             arguments = CarbonScreens.DeepLink.arguments,
             deepLinks = CarbonScreens.DeepLink.deepLink
         ) {
-            val textColor = it.arguments?.getString("textColor")
-            var color = Color.BLACK
-            try {
-                color = Color.parseColor(textColor)
-            } catch (exception: IllegalArgumentException) {
-                Timber.e("Unsupported value for color")
-            }
-            val textSize = it.arguments?.getString("textSize")
-            var size = 30f
-            if (!textSize.isNullOrEmpty()) {
-                try {
-                    size = textSize.toFloat()
-                } catch (exception: NumberFormatException) {
-                    Timber.e("Unsupported value for size")
-                }
-            }
+            val textColor = it.getTextColor(Color.BLACK)
+            val textSize = it.getTextSize(30.0F)
             DeepLinkSampleScreen(
-                textColor = color,
-                textSize = size
+                textColor = textColor,
+                textSize = textSize
             )
         }
         composable(CarbonScreens.About.route) {
@@ -229,40 +182,110 @@ fun NavGraphBuilder.mainFlowGraph(
     }
 }
 
+
+//region Carbon Android app
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
-    return when (navBackStackEntry?.destination?.route) {
-        CarbonScreens.Home.route -> CarbonScreens.Home.title
-        CarbonScreens.Settings.route -> CarbonScreens.Settings.title
-        CarbonScreens.DeepLink.route -> CarbonScreens.DeepLink.title
-        CarbonScreens.License.route -> CarbonScreens.License.title
-        else -> ""
+fun rememberCarbonAndroidAppState(
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    navController: NavHostController = rememberNavController(),
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+): CarbonAndroidAppState {
+    return remember(navController, coroutineScope) {
+        CarbonAndroidAppState(navController, coroutineScope,drawerState, snackbarHostState)
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+class CarbonAndroidAppState(
+    val navController: NavHostController,
+    private val coroutineScope: CoroutineScope,
+    val drawerState: DrawerState,
+    val snackbarHostState: SnackbarHostState,
+) {
+    val currentDestination: NavDestination?
+    @Composable get() = navController
+        .currentBackStackEntryAsState()
+        .value
+        ?.destination
+
+    val destinations: List<CarbonScreens> = CarbonScreens.values()
+
+    val destinationTitle: String
+    @Composable get() {
+        currentDestination?.route?.let { currentRoute ->
+            val destination = CarbonScreens.values().find { currentRoute == it.route}
+            return destination?.title ?: ""
+        }
+        return ""
+    }
+
+    val shouldShowBottomBar: Boolean
+    @Composable get() {
+        currentDestination?.route?.let { currentRoute ->
+            val destination = CarbonScreens.values().find { currentRoute == it.route}
+            // We wanna show the bottom app bar on ever destination except for the design
+            // systems screen
+            return destination != CarbonScreens.DesignSystem
+        }
+        return false
+    }
+
+    val shouldShowAppTopBar: Boolean
+    @Composable get() = shouldShowBottomBar
+
+    val shouldShowMenuIcon: Boolean
+    get() {
+        navController.currentDestination?.route?.let { route ->
+            return CarbonScreens.values().find { route == it.route } == CarbonScreens.Home
+        }
+        // If we have no destination default to showing the menu
+        return true
+    }
+
+    fun navigateToCarbonScreen(screen: CarbonScreens) {
+        if(drawerState.isOpen) {
+            coroutineScope.launch {
+                drawerState.close()
+            }
+        }
+        val navigationOp = navOptions {
+            // Pop up to the start destination of the graph to
+            // avoid building up a large stack of destinations
+            // on the back stack as users select items
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            // Avoid multiple copies of the same destination when
+            // re-selecting the same item
+            launchSingleTop = true
+            // Restore state when reselecting a previously selected item
+            restoreState = true
+        }
+        navController.navigate(screen.route, navigationOp)
+    }
+
+    private fun toggleDrawer() {
+        coroutineScope.launch {
+            if(drawerState.isOpen)
+                drawerState.close()
+            else
+                drawerState.open()
+        }
+    }
+
+    fun onBackClicked() {
+        if(drawerState.isOpen)
+            toggleDrawer()
+        else
+            navController.popBackStack()
+    }
+    fun onNavIconClicked() {
+        if(shouldShowMenuIcon)
+            toggleDrawer()
+        else
+            onBackClicked()
     }
 }
 //endregion
-
-//region Composable Previews
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-fun DrawerContentPreview() {
-    CarbonAndroidTheme {
-        val scope: CoroutineScope = rememberCoroutineScope()
-        val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
-        val navController: NavHostController = rememberNavController()
-        DrawerContent(scope = scope, navController = navController, drawerState = drawerState)
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-fun MainContentPreview() {
-    CarbonAndroidTheme {
-        val scope: CoroutineScope = rememberCoroutineScope()
-        val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
-        val navController: NavHostController = rememberNavController()
-        MainContent(scope = scope, navController = navController, drawerState = drawerState)
-    }
-}
 //endregion

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My App</string>
+    <string name="app_name">Carbon Compose</string>
 
     <string name="author_format">Author: %s</string>
     <string name="version_format">Version: %s</string>
@@ -69,6 +69,7 @@
     <string name="design_radio_dis_act">"Radio (Disabled/Active)"</string>
     <string name="design_radio_dis_inact">"Radio (Disabled/Inactive)"</string>
 
+    <string name="design_font_scale">%.2fx Font Scale</string>
 
     <string name="design_home">Design System</string>
     <string name="design_colors">Colors</string>
