@@ -29,7 +29,7 @@ fun DesignRadiosScreen(modifier: Modifier = Modifier) {
     val (selectedOption, onOptionSelected: (String) -> Unit) = remember { mutableStateOf(radioOptions[0]) }
     Column(
         modifier = modifier
-        .padding(horizontal = 16.dp, vertical = 2.dp)
+            .padding(horizontal = 16.dp, vertical = 2.dp)
     ) {
         Column(Modifier.selectableGroup()) {
             radioOptions.forEach { text ->
@@ -46,7 +46,7 @@ fun DesignRadiosScreen(modifier: Modifier = Modifier) {
             RadioColumnItem(
                 radioText = stringResource(id = R.string.design_radio_dis_act),
                 selected = true,
-                onOptionSelected = {  },
+                onOptionSelected = { },
                 enabled = false,
             )
 

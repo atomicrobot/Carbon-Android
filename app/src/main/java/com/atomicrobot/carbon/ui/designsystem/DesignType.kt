@@ -29,10 +29,10 @@ fun DesignTypographyScreen(
 ) {
     val types: List<Pair<String, TextStyle>> = androidx.compose.material3.Typography::class
         .memberProperties.map {
-        val textStyleName = splitCamelCase(it.name)
-        val textStyle = it.get(MaterialTheme.typography) as TextStyle
-        Pair(textStyleName, textStyle)
-    }
+            val textStyleName = splitCamelCase(it.name)
+            val textStyle = it.get(MaterialTheme.typography) as TextStyle
+            Pair(textStyleName, textStyle)
+        }
         .sortedWith(
             compareBy({ -it.second.fontSize.value }, { it.first })
         )
@@ -59,7 +59,7 @@ fun TextStyleColumnItem(
     ) {
         Column(
             modifier = Modifier
-                .padding(start  = 16.dp, top = 8.dp, end = 24.dp, bottom = 8.dp),
+                .padding(start = 16.dp, top = 8.dp, end = 24.dp, bottom = 8.dp),
         ) {
             Text(
                 text = textStyleName,

@@ -17,7 +17,6 @@
         <activity
             android:name=".StartActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,7 +40,15 @@
 
             <!-- deep link with URI: https://www.atomicrobot.com/carbon-android -->
             <!-- Test from adb shell using: -->
-            <!-- adb shell am start -W -a android.intent.action.VIEW -d "https://www.atomicrobot.com/carbon-android" -->
+            <!--
+                adb shell am start -W -a android.intent.action.VIEW -d "https://www.atomicrobot.com/carbon-android"                                     // uses Default Color of Black and textSize of 30 pts
+                adb shell am start -W -a android.intent.action.VIEW -d "http://www.atomicrobot.com/carbon-android/path1?textColor=red\&textSize=12"
+                adb shell am start -W -a android.intent.action.VIEW -d "http://www.atomicrobot.com/carbon-android/path1?textColor=green\&textSize=18"
+                adb shell am start -W -a android.intent.action.VIEW -d "http://www.atomicrobot.com/carbon-android/path1?textColor=blue\&textSize=24"
+
+                adb shell am start -W -a android.intent.action.VIEW -d "http://www.atomicrobot.com/carbon-android/path1?textSize=12"                    // uses Default Color of Black
+                adb shell am start -W -a android.intent.action.VIEW -d "http://www.atomicrobot.com/carbon-android/path1?textColor=green"                // uses textSize of 30 pts
+            -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 

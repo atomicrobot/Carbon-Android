@@ -37,8 +37,8 @@ fun DesignCheckboxesScreen(
         item { CheckboxColumnItem(checked = false, enabled = false) }
         item {
             TriStateCheckboxColumnItem(toggleableState = toggleState, enabled = true) {
-                toggleState = if(toggleState == ToggleableState.On) ToggleableState.Indeterminate
-                else if(toggleState == ToggleableState.Indeterminate) ToggleableState.Off
+                toggleState = if (toggleState == ToggleableState.On) ToggleableState.Indeterminate
+                else if (toggleState == ToggleableState.Indeterminate) ToggleableState.Off
                 else ToggleableState.On
             }
         }
@@ -57,10 +57,10 @@ fun CheckboxColumnItem(
     Row(verticalAlignment = Alignment.CenterVertically) {
         Checkbox(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
         Spacer(modifier = Modifier.width(16.dp))
-        val text = when(enabled) {
+        val text = when (enabled) {
             true -> "Checkbox (Enabled)"
             else -> {
-                if(checked) "Checkbox (Disabled/Active)" else "Checkbox (Disabled/Inactive)"
+                if (checked) "Checkbox (Disabled/Active)" else "Checkbox (Disabled/Inactive)"
             }
         }
         Text(text = text)
@@ -80,17 +80,19 @@ fun TriStateCheckboxColumnItem(
             enabled = enabled,
         )
         Spacer(modifier = Modifier.width(16.dp))
-        val text = when(enabled) {
+        val text = when (enabled) {
             true ->
-                if(toggleableState == ToggleableState.On) "TriState Checkbox (Enabled/Active)"
-                else if(toggleableState == ToggleableState.Indeterminate)
-                    "TriState Checkbox (Enabled/Indeterminate)"
-                else "TriState Checkbox (Enabled/Inactive)"
+                when (toggleableState) {
+                    ToggleableState.On -> "TriState Checkbox (Enabled/Active)"
+                    ToggleableState.Indeterminate -> "TriState Checkbox (Enabled/Indeterminate)"
+                    else -> "TriState Checkbox (Enabled/Inactive)"
+                }
             else -> {
-                if(toggleableState == ToggleableState.On) "TriState Checkbox (Disabled/Active)"
-                if(toggleableState == ToggleableState.Indeterminate)
-                    "TriState Checkbox (Disabled/Indeterminate)"
-                else "TriState Checkbox (Disabled/Active)"
+                when (toggleableState) {
+                    ToggleableState.On -> "TriState Checkbox (Disabled/Active)"
+                    ToggleableState.Indeterminate -> "TriState Checkbox (Disabled/Indeterminate)"
+                    else -> "TriState Checkbox (Disabled/Active)"
+                }
             }
         }
         Text(text = text)

@@ -51,30 +51,30 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
 
     object DeepLink : CarbonScreens(
         "Deep Link",
-        "deepLinkPath1",
+        "",
         ScreenIcon(
             selectedIcon = Icons.Filled.QrCodeScanner,
             unselectedIcon = Icons.Outlined.QrCodeScanner,
             iconContentDescription = R.string.cont_desc_scanner_icon
         )
     ) {
-        const val textColor = "textColor"
-        const val textSize = "textSize"
-        const val path = "path"
+        private const val pathParam = "path"
+        private const val textColorParam = "textColor"
+        private const val textSizeParam = "textSize"
 
-        val routeWithArgs = "deepLink/{$path}"
+        const val routeWithArgs: String = "deepLink/{$pathParam}?=$textColorParam={$textColorParam}&?=$textSizeParam={$textSizeParam}"
 
         val arguments = listOf(
-            navArgument(path) {
+            navArgument(pathParam) {
                 nullable = false
                 type = NavType.StringType
             },
-            navArgument(textColor) {
+            navArgument(textColorParam) {
                 nullable = true
                 type = NavType.StringType
                 defaultValue = "black"
             },
-            navArgument(textSize) {
+            navArgument(textSizeParam) {
                 nullable = true
                 type = NavType.StringType
                 defaultValue = "30"
@@ -82,39 +82,63 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         )
         val deepLink = listOf(
             navDeepLink {
-                uriPattern = "atomicrobot://carbon-android/{$path}?textSize={$textSize}&textColor={$textColor}"
+                uriPattern = "atomicrobot://carbon-android/{$pathParam}?textSize={$textSizeParam}&textColor={$textColorParam}"
             },
             navDeepLink {
-                uriPattern = "http://www.atomicrobot.com/carbon-android/{$path}?textSize={$textSize}&textColor={$textColor}"
+                uriPattern = "http://www.atomicrobot.com/carbon-android/{$pathParam}?textSize={$textSizeParam}&textColor={$textColorParam}"
             },
             navDeepLink {
-                uriPattern = "https://www.atomicrobot.com/carbon-android/{$path}?textSize={$textSize}&textColor={$textColor}"
+                uriPattern = "https://www.atomicrobot.com/carbon-android/{$pathParam}?textSize={$textSizeParam}&textColor={$textColorParam}"
             },
         )
 
-        fun NavBackStackEntry.getTextColor(defaultColor: Int = Color.BLACK): Int {
-            return try{
-                val colorStr = arguments?.getString(textColor)
-                if(!colorStr.isNullOrEmpty()) {
+        /**
+         * Extracts the encoded text color parameter from a (NavBackStackEntry) navigation event.
+         * This is useful for extracting the encoded text color parameter from a deep-linking
+         * intent.
+         * @param defaultTextColor The value returned if there isn't a text color parameter in the
+         * NavBackStackEntry.
+         */
+        fun NavBackStackEntry.getTextColor(defaultTextColor: Int = Color.BLACK): Int {
+            return try {
+                val colorStr = arguments?.getString(textColorParam)
+                if (!colorStr.isNullOrEmpty()) {
                     Color.parseColor(colorStr)
-                } else defaultColor
-            }
-            catch (exception: IllegalArgumentException) {
+                } else defaultTextColor
+            } catch (exception: IllegalArgumentException) {
                 Timber.e("Unsupported value for color")
-                defaultColor
+                defaultTextColor
             }
         }
+
+        /**
+         * Extracts the encoded text size parameter from a (NavBackStackEntry) navigation event.
+         * This is useful for extracting the encoded text size parameter from a deep-linking intent.
+         * @param defaultTextSize The value returned if there isn't a text size parameter in the
+         * NavBackStackEntry.
+         */
         fun NavBackStackEntry.getTextSize(defaultTextSize: Float = 30f): Float {
-            return try{
-                val textSizeStr = arguments?.getString(textSize)
-                if(!textSizeStr.isNullOrEmpty()) {
+            return try {
+                val textSizeStr = arguments?.getString(textSizeParam)
+                if (!textSizeStr.isNullOrEmpty()) {
                     textSizeStr.toFloat()
                 } else defaultTextSize
-            }
-            catch (exception: NumberFormatException) {
+            } catch (exception: NumberFormatException) {
                 Timber.e("Unsupported value for size")
                 defaultTextSize
             }
+        }
+
+        /**
+         * Extracts the encoded path parameter from a (NavBackStackEntry) navigation event.
+         * This is useful for extracting the encoded path parameter from a deep-linking intent.
+         * @param defaultPath The value returned if there isn't a path parameter in the
+         * NavBackStackEntry.
+         */
+        @Suppress("unused")
+        fun NavBackStackEntry.getEncodedPath(defaultPath: String): String {
+            val encodedPath = arguments?.getString(pathParam)
+            return encodedPath.takeIf { !it.isNullOrEmpty() } ?: defaultPath
         }
     }
 
@@ -148,7 +172,7 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         ) // Icon value here is a filler
     )
 
-     object DesignSystem : CarbonScreens(
+    object DesignSystem : CarbonScreens(
         "Design",
         "design_system",
         ScreenIcon(

@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon.ui.designsystem
 
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -52,7 +51,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
     navBackStackEntry?.destination?.route?.let { currentRoute ->
-        val destination = CarbonScreens.values().find { currentRoute == it.route}
+        val destination = CarbonScreens.values().find { currentRoute == it.route }
         return destination?.title ?: ""
     }
     return ""
@@ -60,12 +59,12 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun DesignScreen() {
+fun DesignScreen(
+    onBackClicked: () -> Unit,
+) {
     val viewModel: DesignSystemViewModel = getViewModel()
     val screenState: DesignSystemViewModel.ScreenState by viewModel.uiState.collectAsState()
     val navController: NavHostController = rememberAnimatedNavController()
-
-    val onBackPressedDispatcherOwner = LocalOnBackPressedDispatcherOwner.current
 
     CarbonAndroidTheme(
         darkTheme = screenState.darkMode,
@@ -78,9 +77,7 @@ fun DesignScreen() {
                     title = appBarTitle(navBackStackEntry = navBackStackEntry),
                     screenState.darkMode,
                     selectedFontScale = screenState.fontScale,
-                    onBackPressed = {
-                        onBackPressedDispatcherOwner?.onBackPressedDispatcher?.onBackPressed()
-                    },
+                    onBackPressed = onBackClicked,
                     onFontScaleChanged = {
                         viewModel.updateFontScale(it)
                     },
@@ -104,15 +101,13 @@ fun DesignScreen() {
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DesignScreenAppBar(
     title: String,
     darkModeEnabled: Boolean = false,
     selectedFontScale: FontScale = FontScale.Normal,
-    onBackPressed:() -> Unit = {},
+    onBackPressed: () -> Unit = {},
     onFontScaleChanged: (FontScale) -> Unit = {},
     onDarkModeChanged: (Boolean) -> Unit = {},
 ) {
@@ -130,7 +125,8 @@ fun DesignScreenAppBar(
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 modifier = Modifier.size(200.dp, 56.dp),
-                onExpandedChange = { expanded = it}) {
+                onExpandedChange = { expanded = it }
+            ) {
                 TextField(
                     // The `menuAnchor` modifier must be passed to the text field for correctness.
                     modifier = Modifier.menuAnchor(),
@@ -156,11 +152,12 @@ fun DesignScreenAppBar(
 
             IconToggleButton(
                 checked = darkModeEnabled,
-                onCheckedChange = onDarkModeChanged) {
+                onCheckedChange = onDarkModeChanged
+            ) {
                 Icon(
-                    imageVector = if(darkModeEnabled) Icons.Filled.DarkMode
+                    imageVector = if (darkModeEnabled) Icons.Filled.DarkMode
                     else Icons.Filled.LightMode,
-                    if(darkModeEnabled) "Enable Light mode"
+                    if (darkModeEnabled) "Enable Light mode"
                     else "Enable Dark mode"
                 )
             }
@@ -199,7 +196,8 @@ fun NavGraphBuilder.designSystemGraph(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp, vertical = 2.dp),
-                onNavigateTo)
+                onNavigateTo
+            )
         }
         composable(route = DesignSystemScreens.Colors.route) {
             DesignColorsScreen(

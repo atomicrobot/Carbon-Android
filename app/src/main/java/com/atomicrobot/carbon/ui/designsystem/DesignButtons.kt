@@ -1,7 +1,6 @@
 package com.atomicrobot.carbon.ui.designsystem
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,7 +34,6 @@ import androidx.compose.ui.unit.dp
 //region Composables
 @Composable
 fun ButtonTemplateContent() {
-
 }
 
 enum class ButtonType {
@@ -53,10 +51,11 @@ enum class IconButtonType {
 
 fun LazyListScope.buttonTemplate(
     modifier: Modifier = Modifier,
-    button: ButtonType = ButtonType.Filled) {
+    button: ButtonType = ButtonType.Filled
+) {
     items(2) {
         val enabled = it == 0
-        val text = if(enabled) "${button.name} Button (Enabled)" else "${button.name} Button (Disabled)"
+        val text = if (enabled) "${button.name} Button (Enabled)" else "${button.name} Button (Disabled)"
         when (button) {
             ButtonType.Filled -> Button(onClick = {}, modifier = modifier, enabled = enabled) { Text(text = text) }
             ButtonType.Outlined -> OutlinedButton(onClick = {}, modifier = modifier, enabled = enabled) { Text(text = text) }
@@ -74,23 +73,23 @@ fun LazyListScope.iconButtonTemplate(
         when (buttonIcon) {
             IconButtonType.NoFill -> {
                 IconButton(onClick = { }, enabled = enabled) {
-                    Icon(icon, "ImageVector asset name ${icon.name}")
-                }
+                Icon(icon, "ImageVector asset name ${icon.name}")
+            }
             }
             IconButtonType.Filled -> {
                 FilledIconButton(onClick = { }, enabled = enabled) {
-                    Icon(icon, "ImageVector asset name ${icon.name}")
-                }
+                Icon(icon, "ImageVector asset name ${icon.name}")
+            }
             }
             IconButtonType.FilledTonal -> {
                 FilledTonalIconButton(onClick = { }, enabled = enabled) {
-                    Icon(icon, "ImageVector asset name ${icon.name}")
-                }
+                Icon(icon, "ImageVector asset name ${icon.name}")
+            }
             }
             IconButtonType.Outlined -> {
                 OutlinedIconButton(onClick = { }, enabled = enabled) {
-                    Icon(icon, "ImageVector asset name ${icon.name}")
-                }
+                Icon(icon, "ImageVector asset name ${icon.name}")
+            }
             }
         }
     }
@@ -194,7 +193,3 @@ fun OutlinedIconButtonPreview() {
     }
 }
 //endregion
-
-
-
-

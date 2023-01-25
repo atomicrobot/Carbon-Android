@@ -207,7 +207,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager-indicators:${Dependencies.googleAccompanistVersion}")
     implementation("com.google.accompanist:accompanist-navigation-animation:${Dependencies.googleAccompanistVersion}")
 
-
     testImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
     testImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
     testImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")

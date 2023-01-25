@@ -47,7 +47,7 @@ fun LazyListScope.atoms(onAtomClicked: (String) -> Unit) {
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.molecules(onMoleculeClicked: (String) -> Unit) {
     stickyHeader {
-        DesignHomeListHeader(R.drawable.molecule,stringResource(id = R.string.design_molecule))
+        DesignHomeListHeader(R.drawable.molecule, stringResource(id = R.string.design_molecule))
     }
     items(designMoleculeScreens) { molecule: DesignSystemScreens ->
         DesignScreenColumnItem(stringResource(id = molecule.title)) {
@@ -59,9 +59,9 @@ fun LazyListScope.molecules(onMoleculeClicked: (String) -> Unit) {
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.organisms(onOrganismClicked: (String) -> Unit) {
     stickyHeader {
-        DesignHomeListHeader(R.drawable.organism,stringResource(id = R.string.design_organisms))
+        DesignHomeListHeader(R.drawable.organism, stringResource(id = R.string.design_organisms))
     }
-    items(designOrganismsScreens) {organism: DesignSystemScreens ->
+    items(designOrganismsScreens) { organism: DesignSystemScreens ->
         DesignScreenColumnItem(stringResource(id = organism.title)) {
             onOrganismClicked(organism.route)
         }
@@ -100,10 +100,11 @@ fun DesignScreenColumnItem(title: String, onItemClicked: (String) -> Unit = {}) 
     ) {
         Row(
             modifier = Modifier
-                .padding(start  = 16.dp, top = 8.dp, end = 24.dp, bottom = 8.dp),
+                .padding(start = 16.dp, top = 8.dp, end = 24.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(title,
+            Text(
+                title,
                 style = MaterialTheme.typography.bodyLarge
             )
             Spacer(modifier = Modifier.weight(1f))

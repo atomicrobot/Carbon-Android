@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class DesignSystemViewModel(): ViewModel() {
+class DesignSystemViewModel() : ViewModel() {
     data class ScreenState(
         val darkMode: Boolean = false,
         val useDynamicColor: Boolean = false,
@@ -27,6 +27,7 @@ class DesignSystemViewModel(): ViewModel() {
         )
     }
 
+    @Suppress("unused")
     fun enabledDynamicColor(enabled: Boolean) {
         _uiState.value = _uiState.value.copy(
             useDynamicColor = enabled

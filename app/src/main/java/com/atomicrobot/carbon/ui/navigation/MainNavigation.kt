@@ -2,6 +2,7 @@ package com.atomicrobot.carbon.ui.navigation
 
 import android.graphics.Color
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -76,6 +77,9 @@ fun CarbonAndroidApp() {
 fun CarbonAndroid(
     appState: CarbonAndroidAppState = rememberCarbonAndroidAppState(),
 ) {
+    // Intercept back events when the nav. drawer is opened
+    BackHandler(enabled = appState.drawerState.isOpen, onBack = appState::onBack)
+
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
@@ -89,10 +93,10 @@ fun CarbonAndroid(
         Scaffold(
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
-                if(appState.shouldShowAppTopBar) {
+                if (appState.shouldShowAppTopBar) {
                     NavigationTopBar(
                         title = appState.destinationTitle,
-                        navigationIcon = if(appState.shouldShowMenuIcon)
+                        navigationIcon = if (appState.shouldShowMenuIcon)
                             Icons.Filled.Menu
                         else
                             Icons.Filled.ArrowBack,
@@ -101,7 +105,7 @@ fun CarbonAndroid(
                 }
             },
             bottomBar = {
-                if(appState.shouldShowBottomBar) {
+                if (appState.shouldShowBottomBar) {
                     BottomNavigationBar(
                         destinations = appScreens,
                         currentDestination = appState.currentDestination,
@@ -123,7 +127,7 @@ fun CarbonAndroid(
                     ),
                 navController = appState.navController,
                 snackbarHostState = appState.snackbarHostState,
-                onBackClick = appState::onBackClicked
+                onBackClicked = appState::onBack
             )
         }
     }
@@ -134,7 +138,7 @@ fun CarbonAndroidNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    onBackClick: () -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     NavHost(
         modifier = modifier,
@@ -143,7 +147,7 @@ fun CarbonAndroidNavHost(
     ) {
         carbonNavGraph(snackbarHostState)
         composable(route = CarbonScreens.DesignSystem.route) {
-            DesignScreen()
+            DesignScreen(onBackClicked = onBackClicked)
         }
     }
 }
@@ -163,8 +167,12 @@ fun NavGraphBuilder.carbonNavGraph(
             arguments = CarbonScreens.DeepLink.arguments,
             deepLinks = CarbonScreens.DeepLink.deepLink
         ) {
-            val textColor = it.getTextColor(Color.BLACK)
-            val textSize = it.getTextSize(30.0F)
+            val textColor = remember {
+                it.getTextColor(Color.BLACK)
+            }
+            val textSize = remember {
+                it.getTextSize(30.0F)
+            }
             DeepLinkSampleScreen(
                 textColor = textColor,
                 textSize = textSize
@@ -182,7 +190,6 @@ fun NavGraphBuilder.carbonNavGraph(
     }
 }
 
-
 //region Carbon Android app
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -193,7 +200,7 @@ fun rememberCarbonAndroidAppState(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ): CarbonAndroidAppState {
     return remember(navController, coroutineScope) {
-        CarbonAndroidAppState(navController, coroutineScope,drawerState, snackbarHostState)
+        CarbonAndroidAppState(navController, coroutineScope, drawerState, snackbarHostState)
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -204,47 +211,45 @@ class CarbonAndroidAppState(
     val snackbarHostState: SnackbarHostState,
 ) {
     val currentDestination: NavDestination?
-    @Composable get() = navController
-        .currentBackStackEntryAsState()
-        .value
-        ?.destination
-
-    val destinations: List<CarbonScreens> = CarbonScreens.values()
+        @Composable get() = navController
+            .currentBackStackEntryAsState()
+            .value
+            ?.destination
 
     val destinationTitle: String
-    @Composable get() {
-        currentDestination?.route?.let { currentRoute ->
-            val destination = CarbonScreens.values().find { currentRoute == it.route}
-            return destination?.title ?: ""
+        @Composable get() {
+            currentDestination?.route?.let { currentRoute ->
+                val destination = CarbonScreens.values().find { currentRoute == it.route }
+                return destination?.title ?: ""
+            }
+            return ""
         }
-        return ""
-    }
 
     val shouldShowBottomBar: Boolean
-    @Composable get() {
-        currentDestination?.route?.let { currentRoute ->
-            val destination = CarbonScreens.values().find { currentRoute == it.route}
-            // We wanna show the bottom app bar on ever destination except for the design
-            // systems screen
-            return destination != CarbonScreens.DesignSystem
+        @Composable get() {
+            currentDestination?.route?.let { currentRoute ->
+                val destination = CarbonScreens.values().find { currentRoute == it.route }
+                // We wanna show the bottom app bar on ever destination except for the design
+                // systems screen
+                return destination != CarbonScreens.DesignSystem
+            }
+            return false
         }
-        return false
-    }
 
     val shouldShowAppTopBar: Boolean
-    @Composable get() = shouldShowBottomBar
+        @Composable get() = shouldShowBottomBar
 
     val shouldShowMenuIcon: Boolean
-    get() {
-        navController.currentDestination?.route?.let { route ->
-            return CarbonScreens.values().find { route == it.route } == CarbonScreens.Home
+        get() {
+            navController.currentDestination?.route?.let { route ->
+                return CarbonScreens.values().find { route == it.route } == CarbonScreens.Home
+            }
+            // If we have no destination default to showing the menu
+            return true
         }
-        // If we have no destination default to showing the menu
-        return true
-    }
 
     fun navigateToCarbonScreen(screen: CarbonScreens) {
-        if(drawerState.isOpen) {
+        if (drawerState.isOpen) {
             coroutineScope.launch {
                 drawerState.close()
             }
@@ -267,24 +272,24 @@ class CarbonAndroidAppState(
 
     private fun toggleDrawer() {
         coroutineScope.launch {
-            if(drawerState.isOpen)
+            if (drawerState.isOpen)
                 drawerState.close()
             else
                 drawerState.open()
         }
     }
 
-    fun onBackClicked() {
-        if(drawerState.isOpen)
+    fun onBack() {
+        if (drawerState.isOpen)
             toggleDrawer()
         else
             navController.popBackStack()
     }
     fun onNavIconClicked() {
-        if(shouldShowMenuIcon)
+        if (shouldShowMenuIcon)
             toggleDrawer()
         else
-            onBackClicked()
+            onBack()
     }
 }
 //endregion

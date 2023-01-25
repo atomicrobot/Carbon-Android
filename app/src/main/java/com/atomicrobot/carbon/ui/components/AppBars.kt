@@ -75,10 +75,10 @@ fun BottomBar(
 ) {
     Surface(
         modifier = modifier
-        .fillMaxWidth(),
+            .fillMaxWidth(),
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
-        Row( modifier.padding(16.dp)) {
+        Row(modifier.padding(16.dp)) {
             Text(
                 text = stringResource(id = R.string.version_format, buildVersion),
                 modifier = Modifier.weight(1f)
@@ -105,7 +105,7 @@ fun BottomNavigationBar(
                 selected = selected,
                 icon = {
                     Icon(
-                        if(selected) destination.iconData.selectedIcon
+                        if (selected) destination.iconData.selectedIcon
                         else destination.iconData.unselectedIcon,
                         stringResource(id = destination.iconData.iconContentDescription)
                     )
@@ -141,7 +141,7 @@ private fun CustomSnackBarContent(message: String) {
         )
     }
 }
-//endRegion
+// endRegion
 
 //region Previews
 @Preview

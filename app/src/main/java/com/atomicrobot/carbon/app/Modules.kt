@@ -112,7 +112,7 @@ class Modules {
             LicenseViewModel(app = androidApplication())
         }
         viewModel {
-            DesignSystemViewModel(app = androidApplication())
+            DesignSystemViewModel()
         }
     }
 }

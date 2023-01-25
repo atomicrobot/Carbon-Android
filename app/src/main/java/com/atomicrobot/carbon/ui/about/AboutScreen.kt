@@ -55,7 +55,6 @@ fun AboutScreen() {
     }
 }
 
-
 @Composable
 fun AboutBody() {
     val context = LocalContext.current

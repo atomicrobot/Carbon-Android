@@ -5,7 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.compose.material3.Typography
 
 //region Activity extensions
-inline fun <reified T: ComponentActivity> ComponentActivity.startComponentActivity() {
+@Suppress("unused")
+inline fun <reified T : ComponentActivity> ComponentActivity.startComponentActivity() {
     startActivity(Intent(this, T::class.java))
 }
 //endregion
@@ -39,9 +40,10 @@ fun Typography.scale(scaleFactor: Float): Typography {
         headlineLarge = this.headlineLarge.copy(
             fontSize = this.headlineLarge.fontSize.times(scaleFactor)
         ),
-        headlineMedium = this.headlineMedium.
-        copy(fontSize = this.headlineMedium.fontSize.times(scaleFactor)
-        ),
+        headlineMedium = this.headlineMedium
+            .copy(
+                fontSize = this.headlineMedium.fontSize.times(scaleFactor)
+            ),
         headlineSmall = this.headlineSmall.copy(
             fontSize = this.headlineSmall.fontSize.times(scaleFactor)
         ),

@@ -37,9 +37,9 @@ fun CarbonAndroidTheme(
     val ctx = LocalContext.current
     val colorScheme = when {
         dynamicColor && darkTheme -> dynamicDarkColorScheme(ctx)
-                dynamicColor && !darkTheme -> dynamicLightColorScheme(ctx)
+        dynamicColor && !darkTheme -> dynamicLightColorScheme(ctx)
         darkTheme -> darkColorScheme
-                else -> lightColorScheme
+        else -> lightColorScheme
     }
 
     /**
@@ -61,7 +61,7 @@ fun CarbonAndroidTheme(
         }
     }
 
-    val typography = if(fontScale == 1.0f) carbonTypography
+    val typography = if (fontScale == 1.0f) carbonTypography
     else carbonTypography.scale(scaleFactor = fontScale)
 
     MaterialTheme(

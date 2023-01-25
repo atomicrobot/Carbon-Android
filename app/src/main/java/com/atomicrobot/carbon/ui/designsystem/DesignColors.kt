@@ -26,12 +26,13 @@ import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.ui.designsystem.theme.FinAllyColors
 import com.atomicrobot.carbon.ui.designsystem.theme.FinAllyShapeTokens
 import com.atomicrobot.carbon.util.splitCamelCase
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.full.memberProperties
 
 //region Composables
 //region Composable Extensions
-fun LazyGridScope.header(content: @Composable LazyGridItemScope.() -> Unit
+fun LazyGridScope.header(
+    content: @Composable LazyGridItemScope.() -> Unit
 ) {
     // Hack to make to create headers in a LazyGrid composable
     item(
@@ -100,7 +101,7 @@ fun VerticalColorSwatch(colorName: String, color: Color) {
             style = MaterialTheme.typography.titleSmall,
         )
 
-        val hexColor = if(color.alpha >= 1.0F)
+        val hexColor = if (color.alpha >= 1.0F)
             "#${"%X".format(color.toArgb()).substring(startIndex = 2)}"
         else "#%X".format(color.toArgb())
 
@@ -132,7 +133,7 @@ fun HorizontalColorSwatch(colorName: String, colorRole: String? = null, color: C
                 style = MaterialTheme.typography.titleSmall,
             )
 
-            val hexColor = if(color.alpha >= 1.0F)
+            val hexColor = if (color.alpha >= 1.0F)
                 "#${"%X".format(color.toArgb()).substring(startIndex = 2)}"
             else "#%X".format(color.toArgb())
             Text(

@@ -77,8 +77,9 @@ fun DrawerAppScreenItem(
             .size(45.dp)
             .padding(8.dp)
             .align(Alignment.CenterVertically)
-        if (screen.route == CarbonScreens.About.route
-            || screen.route == CarbonScreens.AboutHtml.route) {
+        if (screen.route == CarbonScreens.About.route ||
+            screen.route == CarbonScreens.AboutHtml.route
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.carbon_android_logo), // Use custom icon
                 contentDescription = contentDesc,
