@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 
 //region Composables
 @Composable
@@ -29,27 +30,27 @@ fun DesignCheckboxesScreen(
         modifier = modifier
     ) {
         item {
-            CheckboxColumnItem(isChecked) {
+            CheckboxRow(isChecked) {
                 isChecked = it
             }
         }
-        item { CheckboxColumnItem(checked = true, enabled = false) }
-        item { CheckboxColumnItem(checked = false, enabled = false) }
+        item { CheckboxRow(checked = true, enabled = false) }
+        item { CheckboxRow(checked = false, enabled = false) }
         item {
-            TriStateCheckboxColumnItem(toggleableState = toggleState, enabled = true) {
+            TriStateCheckboxRow(toggleableState = toggleState, enabled = true) {
                 toggleState = if (toggleState == ToggleableState.On) ToggleableState.Indeterminate
                 else if (toggleState == ToggleableState.Indeterminate) ToggleableState.Off
                 else ToggleableState.On
             }
         }
         item {
-            TriStateCheckboxColumnItem(toggleableState = ToggleableState.Indeterminate, enabled = false)
+            TriStateCheckboxRow(toggleableState = ToggleableState.Indeterminate, enabled = false)
         }
     }
 }
 
 @Composable
-fun CheckboxColumnItem(
+fun CheckboxRow(
     checked: Boolean,
     enabled: Boolean = true,
     onCheckedChange: ((Boolean) -> Unit)? = {}
@@ -68,7 +69,7 @@ fun CheckboxColumnItem(
 }
 
 @Composable
-fun TriStateCheckboxColumnItem(
+fun TriStateCheckboxRow(
     toggleableState: ToggleableState,
     enabled: Boolean = true,
     onToggleClicked: (() -> Unit)? = {}
@@ -101,15 +102,15 @@ fun TriStateCheckboxColumnItem(
 //endregion
 
 //region Composable Previews
-@Preview("Checked Checkbox")
+@Preview("Checked/Enabled")
 @Composable
-fun CheckedCheckboxColumnItemPreview() {
-    CheckboxColumnItem(checked = true, enabled = true)
+fun CheckedCheckboxRowPreview() = CarbonAndroidTheme {
+    CheckboxRow(checked = true, enabled = true)
 }
 
-@Preview("Checked Disabled Checkbox")
+@Preview("Checked/Disabled")
 @Composable
-fun CheckedDisabledCheckboxColumnItemPreview() {
-    CheckboxColumnItem(checked = true, enabled = false)
+fun CheckedDisabledCheckboxRowPreview() = CarbonAndroidTheme {
+    CheckboxRow(checked = true, enabled = false)
 }
 //endregion

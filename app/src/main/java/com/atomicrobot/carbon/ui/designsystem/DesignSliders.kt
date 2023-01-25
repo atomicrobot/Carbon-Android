@@ -2,6 +2,7 @@ package com.atomicrobot.carbon.ui.designsystem
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
@@ -17,11 +18,12 @@ import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 //region Composables
 @Composable
 fun DesignSlidersScreen(modifier: Modifier = Modifier) {
-
-    LazyColumn(modifier = modifier) {
-        item {
+    LazyColumn(
+        modifier.padding(horizontal = 16.dp, vertical = 2.dp)
+    ) {
+        item(key = "No-Steps/Enabled") {
             var sliderValue by remember { mutableStateOf(0.5F) }
-            SliderColumnItem(
+            SliderRow(
                 sliderValue = sliderValue,
                 sliderSteps = 0,
                 sliderEnabled = true,
@@ -30,17 +32,17 @@ fun DesignSlidersScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        item {
-            SliderColumnItem(
+        item(key = "No-Steps/Disabled") {
+            SliderRow(
                 sliderValue = .5f,
                 sliderSteps = 0,
                 sliderEnabled = false,
             )
         }
 
-        item {
+        item(key = "Steps/Enabled") {
             var sliderValue by remember { mutableStateOf(0.333F) }
-            SliderColumnItem(
+            SliderRow(
                 sliderValue = sliderValue,
                 sliderSteps = 5,
                 sliderEnabled = true,
@@ -49,8 +51,8 @@ fun DesignSlidersScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        item {
-            SliderColumnItem(
+        item(key = "Steps/Disabled") {
+            SliderRow(
                 sliderValue = .333f,
                 sliderSteps = 5,
                 sliderEnabled = false,
@@ -60,7 +62,7 @@ fun DesignSlidersScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SliderColumnItem(
+fun SliderRow(
     sliderValue: Float = .0F,
     sliderSteps: Int = 0,
     sliderEnabled: Boolean = true,
@@ -78,25 +80,21 @@ fun SliderColumnItem(
 }
 //endregion
 //region Composable  Previews
-@Preview("Slider progress 50%")
+@Preview("Slider: 50%")
 @Composable
-fun NoStepSliderColumnItemPreview() {
-    CarbonAndroidTheme {
-        SliderColumnItem(
-            sliderValue = .5f,
-            sliderSteps = 0,
-        )
-    }
+fun NoStepSliderSliderRowPreview() = CarbonAndroidTheme {
+    SliderRow(
+        sliderValue = .5f,
+        sliderSteps = 0,
+    )
 }
 
-@Preview("Stepped Slider progress 40%")
+@Preview("Stepped Slider: 40%")
 @Composable
-fun SteppedSliderColumnItemPreview() {
-    CarbonAndroidTheme {
-        SliderColumnItem(
-            sliderValue = .4f,
-            sliderSteps = 4,
-        )
-    }
+fun SteppedSliderSliderRowPreview() = CarbonAndroidTheme {
+    SliderRow(
+        sliderValue = .4f,
+        sliderSteps = 4,
+    )
 }
 //endregion

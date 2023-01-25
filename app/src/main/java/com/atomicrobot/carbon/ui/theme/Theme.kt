@@ -3,12 +3,17 @@ package com.atomicrobot.carbon.ui.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import com.atomicrobot.carbon.util.scale
@@ -60,9 +65,11 @@ fun CarbonAndroidTheme(
             )
         }
     }
-
-    val typography = if (fontScale == 1.0f) carbonTypography
-    else carbonTypography.scale(scaleFactor = fontScale)
+    // Only update the typography if the font scaling changes.
+    val typography: Typography = remember(fontScale) {
+        if (fontScale == 1.0f) carbonTypography
+        else carbonTypography.scale(scaleFactor = fontScale)
+    }
 
     MaterialTheme(
         colorScheme = colorScheme,

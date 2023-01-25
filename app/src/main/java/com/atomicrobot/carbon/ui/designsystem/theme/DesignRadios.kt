@@ -33,7 +33,7 @@ fun DesignRadiosScreen(modifier: Modifier = Modifier) {
     ) {
         Column(Modifier.selectableGroup()) {
             radioOptions.forEach { text ->
-                RadioColumnItem(
+                RadioRow(
                     radioText = text,
                     selected = (text == selectedOption),
                     onOptionSelected = onOptionSelected,
@@ -43,14 +43,14 @@ fun DesignRadiosScreen(modifier: Modifier = Modifier) {
         }
 
         Column(Modifier.selectableGroup()) {
-            RadioColumnItem(
+            RadioRow(
                 radioText = stringResource(id = R.string.design_radio_dis_act),
                 selected = true,
                 onOptionSelected = { },
                 enabled = false,
             )
 
-            RadioColumnItem(
+            RadioRow(
                 radioText = stringResource(id = R.string.design_radio_dis_inact),
                 selected = false,
                 onOptionSelected = { },
@@ -61,7 +61,7 @@ fun DesignRadiosScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun RadioColumnItem(
+fun RadioRow(
     radioText: String,
     selected: Boolean = false,
     onOptionSelected: (String) -> Unit,
@@ -97,8 +97,8 @@ fun RadioColumnItem(
 //region Composable  Previews
 @Preview("Checked Radio Button")
 @Composable
-fun CheckedRadioColumnItemPreview() {
-    RadioColumnItem(
+fun CheckedRadioRowPreview() {
+    RadioRow(
         radioText = "Radio Button",
         selected = true,
         onOptionSelected = { },
@@ -108,8 +108,8 @@ fun CheckedRadioColumnItemPreview() {
 
 @Preview("Unchecked Radio Button")
 @Composable
-fun UncheckedRadioColumnItemPreview() {
-    RadioColumnItem(
+fun UncheckedRadioRowPreview() {
+    RadioRow(
         radioText = "Radio Button",
         selected = false,
         onOptionSelected = { },

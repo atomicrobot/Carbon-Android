@@ -80,6 +80,7 @@
     <string name="design_radios">Radios</string>
     <string name="design_sliders">Sliders</string>
     <string name="design_switches">Switches</string>
+    <string name="design_textfields">Text Fields</string>
 
     <string-array name="design_radio_options">
         <item>Apple</item>

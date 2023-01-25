@@ -5,24 +5,29 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,14 +36,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.designsystem.theme.DesignRadiosScreen
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -50,21 +57,23 @@ import org.koin.androidx.compose.getViewModel
 //region Composables
 @Composable
 fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
-    navBackStackEntry?.destination?.route?.let { currentRoute ->
-        val destination = CarbonScreens.values().find { currentRoute == it.route }
-        return destination?.title ?: ""
-    }
-    return ""
+    return navBackStackEntry?.destination?.route?.let { currentRoute ->
+        var destination = DesignSystemScreens.values().find { currentRoute == it.route }
+        return@let destination?.let {
+            stringResource(id = it.title)
+        } ?: "Design System"
+    } ?: "Design System"
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun DesignScreen(
+fun DesignSystem(
     onBackClicked: () -> Unit,
 ) {
     val viewModel: DesignSystemViewModel = getViewModel()
     val screenState: DesignSystemViewModel.ScreenState by viewModel.uiState.collectAsState()
     val navController: NavHostController = rememberAnimatedNavController()
+
 
     CarbonAndroidTheme(
         darkTheme = screenState.darkMode,
@@ -72,12 +81,19 @@ fun DesignScreen(
     ) {
         Scaffold(
             topBar = {
-                val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
+                val navBackStackEntry: NavBackStackEntry? by navController
+                    .currentBackStackEntryAsState()
+                var title = appBarTitle(navBackStackEntry = navBackStackEntry)
                 DesignScreenAppBar(
-                    title = appBarTitle(navBackStackEntry = navBackStackEntry),
+                    title = title,
                     screenState.darkMode,
                     selectedFontScale = screenState.fontScale,
-                    onBackPressed = onBackClicked,
+                    onBackPressed = {
+                        navController.popBackStack()
+                        if(navBackStackEntry?.destination?.route == designSystemHomeRoute) {
+                            onBackClicked()
+                        }
+                    },
                     onFontScaleChanged = {
                         viewModel.updateFontScale(it)
                     },
@@ -122,24 +138,34 @@ fun DesignScreenAppBar(
             }
         },
         actions = {
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                modifier = Modifier.size(200.dp, 56.dp),
-                onExpandedChange = { expanded = it }
+            Box(
+                modifier = Modifier.wrapContentSize()
             ) {
-                TextField(
-                    // The `menuAnchor` modifier must be passed to the text field for correctness.
-                    modifier = Modifier.menuAnchor(),
-                    readOnly = true,
-                    value = selectedFontScale.label(LocalContext.current),
-                    onValueChange = {},
-                    trailingIcon = { TrailingIcon(expanded = expanded) },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                )
-                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                Button(
+                    onClick = { expanded = !expanded },
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                    )
+                ) {
+                    Text(
+                        style = TextStyle.Default,
+                        text = selectedFontScale.shortLabel(),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    TrailingIcon(expanded = expanded)
+                }
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     fontScales.forEach {
                         DropdownMenuItem(
-                            text = { Text(it.label(LocalContext.current)) },
+                            text = {
+                                Text(
+                                    text = it.label(LocalContext.current),
+                                    // Force the text style to default so that the text stays the same size
+                                    style = TextStyle.Default,
+                                )
+                           },
                             onClick = {
                                 onFontScaleChanged(it)
                                 expanded = false
@@ -172,30 +198,29 @@ fun NavGraphBuilder.designSystemGraph(
 ) {
     val onEnterTransition: AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition? = {
         when (targetState.destination.route) {
-            DesignSystemScreens.Home.route ->
+            designSystemHomeRoute ->
                 slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(500))
             else -> slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(500))
         }
     }
     val onExitTransition: AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition? = {
         when (initialState.destination.route) {
-            DesignSystemScreens.Home.route -> {
+            designSystemHomeRoute -> {
                 slideOutOfContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(500))
             }
             else -> slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(500))
         }
     }
     navigation(
-        startDestination = DesignSystemScreens.Home.route,
+        startDestination = designSystemHomeRoute,
         route = "design_system",
         enterTransition = onEnterTransition,
         exitTransition = onExitTransition,
     ) {
-        composable(route = DesignSystemScreens.Home.route) {
+        composable(route = designSystemHomeRoute) {
             DesignScreenHome(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 2.dp),
+                    .fillMaxSize(),
                 onNavigateTo
             )
         }
@@ -232,12 +257,18 @@ fun NavGraphBuilder.designSystemGraph(
         composable(route = DesignSystemScreens.Sliders.route) {
             DesignSlidersScreen(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 2.dp),
+                    .fillMaxSize(),
             )
         }
         composable(route = DesignSystemScreens.Switches.route) {
             DesignSwitchesScreen(
+                modifier = Modifier
+                    .fillMaxSize(),
+            )
+        }
+
+        composable(route = DesignSystemScreens.TextFields.route) {
+            DesignTextFieldsScreen(
                 modifier = Modifier
                     .fillMaxSize(),
             )

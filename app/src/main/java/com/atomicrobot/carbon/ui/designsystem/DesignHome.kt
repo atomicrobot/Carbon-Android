@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 
+internal const val designSystemHomeRoute: String = "design-system-home"
+
 //region Composables
 //region LazyColumn extension
 @OptIn(ExperimentalFoundationApi::class)
@@ -37,8 +39,8 @@ fun LazyListScope.atoms(onAtomClicked: (String) -> Unit) {
     stickyHeader {
         DesignHomeListHeader(R.drawable.atom, stringResource(id = R.string.design_atoms))
     }
-    items(designAtomScreens) { atom: DesignSystemScreens ->
-        DesignScreenColumnItem(stringResource(id = atom.title)) {
+    items(atoms) { atom: DesignSystemScreens ->
+        DesignScreenRow(stringResource(id = atom.title)) {
             onAtomClicked(atom.route)
         }
     }
@@ -49,8 +51,8 @@ fun LazyListScope.molecules(onMoleculeClicked: (String) -> Unit) {
     stickyHeader {
         DesignHomeListHeader(R.drawable.molecule, stringResource(id = R.string.design_molecule))
     }
-    items(designMoleculeScreens) { molecule: DesignSystemScreens ->
-        DesignScreenColumnItem(stringResource(id = molecule.title)) {
+    items(molecules) { molecule: DesignSystemScreens ->
+        DesignScreenRow(stringResource(id = molecule.title)) {
             onMoleculeClicked(molecule.route)
         }
     }
@@ -61,8 +63,8 @@ fun LazyListScope.organisms(onOrganismClicked: (String) -> Unit) {
     stickyHeader {
         DesignHomeListHeader(R.drawable.organism, stringResource(id = R.string.design_organisms))
     }
-    items(designOrganismsScreens) { organism: DesignSystemScreens ->
-        DesignScreenColumnItem(stringResource(id = organism.title)) {
+    items(organisms) { organism: DesignSystemScreens ->
+        DesignScreenRow(stringResource(id = organism.title)) {
             onOrganismClicked(organism.route)
         }
     }
@@ -91,7 +93,7 @@ fun DesignHomeListHeader(iconRes: Int, title: String) {
 }
 
 @Composable
-fun DesignScreenColumnItem(title: String, onItemClicked: (String) -> Unit = {}) {
+fun DesignScreenRow(title: String, onItemClicked: (String) -> Unit = {}) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -120,6 +122,7 @@ fun DesignScreenHome(
 ) {
     LazyColumn(
         modifier = modifier
+            .padding(horizontal = 16.dp, vertical = 2.dp)
     ) {
         this.atoms(onNavigateToDesignCategory)
         this.molecules(onNavigateToDesignCategory)
@@ -131,55 +134,43 @@ fun DesignScreenHome(
 //region Composable Previews
 @Preview
 @Composable
-fun AtomsPreview() {
-    CarbonAndroidTheme {
-        LazyColumn {
-            this.atoms {}
-        }
+fun AtomsPreview() = CarbonAndroidTheme {
+    LazyColumn {
+        this.atoms {}
     }
 }
 
 @Preview
 @Composable
-fun MoleculesPreview() {
-    CarbonAndroidTheme {
-        LazyColumn {
-            this.molecules {}
-        }
+fun MoleculesPreview() = CarbonAndroidTheme {
+    LazyColumn {
+        this.molecules {}
     }
 }
 
 @Preview
 @Composable
-fun OrganismsPreview() {
-    CarbonAndroidTheme {
-        LazyColumn {
-            this.organisms {}
-        }
+fun OrganismsPreview() = CarbonAndroidTheme {
+    LazyColumn {
+        this.organisms {}
     }
 }
 
 @Preview("Atom Header")
 @Composable
-fun AtomsDesignHomeListHeaderPreview() {
-    CarbonAndroidTheme {
-        DesignHomeListHeader(R.drawable.atom, "Atoms")
-    }
+fun AtomsDesignHomeListHeaderPreview() = CarbonAndroidTheme {
+    DesignHomeListHeader(R.drawable.atom, "Atoms")
 }
 
 @Preview("Molecule Header")
 @Composable
-fun MoleculesDesignHomeListHeaderPreview() {
-    CarbonAndroidTheme {
-        DesignHomeListHeader(R.drawable.molecule, "Molecules")
-    }
+fun MoleculesDesignHomeListHeaderPreview() = CarbonAndroidTheme {
+    DesignHomeListHeader(R.drawable.molecule, "Molecules")
 }
 
 @Preview("Organisms Header")
 @Composable
-fun OrganismsDesignHomeListHeaderPreview() {
-    CarbonAndroidTheme {
-        DesignHomeListHeader(R.drawable.organism, "Organisms")
-    }
+fun OrganismsDesignHomeListHeaderPreview() = CarbonAndroidTheme {
+    DesignHomeListHeader(R.drawable.organism, "Organisms")
 }
 //endregion

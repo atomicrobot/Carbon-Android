@@ -50,7 +50,7 @@ import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.components.NavigationTopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
-import com.atomicrobot.carbon.ui.designsystem.DesignScreen
+import com.atomicrobot.carbon.ui.designsystem.DesignSystem
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
@@ -147,7 +147,7 @@ fun CarbonAndroidNavHost(
     ) {
         carbonNavGraph(snackbarHostState)
         composable(route = CarbonScreens.DesignSystem.route) {
-            DesignScreen(onBackClicked = onBackClicked)
+            DesignSystem(onBackClicked = onBackClicked)
         }
     }
 }

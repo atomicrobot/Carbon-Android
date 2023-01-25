@@ -16,6 +16,10 @@ sealed class FontScale(val scale: Float) {
     object Large : FontScale(scale = 1.5F)
     object ExtraLarge : FontScale(scale = 2.0F)
 
+    fun shortLabel(): String {
+        return "%.2fx".format(this.scale)
+    }
+
     fun label(ctx: Context): String {
         return ctx.getString(R.string.design_font_scale, this.scale)
     }

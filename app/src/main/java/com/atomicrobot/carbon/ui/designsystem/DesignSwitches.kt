@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 
 //region Composables
 @Composable
@@ -27,18 +28,18 @@ fun DesignSwitchesScreen(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 2.dp)
     ) {
-        item {
-            SwitchColumnItem(isChecked) {
+        item(key = "Checked/Enabled") {
+            SwitchRow(isChecked) {
                 isChecked = it
             }
         }
-        item { SwitchColumnItem(checked = true, enabled = false) }
-        item { SwitchColumnItem(checked = false, enabled = false) }
+        item(key = "Checked/Disabled") { SwitchRow(checked = true, enabled = false) }
+        item(key = "Unchecked/Disabled") { SwitchRow(checked = false, enabled = false) }
     }
 }
 
 @Composable
-fun SwitchColumnItem(checked: Boolean, enabled: Boolean = true, onCheckedChange: ((Boolean) -> Unit)? = {}) {
+fun SwitchRow(checked: Boolean, enabled: Boolean = true, onCheckedChange: ((Boolean) -> Unit)? = {}) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Switch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
         Spacer(modifier = Modifier.width(16.dp))
@@ -57,13 +58,13 @@ fun SwitchColumnItem(checked: Boolean, enabled: Boolean = true, onCheckedChange:
 //region Composable Previews
 @Preview("Checked Switch")
 @Composable
-fun CheckedSwitchColumnItemPreview() {
-    SwitchColumnItem(checked = true, enabled = true)
+fun CheckedSwitchRowPreview() = CarbonAndroidTheme {
+    SwitchRow(checked = true, enabled = true)
 }
 
 @Preview("Checked Disabled Switch")
 @Composable
-fun CheckedDisabledSwitchColumnItemPreview() {
-    SwitchColumnItem(checked = true, enabled = false)
+fun CheckedDisabledSwitchRowPreview() = CarbonAndroidTheme {
+    SwitchRow(checked = true, enabled = false)
 }
 //endregion

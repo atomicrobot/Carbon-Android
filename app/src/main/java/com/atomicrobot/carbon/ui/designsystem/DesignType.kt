@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,7 @@ import kotlin.reflect.full.memberProperties
 fun DesignTypographyScreen(
     modifier: Modifier = Modifier,
 ) {
-    val types: List<Pair<String, TextStyle>> = androidx.compose.material3.Typography::class
+    val types: List<Pair<String, TextStyle>> = Typography::class
         .memberProperties.map {
             val textStyleName = splitCamelCase(it.name)
             val textStyle = it.get(MaterialTheme.typography) as TextStyle
@@ -36,19 +37,21 @@ fun DesignTypographyScreen(
         .sortedWith(
             compareBy({ -it.second.fontSize.value }, { it.first })
         )
-        .toList()
 
     LazyColumn(
         modifier = modifier
     ) {
-        items(types) {
-            TextStyleColumnItem(textStyleName = it.first, textStyle = it.second)
+        items(
+            types,
+            key = { it.first }
+        ) {
+            TextStyleRow(textStyleName = it.first, textStyle = it.second)
         }
     }
 }
 
 @Composable
-fun TextStyleColumnItem(
+fun TextStyleRow(
     textStyleName: String,
     textStyle: TextStyle,
     infoTextStyle: TextStyle = MaterialTheme.typography.labelLarge
@@ -108,37 +111,32 @@ fun TextStyleColumnItem(
     }
 }
 //endregion
+
 //region Composable  Previews
 @Preview("Label Small TextStyle")
 @Composable
-fun LabelSmallTextStyleColumnItemPreview() {
-    CarbonAndroidTheme {
-        TextStyleColumnItem(
-            "labelSmall",
-            MaterialTheme.typography.labelSmall
-        )
-    }
+fun LabelSmallTextStyleRowPreview() = CarbonAndroidTheme {
+    TextStyleRow(
+        "labelSmall",
+        MaterialTheme.typography.labelSmall
+    )
 }
 
 @Preview("Label Medium TextStyle")
 @Composable
-fun LabelMediumTextStyleColumnItemPreview() {
-    CarbonAndroidTheme {
-        TextStyleColumnItem(
-            "labelMedium",
-            MaterialTheme.typography.labelMedium
-        )
-    }
+fun LabelMediumTextStyleRowPreview() = CarbonAndroidTheme {
+    TextStyleRow(
+        "labelMedium",
+        MaterialTheme.typography.labelMedium
+    )
 }
 
 @Preview("Label Large TextStyle")
 @Composable
-fun LabelLargeTextStyleColumnItemPreview() {
-    CarbonAndroidTheme {
-        TextStyleColumnItem(
-            "labelLarge",
-            MaterialTheme.typography.labelLarge
-        )
-    }
+fun LabelLargeTextStyleRowPreview() = CarbonAndroidTheme {
+    TextStyleRow(
+        "labelLarge",
+        MaterialTheme.typography.labelLarge
+    )
 }
 //endregion
