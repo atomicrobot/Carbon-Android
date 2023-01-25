@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -28,6 +29,7 @@ import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.designSystems.DesignSystemScreen
+import com.atomicrobot.carbon.ui.designSystems.DesignSystemViewModel
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
@@ -40,6 +42,7 @@ fun MainNavigation() {
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    val designSystemViewModel: DesignSystemViewModel = hiltViewModel()
     val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -112,7 +115,11 @@ fun MainNavigation() {
                     navController = navController,
                     startDestination = "Main"
                 ) {
-                    mainFlowGraph(navController, snackbarHostState)
+                    mainFlowGraph(
+                        navController = navController,
+                        designSystemViewModel = designSystemViewModel,
+                        snackbarHostState = snackbarHostState
+                    )
                 }
             }
         }
@@ -125,9 +132,12 @@ fun MainNavigation() {
 @Suppress("UNUSED_PARAMETER")
 fun NavGraphBuilder.mainFlowGraph(
     navController: NavHostController,
+    designSystemViewModel: DesignSystemViewModel,
     snackbarHostState: SnackbarHostState
 ) {
+
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
+
         composable(CarbonScreens.Home.route) {
             MainScreen(snackbarHostState)
         }
@@ -171,6 +181,7 @@ fun NavGraphBuilder.mainFlowGraph(
         }
         composable(CarbonScreens.DesignSystems.route){
             DesignSystemScreen(
+                designSystemViewModel = designSystemViewModel,
                 onDismiss = navController::navigateUp
             )
         }

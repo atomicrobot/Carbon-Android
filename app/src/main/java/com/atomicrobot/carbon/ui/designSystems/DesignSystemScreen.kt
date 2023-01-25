@@ -2,6 +2,7 @@ package com.atomicrobot.carbon.ui.designSystems
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,31 +12,39 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.atomicrobot.carbon.ui.designSystems.DesignSystemScreenState.*
+import com.atomicrobot.carbon.ui.designSystems.DesignSystemViewModel.Event
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
-import timber.log.Timber
+import com.atomicrobot.carbon.ui.theme.DefaultDarkColorPalette
+import com.atomicrobot.carbon.ui.theme.DefaultLightColorPalette
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DesignSystemScreen(
+    designSystemViewModel: DesignSystemViewModel,
     onDismiss: () -> Unit
 ) {
 
     var expandedMenu by remember { mutableStateOf(false) }
 
-    var darkModeChecked by remember { mutableStateOf(false) }
-
-    var textScale by remember { mutableStateOf(1.0) }
-
     var screenState: DesignSystemScreenState by remember { mutableStateOf(OverviewState) }
+
+    val designSystemState by designSystemViewModel.designSystemState.collectAsState()
 
     BackHandler(
         enabled = true,
@@ -47,7 +56,10 @@ fun DesignSystemScreen(
         }
     )
 
-    CarbonAndroidTheme(darkTheme = darkModeChecked) {
+    CarbonAndroidTheme(
+        darkTheme = designSystemState.isInDarkMode,
+        testingFontScale = designSystemState.fontScale
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -55,17 +67,17 @@ fun DesignSystemScreen(
         ) {
             AdjustmentsRow(
                 expandedMenu = expandedMenu,
-                darkModeChecked = darkModeChecked,
-                textScale = textScale,
+                darkModeChecked = designSystemState.isInDarkMode,
+                textScale = designSystemState.fontScale,
                 screenState = screenState,
                 onMenuExpandedStateChanged = {
                     expandedMenu = it
                 },
                 onDarkModeChanged = {
-                    darkModeChecked = it
+                    designSystemViewModel.applyAction(Event.ToggleDarkMode(it))
                 },
                 onTextScaleChanged = {
-                    textScale = it
+                    designSystemViewModel.applyAction(Event.SetFontScale(it))
                     expandedMenu = false
                 },
                 onReturnFromDetail = {
@@ -79,11 +91,23 @@ fun DesignSystemScreen(
                 targetState = screenState,
                 transitionSpec = {
                     if (targetState is DetailState) {
-                        slideInHorizontally(initialOffsetX = { width -> width }) with
-                                slideOutHorizontally(targetOffsetX = { width -> -width })
+                        slideInHorizontally(
+                            animationSpec = tween(),
+                            initialOffsetX = { width -> width }
+                        ) with
+                                slideOutHorizontally(
+                                    animationSpec = tween(),
+                                    targetOffsetX = { width -> -width }
+                                )
                     } else {
-                        slideInHorizontally(initialOffsetX = { width -> -width }) with
-                                slideOutHorizontally(targetOffsetX = { width -> width })
+                        slideInHorizontally(
+                            animationSpec = tween(),
+                            initialOffsetX = { width -> -width }
+                        ) with
+                                slideOutHorizontally(
+                                    animationSpec = tween(),
+                                    targetOffsetX = { width -> width }
+                                )
                     }
                 }
             ) {
@@ -178,11 +202,11 @@ fun LazyListScope.moleculesGroup(
 fun AdjustmentsRow(
     expandedMenu: Boolean,
     darkModeChecked: Boolean,
-    textScale: Double,
+    textScale: Float,
     screenState: DesignSystemScreenState,
     onMenuExpandedStateChanged: (Boolean) -> Unit,
     onDarkModeChanged: (Boolean) -> Unit,
-    onTextScaleChanged: (Double) -> Unit,
+    onTextScaleChanged: (Float) -> Unit,
     onReturnFromDetail: () -> Unit
 ) {
     Row(
@@ -225,59 +249,64 @@ fun AdjustmentsRow(
                     ) {
                         Text(
                             text = "${textScale}x Text Scale",
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Icon(
                             imageVector = Icons.Filled.ArrowDropDown,
                             contentDescription = "dropdown menu",
-                            tint = MaterialTheme.colorScheme.onBackground
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }
             )
 
             DropdownMenu(
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.onSecondaryContainer),
                 expanded = expandedMenu,
                 onDismissRequest = { onMenuExpandedStateChanged(false) }
             ) {
                 DropdownMenuItem(
                     text = {
-                        Text(
-                            text = "0.75x"
-                        )
+                        Text(text = "0.75x")
                     },
+                    colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
                     onClick = {
-                        onTextScaleChanged(0.75)
+                        onTextScaleChanged(0.75f)
                     }
                 )
                 DropdownMenuItem(
                     text = {
-                        Text(
-                            text = "1.0x"
-                        )
+                        Text(text = "1.0x")
                     },
+                    colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
                     onClick = {
-                        onTextScaleChanged(1.0)
+                        onTextScaleChanged(1.0f)
                     }
                 )
                 DropdownMenuItem(
                     text = {
-                        Text(
-                            text = "1.5x"
-                        )
+                        Text(text = "1.5x")
                     },
+                    colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
                     onClick = {
-                        onTextScaleChanged(1.5)
+                        onTextScaleChanged(1.5f)
                     }
                 )
                 DropdownMenuItem(
                     text = {
-                        Text(
-                            text = "2.0x"
-                        )
+                        Text(text = "2.0x")
                     },
+                    colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
                     onClick = {
-                        onTextScaleChanged(2.0)
+                        onTextScaleChanged(2.0f)
                     }
                 )
             }
@@ -297,15 +326,65 @@ fun AdjustmentsRow(
 
 @Composable
 fun selectedComposableSet(
-    category: String?
+    category: String?,
+    definedColors: Set<String> = emptySet()
 ): List<@Composable () -> Unit> {
 
     return when (category){
-        Atom.COLORS.category -> getColorSchemeComposables()
+        Atom.COLORS.category -> getColorSchemeComposables(definedColors)
         Atom.TYPOGRAPHY.category -> getTypographyComposables()
         Atom.FONTS.category -> getFontComposables()
         Molecule.BUTTONS.category -> getButtonComposables()
         else -> listOf()
+    }
+}
+
+@HiltViewModel
+class DesignSystemViewModel @Inject constructor(
+) : ViewModel() {
+
+    private val _designSystemState = MutableStateFlow(State())
+
+    val designSystemState: StateFlow<State> = _designSystemState.asStateFlow()
+
+    fun applyAction(action: Event){
+        when (action){
+            is Event.ToggleDarkMode -> toggleDarkMode(action.darkMode)
+            is Event.SetFontScale -> setFontScale(action.scale)
+            is Event.AlterColor -> alterColor(action.colorPair)
+        }
+    }
+
+    private fun toggleDarkMode(darkMode: Boolean){
+        _designSystemState.update {
+            it.copy(
+                isInDarkMode = darkMode
+            )
+        }
+    }
+
+    private fun setFontScale(scale: Float){
+        _designSystemState.update {
+            it.copy(
+                fontScale = scale
+            )
+        }
+    }
+
+    private fun alterColor(pair: Pair<String,Color>){
+
+    }
+
+    data class State(
+        val isInDarkMode: Boolean = false,
+        val fontScale: Float = 1f,
+        val definedColors: Set<String> = if (isInDarkMode) DefaultDarkColorPalette.definedColorMap.keys else DefaultLightColorPalette.definedColorMap.keys
+    )
+
+    sealed class Event {
+        class ToggleDarkMode(val darkMode: Boolean) : Event()
+        class SetFontScale(val scale: Float) : Event()
+        class AlterColor(val colorPair: Pair<String,Color>) : Event()
     }
 }
 
