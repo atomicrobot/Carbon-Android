@@ -1,30 +1,35 @@
 package com.atomicrobot.carbon.ui.designSystems
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
-import com.atomicrobot.carbon.ui.designSystems.DesignSystemScreenState.*
-import com.atomicrobot.carbon.ui.designSystems.DesignSystemViewModel.Event
+import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.navigation.CarbonScreens
+import com.atomicrobot.carbon.ui.components.CarbonTopBarNavigation
+import com.atomicrobot.carbon.ui.components.DesignSystemDetailNavigation
+import com.atomicrobot.carbon.ui.components.DesignSystemTopBarActions
+import com.atomicrobot.carbon.ui.navigation.AppBarState
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import com.atomicrobot.carbon.ui.theme.DefaultDarkColorPalette
 import com.atomicrobot.carbon.ui.theme.DefaultLightColorPalette
+import com.atomicrobot.carbon.util.LocalActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,309 +38,158 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DesignSystemScreen(
-    designSystemViewModel: DesignSystemViewModel,
-    onDismiss: () -> Unit
+    designSystemViewModel: DesignSystemViewModel = hiltViewModel(LocalActivity.current),
+    onDetailSelected: (String) -> Unit,
+    onDrawerClicked: () -> Unit,
+    onUpdateAppBarState: (AppBarState) -> Unit
 ) {
-
-    var expandedMenu by remember { mutableStateOf(false) }
-
-    var screenState: DesignSystemScreenState by remember { mutableStateOf(OverviewState) }
 
     val designSystemState by designSystemViewModel.designSystemState.collectAsState()
 
-    BackHandler(
-        enabled = true,
-        onBack = {
-            when (screenState) {
-                is DetailState -> screenState = OverviewState
-                is OverviewState -> onDismiss()
-            }
-        }
-    )
+    LaunchedEffect(Unit){
+        onUpdateAppBarState(
+            AppBarState(
+                title = CarbonScreens.DesignSystems.title,
+                navigation = {
+                    CarbonTopBarNavigation(
+                        onDrawerClicked = onDrawerClicked
+                    )
+                },
+                actions = {
+                    DesignSystemTopBarActions(
+                        onDarkModeToggled = {
+                            designSystemViewModel.applyAction(DesignSystemViewModel.Event.ToggleDarkMode(it))
+                        },
+                        onFontScaleSet = {
+                            designSystemViewModel.applyAction(DesignSystemViewModel.Event.SetFontScale(it))
+                        },
+                        fontScale = designSystemState.fontScale,
+                        darkMode = designSystemState.isInDarkMode
+                    )
+                }
+            )
+        )
+    }
 
     CarbonAndroidTheme(
         darkTheme = designSystemState.isInDarkMode,
         testingFontScale = designSystemState.fontScale
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+        Surface(
+            color = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ) {
-            AdjustmentsRow(
-                expandedMenu = expandedMenu,
-                darkModeChecked = designSystemState.isInDarkMode,
-                textScale = designSystemState.fontScale,
-                screenState = screenState,
-                onMenuExpandedStateChanged = {
-                    expandedMenu = it
-                },
-                onDarkModeChanged = {
-                    designSystemViewModel.applyAction(Event.ToggleDarkMode(it))
-                },
-                onTextScaleChanged = {
-                    designSystemViewModel.applyAction(Event.SetFontScale(it))
-                    expandedMenu = false
-                },
-                onReturnFromDetail = {
-                    screenState = OverviewState
-                }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            AnimatedContent(
-                targetState = screenState,
-                transitionSpec = {
-                    if (targetState is DetailState) {
-                        slideInHorizontally(
-                            animationSpec = tween(),
-                            initialOffsetX = { width -> width }
-                        ) with
-                                slideOutHorizontally(
-                                    animationSpec = tween(),
-                                    targetOffsetX = { width -> -width }
-                                )
-                    } else {
-                        slideInHorizontally(
-                            animationSpec = tween(),
-                            initialOffsetX = { width -> -width }
-                        ) with
-                                slideOutHorizontally(
-                                    animationSpec = tween(),
-                                    targetOffsetX = { width -> width }
-                                )
-                    }
-                }
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
             ) {
-                when (screenState) {
-                    is OverviewState -> {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            this.atomsGroup(
-                                onAtomClicked = {
-                                    screenState = DetailState(it.category)
-                                }
-                            )
-
-                            item {
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Divider()
-                                Spacer(modifier = Modifier.height(8.dp))
-                            }
-
-                            this.moleculesGroup(
-                                onMoleculeClicked = {
-                                    screenState = DetailState(it.category)
-                                }
-                            )
-                        }
-                    }
-                    is DetailState -> {
-
-                        val composables = selectedComposableSet(screenState.category)
-
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-
-                            items(composables) { composable ->
-                                composable()
-                            }
-                        }
-                    }
-                }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+                this.atoms(onDetailSelected)
+                this.molecules(onDetailSelected)
+                this.organisms(onDetailSelected)
             }
         }
     }
 }
 
-fun LazyListScope.atomsGroup(
-    onAtomClicked: (Atom) -> Unit
+@OptIn(ExperimentalFoundationApi::class)
+fun LazyListScope.atoms(
+    onAtomClicked: (String) -> Unit
 ) {
+    stickyHeader {
+        DesignHomeListHeader(R.drawable.atom, stringResource(id = R.string.design_atoms))
+    }
     items(Atom.values()) { atom ->
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    onAtomClicked(atom)
-                }
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                text = atom.category
-            )
-        }
+        DesignScreenRow(
+            title = atom.category,
+            onItemClicked = { onAtomClicked(atom.category) }
+        )
     }
+    item { Spacer(modifier = Modifier.height(16.dp)) }
 }
 
-fun LazyListScope.moleculesGroup(
-    onMoleculeClicked: (Molecule) -> Unit
+@OptIn(ExperimentalFoundationApi::class)
+fun LazyListScope.molecules(
+    onMoleculeClicked: (String) -> Unit
 ) {
+    stickyHeader {
+        DesignHomeListHeader(R.drawable.molecule, stringResource(id = R.string.design_molecule))
+    }
     items(Molecule.values()) { molecule ->
-        Box(
+        DesignScreenRow(molecule.category) {
+            onMoleculeClicked(molecule.category)
+        }
+    }
+    item { Spacer(modifier = Modifier.height(16.dp)) }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+fun LazyListScope.organisms(
+    onOrganismClicked: (String) -> Unit
+) {
+    stickyHeader {
+        DesignHomeListHeader(R.drawable.organism, stringResource(id = R.string.design_organisms))
+    }
+    items(Organism.values()) { organism ->
+        DesignScreenRow(organism.category) {
+            onOrganismClicked(organism.category)
+        }
+    }
+}
+
+@Composable
+fun DesignHomeListHeader(
+    iconRes: Int,
+    title: String
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painterResource(id = iconRes),
+                "Header section icon",
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+        Divider()
+    }
+}
+
+@Composable
+fun DesignScreenRow(
+    title: String,
+    onItemClicked: (String) -> Unit = {}
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .clickable { onItemClicked(title) },
+        color = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+    ) {
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    onMoleculeClicked(molecule)
-                }
+                .padding(start = 16.dp, top = 8.dp, end = 24.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                text = molecule.category
+                title,
+                style = MaterialTheme.typography.bodyLarge
             )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(Icons.Filled.ChevronRight, "View $title")
         }
-    }
-}
-
-@Composable
-fun AdjustmentsRow(
-    expandedMenu: Boolean,
-    darkModeChecked: Boolean,
-    textScale: Float,
-    screenState: DesignSystemScreenState,
-    onMenuExpandedStateChanged: (Boolean) -> Unit,
-    onDarkModeChanged: (Boolean) -> Unit,
-    onTextScaleChanged: (Float) -> Unit,
-    onReturnFromDetail: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        if (screenState is DetailState) {
-            Row(
-                modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = onReturnFromDetail
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Return to Overview"
-                    )
-                }
-            }
-        }
-
-        Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
-            OutlinedButton(
-                onClick = { onMenuExpandedStateChanged(!expandedMenu) },
-                shape = RectangleShape,
-                contentPadding = PaddingValues(
-                    start = 12.dp,
-                    top = 8.dp,
-                    bottom = 8.dp,
-                    end = 0.dp
-                ),
-                content = {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "${textScale}x Text Scale",
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                        Icon(
-                            imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = "dropdown menu",
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    }
-                }
-            )
-
-            DropdownMenu(
-                modifier = Modifier.background(color = MaterialTheme.colorScheme.onSecondaryContainer),
-                expanded = expandedMenu,
-                onDismissRequest = { onMenuExpandedStateChanged(false) }
-            ) {
-                DropdownMenuItem(
-                    text = {
-                        Text(text = "0.75x")
-                    },
-                    colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    onClick = {
-                        onTextScaleChanged(0.75f)
-                    }
-                )
-                DropdownMenuItem(
-                    text = {
-                        Text(text = "1.0x")
-                    },
-                    colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    onClick = {
-                        onTextScaleChanged(1.0f)
-                    }
-                )
-                DropdownMenuItem(
-                    text = {
-                        Text(text = "1.5x")
-                    },
-                    colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    onClick = {
-                        onTextScaleChanged(1.5f)
-                    }
-                )
-                DropdownMenuItem(
-                    text = {
-                        Text(text = "2.0x")
-                    },
-                    colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    onClick = {
-                        onTextScaleChanged(2.0f)
-                    }
-                )
-            }
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-        Switch(
-            checked = darkModeChecked,
-            onCheckedChange = onDarkModeChanged
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(
-            text = "Dark Mode",
-            style = MaterialTheme.typography.labelLarge
-        )
-    }
-}
-
-@Composable
-fun selectedComposableSet(
-    category: String?,
-    definedColors: Set<String> = emptySet()
-): List<@Composable () -> Unit> {
-
-    return when (category){
-        Atom.COLORS.category -> getColorSchemeComposables(definedColors)
-        Atom.TYPOGRAPHY.category -> getTypographyComposables()
-        Atom.FONTS.category -> getFontComposables()
-        Molecule.BUTTONS.category -> getButtonComposables()
-        else -> listOf()
     }
 }
 
@@ -407,7 +261,5 @@ enum class Molecule(val category: String) {
     BARS(category = "Bars")
 }
 
-sealed class DesignSystemScreenState(val category: String? = null) {
-    object OverviewState : DesignSystemScreenState()
-    class DetailState(detail: String) : DesignSystemScreenState(detail)
+enum class Organism(val category: String) {
 }

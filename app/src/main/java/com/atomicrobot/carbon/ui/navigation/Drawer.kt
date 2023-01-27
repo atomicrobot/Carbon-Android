@@ -36,7 +36,7 @@ import com.atomicrobot.carbon.util.AppScreensPreviewProvider
 fun Drawer(
     @PreviewParameter(AppScreensPreviewProvider::class, limit = 1) screens: List<CarbonScreens>,
     modifier: Modifier = Modifier,
-    onDestinationClicked: (route: String) -> Unit = { _ -> }
+    onDestinationClicked: (CarbonScreens) -> Unit = { _ -> }
 ) {
     Column(
         modifier
@@ -64,13 +64,13 @@ fun Drawer(
 @Composable
 fun DrawerAppScreenItem(
     @PreviewParameter(AppScreenPreviewProvider::class, limit = 3) screen: CarbonScreens,
-    onDestinationClicked: (route: String) -> Unit = { _ -> }
+    onDestinationClicked: (CarbonScreens) -> Unit = { _ -> }
 ) {
     Row(
         Modifier
             .fillMaxWidth()
             .clickable {
-                onDestinationClicked(screen.route)
+                onDestinationClicked(screen)
             },
         verticalAlignment = Alignment.CenterVertically
     ) {

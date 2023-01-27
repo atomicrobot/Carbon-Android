@@ -9,6 +9,7 @@ object Dependencies {
     const val mThreeVersion = "1.0.1"
     const val coreVersion = "1.7.0"
     const val viewPagerVersion = "0.28.0"
+    const val animationVersion = "0.28.0"
     const val firebaseBomVersion = "28.0.0"
     const val firebaseCrashlyticsGradleVersion = "2.6.1"
     const val googleAccompanistVersion = "0.27.0"

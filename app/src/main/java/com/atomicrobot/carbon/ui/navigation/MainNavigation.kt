@@ -1,55 +1,80 @@
 package com.atomicrobot.carbon.ui.navigation
 
 import android.graphics.Color
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.*
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
+import androidx.navigation.*
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.navigation.CarbonScreens
+import com.atomicrobot.carbon.navigation.CarbonScreens.DeepLink.arguments
+import com.atomicrobot.carbon.navigation.CarbonScreens.DeepLink.title
 import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.navigation.drawerScreens
 import com.atomicrobot.carbon.ui.about.AboutHtmlScreen
 import com.atomicrobot.carbon.ui.about.AboutScreen
-import com.atomicrobot.carbon.ui.components.BottomNavigationBar
-import com.atomicrobot.carbon.ui.components.TopBar
+import com.atomicrobot.carbon.ui.components.*
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
+import com.atomicrobot.carbon.ui.designSystems.DesignSystemDetailScreen
 import com.atomicrobot.carbon.ui.designSystems.DesignSystemScreen
 import com.atomicrobot.carbon.ui.designSystems.DesignSystemViewModel
+import com.atomicrobot.carbon.ui.designSystems.DesignSystemViewModel.Event
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import com.atomicrobot.carbon.util.LocalActivity
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainNavigation() {
-    val navController = rememberNavController()
-    val scope = rememberCoroutineScope()
+fun CarbonAndroidApp() {
+    CarbonAndroidTheme {
+        val parentActivity = LocalContext.current as ComponentActivity
+        // Wrap the composable in a LocalActivity provider so our composable 'environment'
+        // has access to Activity context/scope which is required for requesting permissions
+        CompositionLocalProvider(LocalActivity provides parentActivity) {
+            CarbonAndroid()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@Composable
+fun CarbonAndroid() {
+    val navController = rememberAnimatedNavController()
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-    val designSystemViewModel: DesignSystemViewModel = hiltViewModel()
-    val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
 
+    val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val navigationActions: NavigationActions = remember {
+        NavigationActions(navController, scope, drawerState)
+    }
 
-    BackHandler(enabled = drawerState.isOpen) {
-        scope.launch {
-            drawerState.close()
+    val appBarState by navigationActions.appBarState.collectAsState()
+
+    BackHandler(enabled = true) {
+        if (drawerState.isOpen){
+            navigationActions.toggleDrawer()
+        } else {
+            navigationActions.back()
         }
     }
 
@@ -60,16 +85,9 @@ fun MainNavigation() {
                 content = {
                     Drawer(
                         screens = drawerScreens,
-                        onDestinationClicked = { route ->
-                            scope.launch {
-                                drawerState.close()
-                            }
-                            if (navController.currentBackStackEntry?.destination?.route != route) {
-                                navController.navigate(route) {
-                                    popUpTo(navController.graph.startDestinationId)
-                                    launchSingleTop = true
-                                }
-                            }
+                        onDestinationClicked = { screen ->
+                            navigationActions.toggleDrawer()
+                            navigationActions.navigateToScreen(screen.route)
                         }
                     )
                 }
@@ -78,47 +96,31 @@ fun MainNavigation() {
         content = {
             Scaffold(
                 topBar = {
-                    TopBar(
-                        title = appBarTitle(navBackStackEntry),
-                        buttonIcon = Icons.Filled.Menu,
-                        onButtonClicked = {
-                            scope.launch {
-                                drawerState.open()
-                            }
-                        }
+                    TopAppBar(
+                        title = { Text(text = appBarState.title) },
+                        navigationIcon = { appBarState.navigation?.invoke() },
+                        actions = { appBarState.actions?.invoke(this) }
                     )
                 },
                 bottomBar = {
                     BottomNavigationBar(
                         destinations = appScreens,
                         navController = navController,
-                        onDestinationClicked = {
-                            if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                                navController.navigate(it.route) {
-                                    // Make sure the back stack only consists of the current graphs main
-                                    // destination
-                                    popUpTo(CarbonScreens.Home.route) {
-                                        saveState = true
-                                    }
-                                    // Singular instance of destinations
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
+                        onDestinationClicked = { screen ->
+                            navigationActions.navigateToScreen(screen.route)
                         }
                     )
                 },
                 snackbarHost = { SnackbarHost(snackbarHostState) }
             ) { innerPadding ->
-                NavHost(
+                AnimatedNavHost(
                     modifier = Modifier.padding(innerPadding),
                     navController = navController,
-                    startDestination = "Main"
-                ) {
-                    mainFlowGraph(
-                        navController = navController,
-                        designSystemViewModel = designSystemViewModel,
-                        snackbarHostState = snackbarHostState
+                    startDestination = CarbonScreens.Home.route
+                ){
+                    carbonNavGraph(
+                        navigationActions = navigationActions,
+                        snackbarHostState = snackbarHostState,
                     )
                 }
             }
@@ -129,75 +131,107 @@ fun MainNavigation() {
 /**
  * Nested nav. graph dedicated to displaying 'main' app content.
  */
-@Suppress("UNUSED_PARAMETER")
-fun NavGraphBuilder.mainFlowGraph(
-    navController: NavHostController,
-    designSystemViewModel: DesignSystemViewModel,
-    snackbarHostState: SnackbarHostState
+fun NavGraphBuilder.carbonNavGraph(
+    navigationActions: NavigationActions,
+    snackbarHostState: SnackbarHostState,
 ) {
 
-    navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
+    carbonFlow(
+        snackbarHostState = snackbarHostState,
+        onUpdateAppBarState = navigationActions::updateAppBar,
+        onDrawerClicked = navigationActions::toggleDrawer
+    )
 
-        composable(CarbonScreens.Home.route) {
-            MainScreen(snackbarHostState)
-        }
-        composable(CarbonScreens.Settings.route) {
-            SettingsScreen()
-        }
-        composable(
-            route = CarbonScreens.DeepLink.routeWithArgs,
-            arguments = CarbonScreens.DeepLink.arguments,
-            deepLinks = CarbonScreens.DeepLink.deepLink
-        ) {
-            val textColor = it.arguments?.getString("textColor")
-            var color = Color.BLACK
-            try {
-                color = Color.parseColor(textColor)
-            } catch (exception: IllegalArgumentException) {
-                Timber.e("Unsupported value for color")
-            }
-            val textSize = it.arguments?.getString("textSize")
-            var size = 30f
-            if (!textSize.isNullOrEmpty()) {
-                try {
-                    size = textSize.toFloat()
-                } catch (exception: NumberFormatException) {
-                    Timber.e("Unsupported value for size")
-                }
-            }
-            DeepLinkSampleScreen(
-                textColor = color,
-                textSize = size
-            )
-        }
-        composable(CarbonScreens.About.route) {
-            AboutScreen()
-        }
-        composable(CarbonScreens.AboutHtml.route) {
-            AboutHtmlScreen()
-        }
-        composable(CarbonScreens.License.route) {
-            LicenseScreen()
-        }
-        composable(CarbonScreens.DesignSystems.route){
-            DesignSystemScreen(
-                designSystemViewModel = designSystemViewModel,
-                onDismiss = navController::navigateUp
-            )
-        }
-    }
+    designSystemFlow(
+        onUpdateAppBarState = navigationActions::updateAppBar,
+        onDrawerClicked = navigationActions::toggleDrawer,
+        onDetailSelected = navigationActions::navigateToScreen,
+        onDetailBack = navigationActions::back
+    )
 }
 
-@Composable
-fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
-    return when (navBackStackEntry?.destination?.route) {
-        CarbonScreens.Home.route -> CarbonScreens.Home.title
-        CarbonScreens.Settings.route -> CarbonScreens.Settings.title
-        CarbonScreens.DeepLink.route -> CarbonScreens.DeepLink.title
-        CarbonScreens.About.route -> CarbonScreens.About.title
-        CarbonScreens.AboutHtml.route -> CarbonScreens.AboutHtml.title
-        CarbonScreens.License.route -> CarbonScreens.License.title
-        CarbonScreens.DesignSystems.route -> CarbonScreens.DesignSystems.title
-        else -> ""
+@OptIn(ExperimentalMaterial3Api::class)
+class NavigationActions(
+    val navController: NavHostController,
+    val scope: CoroutineScope,
+    val drawerState: DrawerState
+){
+
+    private val _appBarState = MutableStateFlow(
+        AppBarState.defaultAppBarState(
+            title = CarbonScreens.Home.title,
+            onDrawerClicked = { toggleDrawer() }
+        )
+    )
+
+    val appBarState: StateFlow<AppBarState> = _appBarState.asStateFlow()
+
+    val currentNavDestination: NavDestination?
+    get() = navController.currentBackStackEntry?.destination
+
+    fun toggleDrawer() {
+        scope.launch {
+            if (drawerState.isOpen){
+                drawerState.close()
+            } else {
+                drawerState.open()
+            }
+        }
+    }
+
+    fun navigateToScreen(route: String) {
+        if (currentNavDestination?.route != route){
+            navController.navigate(route){
+                launchSingleTop = true
+
+                Timber.d("PPPP, ${currentNavDestination?.route}")
+
+                if (currentNavDestination?.route != CarbonScreens.DesignSystems.route){
+                    popUpTo(CarbonScreens.Home.route){
+                        saveState = true
+                    }
+                    restoreState = true
+                }
+            }
+        }
+    }
+
+    fun back(){
+        navController.navigateUp()
+    }
+
+    fun updateAppBar(
+        appBarState: AppBarState
+    ){
+        _appBarState.update {
+            appBarState
+        }
+    }
+
+}
+
+data class AppBarState(
+    val title: String = "",
+    val navigation: (@Composable () -> Unit)? = null,
+    val actions: (@Composable RowScope.() -> Unit)? = null
+) {
+
+    companion object {
+        fun defaultAppBarState(
+            title: String,
+            onDrawerClicked: () -> Unit
+        ): AppBarState {
+            return AppBarState(
+                title = title,
+                navigation = {
+                     CarbonTopBarNavigation(
+                         onDrawerClicked = onDrawerClicked
+                     )
+                },
+                actions = {
+                    CarbonTopBarActions()
+                }
+            )
+        }
     }
 }

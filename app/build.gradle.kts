@@ -168,6 +168,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:${Dependencies.composeHiltNavigationVersion}")
     implementation("androidx.navigation:navigation-compose:${Dependencies.composeNavigationVersion}")
     implementation("com.google.accompanist:accompanist-pager:${Dependencies.viewPagerVersion}")
+    implementation("com.google.accompanist:accompanist-navigation-animation:${Dependencies.animationVersion}")
 
     implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
     implementation("com.google.android.gms:play-services-base:${Dependencies.playServicesVersion}")

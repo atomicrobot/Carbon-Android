@@ -92,6 +92,12 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         "designSystems",
         ScreenIcon(Icons.Filled.Build, R.string.cont_desc_design_systems) // Icon value here is a filler
     )
+
+    object DesignSystemsDetail : CarbonScreens(
+        "Design System Detail",
+        "designSystemsDetail/{category}",
+        ScreenIcon(Icons.Filled.Build, R.string.cont_desc_design_systems) // Icon value here is a filler
+    )
 }
 
 val appScreens = listOf(

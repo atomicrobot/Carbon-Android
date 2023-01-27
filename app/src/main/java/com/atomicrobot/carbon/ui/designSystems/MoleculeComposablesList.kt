@@ -1,7 +1,6 @@
 package com.atomicrobot.carbon.ui.designSystems
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image

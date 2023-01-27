@@ -65,7 +65,7 @@ val DefaultDarkColorPalette = ColorSchemeWrapper(
         "onTertiaryContainer" to Orange,
         "background" to Black100,
         "onBackground" to White100,
-        "surface" to Neutron,
+        "surface" to White100,
         "surfaceVariant" to Transparent,
         "onSurfaceVariant" to LightGray,
     )
@@ -115,20 +115,20 @@ fun CarbonAndroidTheme(
         )
     }
 
-    val activeScheme by rememberUpdatedState(
+    val activeScheme: ColorScheme = remember(paletteTestingMap,darkTheme){
         when (darkTheme){
             true -> DefaultDarkColorPalette.copy(
                 definedColorMap = DefaultDarkColorPalette.definedColorMap + paletteTestingMap).convertToScheme()
             else -> DefaultLightColorPalette.copy(
                 definedColorMap = DefaultLightColorPalette.definedColorMap + paletteTestingMap).convertToScheme()
         }
-    )
+    }
 
-    val activeTypography by rememberUpdatedState(
+    val activeTypography: Typography = remember(testingFontScale){
         DefaultTypography.copy(
             fontScale = testingFontScale
         ).scaledTypography()
-    )
+    }
 
     MaterialTheme(
         colorScheme = activeScheme,
