@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon.ui.designSystems
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,12 +21,9 @@ import androidx.lifecycle.ViewModel
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.CarbonTopBarNavigation
-import com.atomicrobot.carbon.ui.components.DesignSystemDetailNavigation
 import com.atomicrobot.carbon.ui.components.DesignSystemTopBarActions
 import com.atomicrobot.carbon.ui.navigation.AppBarState
-import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
-import com.atomicrobot.carbon.ui.theme.DefaultDarkColorPalette
-import com.atomicrobot.carbon.ui.theme.DefaultLightColorPalette
+import com.atomicrobot.carbon.ui.theme.*
 import com.atomicrobot.carbon.util.LocalActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -232,7 +227,7 @@ class DesignSystemViewModel @Inject constructor(
     data class State(
         val isInDarkMode: Boolean = false,
         val fontScale: Float = 1f,
-        val definedColors: Set<String> = if (isInDarkMode) DefaultDarkColorPalette.definedColorMap.keys else DefaultLightColorPalette.definedColorMap.keys
+        val appliedColorMap: Map<String,Color> = if (isInDarkMode) defaultDarkColorMap else defaultLightColorMap,
     )
 
     sealed class Event {

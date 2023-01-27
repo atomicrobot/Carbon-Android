@@ -9,9 +9,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.DesignSystemDetailNavigation
 import com.atomicrobot.carbon.ui.designSystems.DesignSystemViewModel.Event
 import com.atomicrobot.carbon.ui.components.DesignSystemTopBarActions
@@ -60,10 +60,14 @@ fun DesignSystemDetailScreen(
     }
 
     CarbonAndroidTheme(
+        paletteTestingMap = designSystemState.appliedColorMap,
         darkTheme = designSystemState.isInDarkMode,
         testingFontScale = designSystemState.fontScale
     ){
-        val composables = selectedComposableSet(detailCategory)
+        val composables = selectedComposableSet(
+            category = detailCategory,
+            appliedColorMap = designSystemState.appliedColorMap
+        )
 
         Column(
             modifier = Modifier
@@ -89,11 +93,11 @@ fun DesignSystemDetailScreen(
 @Composable
 fun selectedComposableSet(
     category: String?,
-    definedColors: Set<String> = emptySet()
+    appliedColorMap: Map<String, String> = emptyMap()
 ): List<@Composable () -> Unit> {
 
     return when (category){
-        Atom.COLORS.category -> getColorSchemeComposables(definedColors)
+        Atom.COLORS.category -> getColorSchemeComposables(appliedColorMap = appliedColorMap)
         Atom.TYPOGRAPHY.category -> getTypographyComposables()
         Atom.FONTS.category -> getFontComposables()
         Molecule.BUTTONS.category -> getButtonComposables()

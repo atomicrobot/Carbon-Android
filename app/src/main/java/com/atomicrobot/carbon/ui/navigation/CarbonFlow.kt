@@ -5,7 +5,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import com.atomicrobot.carbon.navigation.CarbonScreens
-import com.atomicrobot.carbon.navigation.CarbonScreens.DeepLink.arguments
 import com.atomicrobot.carbon.ui.about.AboutHtmlScreen
 import com.atomicrobot.carbon.ui.about.AboutScreen
 import com.atomicrobot.carbon.ui.components.CarbonScreen

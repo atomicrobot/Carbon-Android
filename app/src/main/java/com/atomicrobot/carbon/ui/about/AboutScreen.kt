@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
-import com.atomicrobot.carbon.ui.theme.CarbonColors
+import com.atomicrobot.carbon.ui.theme.CarbonPalette
 
 @Preview(showBackground = true)
 @Composable
@@ -322,6 +322,6 @@ fun StripedLineShape(modifier: Modifier = Modifier) {
         modifier = Modifier
             .fillMaxSize()
             .clip(shape)
-            .background(CarbonColors.Orange)
+            .background(CarbonPalette.ORANGE.color)
     )
 }

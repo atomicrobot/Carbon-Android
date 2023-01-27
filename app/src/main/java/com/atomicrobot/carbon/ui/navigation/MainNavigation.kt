@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon.ui.navigation
 
-import android.graphics.Color
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
@@ -10,28 +9,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.navigation
-import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.navigation.CarbonScreens
-import com.atomicrobot.carbon.navigation.CarbonScreens.DeepLink.arguments
-import com.atomicrobot.carbon.navigation.CarbonScreens.DeepLink.title
 import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.navigation.drawerScreens
-import com.atomicrobot.carbon.ui.about.AboutHtmlScreen
-import com.atomicrobot.carbon.ui.about.AboutScreen
 import com.atomicrobot.carbon.ui.components.*
-import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
-import com.atomicrobot.carbon.ui.designSystems.DesignSystemDetailScreen
-import com.atomicrobot.carbon.ui.designSystems.DesignSystemScreen
-import com.atomicrobot.carbon.ui.designSystems.DesignSystemViewModel
-import com.atomicrobot.carbon.ui.designSystems.DesignSystemViewModel.Event
-import com.atomicrobot.carbon.ui.license.LicenseScreen
-import com.atomicrobot.carbon.ui.main.MainScreen
-import com.atomicrobot.carbon.ui.settings.SettingsScreen
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import com.atomicrobot.carbon.util.LocalActivity
 import com.google.accompanist.navigation.animation.AnimatedNavHost

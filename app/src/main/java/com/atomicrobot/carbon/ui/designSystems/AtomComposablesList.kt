@@ -14,29 +14,22 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.atomicrobot.carbon.ui.theme.CarbonColors
+import com.atomicrobot.carbon.ui.theme.CarbonPalette
 import okhttp3.internal.toHexString
 import timber.log.Timber
 import kotlin.reflect.full.*
 
 @Composable
 fun getColorSchemeComposables(
-    definedColors: Set<String>
+    appliedColorMap: Map<String,String>
 ): List<@Composable () -> Unit> {
 
-    val carbonColors = CarbonColors::class.companionObject?.memberProperties?.map {
-        Pair(it.name, it.getter.call(CarbonColors.Companion) as Color)
-    }
-    val themeColors = MaterialTheme.colorScheme::class.memberProperties.map {
-        Pair(it.name, it.getter.call(MaterialTheme.colorScheme) as Color)
+    val carbonColors = CarbonPalette.values().map {
+        Pair(it.camelCase,it.color)
     }
 
-    val overlapMap = themeColors.filter {
-        definedColors.contains(it.first)
-    }.associate { themeColor ->
-        themeColor.first to carbonColors?.firstOrNull { carbonColor ->
-            carbonColor.second.toArgb() == themeColor.second.toArgb()
-        }?.first
+    val themeColors = MaterialTheme.colorScheme::class.memberProperties.map {
+        Pair(it.name, it.getter.call(MaterialTheme.colorScheme) as Color)
     }
 
     val paletteColors: @Composable () -> Unit = {
@@ -48,7 +41,7 @@ fun getColorSchemeComposables(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            carbonColors?.chunked(2)?.forEach { couple ->
+            carbonColors.chunked(2).forEach { couple ->
                 Row(modifier = Modifier.fillMaxWidth()) {
                     ColorSwatchItem(
                         modifier = Modifier.weight(1f),
@@ -91,7 +84,7 @@ fun getColorSchemeComposables(
                         color = couple[0].second,
                         primaryName = couple[0].first,
                         hex = couple[0].second.toArgb().toHexString(),
-                        secondaryName = overlapMap[couple[0].first] ?: "Default"
+                        secondaryName = appliedColorMap[couple[0].first] ?: "Default"
                     )
 
                     if (couple.size > 1) {
@@ -102,7 +95,7 @@ fun getColorSchemeComposables(
                             color = couple[1].second,
                             primaryName = couple[1].first,
                             hex = couple[1].second.toArgb().toHexString(),
-                            secondaryName = overlapMap[couple[1].first] ?: "Default"
+                            secondaryName = appliedColorMap[couple[1].first] ?: "Default"
                         )
                     }
                 }
