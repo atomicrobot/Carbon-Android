@@ -12,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -43,7 +42,7 @@ fun DesignSystemScreen(
 
     val designSystemState by designSystemViewModel.designSystemState.collectAsState()
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         onUpdateAppBarState(
             AppBarState(
                 title = CarbonScreens.DesignSystems.title,
@@ -55,10 +54,18 @@ fun DesignSystemScreen(
                 actions = {
                     DesignSystemTopBarActions(
                         onDarkModeToggled = {
-                            designSystemViewModel.applyAction(DesignSystemViewModel.Event.ToggleDarkMode(it))
+                            designSystemViewModel.applyAction(
+                                DesignSystemViewModel.Event.ToggleDarkMode(
+                                    it
+                                )
+                            )
                         },
                         onFontScaleSet = {
-                            designSystemViewModel.applyAction(DesignSystemViewModel.Event.SetFontScale(it))
+                            designSystemViewModel.applyAction(
+                                DesignSystemViewModel.Event.SetFontScale(
+                                    it
+                                )
+                            )
                         },
                         fontScale = designSystemState.fontScale,
                         darkMode = designSystemState.isInDarkMode
@@ -196,15 +203,14 @@ class DesignSystemViewModel @Inject constructor(
 
     val designSystemState: StateFlow<State> = _designSystemState.asStateFlow()
 
-    fun applyAction(action: Event){
-        when (action){
+    fun applyAction(action: Event) {
+        when (action) {
             is Event.ToggleDarkMode -> toggleDarkMode(action.darkMode)
             is Event.SetFontScale -> setFontScale(action.scale)
-            is Event.AlterColor -> alterColor(action.colorPair)
         }
     }
 
-    private fun toggleDarkMode(darkMode: Boolean){
+    private fun toggleDarkMode(darkMode: Boolean) {
         _designSystemState.update {
             it.copy(
                 isInDarkMode = darkMode
@@ -212,7 +218,7 @@ class DesignSystemViewModel @Inject constructor(
         }
     }
 
-    private fun setFontScale(scale: Float){
+    private fun setFontScale(scale: Float) {
         _designSystemState.update {
             it.copy(
                 fontScale = scale
@@ -220,20 +226,14 @@ class DesignSystemViewModel @Inject constructor(
         }
     }
 
-    private fun alterColor(pair: Pair<String,Color>){
-
-    }
-
     data class State(
         val isInDarkMode: Boolean = false,
-        val fontScale: Float = 1f,
-        val appliedColorMap: Map<String,Color> = if (isInDarkMode) defaultDarkColorMap else defaultLightColorMap,
+        val fontScale: Float = 1f
     )
 
     sealed class Event {
         class ToggleDarkMode(val darkMode: Boolean) : Event()
         class SetFontScale(val scale: Float) : Event()
-        class AlterColor(val colorPair: Pair<String,Color>) : Event()
     }
 }
 

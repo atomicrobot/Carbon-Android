@@ -60,13 +60,12 @@ fun DesignSystemDetailScreen(
     }
 
     CarbonAndroidTheme(
-        paletteTestingMap = designSystemState.appliedColorMap,
         darkTheme = designSystemState.isInDarkMode,
         testingFontScale = designSystemState.fontScale
     ){
         val composables = selectedComposableSet(
             category = detailCategory,
-            appliedColorMap = designSystemState.appliedColorMap
+            isInDarkMode = designSystemState.isInDarkMode
         )
 
         Column(
@@ -93,11 +92,11 @@ fun DesignSystemDetailScreen(
 @Composable
 fun selectedComposableSet(
     category: String?,
-    appliedColorMap: Map<String, String> = emptyMap()
+    isInDarkMode: Boolean
 ): List<@Composable () -> Unit> {
 
     return when (category){
-        Atom.COLORS.category -> getColorSchemeComposables(appliedColorMap = appliedColorMap)
+        Atom.COLORS.category -> getColorSchemeComposables(isInDarkMode)
         Atom.TYPOGRAPHY.category -> getTypographyComposables()
         Atom.FONTS.category -> getFontComposables()
         Molecule.BUTTONS.category -> getButtonComposables()

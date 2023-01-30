@@ -5,32 +5,51 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.res.fontResource
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.atomicrobot.carbon.ui.theme.CarbonPalette
+import com.atomicrobot.carbon.ui.theme.*
 import okhttp3.internal.toHexString
 import timber.log.Timber
 import kotlin.reflect.full.*
 
 @Composable
 fun getColorSchemeComposables(
-    appliedColorMap: Map<String,String>
+    isInDarkMode: Boolean
 ): List<@Composable () -> Unit> {
 
     val carbonColors = CarbonPalette.values().map {
         Pair(it.camelCase,it.color)
     }
 
-    val themeColors = MaterialTheme.colorScheme::class.memberProperties.map {
-        Pair(it.name, it.getter.call(MaterialTheme.colorScheme) as Color)
-    }
+    val themeColors by rememberUpdatedState(
+        when (isInDarkMode){
+            true -> appliedDarkColorMap.map{ it.key to it.value.color } + unappliedDarkColorMap.toList()
+            else -> appliedLightColorMap.map { it.key to it.value.color } + unappliedLightColorMap.toList()
+        }
+    )
+
+    val appliedColorMap by rememberUpdatedState(
+        (if (isInDarkMode){
+            appliedDarkColorMap
+        } else {
+            appliedLightColorMap
+        }).entries.associate {
+            it.key to it.value.camelCase
+        }
+    )
 
     val paletteColors: @Composable () -> Unit = {
         Column(
@@ -162,8 +181,8 @@ fun ColorSwatchItem(
 @Composable
 fun getTypographyComposables(): List<@Composable () -> Unit> {
 
-    return MaterialTheme.typography::class.memberProperties.map {
-        Pair(it.getter.call(MaterialTheme.typography) as TextStyle, it.name)
+    return (appliedTypographyMap + unappliedTypographyMap).map {
+        Pair(it.value,it.key)
     }.sortedByDescending { it.first.fontSize.value }.map { stylePair ->
         {
             Column(
@@ -216,14 +235,17 @@ fun getTypographyComposables(): List<@Composable () -> Unit> {
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun getFontComposables(): List<@Composable () -> Unit> {
 
-    return FontFamily.Companion::class.memberProperties.map {
-        Timber.d("PPPP, ${it.getter.call(FontFamily.Companion)}")
-        Pair(it.getter.call(FontFamily.Companion) as FontFamily, it.name)
-    }.map {
+    val defaultTextStyle = LocalTextStyle.current
+
+    val fontsList = listOf(Pair(defaultTextStyle.fontFamily, defaultTextStyle.fontFamily.toString()))
+
+    return fontsList.map {
         {
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -233,10 +255,10 @@ fun getFontComposables(): List<@Composable () -> Unit> {
 
                 Text(
                     modifier = Modifier.weight(2f),
-                    text = it.second,
+                    text = it.second.substringAfter("."),
                     style = TextStyle(
                         fontFamily = it.first,
-                        fontSize = 22.sp
+                        fontSize = MaterialTheme.typography.headlineLarge.fontSize
                     )
                 )
 
@@ -249,7 +271,7 @@ fun getFontComposables(): List<@Composable () -> Unit> {
 
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = "framework",
+                    text = "Default",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
