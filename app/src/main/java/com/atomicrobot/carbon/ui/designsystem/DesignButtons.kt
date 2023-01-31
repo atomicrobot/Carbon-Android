@@ -1,5 +1,6 @@
 package com.atomicrobot.carbon.ui.designsystem
 
+import androidx.annotation.Keep
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -18,8 +19,6 @@ import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ThumbDown
 import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -36,9 +35,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,18 +48,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import org.koin.androidx.compose.getViewModel
 
 //region Composables
+
+@Keep
 enum class ButtonType {
     Filled,
     Outlined,
     Elevated
 }
 
+@Keep
 enum class IconButtonType {
     NoFill,
     Filled,
@@ -66,27 +72,61 @@ enum class IconButtonType {
     Outlined,
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DesignButtonsScreen(
     modifier: Modifier = Modifier,
+    designSystemVM: DesignSystemViewModel = getViewModel(),
+    onNavIconClicked: () -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 2.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    val screenState: DesignSystemViewModel.ScreenState by designSystemVM.uiState.collectAsState()
+    CarbonAndroidTheme(
+        darkTheme = screenState.darkMode,
+        fontScale = screenState.fontScale.scale,
     ) {
-        buttonItemsTemplate(modifier = Modifier.fillMaxWidth())
-        buttonItemsTemplate(modifier = Modifier.fillMaxWidth(), button = ButtonType.Outlined)
-        buttonItemsTemplate(modifier = Modifier.fillMaxWidth(), button = ButtonType.Elevated)
+        Scaffold(
+            topBar = {
+                DesignScreenAppBar(
+                    title = stringResource(id = DesignSystemScreens.Buttons.title),
+                    screenState.darkMode,
+                    selectedFontScale = screenState.fontScale,
+                    onBackPressed = onNavIconClicked,
+                    onFontScaleChanged = {
+                        designSystemVM.updateFontScale(it)
+                    },
+                    onDarkModeChanged = {
+                        designSystemVM.enabledDarkMode(it)
+                    }
+                )
+            },
+            modifier = modifier,
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(it)
+                    .padding(horizontal = 16.dp, vertical = 2.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                buttonItemsTemplate(modifier = Modifier.fillMaxWidth())
+                buttonItemsTemplate(
+                    modifier = Modifier.fillMaxWidth(),
+                    button = ButtonType.Outlined
+                )
+                buttonItemsTemplate(
+                    modifier = Modifier.fillMaxWidth(),
+                    button = ButtonType.Elevated
+                )
 
-        iconButtonItemsTemplate(Icons.Filled.ThumbUp, IconButtonType.NoFill)
-        iconButtonItemsTemplate(Icons.Filled.ThumbDown, IconButtonType.Filled)
-        iconButtonItemsTemplate(Icons.Filled.Settings, IconButtonType.FilledTonal)
-        iconButtonItemsTemplate(Icons.Filled.CameraAlt, IconButtonType.Outlined)
-        fabButtonItemsTemplate(Icons.Filled.Palette)
+                iconButtonItemsTemplate(Icons.Filled.ThumbUp, IconButtonType.NoFill)
+                iconButtonItemsTemplate(Icons.Filled.ThumbDown, IconButtonType.Filled)
+                iconButtonItemsTemplate(Icons.Filled.Settings, IconButtonType.FilledTonal)
+                iconButtonItemsTemplate(Icons.Filled.CameraAlt, IconButtonType.Outlined)
+                fabButtonItemsTemplate(Icons.Filled.Palette)
 
-        menuButtonItems()
+                menuButtonItems()
+            }
+        }
     }
 }
 //region LazyColumn Extensions
@@ -189,7 +229,8 @@ fun LazyListScope.menuButtonItems() {
     // Pop-up style menu that gets anchored to sibling composale
     item {
         var expanded by remember { mutableStateOf(false) }
-        Box(modifier = Modifier.fillMaxSize()
+        Box(modifier = Modifier
+            .fillMaxSize()
             .wrapContentSize(Alignment.TopStart)) {
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Menu Options")

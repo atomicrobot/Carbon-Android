@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,13 +29,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.atomicrobot.carbon.navigation.CarbonScreens
+import com.atomicrobot.carbon.ui.components.NavigationTopBar
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import io.noties.markwon.Markwon
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LicenseScreen(
+    modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
+    onNavIconClicked: () -> Unit,
 ) {
     val viewModel: LicenseViewModel = getViewModel()
     val screenState by viewModel.uiState.collectAsState()
@@ -39,15 +49,28 @@ fun LicenseScreen(
         viewModel.getLicenses()
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Scaffold(
+        topBar = {
+            NavigationTopBar(
+                title = CarbonScreens.Settings.title,
+                navigationIcon = Icons.Filled.ArrowBack,
+                onNavigationIconClicked = onNavIconClicked
+            )
+        },
+        modifier = modifier,
     ) {
-        LicensesResponse(
-            screenState.licensesState,
-            snackbarHostState
-        )
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LicensesResponse(
+                screenState.licensesState,
+                snackbarHostState
+            )
+        }
     }
 }
 
@@ -94,6 +117,9 @@ fun LicensesList(licenses: String) {
 fun LicenseScreenPreview() {
     CarbonAndroidTheme {
         val snackbarHostState = remember { SnackbarHostState() }
-        LicenseScreen(snackbarHostState)
+        LicenseScreen(
+            snackbarHostState = snackbarHostState,
+            onNavIconClicked = {}
+        )
     }
 }

@@ -13,21 +13,25 @@ import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.ui.designsystem.theme.FinAllyColors
 import com.atomicrobot.carbon.ui.designsystem.theme.FinAllyShapeTokens
-import com.atomicrobot.carbon.util.splitCamelCase
-import java.util.Locale
-import kotlin.reflect.full.memberProperties
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import org.koin.androidx.compose.getViewModel
 
 //region Composables
 //region Composable Extensions
@@ -44,39 +48,59 @@ fun LazyGridScope.header(
 }
 //endregion
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DesignColorsScreen(
     modifier: Modifier = Modifier,
+    designSystemVM: DesignSystemViewModel = getViewModel(),
+    onNavIconClicked: () -> Unit,
 ) {
-    val finAllySwatches: List<Pair<String, Color>> = FinAllyColors::class.memberProperties.map {
-        val colorName = splitCamelCase(it.name).replaceFirstChar { firstChar ->
-            if (firstChar.isLowerCase()) firstChar.titlecase(Locale.ROOT) else it.toString()
-        }
-        val color = it.get(FinAllyColors::class.objectInstance!!) as Color
-        Pair(colorName, color)
-    }.toList()
-
-    LazyVerticalGrid(
-        modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 2.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        columns = GridCells.Fixed(2)
+    val screenState: DesignSystemViewModel.ScreenState by designSystemVM.uiState.collectAsState()
+    CarbonAndroidTheme(
+        darkTheme = screenState.darkMode,
+        fontScale = screenState.fontScale.scale,
     ) {
-        header {
-            Text(
-                text = "FinAlly Color Palette",
-                fontWeight = FontWeight.Normal,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-        }
-        items(
-            items = finAllySwatches,
-            key = {
-                // This only works if colors aren't repeated
-                it.second.toArgb()
+        Scaffold(
+            topBar = {
+                DesignScreenAppBar(
+                    title = stringResource(id = DesignSystemScreens.Colors.title),
+                    screenState.darkMode,
+                    selectedFontScale = screenState.fontScale,
+                    onBackPressed = onNavIconClicked,
+                    onFontScaleChanged = {
+                        designSystemVM.updateFontScale(it)
+                    },
+                    onDarkModeChanged = {
+                        designSystemVM.enabledDarkMode(it)
+                    }
+                )
+            },
+            modifier = modifier
+        ) { it ->
+            LazyVerticalGrid(
+                modifier = modifier
+                    .padding(it)
+                    .padding(horizontal = 16.dp, vertical = 2.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                columns = GridCells.Fixed(2)
+            ) {
+                header {
+                    Text(
+                        text = "FinAlly Color Palette",
+                        fontWeight = FontWeight.Normal,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+                items(
+                    items = designSystemVM.finAllySwatches,
+                    key = {
+                        // This only works if colors aren't repeated
+                        it.second.toArgb()
+                    }
+                ) {
+                    HorizontalColorSwatch(colorName = it.first, color = it.second)
+                }
             }
-        ) {
-            HorizontalColorSwatch(colorName = it.first, color = it.second)
         }
     }
 }

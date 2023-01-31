@@ -3,6 +3,12 @@ package com.atomicrobot.carbon.util
 import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 
 //region Activity extensions
 @Suppress("unused")
@@ -77,3 +83,26 @@ fun Typography.scale(scaleFactor: Float): Typography {
     )
 }
 //endregion
+
+@Composable
+fun NavBackStackEntry.rememberParentEntry(navController: NavController): NavBackStackEntry {
+    // First, get the parent of the current destination
+    // This always exists since every destination in your graph has a parent
+    val parentId = destination.parent!!.id
+
+    // Now get the NavBackStackEntry associated with the parent
+    // making sure to remember it
+    return remember(this) {
+        navController.getBackStackEntry(parentId)
+    }
+}
+
+
+@Composable
+inline fun <reified VM : ViewModel> NavBackStackEntry.getNavigationScopedViewModel(
+    navController: NavController
+): VM {
+    val parentEntry = rememberParentEntry(navController)
+    return viewModel(parentEntry)
+}
+

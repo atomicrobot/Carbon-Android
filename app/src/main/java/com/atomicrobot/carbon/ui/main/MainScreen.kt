@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,14 +31,19 @@ import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
+import com.atomicrobot.carbon.ui.components.NavigationTopBar
 import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
+    modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
+    onNavIconClicked: () -> Unit,
 ) {
     val viewModel: MainViewModel = getViewModel()
     val screenState by viewModel.uiState.collectAsState()
@@ -42,24 +51,38 @@ fun MainScreen(
     LaunchedEffect(true) {
         viewModel.fetchCommits()
     }
-    MainContent(
-        username = screenState.username,
-        repository = screenState.repository,
-        commitsState = screenState.commitsState,
-        snackbarHostState = snackbarHostState,
-        onUserInputChanged = { username, repository ->
-            viewModel.updateUserInput(username, repository)
+
+    Scaffold(
+        topBar = {
+            NavigationTopBar(
+                title = CarbonScreens.Home.title,
+                navigationIcon = Icons.Filled.Menu,
+                onNavigationIconClicked = onNavIconClicked
+            )
         },
-        onUserSelectedFetchCommits = {
-            viewModel.fetchCommits()
-        },
-        buildVersion = viewModel.getVersion(),
-        fingerprint = viewModel.getVersionFingerprint()
-    )
+        modifier = modifier,
+    ) {
+        MainContent(
+            modifier = modifier.padding(it),
+            username = screenState.username,
+            repository = screenState.repository,
+            commitsState = screenState.commitsState,
+            snackbarHostState = snackbarHostState,
+            onUserInputChanged = { username, repository ->
+                viewModel.updateUserInput(username, repository)
+            },
+            onUserSelectedFetchCommits = {
+                viewModel.fetchCommits()
+            },
+            buildVersion = viewModel.getVersion(),
+            fingerprint = viewModel.getVersionFingerprint()
+        )
+    }
 }
 
 @Composable
 fun MainContent(
+    modifier: Modifier = Modifier,
     username: String = MainViewModel.DEFAULT_USERNAME,
     repository: String = MainViewModel.DEFAULT_REPO,
     commitsState: MainViewModel.Commits = MainViewModel.Commits.Result(emptyList()),
@@ -69,7 +92,7 @@ fun MainContent(
     buildVersion: String,
     fingerprint: String
 ) {
-    Column {
+    Column(modifier = modifier) {
         /*
         * Main Screen is split into three chunks
         * (1) User Input

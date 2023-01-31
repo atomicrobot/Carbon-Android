@@ -16,11 +16,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
+import org.koin.androidx.compose.getViewModel
 
 internal const val designSystemHomeRoute: String = "design-system-home"
 
@@ -115,18 +120,46 @@ fun DesignScreenRow(title: String, onItemClicked: (String) -> Unit = {}) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DesignScreenHome(
+fun DesignSystemHomeScreen(
     modifier: Modifier = Modifier,
-    onNavigateToDesignCategory: (String) -> Unit = {}
+    designSystemVM: DesignSystemViewModel = getViewModel(),
+    onNavigate: (String) -> Unit = {},
+    onNavIconClicked: () -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 2.dp)
+    val screenState: DesignSystemViewModel.ScreenState by designSystemVM.uiState.collectAsState()
+    CarbonAndroidTheme(
+        darkTheme = screenState.darkMode,
+        fontScale = screenState.fontScale.scale,
     ) {
-        this.atoms(onNavigateToDesignCategory)
-        this.molecules(onNavigateToDesignCategory)
-        this.organisms(onNavigateToDesignCategory)
+        Scaffold(
+            topBar = {
+                DesignScreenAppBar(
+                    title = "Design Systems",
+                    screenState.darkMode,
+                    selectedFontScale = screenState.fontScale,
+                    onBackPressed = onNavIconClicked,
+                    onFontScaleChanged = {
+                        designSystemVM.updateFontScale(it)
+                    },
+                    onDarkModeChanged = {
+                        designSystemVM.enabledDarkMode(it)
+                    }
+                )
+            },
+            modifier = modifier
+        ) {
+            LazyColumn(
+                modifier = modifier
+                    .padding(it)
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
+            ) {
+                this.atoms(onNavigate)
+                this.molecules(onNavigate)
+                this.organisms(onNavigate)
+            }
+        }
     }
 }
 //endregion

@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
@@ -26,11 +25,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,85 +35,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.atomicrobot.carbon.ui.designsystem.theme.DesignRadiosScreen
-import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
-import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.atomicrobot.carbon.util.getNavigationScopedViewModel
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import org.koin.androidx.compose.getViewModel
 
 //region Composables
-@Composable
-fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
-    return navBackStackEntry?.destination?.route?.let { currentRoute ->
-        var destination = DesignSystemScreens.values().find { currentRoute == it.route }
-        return@let destination?.let {
-            stringResource(id = it.title)
-        } ?: "Design System"
-    } ?: "Design System"
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
-@Composable
-fun DesignSystem(
-    onBackClicked: () -> Unit,
-) {
-    val viewModel: DesignSystemViewModel = getViewModel()
-    val screenState: DesignSystemViewModel.ScreenState by viewModel.uiState.collectAsState()
-    val navController: NavHostController = rememberAnimatedNavController()
-
-
-    CarbonAndroidTheme(
-        darkTheme = screenState.darkMode,
-        fontScale = screenState.fontScale.scale,
-    ) {
-        Scaffold(
-            topBar = {
-                val navBackStackEntry: NavBackStackEntry? by navController
-                    .currentBackStackEntryAsState()
-                var title = appBarTitle(navBackStackEntry = navBackStackEntry)
-                DesignScreenAppBar(
-                    title = title,
-                    screenState.darkMode,
-                    selectedFontScale = screenState.fontScale,
-                    onBackPressed = {
-                        navController.popBackStack()
-                        if(navBackStackEntry?.destination?.route == designSystemHomeRoute) {
-                            onBackClicked()
-                        }
-                    },
-                    onFontScaleChanged = {
-                        viewModel.updateFontScale(it)
-                    },
-                    onDarkModeChanged = {
-                        viewModel.enabledDarkMode(it)
-                    }
-                )
-            },
-            modifier = Modifier.fillMaxSize()
-        ) { innerPadding ->
-            AnimatedNavHost(
-                modifier = Modifier.padding(innerPadding),
-                navController = navController,
-                startDestination = "design_system"
-            ) {
-                designSystemGraph {
-                    navController.navigate(it)
-                }
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DesignScreenAppBar(
@@ -194,7 +124,9 @@ fun DesignScreenAppBar(
 //region NavGraphBuilder extension
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.designSystemGraph(
-    onNavigateTo: (String) -> Unit = {}
+    navController: NavHostController,
+    onNavigateTo: (String) -> Unit = {},
+    onNavIconClicked: () -> Unit,
 ) {
     val onEnterTransition: AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition? = {
         when (targetState.destination.route) {
@@ -218,59 +150,77 @@ fun NavGraphBuilder.designSystemGraph(
         exitTransition = onExitTransition,
     ) {
         composable(route = designSystemHomeRoute) {
-            DesignScreenHome(
+            DesignSystemHomeScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
-                onNavigateTo
+                onNavigate = onNavigateTo,
+                onNavIconClicked = onNavIconClicked
             )
         }
         composable(route = DesignSystemScreens.Colors.route) {
             DesignColorsScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
+                onNavIconClicked = onNavIconClicked
             )
         }
         composable(route = DesignSystemScreens.Typography.route) {
             DesignTypographyScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
+                onNavIconClicked = onNavIconClicked
             )
         }
         composable(route = DesignSystemScreens.Buttons.route) {
             DesignButtonsScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
+                onNavIconClicked = onNavIconClicked
             )
         }
         composable(route = DesignSystemScreens.Checkboxes.route) {
             DesignCheckboxesScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
+                onNavIconClicked = onNavIconClicked
             )
         }
         composable(route = DesignSystemScreens.Radios.route) {
             DesignRadiosScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
+                onNavIconClicked = onNavIconClicked
             )
         }
         composable(route = DesignSystemScreens.Sliders.route) {
             DesignSlidersScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
+                onNavIconClicked = onNavIconClicked
             )
         }
         composable(route = DesignSystemScreens.Switches.route) {
             DesignSwitchesScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
+                onNavIconClicked = onNavIconClicked
             )
         }
 
         composable(route = DesignSystemScreens.TextFields.route) {
             DesignTextFieldsScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
+                onNavIconClicked = onNavIconClicked
             )
         }
     }
