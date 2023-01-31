@@ -1,6 +1,5 @@
 package com.atomicrobot.carbon.ui.designsystem
 
-import androidx.annotation.Keep
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -56,15 +55,12 @@ import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import org.koin.androidx.compose.getViewModel
 
 //region Composables
-
-@Keep
 enum class ButtonType {
     Filled,
     Outlined,
     Elevated
 }
 
-@Keep
 enum class IconButtonType {
     NoFill,
     Filled,
@@ -74,7 +70,7 @@ enum class IconButtonType {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DesignButtonsScreen(
+fun DesignSystemButtonsScreen(
     modifier: Modifier = Modifier,
     designSystemVM: DesignSystemViewModel = getViewModel(),
     onNavIconClicked: () -> Unit,

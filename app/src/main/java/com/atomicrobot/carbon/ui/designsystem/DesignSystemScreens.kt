@@ -35,6 +35,10 @@ sealed class DesignSystemScreens(
         "design-system-checkboxes",
         DesignSystemType.Molecule
     )
+    object Pickers : DesignSystemScreens(
+        R.string.design_pickers,
+        "design-system-pickers",
+        DesignSystemType.Molecule)
     object Radios : DesignSystemScreens(
         R.string.design_radios,
         "design-system-radios",

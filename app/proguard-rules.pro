@@ -4,6 +4,11 @@
     public static final *** NULL;
 }
 
+-keep class com.atomicrobot.carbon.navigation.CarbonScreens { *; }
+-keep class com.atomicrobot.carbon.navigation.CarbonScreens$* { *; }
+-keep class com.atomicrobot.carbon.ui.designsystem.DesignSystemScreens* { *; }
+-keep class com.atomicrobot.carbon.ui.designsystem.DesignSystemScreens$* { *; }
+
 # Kotlin Parcelize will throw Proguard warnings without this
 -dontwarn kotlin.internal.annotations.AvoidUninitializedObjectCopyingCheck
 

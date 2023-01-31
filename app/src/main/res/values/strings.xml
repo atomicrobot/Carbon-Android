@@ -77,6 +77,7 @@
     <string name="design_typography">Typography</string>
     <string name="design_buttons">Buttons</string>
     <string name="design_checkboxes">Checkboxes</string>
+    <string name="design_pickers">Pickers</string>
     <string name="design_radios">Radios</string>
     <string name="design_sliders">Sliders</string>
     <string name="design_switches">Switches</string>

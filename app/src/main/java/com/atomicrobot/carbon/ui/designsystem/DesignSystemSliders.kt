@@ -23,7 +23,7 @@ import org.koin.androidx.compose.getViewModel
 //region Composables
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DesignSlidersScreen(
+fun DesignSystemSlidersScreen(
     modifier: Modifier = Modifier,
     designSystemVM: DesignSystemViewModel = getViewModel(),
     onNavIconClicked: () -> Unit

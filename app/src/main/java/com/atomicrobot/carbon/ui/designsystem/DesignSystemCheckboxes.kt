@@ -28,7 +28,7 @@ import org.koin.androidx.compose.getViewModel
 //region Composables
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DesignCheckboxesScreen(
+fun DesignSystemCheckboxesScreen(
     modifier: Modifier = Modifier,
     designSystemVM: DesignSystemViewModel = getViewModel(),
     onNavIconClicked: () -> Unit,

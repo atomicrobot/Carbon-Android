@@ -239,13 +239,17 @@ class CarbonAndroidAppState(
     val shouldShowBottomBar: Boolean
         @Composable get() = currentDestination
             ?.route
-            ?.let { route -> CarbonScreens.values().first { screen -> route == screen.route }} !=
-                CarbonScreens.DesignSystem
+            ?.let { route ->
+                CarbonScreens.values()
+                    .find { s -> s.route == route }
+                    ?.let { it != CarbonScreens.DesignSystem }
+            } ?: false
 
     private val shouldShowMenuIcon: Boolean
-        get() = navController.currentDestination?.route?.let { route ->
-            CarbonScreens.values().find { route == it.route }
-        } == CarbonScreens.Home
+        get() = navController.currentDestination
+            ?.route
+            ?.let { route -> CarbonScreens.values().find { s -> s.route == route }} ==
+                CarbonScreens.Home
 
     fun navigateToCarbonScreen(screen: CarbonScreens) = navigateToRoute(screen.route)
 

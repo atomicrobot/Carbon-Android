@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 
 @Suppress("unused")
 object FinAllyColors {
@@ -46,4 +47,45 @@ object FinAllyColors {
     val red200: Color = Color(0xFFAA4848)
     val red100: Color = Color(0xFFD4A3A3)
 //endregion
+
+    val colorMap: Map<String, Int> =
+        mapOf(
+            // Grey
+            "Grey 1000" to grey1000.toArgb(),
+            "Grey 950" to grey950.toArgb(),
+            "Grey 900" to grey900.toArgb(),
+            "Grey 850" to grey850.toArgb(),
+            "Grey 800" to grey800.toArgb(),
+            "Grey 750" to grey750.toArgb(),
+            "Grey 700" to grey700.toArgb(),
+            "Grey 650" to grey650.toArgb(),
+            "Grey 600" to grey600.toArgb(),
+            "Grey 550" to grey550.toArgb(),
+            "Grey 500" to grey500.toArgb(),
+            "Grey 450" to grey450.toArgb(),
+            "Grey 400" to grey400.toArgb(),
+            "Grey 350" to grey350.toArgb(),
+            "Grey 300" to grey300.toArgb(),
+            "Grey 250" to grey250.toArgb(),
+            "Grey 200" to grey200.toArgb(),
+            "Grey 150" to grey150.toArgb(),
+            "Grey 100" to grey100.toArgb(),
+            "Grey 50" to grey50.toArgb(),
+            "Grey 0" to grey0.toArgb(),
+            // Green
+            "Green 900" to green900.toArgb(),
+            "Green 800" to green800.toArgb(),
+            "Green 700" to green700.toArgb(),
+            "Green 600" to green600.toArgb(),
+            "Green 500" to green500.toArgb(),
+            "Green 400" to green400.toArgb(),
+            "Green 300" to green300.toArgb(),
+            "Green 200" to green200.toArgb(),
+            "Green 100" to green100.toArgb(),
+            // Red
+            "Red 400" to red400.toArgb(),
+            "Red 300" to red300.toArgb(),
+            "Red 200" to red200.toArgb(),
+            "Red 100" to red100.toArgb(),
+        )
 }

@@ -34,7 +34,7 @@ import org.koin.androidx.compose.getViewModel
 //region Composables
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DesignRadiosScreen(
+fun DesignSystemRadiosScreen(
     modifier: Modifier = Modifier,
     designSystemVM: DesignSystemViewModel = getViewModel(),
     onNavIconClicked: () -> Unit

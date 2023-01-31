@@ -24,6 +24,7 @@ object Dependencies {
     const val rxAndroidVersion = "2.1.1"
     const val splashVersion = "1.0.0"
     const val timberVersion = "5.0.1"
+    const val mat3componentsVersion = "1.8.0"
 
     // Test dependency versions
     const val androidTestSupportVersion = "1.4.0"

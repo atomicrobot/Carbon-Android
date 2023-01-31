@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,7 +51,7 @@ fun LazyGridScope.header(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DesignColorsScreen(
+fun DesignSystemColorsScreen(
     modifier: Modifier = Modifier,
     designSystemVM: DesignSystemViewModel = getViewModel(),
     onNavIconClicked: () -> Unit,
@@ -95,7 +96,7 @@ fun DesignColorsScreen(
                     items = designSystemVM.finAllySwatches,
                     key = {
                         // This only works if colors aren't repeated
-                        it.second.toArgb()
+                        it.second
                     }
                 ) {
                     HorizontalColorSwatch(colorName = it.first, color = it.second)
@@ -106,15 +107,18 @@ fun DesignColorsScreen(
 }
 
 @Composable
-fun VerticalColorSwatch(colorName: String, color: Color) {
+fun VerticalColorSwatch(colorName: String, color: Int) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
+        val colr = remember(color) {
+            Color(color)
+        }
         Box(
             modifier = Modifier
                 .background(
-                    color,
+                    colr,
                     shape = FinAllyShapeTokens.ColorSwatch
                 )
                 .size(80.dp)
@@ -125,9 +129,9 @@ fun VerticalColorSwatch(colorName: String, color: Color) {
             style = MaterialTheme.typography.titleSmall,
         )
 
-        val hexColor = if (color.alpha >= 1.0F)
-            "#${"%X".format(color.toArgb()).substring(startIndex = 2)}"
-        else "#%X".format(color.toArgb())
+        val hexColor = if (colr.alpha >= 1.0F)
+            "#${"%X".format(colr.toArgb()).substring(startIndex = 2)}"
+        else "#%X".format(colr.toArgb())
 
         Text(
             text = hexColor,
@@ -138,15 +142,18 @@ fun VerticalColorSwatch(colorName: String, color: Color) {
 }
 
 @Composable
-fun HorizontalColorSwatch(colorName: String, colorRole: String? = null, color: Color) {
+fun HorizontalColorSwatch(colorName: String, colorRole: String? = null, color: Int) {
     Row(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
+        val colr = remember(color) {
+            Color(color)
+        }
         Box(
             modifier = Modifier
                 .background(
-                    color,
+                    colr,
                     shape = FinAllyShapeTokens.ColorSwatch
                 )
                 .size(80.dp)
@@ -157,9 +164,9 @@ fun HorizontalColorSwatch(colorName: String, colorRole: String? = null, color: C
                 style = MaterialTheme.typography.titleSmall,
             )
 
-            val hexColor = if (color.alpha >= 1.0F)
-                "#${"%X".format(color.toArgb()).substring(startIndex = 2)}"
-            else "#%X".format(color.toArgb())
+            val hexColor = if (colr.alpha >= 1.0F)
+                "#${"%X".format(colr.toArgb()).substring(startIndex = 2)}"
+            else "#%X".format(colr.toArgb())
             Text(
                 text = hexColor,
                 fontWeight = FontWeight.Normal,
@@ -182,12 +189,12 @@ fun HorizontalColorSwatch(colorName: String, colorRole: String? = null, color: C
 @Preview
 @Composable
 fun VerticalColorSwatchPreview() {
-    VerticalColorSwatch(colorName = "Green/900", color = FinAllyColors.green900)
+    VerticalColorSwatch(colorName = "Green/900", color = FinAllyColors.green900.toArgb())
 }
 
 @Preview
 @Composable
 fun HorizontalColorSwatchPreview() {
-    HorizontalColorSwatch(colorName = "Red/400", color = FinAllyColors.red400)
+    HorizontalColorSwatch(colorName = "Red/400", color = FinAllyColors.red400.toArgb())
 }
 //endregion

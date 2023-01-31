@@ -72,7 +72,10 @@ android {
 
         buildConfigField("String", "VERSION_FINGERPRINT", versionFingerprint)
 
-        proguardFiles("proguard-android.txt", "proguard-rules.pro")
+        proguardFiles(
+            getDefaultProguardFile("proguard-android-optimize.txt"),
+            "proguard-rules.pro"
+        )
 
         testInstrumentationRunner = "com.atomicrobot.carbon.CustomAppTestRunner"
         vectorDrawables {
@@ -187,6 +190,11 @@ dependencies {
 
     implementation("io.reactivex.rxjava2:rxandroid:${Dependencies.rxAndroidVersion}")
 
+    implementation("com.google.accompanist:accompanist-pager:${Dependencies.googleAccompanistVersion}")
+    implementation("com.google.accompanist:accompanist-pager-indicators:${Dependencies.googleAccompanistVersion}")
+    implementation("com.google.accompanist:accompanist-navigation-animation:${Dependencies.googleAccompanistVersion}")
+    implementation("com.google.android.material:material:${Dependencies.mat3componentsVersion}")
+
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshiVersion}")
 
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Dependencies.composeVersion}")
@@ -202,10 +210,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:${Dependencies.composeVersion}")
     debugImplementation("androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}")
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")
-
-    implementation("com.google.accompanist:accompanist-pager:${Dependencies.googleAccompanistVersion}")
-    implementation("com.google.accompanist:accompanist-pager-indicators:${Dependencies.googleAccompanistVersion}")
-    implementation("com.google.accompanist:accompanist-navigation-animation:${Dependencies.googleAccompanistVersion}")
 
     testImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
     testImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")

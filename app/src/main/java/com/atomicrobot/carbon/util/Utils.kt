@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
@@ -18,6 +19,7 @@ inline fun <reified T : ComponentActivity> ComponentActivity.startComponentActiv
 //endregion
 
 //region Helper functions
+@Suppress("unused")
 fun splitCamelCase(s: String): String {
     return s.replace(
         String.format(
@@ -29,7 +31,46 @@ fun splitCamelCase(s: String): String {
         "/"
     )
 }
-//endregion
+
+@Composable
+fun NavBackStackEntry.rememberParentEntry(navController: NavController): NavBackStackEntry {
+    // First, get the parent of the current destination
+    // This always exists since every destination in your graph has a parent
+    val parentId = destination.parent!!.id
+
+    // Now get the NavBackStackEntry associated with the parent
+    // making sure to remember it
+    return remember(this) {
+        navController.getBackStackEntry(parentId)
+    }
+}
+
+@Composable
+inline fun <reified VM : ViewModel> NavBackStackEntry.getNavigationScopedViewModel(
+    navController: NavController
+): VM {
+    val parentEntry = rememberParentEntry(navController)
+    return viewModel(parentEntry)
+}
+fun getTextStylesMap(typography: Typography): List<Pair<String, TextStyle>> {
+    return mapOf(
+        "displayLarge" to typography.displayLarge,
+        "displayMedium" to typography.displayMedium,
+        "displaySmall" to typography.displaySmall,
+        "headlineLarge" to typography.headlineLarge,
+        "headlineMedium" to typography.headlineMedium,
+        "headlineSmall" to typography.headlineSmall,
+        "titleLarge" to typography.titleLarge,
+        "titleMedium" to typography.titleMedium,
+        "titleSmall" to typography.titleSmall,
+        "bodyLarge" to typography.bodyLarge,
+        "bodyMedium" to typography.bodyMedium,
+        "bodySmall" to typography.bodySmall,
+        "labelLarge" to typography.labelLarge,
+        "labelMedium" to typography.labelMedium,
+        "labelSmall" to typography.labelSmall,
+    ).toList()
+}
 
 //region Typography extension
 fun Typography.scale(scaleFactor: Float): Typography {
@@ -83,26 +124,5 @@ fun Typography.scale(scaleFactor: Float): Typography {
     )
 }
 //endregion
-
-@Composable
-fun NavBackStackEntry.rememberParentEntry(navController: NavController): NavBackStackEntry {
-    // First, get the parent of the current destination
-    // This always exists since every destination in your graph has a parent
-    val parentId = destination.parent!!.id
-
-    // Now get the NavBackStackEntry associated with the parent
-    // making sure to remember it
-    return remember(this) {
-        navController.getBackStackEntry(parentId)
-    }
-}
-
-
-@Composable
-inline fun <reified VM : ViewModel> NavBackStackEntry.getNavigationScopedViewModel(
-    navController: NavController
-): VM {
-    val parentEntry = rememberParentEntry(navController)
-    return viewModel(parentEntry)
-}
+//endregion
 

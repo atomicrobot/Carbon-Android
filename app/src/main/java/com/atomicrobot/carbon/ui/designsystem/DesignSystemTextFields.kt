@@ -35,7 +35,7 @@ import org.koin.androidx.compose.getViewModel
 //region TextField Composables
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DesignTextFieldsScreen(
+fun DesignSystemTextFieldsScreen(
     modifier: Modifier = Modifier,
     designSystemVM: DesignSystemViewModel = getViewModel(),
     onNavIconClicked: () -> Unit

@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import com.atomicrobot.carbon.ui.designsystem.theme.DesignRadiosScreen
+import com.atomicrobot.carbon.ui.designsystem.theme.DesignSystemRadiosScreen
 import com.atomicrobot.carbon.util.getNavigationScopedViewModel
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
@@ -131,16 +131,40 @@ fun NavGraphBuilder.designSystemGraph(
     val onEnterTransition: AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition? = {
         when (targetState.destination.route) {
             designSystemHomeRoute ->
-                slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(500))
-            else -> slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(500))
+                if(initialState.destination.parent != targetState.destination.parent)
+                    slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        animationSpec = tween(500)
+                    )
+            else
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    animationSpec = tween(500)
+                )
+            else -> slideIntoContainer(
+                AnimatedContentScope.SlideDirection.Left,
+                animationSpec = tween(500)
+            )
         }
     }
     val onExitTransition: AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition? = {
         when (initialState.destination.route) {
             designSystemHomeRoute -> {
-                slideOutOfContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(500))
+                if(initialState.destination.parent != targetState.destination.parent)
+                    slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        animationSpec = tween(500)
+                    )
+                else
+                    slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        animationSpec = tween(500)
+                    )
             }
-            else -> slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(500))
+            else -> slideOutOfContainer(
+                AnimatedContentScope.SlideDirection.Right,
+                animationSpec = tween(500)
+            )
         }
     }
     navigation(
@@ -159,7 +183,7 @@ fun NavGraphBuilder.designSystemGraph(
             )
         }
         composable(route = DesignSystemScreens.Colors.route) {
-            DesignColorsScreen(
+            DesignSystemColorsScreen(
                 designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
@@ -167,7 +191,7 @@ fun NavGraphBuilder.designSystemGraph(
             )
         }
         composable(route = DesignSystemScreens.Typography.route) {
-            DesignTypographyScreen(
+            DesignSystemTypographyScreen(
                 designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
@@ -175,7 +199,7 @@ fun NavGraphBuilder.designSystemGraph(
             )
         }
         composable(route = DesignSystemScreens.Buttons.route) {
-            DesignButtonsScreen(
+            DesignSystemButtonsScreen(
                 designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
@@ -183,7 +207,15 @@ fun NavGraphBuilder.designSystemGraph(
             )
         }
         composable(route = DesignSystemScreens.Checkboxes.route) {
-            DesignCheckboxesScreen(
+            DesignSystemCheckboxesScreen(
+                designSystemVM = it.getNavigationScopedViewModel(navController),
+                modifier = Modifier
+                    .fillMaxSize(),
+                onNavIconClicked = onNavIconClicked
+            )
+        }
+        composable(route = DesignSystemScreens.Pickers.route) {
+            DesignSystemPickersScreen(
                 designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
@@ -191,7 +223,7 @@ fun NavGraphBuilder.designSystemGraph(
             )
         }
         composable(route = DesignSystemScreens.Radios.route) {
-            DesignRadiosScreen(
+            DesignSystemRadiosScreen(
                 designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
@@ -199,7 +231,7 @@ fun NavGraphBuilder.designSystemGraph(
             )
         }
         composable(route = DesignSystemScreens.Sliders.route) {
-            DesignSlidersScreen(
+            DesignSystemSlidersScreen(
                 designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
@@ -207,16 +239,15 @@ fun NavGraphBuilder.designSystemGraph(
             )
         }
         composable(route = DesignSystemScreens.Switches.route) {
-            DesignSwitchesScreen(
+            DesignSystemSwitchesScreen(
                 designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),
                 onNavIconClicked = onNavIconClicked
             )
         }
-
         composable(route = DesignSystemScreens.TextFields.route) {
-            DesignTextFieldsScreen(
+            DesignSystemTextFieldsScreen(
                 designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
                     .fillMaxSize(),

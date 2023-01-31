@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,14 +25,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
-import com.atomicrobot.carbon.util.splitCamelCase
+import com.atomicrobot.carbon.util.getTextStylesMap
 import org.koin.androidx.compose.getViewModel
-import kotlin.reflect.full.memberProperties
 
 //region Composables
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DesignTypographyScreen(
+fun DesignSystemTypographyScreen(
     modifier: Modifier = Modifier,
     designSystemVM: DesignSystemViewModel = getViewModel(),
     onNavIconClicked: () -> Unit,
@@ -62,15 +60,8 @@ fun DesignTypographyScreen(
         ) { it ->
             val typography = MaterialTheme.typography
             val types = remember(screenState.fontScale.scale) {
-                Typography::class
-                .memberProperties.map {
-                    val textStyleName = splitCamelCase(it.name)
-                    val textStyle = it.get(typography) as TextStyle
-                    Pair(textStyleName, textStyle)
-                }
-                .sortedWith(compareBy({ -it.second.fontSize.value }, { it.first }))
+                getTextStylesMap(typography)
             }
-
             LazyColumn(
                 modifier = Modifier.padding(it)
             ) {
