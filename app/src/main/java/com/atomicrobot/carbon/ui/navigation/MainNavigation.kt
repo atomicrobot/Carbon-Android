@@ -68,7 +68,6 @@ fun CarbonAndroid() {
                     Drawer(
                         screens = drawerScreens,
                         onDestinationClicked = { screen ->
-                            navigationActions.toggleDrawer()
                             navigationActions.navigateToScreen(screen.route)
                         }
                     )
@@ -162,6 +161,9 @@ class NavigationActions(
     }
 
     fun navigateToScreen(route: String) {
+        if (drawerState.isOpen){
+            toggleDrawer()
+        }
         if (currentNavDestination?.route != route){
             navController.navigate(route){
                 launchSingleTop = true

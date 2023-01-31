@@ -37,21 +37,19 @@ fun CarbonTopBarActions() = Icon(
 @Composable
 fun CarbonTopBarNavigation(
     onDrawerClicked: () -> Unit
-) = IconButton(
+) = AtomicRobotUI.Button.Icon(
     onClick = onDrawerClicked,
-    content = {
-        Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu Drawer")
-    }
+    imageVector = Icons.Filled.Menu,
+    contentDescription = "Menu Drawer"
 )
 
 @Composable
 fun DesignSystemDetailNavigation(
     onBackToSystemClicked: () -> Unit
-) = IconButton(
+) = AtomicRobotUI.Button.Icon(
     onClick = onBackToSystemClicked,
-    content = {
-        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
-    }
+    imageVector = Icons.Filled.ArrowBack,
+    contentDescription = "Back"
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,35 +64,10 @@ fun DesignSystemTopBarActions(
     var expandedMenu by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.wrapContentSize()) {
-        Button(
+        AtomicRobotUI.Button.DropdownMenuButton(
             onClick = { expandedMenu = !expandedMenu },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ),
-            shape = RectangleShape,
-            contentPadding = PaddingValues(
-                start = 12.dp,
-                top = 8.dp,
-                bottom = 8.dp,
-                end = 0.dp
-            ),
-            content = {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "${fontScale}x",
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Icon(
-                        imageVector = if (expandedMenu) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
-                        contentDescription = "dropdown menu",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
+            expanded = expandedMenu,
+            fontScale = fontScale
         )
 
         DropdownMenu(
