@@ -20,10 +20,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.atomicrobot.carbon.ui.about.StripedLineShape
 import com.atomicrobot.carbon.ui.theme.*
 import okhttp3.internal.toHexString
 import timber.log.Timber
 import kotlin.reflect.full.*
+import kotlin.text.Typography.section
 
 @Composable
 fun getColorSchemeComposables(
@@ -274,6 +276,30 @@ fun getFontComposables(): List<@Composable () -> Unit> {
                     text = "Default",
                     style = MaterialTheme.typography.bodyMedium
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun getShapeComposables(): List<@Composable () -> Unit> {
+    return listOf {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+        ) {
+            Text(
+                text = "Striped Line Shape",
+                style = MaterialTheme.typography.headlineSmall
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Box(
+                modifier = Modifier.fillMaxWidth().height(2.dp)
+            ){
+                StripedLineShape()
             }
         }
     }

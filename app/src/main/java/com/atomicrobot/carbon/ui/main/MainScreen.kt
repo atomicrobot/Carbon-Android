@@ -129,13 +129,13 @@ fun GithubUserInput(
             // Username
             AtomicRobotUI.TextField.TransparentTextField(
                 value = username,
-                labelResId = R.string.username,
+                label = stringResource(id = R.string.username),
                 modifier = Modifier.padding(bottom = 8.dp)
             ) { newUsername -> onUserInputChanged(newUsername, repository) }
             // Repo
             AtomicRobotUI.TextField.TransparentTextField(
                 value = repository,
-                labelResId = R.string.repository
+                label = stringResource(id = R.string.repository)
             ) { newRepo -> onUserInputChanged(username, newRepo) }
             // Fetch commits
             AtomicRobotUI.Button.Outlined(

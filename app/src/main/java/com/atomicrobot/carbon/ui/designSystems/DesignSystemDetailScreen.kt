@@ -1,6 +1,7 @@
 package com.atomicrobot.carbon.ui.designSystems
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -71,6 +72,7 @@ fun DesignSystemDetailScreen(
         )
 
         Surface(
+            modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ){
@@ -106,7 +108,11 @@ fun selectedComposableSet(
         Atom.COLORS.category -> getColorSchemeComposables(isInDarkMode)
         Atom.TYPOGRAPHY.category -> getTypographyComposables()
         Atom.FONTS.category -> getFontComposables()
+        Atom.SHAPES.category -> getShapeComposables()
         Molecule.BUTTONS.category -> getButtonComposables()
+        Molecule.TEXTFIELDS.category -> getTextFieldComposables()
+        Molecule.PROGRESS.category -> getProgressComposables()
+        Molecule.BARS.category -> getBarComposables()
         else -> listOf()
     }
 }

@@ -53,7 +53,7 @@ fun CarbonAndroid() {
     val appBarState by navigationActions.appBarState.collectAsState()
 
     BackHandler(enabled = true) {
-        if (drawerState.isOpen){
+        if (drawerState.isOpen) {
             navigationActions.toggleDrawer()
         } else {
             navigationActions.back()
@@ -98,7 +98,7 @@ fun CarbonAndroid() {
                     modifier = Modifier.padding(innerPadding),
                     navController = navController,
                     startDestination = CarbonScreens.Home.route
-                ){
+                ) {
                     carbonNavGraph(
                         navigationActions = navigationActions,
                         snackbarHostState = snackbarHostState,
@@ -136,7 +136,7 @@ class NavigationActions(
     val navController: NavHostController,
     val scope: CoroutineScope,
     val drawerState: DrawerState
-){
+) {
 
     private val _appBarState = MutableStateFlow(
         AppBarState.defaultAppBarState(
@@ -148,11 +148,11 @@ class NavigationActions(
     val appBarState: StateFlow<AppBarState> = _appBarState.asStateFlow()
 
     val currentNavDestination: NavDestination?
-    get() = navController.currentBackStackEntry?.destination
+        get() = navController.currentBackStackEntry?.destination
 
     fun toggleDrawer() {
         scope.launch {
-            if (drawerState.isOpen){
+            if (drawerState.isOpen) {
                 drawerState.close()
             } else {
                 drawerState.open()
@@ -161,32 +161,27 @@ class NavigationActions(
     }
 
     fun navigateToScreen(route: String) {
-        if (drawerState.isOpen){
+        if (drawerState.isOpen) {
             toggleDrawer()
         }
-        if (currentNavDestination?.route != route){
-            navController.navigate(route){
+        if (currentNavDestination?.route != route) {
+            navController.navigate(route) {
                 launchSingleTop = true
 
-                Timber.d("PPPP, ${currentNavDestination?.route}")
-
-                if (currentNavDestination?.route != CarbonScreens.DesignSystems.route){
-                    popUpTo(CarbonScreens.Home.route){
-                        saveState = true
-                    }
-                    restoreState = true
+                if (currentNavDestination?.route?.contains("design") == false){
+                    popUpTo(CarbonScreens.Home.route)
                 }
             }
         }
     }
 
-    fun back(){
+    fun back() {
         navController.navigateUp()
     }
 
     fun updateAppBar(
         appBarState: AppBarState
-    ){
+    ) {
         _appBarState.update {
             appBarState
         }
@@ -208,9 +203,9 @@ data class AppBarState(
             return AppBarState(
                 title = title,
                 navigation = {
-                     CarbonTopBarNavigation(
-                         onDrawerClicked = onDrawerClicked
-                     )
+                    CarbonTopBarNavigation(
+                        onDrawerClicked = onDrawerClicked
+                    )
                 },
                 actions = {
                     CarbonTopBarActions()

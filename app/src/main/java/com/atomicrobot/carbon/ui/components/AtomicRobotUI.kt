@@ -92,7 +92,6 @@ object AtomicRobotUI {
 
         @Composable
         fun DropdownMenuButton(
-            modifier: Modifier = Modifier,
             fontScale: Float,
             expanded: Boolean,
             onClick: () -> Unit
@@ -136,7 +135,7 @@ object AtomicRobotUI {
         fun TransparentTextField(
             modifier: Modifier = Modifier,
             value: String = stringResource(id = R.string.txtField_placeholder),
-            labelResId: Int = R.string.label_placeholder,
+            label: String = stringResource(id = R.string.label_placeholder),
             onValueChanged: (String) -> Unit = { _ -> }
         ) {
             TextField(
@@ -144,7 +143,7 @@ object AtomicRobotUI {
                 onValueChange = onValueChanged,
                 label = {
                     Text(
-                        text = stringResource(id = labelResId),
+                        text = label,
                     )
                 },
                 modifier = modifier

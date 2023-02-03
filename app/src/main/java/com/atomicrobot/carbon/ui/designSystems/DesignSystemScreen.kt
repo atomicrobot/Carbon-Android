@@ -80,6 +80,7 @@ fun DesignSystemScreen(
         testingFontScale = designSystemState.fontScale
     ) {
         Surface(
+            modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ) {
@@ -241,19 +242,20 @@ enum class Atom(val category: String) {
     COLORS(category = "Colors"),
     TYPOGRAPHY(category = "Typography"),
     FONTS(category = "Fonts"),
-    LOGOS(category = "Logos"),
-    ICONS(category = "Icons")
+    SHAPES(category = "Shapes")
+    //LOGOS(category = "Logos"),
+    //ICONS(category = "Icons")
 }
 
 enum class Molecule(val category: String) {
     BUTTONS(category = "Buttons"),
-    CHECKBOXES(category = "Checkboxes"),
-    RADIOS(category = "Radios"),
-    SWITCHES(category = "Switches"),
-    SLIDERS(category = "Sliders"),
-    PICKERS(category = "Pickers"),
+    //CHECKBOXES(category = "Checkboxes"),
+    //RADIOS(category = "Radios"),
+    //SWITCHES(category = "Switches"),
+    //SLIDERS(category = "Sliders"),
     TEXTFIELDS(category = "Text Fields"),
-    BARS(category = "Bars")
+    BARS(category = "Bars"),
+    PROGRESS(category = "Progress")
 }
 
 enum class Organism(val category: String) {
