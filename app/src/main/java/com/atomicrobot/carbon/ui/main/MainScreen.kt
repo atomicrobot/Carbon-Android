@@ -177,6 +177,9 @@ fun CommitItem(
                 detectTapGestures(
                     onLongPress = {
                         clicked = !clicked
+                        /*TODO make a navigate call to a new screen, That also probably means
+                        *  that all the git stuff we did to the main view model, and main screen
+                        *  should be redone for this new screen.*/
                     }
                 )
             },

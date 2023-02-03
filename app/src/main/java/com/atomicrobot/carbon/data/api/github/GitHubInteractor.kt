@@ -29,7 +29,7 @@ class GitHubInteractor(
         return LoadCommitsResponse(request, commits)
     }
 
-    suspend fun loadDetailedCommit(request: LoadCommitsRequest, commits: List<DetailedCommit>): LoadDetailedCommitResponse {
+    suspend fun loadDetailedCommit(request: LoadCommitsRequest): LoadDetailedCommitResponse {
         val detailedResponse = checkResponse(
             api2.detailedCommit(request.user, request.repository),
             context.getString(R.string.error_get_commits_error)

@@ -2,6 +2,7 @@ package com.atomicrobot.carbon.app
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import com.atomicrobot.carbon.data.api.github.DetailedGitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.lumen.LumenDatabase
@@ -87,9 +88,17 @@ class Modules {
         }
 
         single {
+            provideDetailedGitHubApiService(
+                retrofit = get()
+            )
+        }
+
+
+        single {
             provideGitHubService(
                 context = androidContext(),
-                api = get()
+                api = get(),
+                api2 = get()
             )
         }
 
@@ -183,11 +192,16 @@ fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
     return retrofit.create(GitHubApiService::class.java)
 }
 
+fun provideDetailedGitHubApiService(retrofit: Retrofit):DetailedGitHubApiService {
+    return retrofit.create(DetailedGitHubApiService::class.java)
+}
+
 private fun provideGitHubService(
     context: Context,
-    api: GitHubApiService
+    api: GitHubApiService,
+    api2: DetailedGitHubApiService
 ): GitHubInteractor {
-    return GitHubInteractor(context, api)
+    return GitHubInteractor(context, api, api2)
 }
 
 private fun provideLumenDatabase(
