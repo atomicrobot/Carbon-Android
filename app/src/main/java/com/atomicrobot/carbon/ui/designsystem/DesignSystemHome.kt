@@ -35,8 +35,6 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import org.koin.androidx.compose.getViewModel
 
-internal const val designSystemHomeRoute: String = "design-system-home"
-
 //region Composables
 //region LazyColumn extension
 @OptIn(ExperimentalFoundationApi::class)

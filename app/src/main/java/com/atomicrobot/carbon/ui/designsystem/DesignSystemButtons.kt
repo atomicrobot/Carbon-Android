@@ -130,11 +130,12 @@ fun LazyListScope.buttonItemsTemplate(
     modifier: Modifier = Modifier,
     button: ButtonType = ButtonType.Filled
 ) {
-    items(2,
+    items(
+        2,
         key = {
             val enabled = it == 0
-            val active = if(enabled) "Active" else "Disabled"
-            "${button.toString()} Button/$active"
+            val active = if (enabled) "Active" else "Disabled"
+            "$button Button/$active"
         }
     ) {
         val enabled = it == 0
@@ -166,34 +167,35 @@ fun LazyListScope.iconButtonItemsTemplate(
     icon: ImageVector,
     buttonIcon: IconButtonType = IconButtonType.NoFill,
 ) {
-    items(2,
+    items(
+        2,
         key = {
             val enabled = it == 0
-            val active = if(enabled) "Active" else "Disabled"
-            "${buttonIcon.toString()} Icon Button/$active"
+            val active = if (enabled) "Active" else "Disabled"
+            "$buttonIcon Icon Button/$active"
         }
     ) {
         val enabled = it == 0
         when (buttonIcon) {
             IconButtonType.NoFill -> {
                 IconButton(onClick = { }, enabled = enabled) {
-                    Icon(icon, "ImageVector asset name ${icon.name}")
-                }
+                Icon(icon, "ImageVector asset name ${icon.name}")
+            }
             }
             IconButtonType.Filled -> {
                 FilledIconButton(onClick = { }, enabled = enabled) {
-                    Icon(icon, "ImageVector asset name ${icon.name}")
-                }
+                Icon(icon, "ImageVector asset name ${icon.name}")
+            }
             }
             IconButtonType.FilledTonal -> {
                 FilledTonalIconButton(onClick = { }, enabled = enabled) {
-                    Icon(icon, "ImageVector asset name ${icon.name}")
-                }
+                Icon(icon, "ImageVector asset name ${icon.name}")
+            }
             }
             IconButtonType.Outlined -> {
                 OutlinedIconButton(onClick = { }, enabled = enabled) {
-                    Icon(icon, "ImageVector asset name ${icon.name}")
-                }
+                Icon(icon, "ImageVector asset name ${icon.name}")
+            }
             }
         }
     }
@@ -225,9 +227,11 @@ fun LazyListScope.menuButtonItems() {
     // Pop-up style menu that gets anchored to sibling composale
     item {
         var expanded by remember { mutableStateOf(false) }
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.TopStart)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.TopStart)
+        ) {
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Menu Options")
             }

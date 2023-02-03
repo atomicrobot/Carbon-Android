@@ -3,14 +3,11 @@ package com.atomicrobot.carbon.ui.navigation
 import android.graphics.Color
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -34,22 +31,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavDestination
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.navigation.CarbonScreens.DeepLink.getTextColor
 import com.atomicrobot.carbon.navigation.CarbonScreens.DeepLink.getTextSize
-import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.navigation.drawerScreens
 import com.atomicrobot.carbon.ui.about.AboutHtmlScreen
 import com.atomicrobot.carbon.ui.about.AboutScreen
-import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.CustomSnackbar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
+import com.atomicrobot.carbon.ui.designsystem.DesignSystemScreens
 import com.atomicrobot.carbon.ui.designsystem.designSystemGraph
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
@@ -96,19 +91,6 @@ fun CarbonAndroid(
     ) {
         Scaffold(
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
-            bottomBar = {
-                AnimatedVisibility(
-                    visible = appState.shouldShowBottomBar,
-                    enter = slideInVertically { it } + fadeIn(),
-                    exit = slideOutVertically { it } + fadeOut(),
-                ) {
-                    BottomNavigationBar(
-                        destinations = appScreens,
-                        currentDestination = appState.currentDestination,
-                        onDestinationClicked = appState::navigateToCarbonScreen,
-                    )
-                }
-            },
             snackbarHost = { CustomSnackbar(appState.snackbarHostState) },
         ) { innerPadding ->
             CarbonAndroidNavHost(
@@ -117,9 +99,7 @@ fun CarbonAndroid(
                     .padding(innerPadding)
                     .consumedWindowInsets(innerPadding)
                     .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Horizontal
-                        )
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
                     ),
                 navController = appState.navController,
                 snackbarHostState = appState.snackbarHostState,
@@ -139,12 +119,32 @@ fun CarbonAndroidNavHost(
     onNavigateTo: (String) -> Unit,
     onNavIconClicked: () -> Unit,
 ) {
+
+    val onEnterTransition: AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition = {
+        if (DesignSystemScreens.values().any { initialState.destination.route == it.route })
+            slideIntoContainer(
+                AnimatedContentScope.SlideDirection.Right,
+                animationSpec = tween(500)
+            )
+        else
+            EnterTransition.None
+    }
+    val onExitTransition: AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition = {
+        if (DesignSystemScreens.values().any { targetState.destination.route == it.route })
+            slideOutOfContainer(
+                AnimatedContentScope.SlideDirection.Left,
+                animationSpec = tween(500)
+            )
+        else
+            ExitTransition.None
+    }
+
     AnimatedNavHost(
         modifier = modifier,
         navController = navController,
         startDestination = "Main",
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None }
+        enterTransition = onEnterTransition,
+        exitTransition = onExitTransition,
     ) {
         carbonNavGraph(
             snackbarHostState,
@@ -230,26 +230,11 @@ class CarbonAndroidAppState(
     val drawerState: DrawerState,
     val snackbarHostState: SnackbarHostState,
 ) {
-    val currentDestination: NavDestination?
-        @Composable get() = navController
-            .currentBackStackEntryAsState()
-            .value
-            ?.destination
-
-    val shouldShowBottomBar: Boolean
-        @Composable get() = currentDestination
-            ?.route
-            ?.let { route ->
-                CarbonScreens.values()
-                    .find { s -> s.route == route }
-                    ?.let { it != CarbonScreens.DesignSystem }
-            } ?: false
-
     private val shouldShowMenuIcon: Boolean
         get() = navController.currentDestination
             ?.route
-            ?.let { route -> CarbonScreens.values().find { s -> s.route == route }} ==
-                CarbonScreens.Home
+            ?.let { route -> CarbonScreens.values().find { s -> s.route == route } } ==
+            CarbonScreens.Home
 
     fun navigateToCarbonScreen(screen: CarbonScreens) = navigateToRoute(screen.route)
 
@@ -259,8 +244,8 @@ class CarbonAndroidAppState(
         popUpRoute: () -> Int = {
             // Default to the start destination of the current graph, otherwise default to the
             // default for the root NavGraph(NavHost)
-            navController.currentDestination?.parent?.findStartDestination()?.id ?:
-            navController.graph.findStartDestination().id
+            navController.currentDestination?.parent?.findStartDestination()?.id
+                ?: navController.graph.findStartDestination().id
         }
     ) {
         if (drawerState.isOpen) {
@@ -272,7 +257,7 @@ class CarbonAndroidAppState(
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations
             // on the back stack as users select items
-            if(popUpFirst) {
+            if (popUpFirst) {
                 popUpTo(popUpRoute()) {
                     saveState = true
                 }

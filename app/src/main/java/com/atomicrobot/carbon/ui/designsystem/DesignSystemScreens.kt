@@ -15,6 +15,11 @@ sealed class DesignSystemScreens(
     val route: String,
     val type: DesignSystemType
 ) {
+    object Home : DesignSystemScreens(
+        R.string.design_home,
+        "design-system-home",
+        DesignSystemType.Atom
+    )
     object Colors : DesignSystemScreens(
         R.string.design_colors,
         "design-system-colors",
@@ -74,6 +79,7 @@ sealed class DesignSystemScreens(
 }
 
 val atoms: List<DesignSystemScreens> = DesignSystemScreens.values(DesignSystemType.Atom)
+    .filter { it != DesignSystemScreens.Home }
 
 val molecules: List<DesignSystemScreens> = DesignSystemScreens.values(DesignSystemType.Molecule)
 

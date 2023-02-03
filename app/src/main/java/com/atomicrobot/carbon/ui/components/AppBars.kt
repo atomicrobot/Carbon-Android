@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,19 +31,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.navigation.CarbonScreens
-import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 
 //region Composables
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationTopBar(
-    title: String = CarbonScreens.Home.title,
+    title: String = stringResource(id = CarbonScreens.Home.title),
     navigationIcon: ImageVector = Icons.Filled.Menu,
     onNavigationIconClicked: () -> Unit = {}
 ) = TopAppBar(
@@ -90,27 +91,38 @@ fun BottomBar(
     }
 }
 
+enum class BottomBarNav {
+    Home,
+    Profile,
+}
+
 @Composable
 fun BottomNavigationBar(
-    destinations: List<CarbonScreens>,
-    currentDestination: NavDestination?,
-    onDestinationClicked: (CarbonScreens) -> Unit = {}
+    currentTab: BottomBarNav,
+    onBottomTabClicked: (BottomBarNav) -> Unit = {}
 ) {
     NavigationBar {
-        destinations.forEach { destination ->
-            val selected = currentDestination
-                ?.hierarchy
-                ?.any { it.route == destination.route } == true
+        BottomBarNav.values().forEach { destination ->
+            val selected = currentTab == destination
             NavigationBarItem(
                 selected = selected,
                 icon = {
                     Icon(
-                        if (selected) destination.iconData.selectedIcon
-                        else destination.iconData.unselectedIcon,
-                        stringResource(id = destination.iconData.iconContentDescription)
+                        when (destination) {
+                            BottomBarNav.Home ->
+                                if (selected) Icons.Filled.Home else Icons.Outlined.Home
+                            BottomBarNav.Profile ->
+                                if (selected) Icons.Filled.Person else Icons.Outlined.Person
+                        },
+                        when (destination) {
+                            BottomBarNav.Home ->
+                                "Home"/*stringResource(id = R.string.carbon_home)*/
+                            BottomBarNav.Profile ->
+                                "Profile"/*stringResource(id = R.string.carbon_profile)*/
+                        }
                     )
                 },
-                onClick = { onDestinationClicked(destination) }
+                onClick = { onBottomTabClicked(destination) }
             )
         }
     }
@@ -167,7 +179,7 @@ fun BottomBarPreview() {
 @Composable
 fun BottomNavigationBarPreview() {
     CarbonAndroidTheme {
-        BottomNavigationBar(appScreens, null)
+        BottomNavigationBar(BottomBarNav.Home) { }
     }
 }
 

@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.NavigationTopBar
 
@@ -25,7 +26,7 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             NavigationTopBar(
-                title = CarbonScreens.Settings.title,
+                title = stringResource(id = CarbonScreens.Settings.title),
                 navigationIcon = Icons.Filled.ArrowBack,
                 onNavigationIconClicked = onNavIconClicked
             )
@@ -33,7 +34,9 @@ fun SettingsScreen(
         modifier = modifier,
     ) {
         Column(
-            modifier = Modifier.padding(it).fillMaxSize(),
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

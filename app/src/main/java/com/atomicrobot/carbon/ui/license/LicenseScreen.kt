@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -52,7 +53,7 @@ fun LicenseScreen(
     Scaffold(
         topBar = {
             NavigationTopBar(
-                title = CarbonScreens.Settings.title,
+                title = stringResource(id = CarbonScreens.License.title),
                 navigationIcon = Icons.Filled.ArrowBack,
                 onNavigationIconClicked = onNavIconClicked
             )

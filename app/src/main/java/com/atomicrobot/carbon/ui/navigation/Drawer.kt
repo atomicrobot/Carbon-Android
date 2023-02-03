@@ -93,7 +93,7 @@ fun DrawerAppScreenItem(
             )
         }
         Text(
-            text = screen.title,
+            text = stringResource(id = screen.title),
             style = MaterialTheme.typography.headlineMedium,
         )
     }

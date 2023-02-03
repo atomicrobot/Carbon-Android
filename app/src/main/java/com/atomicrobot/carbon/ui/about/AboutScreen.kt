@@ -59,7 +59,7 @@ fun AboutScreen(
     Scaffold(
         topBar = {
             NavigationTopBar(
-                title = CarbonScreens.About.title,
+                title = stringResource(id = CarbonScreens.About.title),
                 navigationIcon = Icons.Filled.ArrowBack,
                 onNavigationIconClicked = onNavIconClicked
             )
@@ -347,7 +347,7 @@ class StripedLine : Shape {
 fun StripedLineShape(modifier: Modifier = Modifier) {
     val shape = StripedLine()
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .clip(shape)
             .background(Orange)

@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.NavigationTopBar
@@ -27,7 +28,7 @@ fun DeepLinkSampleScreen(
     Scaffold(
         topBar = {
             NavigationTopBar(
-                title = CarbonScreens.DeepLink.title,
+                title = stringResource(id = CarbonScreens.DeepLink.title),
                 navigationIcon = Icons.Filled.ArrowBack,
                 onNavigationIconClicked = onNavIconClicked
             )

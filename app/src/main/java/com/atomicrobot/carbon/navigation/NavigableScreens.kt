@@ -27,9 +27,13 @@ data class ScreenIcon(
     @StringRes val iconContentDescription: Int
 )
 
-sealed class CarbonScreens(val title: String, val route: String, val iconData: ScreenIcon) {
+sealed class CarbonScreens(
+    @StringRes val title: Int,
+    val route: String,
+    val iconData: ScreenIcon
+) {
     object Home : CarbonScreens(
-        "Home",
+        R.string.carbon_home,
         "home",
         ScreenIcon(
             selectedIcon = Icons.Filled.Home,
@@ -37,9 +41,8 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
             iconContentDescription = R.string.cont_desc_home_icon
         )
     )
-    
     object Settings : CarbonScreens(
-        "Settings",
+        R.string.carbon_settings,
         "settings",
         ScreenIcon(
             selectedIcon = Icons.Filled.Settings,
@@ -47,9 +50,8 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
             iconContentDescription = R.string.cont_desc_settings_icon
         )
     )
-    
     object DeepLink : CarbonScreens(
-        "Deep Link",
+        R.string.carbon_deeplink,
         "",
         ScreenIcon(
             selectedIcon = Icons.Filled.QrCodeScanner,
@@ -142,7 +144,7 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
     }
 
     object License : CarbonScreens(
-        "License",
+        R.string.carbon_license,
         "license",
         ScreenIcon(
             selectedIcon = Icons.Filled.Description,
@@ -150,9 +152,8 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
             iconContentDescription = R.string.cont_desc_license_icon
         )
     )
-    
     object About : CarbonScreens(
-        "About",
+        R.string.carbon_about,
         "about",
         ScreenIcon(
             selectedIcon = Icons.Filled.Home,
@@ -160,9 +161,8 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
             iconContentDescription = R.string.cont_desc_about_icon
         ) // Icon value here is a filler
     )
-    
     object AboutHtml : CarbonScreens(
-        "About HTML",
+        R.string.carbon_about_html,
         "abouthtml",
         ScreenIcon(
             selectedIcon = Icons.Filled.Home,
@@ -170,17 +170,15 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
             iconContentDescription = R.string.cont_desc_about_icon
         ) // Icon value here is a filler
     )
-    
     object DesignSystem : CarbonScreens(
-        "Design",
-        "design_system",
+        R.string.design_home,
+        "design",
         ScreenIcon(
             selectedIcon = Icons.Filled.ImagesearchRoller,
             unselectedIcon = Icons.Outlined.ImagesearchRoller,
             iconContentDescription = R.string.cont_desc_design_sys
         ),
     )
-
     companion object {
         fun values(): List<CarbonScreens> =
             CarbonScreens::class.sealedSubclasses.map {
@@ -188,11 +186,6 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
             }
     }
 }
-
-val appScreens = listOf(
-    CarbonScreens.Home,
-    CarbonScreens.Settings
-)
 
 val drawerScreens = listOf(
     CarbonScreens.Home,

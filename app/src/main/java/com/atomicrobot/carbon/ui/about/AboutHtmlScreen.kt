@@ -10,6 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.NavigationTopBar
@@ -24,7 +25,7 @@ fun AboutHtmlScreen(
     Scaffold(
         topBar = {
             NavigationTopBar(
-                title = CarbonScreens.AboutHtml.title,
+                title = stringResource(id = CarbonScreens.AboutHtml.title),
                 navigationIcon = Icons.Filled.ArrowBack,
                 onNavigationIconClicked = onNavIconClicked
             )
@@ -34,16 +35,18 @@ fun AboutHtmlScreen(
         AndroidView(
             modifier = Modifier.padding(it),
             factory = {
-            WebView(it).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                webViewClient = WebViewClient()
-                loadUrl(mUrl)
+                WebView(it).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    webViewClient = WebViewClient()
+                    loadUrl(mUrl)
+                }
+            },
+            update = {
+                it.loadUrl(mUrl)
             }
-        }, update = {
-            it.loadUrl(mUrl)
-        })
+        )
     }
 }

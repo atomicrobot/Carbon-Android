@@ -79,7 +79,7 @@ fun DesignSystemColorsScreen(
             modifier = modifier
         ) { it ->
             LazyVerticalGrid(
-                modifier = modifier
+                modifier = Modifier
                     .padding(it)
                     .padding(horizontal = 16.dp, vertical = 2.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -87,6 +87,8 @@ fun DesignSystemColorsScreen(
             ) {
                 header {
                     Text(
+                        // Text isn't a string resource because this is a placeholder until the
+                        // design team comes up with a new color palette
                         text = "FinAlly Color Palette",
                         fontWeight = FontWeight.Normal,
                         style = MaterialTheme.typography.bodyLarge,
@@ -163,7 +165,7 @@ fun HorizontalColorSwatch(colorName: String, colorRole: String? = null, color: I
                 text = colorName,
                 style = MaterialTheme.typography.titleSmall,
             )
-
+            // Only display the alpha values if not full opague
             val hexColor = if (colr.alpha >= 1.0F)
                 "#${"%X".format(colr.toArgb()).substring(startIndex = 2)}"
             else "#%X".format(colr.toArgb())

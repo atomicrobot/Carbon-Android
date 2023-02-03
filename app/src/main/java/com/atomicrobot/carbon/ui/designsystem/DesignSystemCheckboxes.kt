@@ -119,13 +119,13 @@ fun TriStateCheckboxRow(
                 when (toggleableState) {
                     ToggleableState.On -> "TriState Checkbox (Enabled/Active)"
                     ToggleableState.Indeterminate -> "TriState Checkbox (Enabled/Indeterminate)"
-                    else -> "TriState Checkbox (Enabled/Inactive)"
+                    ToggleableState.Off -> "TriState Checkbox (Enabled/Inactive)"
                 }
             else -> {
                 when (toggleableState) {
                     ToggleableState.On -> "TriState Checkbox (Disabled/Active)"
                     ToggleableState.Indeterminate -> "TriState Checkbox (Disabled/Indeterminate)"
-                    else -> "TriState Checkbox (Disabled/Active)"
+                    ToggleableState.Off -> "TriState Checkbox (Disabled/Active)"
                 }
             }
         }

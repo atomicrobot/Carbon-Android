@@ -95,7 +95,7 @@ fun DesignScreenAppBar(
                                     // Force the text style to default so that the text stays the same size
                                     style = TextStyle.Default,
                                 )
-                           },
+                            },
                             onClick = {
                                 onFontScaleChanged(it)
                                 expanded = false
@@ -130,50 +130,50 @@ fun NavGraphBuilder.designSystemGraph(
 ) {
     val onEnterTransition: AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition? = {
         when (targetState.destination.route) {
-            designSystemHomeRoute ->
-                if(initialState.destination.parent != targetState.destination.parent)
+            DesignSystemScreens.Home.route ->
+                if (initialState.destination.parent != targetState.destination.parent)
                     slideIntoContainer(
                         AnimatedContentScope.SlideDirection.Left,
-                        animationSpec = tween(500)
+                        tween(500)
                     )
-            else
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    animationSpec = tween(500)
-                )
+                else
+                    slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(500)
+                    )
             else -> slideIntoContainer(
                 AnimatedContentScope.SlideDirection.Left,
-                animationSpec = tween(500)
+                tween(500)
             )
         }
     }
     val onExitTransition: AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition? = {
         when (initialState.destination.route) {
-            designSystemHomeRoute -> {
-                if(initialState.destination.parent != targetState.destination.parent)
+            DesignSystemScreens.Home.route -> {
+                if (initialState.destination.parent != targetState.destination.parent)
                     slideOutOfContainer(
                         AnimatedContentScope.SlideDirection.Right,
-                        animationSpec = tween(500)
+                        tween(500)
                     )
                 else
                     slideOutOfContainer(
                         AnimatedContentScope.SlideDirection.Left,
-                        animationSpec = tween(500)
+                        tween(500)
                     )
             }
             else -> slideOutOfContainer(
                 AnimatedContentScope.SlideDirection.Right,
-                animationSpec = tween(500)
+                tween(500)
             )
         }
     }
     navigation(
-        startDestination = designSystemHomeRoute,
-        route = "design_system",
+        startDestination = DesignSystemScreens.Home.route,
+        route = "design",
         enterTransition = onEnterTransition,
         exitTransition = onExitTransition,
     ) {
-        composable(route = designSystemHomeRoute) {
+        composable(route = DesignSystemScreens.Home.route) {
             DesignSystemHomeScreen(
                 designSystemVM = it.getNavigationScopedViewModel(navController),
                 modifier = Modifier
