@@ -24,17 +24,10 @@ class MainViewModel(
         class Error(val message: String) : Commits()
     }
 
-    sealed class DetailedCommits {
-        object Loading: DetailedCommits()
-        class Result(val commit: List<DetailedCommit>) : DetailedCommits()
-        class Error(val message: String) : DetailedCommits()
-    }
-
     data class MainScreenUiState(
         val username: String = DEFAULT_USERNAME, // NON-NLS
         val repository: String = DEFAULT_REPO, // NON-NLS
         val commitsState: Commits = Commits.Result(emptyList()),
-        val detailedCommitState: DetailedCommits = DetailedCommits.Result(emptyList())
     )
 
     private val _uiState = MutableStateFlow(MainScreenUiState())
@@ -74,34 +67,6 @@ class MainViewModel(
         }
     }
 
-    fun fetchDetailedCommit() {
-        // Update the UI state to indicate that we are loading.
-        _uiState.value = _uiState.value.copy(detailedCommitState = DetailedCommits.Loading)
-        viewModelScope.launch {
-            try {
-                /*Passes in active users credentials to interactor which will make use an API
-                service to make a @Get request with said credentials*/
-                gitHubInteractor.loadDetailedCommit(
-                    GitHubInteractor.LoadCommitsRequest(
-                        uiState.value.username,
-                        uiState.value.repository
-                    )
-                ).let {
-                    _uiState.value = _uiState.value.copy(detailedCommitState = DetailedCommits.Result(it.commit))
-                }
-                //TODO
-                /* add function to githubinteractor to get a single detailed commit, and call here*/
-            } catch (error: Exception) {
-                Timber.e(error)
-                _uiState.value = _uiState.value.copy(
-                    detailedCommitState = DetailedCommits.Error(
-                        error.message
-                            ?: app.getString(R.string.error_unexpected)
-                    )
-                )
-            }
-        }
-    }
 
     companion object {
         const val DEFAULT_USERNAME = "madebyatomicrobot" // NON-NLS
