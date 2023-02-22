@@ -1,9 +1,6 @@
 package com.atomicrobot.carbon.ui.main
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,6 +14,8 @@ import androidx.navigation.NavController
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Author
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.ui.components.BottomBar
+import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import com.atomicrobot.carbon.ui.theme.Purple200
 import com.atomicrobot.carbon.util.CommitPreviewProvider
@@ -27,6 +26,7 @@ fun GitInfoNavigation(navController: NavController)
     GitInfoScreen()
 }
 @Composable
+@Preview
 fun GitInfoScreen(scaffoldState: ScaffoldState = rememberScaffoldState()) {
     Scaffold(backgroundColor = Purple200) {
         Column(
@@ -34,7 +34,14 @@ fun GitInfoScreen(scaffoldState: ScaffoldState = rememberScaffoldState()) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
+            TopBar("Git Info Test Title")
+            Card(
+                modifier = Modifier.fillMaxWidth()
+                    .weight(1f)
+            ) {
+                Text(text = "Some Test Text")
+            }
+            BottomBar()
         }
     }
 

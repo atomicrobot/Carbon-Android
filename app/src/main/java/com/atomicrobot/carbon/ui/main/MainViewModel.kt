@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
-import com.atomicrobot.carbon.data.api.github.model.DetailedCommit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

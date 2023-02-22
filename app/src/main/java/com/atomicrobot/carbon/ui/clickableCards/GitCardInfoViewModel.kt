@@ -2,13 +2,11 @@ package com.atomicrobot.carbon.ui.clickableCards
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.DetailedCommit
 import com.atomicrobot.carbon.ui.main.MainViewModel
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class GitCardInfoViewModel (
     private val app: Application,
@@ -16,16 +14,20 @@ class GitCardInfoViewModel (
     private val loadingDelayMs: Long,
     ) : ViewModel() {
 
-    sealed class DetailedCommits {
-        object Loading: DetailedCommits()
-        class Result(val commit: List<DetailedCommit>) : DetailedCommits()
-        class Error(val message: String) : DetailedCommits()
+    sealed class Commit {
+        object Loading: Commit()
+        class Result(val commit: List<DetailedCommit>) : Commit()
+        class Error(val message: String) : Commit()
     }
-    data class MainScreenUiState(
+    data class GitInfoScreenUiState(
         val username: String = MainViewModel.DEFAULT_USERNAME, // NON-NLS
         val repository: String = MainViewModel.DEFAULT_REPO, // NON-NLS
-        val detailedCommitState: DetailedCommits = DetailedCommits.Result(emptyList())
+        val detailedCommitState: Commit = Commit.Result(emptyList())
     )
+    //TODO may need to edit for our uistate
+    private val _uiState = MutableStateFlow(MainViewModel.MainScreenUiState())
+    val uiState: StateFlow<MainViewModel.MainScreenUiState>
+        get() = _uiState
 
 //    fun fetchDetailedCommit() {
 //        // Update the UI state to indicate that we are loading.
