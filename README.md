@@ -46,6 +46,10 @@ This will pull in the current Git SHA and auto incrementing build number as part
 
 `continuousIntegration -Pfingerprint=%build.vcs.number% -PbuildNumber=%build.counter% -PdisablePreDex`
 
+for local testing:
+
+`./gradlew continuousIntegration -Pfingerprint=DEVTEST -PbuildNumber=222 -PdisablePreDex`
+
 Also make sure the CI server is set to use the Gradle wrapper.
 
 ### Artifact Paths
