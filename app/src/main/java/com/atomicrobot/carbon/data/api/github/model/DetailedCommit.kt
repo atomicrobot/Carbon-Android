@@ -2,14 +2,13 @@ package com.atomicrobot.carbon.data.api.github.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.net.URL
 
 @JsonClass(generateAdapter = true)
 data class Tree(
     @Json(name = "path") val path: String,
     @Json(name = "type") val type: String,
     @Json(name = "size") val size: Int,
-    @Json(name = "url") val url: URL
+    @Json(name = "url") val url: String
 )
 
 @JsonClass(generateAdapter = true)
@@ -46,7 +45,7 @@ data class DetailedCommit(
     val detailedCommitTreeSize: Int
         get() = detailedCommit.tree.size
 
-    val detailedCommitTreeURL: URL
+    val detailedCommitTreeURL: String
         get() = detailedCommit.tree.url
 
 }

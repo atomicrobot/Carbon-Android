@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.BuildConfig
-import androidx.navigation.NavController
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
@@ -197,6 +196,7 @@ fun CommitItem(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
+//                        navController.navigate(CarbonScreens.GitInfo.route)
                         clicked = !clicked
                         /*TODO make a navigate call to a new screen, That also probably means
                         *  that all the git stuff we did to the main view model, and main screen

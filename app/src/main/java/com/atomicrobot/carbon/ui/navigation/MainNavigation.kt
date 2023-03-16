@@ -39,9 +39,9 @@ import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.lumen.navigation.DesignLumenNavigation
-import com.atomicrobot.carbon.ui.main.GitInfoNavigation
 import com.atomicrobot.carbon.ui.main.GitInfoScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
+import com.atomicrobot.carbon.ui.main.dummyDetailedCommits
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
 import com.atomicrobot.carbon.ui.shell.CarbonShellNavigation
@@ -252,10 +252,12 @@ fun NavGraphBuilder.mainFlowGraph(
                 LicenseScreen()
             }
         }
-        composable(CarbonScreens.GitInfo.route) {
-            CarbonAndroidTheme() {
-                GitInfoNavigation(navController)
-                //TODO - What do I put here?
+        composable(
+            route = CarbonScreens.GitInfo.route,
+//        arguments = CarbonScreens.GitInfo.arguments
+        ) {
+            CarbonAndroidTheme {
+                GitInfoScreen(dummyDetailedCommits[0])
             }
         }
     }

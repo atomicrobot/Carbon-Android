@@ -2,12 +2,7 @@ package com.atomicrobot.carbon.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.DesignServices
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -115,6 +110,17 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         "gitInfo",
         ScreenIcon(Icons.Filled.Info, R.string.git_info)
     )
+//    {
+//        const val commit = "commit"
+//
+//        val arguments = listOf(
+//            navArgument(commit){
+//                nullable = false
+//                defaultValue = dummyDetailedCommits[0]
+//            }
+//
+//        )
+//    }
 }
 
 val appScreens = listOf(
