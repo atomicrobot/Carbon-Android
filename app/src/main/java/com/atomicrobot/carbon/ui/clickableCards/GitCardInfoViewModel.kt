@@ -35,7 +35,9 @@ class GitCardInfoViewModel (
 
     fun fetchDetailedCommit() {
         // Update the UI state to indicate that we are loading.
-        _uiState.value = _uiState.value.copy(detailedCommitState = GitCardInfoViewModel.DetailedCommit.Loading)
+        _uiState.value = _uiState.value.copy(
+            detailedCommitState = GitCardInfoViewModel.DetailedCommit.Loading
+        )
         viewModelScope.launch {
             try {
                 /*Passes in active users credentials to interactor which will make use an API
@@ -46,10 +48,10 @@ class GitCardInfoViewModel (
                         uiState.value.repository
                     )
                 ).let {
-                    _uiState.value = _uiState.value.copy(detailedCommitState = GitCardInfoViewModel.DetailedCommit.Result(it.commit))
+                    _uiState.value = _uiState.value.copy(
+                        detailedCommitState = GitCardInfoViewModel.DetailedCommit.Result(it.commit)
+                    )
                 }
-                //TODO
-                /* add function to githubinteractor to get a single detailed commit, and call here*/
             } catch (error: Exception) {
                 Timber.e(error)
                 _uiState.value = _uiState.value.copy(

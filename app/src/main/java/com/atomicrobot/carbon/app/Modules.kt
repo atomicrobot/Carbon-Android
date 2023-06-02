@@ -11,6 +11,7 @@ import com.atomicrobot.carbon.data.lumen.dao.RoomDao
 import com.atomicrobot.carbon.data.lumen.dao.SceneDao
 import com.atomicrobot.carbon.data.lumen.dao.SceneLightDao
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
+import com.atomicrobot.carbon.ui.clickableCards.GitCardInfoViewModel
 import com.atomicrobot.carbon.ui.license.LicenseViewModel
 import com.atomicrobot.carbon.ui.lumen.scenes.ScenesViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
@@ -158,6 +159,14 @@ class Modules {
 
         viewModel {
             LicenseViewModel(app = androidApplication())
+        }
+
+        viewModel {
+            GitCardInfoViewModel(
+                app = androidApplication(),
+                gitHubInteractor = get(),
+                loadingDelayMs = get(qualifier = named("loading_delay_ms"))
+            )
         }
     }
 }

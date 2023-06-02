@@ -7,18 +7,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarHost
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
@@ -39,9 +31,8 @@ import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.lumen.navigation.DesignLumenNavigation
-import com.atomicrobot.carbon.ui.main.GitInfoScreen
+import com.atomicrobot.carbon.ui.clickableCards.GitInfoScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
-import com.atomicrobot.carbon.ui.main.dummyDetailedCommits
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
 import com.atomicrobot.carbon.ui.shell.CarbonShellNavigation
@@ -252,12 +243,9 @@ fun NavGraphBuilder.mainFlowGraph(
                 LicenseScreen()
             }
         }
-        composable(
-            route = CarbonScreens.GitInfo.route,
-//        arguments = CarbonScreens.GitInfo.arguments
-        ) {
+        composable(CarbonScreens.GitInfo.route) {
             CarbonAndroidTheme {
-                GitInfoScreen(dummyDetailedCommits[0])
+                GitInfoScreen()
             }
         }
     }
@@ -276,3 +264,59 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
         else -> ""
     }
 }
+
+//@Preview(name = "Github Commit")
+//@Composable
+//fun CommitItem(
+//    @PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit,
+//    onCardClicked: (route: String) -> Unit = { _ -> }
+//) {
+//    val navController: NavHostController = rememberNavController( )
+//    var clicked by remember {mutableStateOf(false) }
+//    Card(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(horizontal = 16.dp, vertical = 4.dp)
+//            .pointerInput(Unit) {
+//                detectTapGestures(
+//                    onLongPress = {
+//
+//                        //TODO Figure out navigation please, then it should all start comming together
+//
+//                        if (navController.currentBackStackEntry?.destination?.route != CarbonScreens.GitInfo.route) {
+//                            navController.navigate(CarbonScreens.GitInfo.route) {
+//                                popUpTo(navController.graph.startDestinationId)
+//                                launchSingleTop = true
+//                            }
+//                        }
+////                        navController.navigate(CarbonScreens.GitInfo.route)
+////                        onCardClicked(CarbonScreens.GitInfo.route)
+//                        clicked = !clicked
+//                        /*TODO make a navigate call to a new screen, That also probably means
+//                        *  that all the git stuff we did to the main view model, and main screen
+//                        *  should be redone for this new screen.*/
+//                    }
+//                )
+//            },
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(16.dp)
+//        ) {
+//            if(clicked) {
+//                //Goal is to navigate to commit details Rather than just display some text
+////                GitInfoNavigation()
+//                Text("clicked")
+//            }
+//            else {
+//                Text(
+//                    text = commit.commitMessage,
+//                    fontWeight = FontWeight.Bold,
+//                    modifier = Modifier.padding(bottom = 8.dp)
+//                )
+//                Text(text = stringResource(id = R.string.author_format, commit.author))
+//            }
+//        }
+//    }
+//}
