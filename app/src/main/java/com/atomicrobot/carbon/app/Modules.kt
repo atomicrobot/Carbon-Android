@@ -2,6 +2,7 @@ package com.atomicrobot.carbon.app
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.data.api.github.DetailedGitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
@@ -21,6 +22,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -61,6 +63,7 @@ class Modules {
                 cache = get(),
                 securityModifier = get()
             )
+
         }
 
         single(named(BASE_URL)) {
@@ -165,7 +168,7 @@ class Modules {
             GitCardInfoViewModel(
                 app = androidApplication(),
                 gitHubInteractor = get(),
-                loadingDelayMs = get(qualifier = named("loading_delay_ms"))
+                loadingDelayMs = get(qualifier = named("loading_delay_ms")),
             )
         }
     }
@@ -173,7 +176,15 @@ class Modules {
 
 private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
     val builder = OkHttpClient.Builder()
-    builder.cache(cache)
+    if(BuildConfig.DEBUG) {
+        builder.cache(cache).apply {
+            val logging = HttpLoggingInterceptor()
+            logging.level = (HttpLoggingInterceptor.Level.BASIC)
+            addInterceptor(logging)
+        }
+    }else {
+        builder.cache(cache)
+    }
     securityModifier.apply(builder)
     return builder.build()
 }

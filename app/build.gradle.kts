@@ -213,6 +213,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:${Dependencies.composeVersion}")
     debugImplementation("androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}")
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")
+    debugImplementation("com.squareup.okhttp3:logging-interceptor:${Dependencies.okHttpVersion}")
 
     testImplementation("junit:junit:${Dependencies.junitVersion}")
     testImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")

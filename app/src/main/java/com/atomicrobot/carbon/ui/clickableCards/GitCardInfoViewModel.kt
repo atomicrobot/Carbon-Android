@@ -18,44 +18,45 @@ class GitCardInfoViewModel (
     private val loadingDelayMs: Long,
     ) : ViewModel() {
 
-    sealed class DetailedCommit {
-        object Loading: DetailedCommit()
-        class Result(val commit: List<com.atomicrobot.carbon.data.api.github.model.DetailedCommit>) : DetailedCommit()
-        class Error(val message: String) : DetailedCommit()
+    sealed class GitHubResponse {
+        object Loading: GitHubResponse()
+        class Result(val commit: DetailedCommit?) : GitHubResponse()
+        class Error(val message: String) : GitHubResponse()
     }
     data class GitInfoScreenUiState(
         val username: String = MainViewModel.DEFAULT_USERNAME, // NON-NLS
         val repository: String = MainViewModel.DEFAULT_REPO, // NON-NLS
-        val detailedCommitState: DetailedCommit = DetailedCommit.Result(emptyList())
+        val sha: String = "3650f33f0234077c709c9767d0a43db17e0a190d",
+        val detailedCommitState: GitHubResponse = GitHubResponse.Result(null)
     )
-    //TODO may need to edit for our uistate
-    private val _uiState = MutableStateFlow(GitCardInfoViewModel.GitInfoScreenUiState())
-    val uiState: StateFlow<GitCardInfoViewModel.GitInfoScreenUiState>
+    private val _uiState = MutableStateFlow(GitInfoScreenUiState())
+    val uiState: StateFlow<GitInfoScreenUiState>
         get() = _uiState
 
     fun fetchDetailedCommit() {
         // Update the UI state to indicate that we are loading.
         _uiState.value = _uiState.value.copy(
-            detailedCommitState = GitCardInfoViewModel.DetailedCommit.Loading
+            detailedCommitState = GitHubResponse.Loading
         )
         viewModelScope.launch {
             try {
                 /*Passes in active users credentials to interactor which will make use an API
                 service to make a @Get request with said credentials*/
                 gitHubInteractor.loadDetailedCommit(
-                    GitHubInteractor.LoadCommitsRequest(
+                    GitHubInteractor.LoadDetailedCommitRequest(
                         uiState.value.username,
-                        uiState.value.repository
+                        uiState.value.repository,
+                        uiState.value.sha
                     )
                 ).let {
                     _uiState.value = _uiState.value.copy(
-                        detailedCommitState = GitCardInfoViewModel.DetailedCommit.Result(it.commit)
+                        detailedCommitState = GitHubResponse.Result(it.commit)
                     )
                 }
             } catch (error: Exception) {
                 Timber.e(error)
                 _uiState.value = _uiState.value.copy(
-                    detailedCommitState = GitCardInfoViewModel.DetailedCommit.Error(
+                    detailedCommitState = GitHubResponse.Error(
                         error.message
                             ?: app.getString(R.string.error_unexpected)
                     )

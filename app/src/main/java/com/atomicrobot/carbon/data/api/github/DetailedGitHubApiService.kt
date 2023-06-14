@@ -6,9 +6,10 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface DetailedGitHubApiService {
-    @GET("repos/{user}/{repository}/commits")
+    @GET("repos/{user}/{repository}/commits/{sha}")
     suspend fun detailedCommit(
         @Path("user") user: String,
-        @Path("repository") repository: String
-    ): Response<List<DetailedCommit>>
+        @Path("repository") repository: String,
+        @Path("sha") sha: String
+    ): Response<DetailedCommit>
 }

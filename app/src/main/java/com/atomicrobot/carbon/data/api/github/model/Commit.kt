@@ -5,13 +5,19 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Author(
-    @Json(name = "name") val name: String
+    @Json(name = "name") val name: String,
+    @Json(name = "email") val email: String,
+    @Json(name = "date") val date: String
 )
 
 @JsonClass(generateAdapter = true)
+data class help(
+    @Json(name = "sha") val sha: String
+)
+@JsonClass(generateAdapter = true)
 data class CommitDetails(
     @Json(name = "message") val message: String,
-    @Json(name = "author") val author: Author
+    @Json(name = "author") val author: Author,
 )
 
 @JsonClass(generateAdapter = true)
@@ -24,4 +30,5 @@ data class Commit(
 
     val author: String
         get() = commit.author.name
+
 }

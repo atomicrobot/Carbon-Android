@@ -8,7 +8,7 @@ import com.atomicrobot.carbon.navigation.LumenScreens
 import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.navigation.lumenScreens
 import com.atomicrobot.carbon.ui.main.dummyCommits
-import com.atomicrobot.carbon.ui.main.dummyDetailedCommits
+import com.atomicrobot.carbon.ui.main.dummyDetailedCommit
 
 class CommitPreviewProvider : PreviewParameterProvider<Commit> {
     override val values: Sequence<Commit>
@@ -17,7 +17,7 @@ class CommitPreviewProvider : PreviewParameterProvider<Commit> {
 
 class DetailedCommitPreviewProvider : PreviewParameterProvider<DetailedCommit> {
     override val values: Sequence<DetailedCommit>
-        get() = dummyDetailedCommits.asSequence()
+        get() = dummyDetailedCommit.asSequence()
 }
 
 class AppScreenPreviewProvider : PreviewParameterProvider<CarbonScreens> {

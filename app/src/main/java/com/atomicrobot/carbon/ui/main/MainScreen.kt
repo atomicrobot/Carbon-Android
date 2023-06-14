@@ -2,6 +2,7 @@
 
 package com.atomicrobot.carbon.ui.main
 
+//import com.atomicrobot.carbon.ui.navigation.CommitItem
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -21,15 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
-import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
-//import com.atomicrobot.carbon.ui.navigation.CommitItem
 import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
@@ -191,9 +188,7 @@ fun CommitList(commits: List<Commit>) {
 @Composable
 fun CommitItem(
     @PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit,
-//    onCardClicked: (route: String) -> Unit = { _ -> }
 ) {
-//    val navController: NavHostController = rememberNavController( )
     var clicked by remember {mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -202,16 +197,6 @@ fun CommitItem(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
-
-
-//                        if (navController.currentBackStackEntry?.destination?.route != CarbonScreens.GitInfo.route) {
-//                            navController.navigate(CarbonScreens.GitInfo.route) {
-//                                popUpTo(navController.graph.startDestinationId)
-//                                launchSingleTop = true
-//                            }
-//                        }
-//                        navController.navigate(CarbonScreens.GitInfo.route)
-//                        onCardClicked(CarbonScreens.GitInfo.route)
                         clicked = !clicked
                     }
                 )

@@ -18,7 +18,9 @@ class GitHubInteractor(
 
     class LoadCommitsRequest(val user: String, val repository: String)
     class LoadCommitsResponse(val request: LoadCommitsRequest, val commits: List<Commit>)
-    class LoadDetailedCommitResponse(val request: LoadCommitsRequest, val commit: List<DetailedCommit>)
+
+    class LoadDetailedCommitRequest(val user: String, val repository: String, val sha: String)
+    class LoadDetailedCommitResponse(val request: LoadDetailedCommitRequest, val commit: DetailedCommit)
 
     suspend fun loadCommits(request: LoadCommitsRequest): LoadCommitsResponse {
         val response = checkResponse(
@@ -29,12 +31,12 @@ class GitHubInteractor(
         return LoadCommitsResponse(request, commits)
     }
 
-    suspend fun loadDetailedCommit(request: LoadCommitsRequest): LoadDetailedCommitResponse {
+    suspend fun loadDetailedCommit(request: LoadDetailedCommitRequest): LoadDetailedCommitResponse {
         val detailedResponse = checkResponse(
-            api2.detailedCommit(request.user, request.repository),
-            context.getString(R.string.error_get_commits_error)
+            api2.detailedCommit(request.user, request.repository, request.sha),
+            context.getString(R.string.error_get_detailed_commit_error)
         )
-        val detailedCommit: List<DetailedCommit> = detailedResponse.body() ?: emptyList()
+        val detailedCommit: DetailedCommit = detailedResponse.body() ?: emptyList<DetailedCommit>()[0]
         return LoadDetailedCommitResponse(request, detailedCommit)
     }
 
