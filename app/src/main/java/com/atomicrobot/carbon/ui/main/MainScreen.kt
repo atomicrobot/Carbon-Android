@@ -22,16 +22,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
 import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
+import timber.log.Timber
 
 @Composable
-fun MainScreen(scaffoldState: ScaffoldState) {
+fun MainScreen(scaffoldState: ScaffoldState, navController: NavController) {
     val viewModel: MainViewModel = getViewModel()
     val screenState by viewModel.uiState.collectAsState()
     val context: Context = LocalContext.current
@@ -39,17 +42,26 @@ fun MainScreen(scaffoldState: ScaffoldState) {
     LaunchedEffect(true) {
         viewModel.fetchCommits()
         createNotificationChannel(context)
+        viewModel.clickAction.collect { event ->
+            when(event) {
+                is MainViewModel.ClickAction.Success -> {
+                    Timber.d("Matthew: Your Card Click was Registered!!!!")
+                    navController.navigate(CarbonScreens.GitInfo.route)
+                }
+
+            }
+        }
     }
     MainContent(
         username = screenState.username,
         repository = screenState.repository,
         commitsState = screenState.commitsState,
         scaffoldState = scaffoldState,
-        onUserInputChanged = { username, repository ->
-            viewModel.updateUserInput(username, repository)
-        },
-        onUserSelectedFetchCommits = {
-            viewModel.fetchCommits()
+        onUserInputChanged = viewModel::updateUserInput,
+        onUserSelectedFetchCommits = viewModel::fetchCommits,
+        onUserClicked = {
+            Timber.d("Matthew: Click Registered at onUserClicked")
+            viewModel.onAction(MainViewModel.CardClicked.Clicked)
         },
         buildVersion = viewModel.getVersion(),
         fingerprint = viewModel.getVersionFingerprint()
@@ -64,6 +76,7 @@ fun MainContent(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
+    onUserClicked: () -> Unit = {},
     buildVersion: String,
     fingerprint: String
 ) {
@@ -82,12 +95,14 @@ fun MainContent(
             repository = repository,
             isLoading = false,
             onUserInputChanged = onUserInputChanged,
-            onUserSelectedFetchCommits = onUserSelectedFetchCommits
+            onUserSelectedFetchCommits = onUserSelectedFetchCommits,
+            onUserClicked = onUserClicked
         )
         GithubResponse(
             commitsState = commitsState,
             scaffoldState = scaffoldState,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            onUserClicked = onUserClicked
         )
         BottomBar(
             buildVersion = buildVersion,
@@ -105,24 +120,27 @@ fun MainContentPreview(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
+    onUserClicked: () -> Unit = {},
     buildVersion: String = BuildConfig.VERSION_NAME,
     fingerprint: String = BuildConfig.VERSION_FINGERPRINT
 ) {
     MainContent(
         buildVersion = buildVersion,
-        fingerprint = fingerprint
+        fingerprint = fingerprint,
     )
 }
 
-@Preview(name = "User Input")
+//@Preview(name = "User Input")
 @Composable
 fun GithubUserInput(
     username: String = MainViewModel.DEFAULT_USERNAME,
     repository: String = MainViewModel.DEFAULT_REPO,
     isLoading: Boolean = false,
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
-    onUserSelectedFetchCommits: () -> Unit = {}
-) {
+    onUserSelectedFetchCommits: () -> Unit = {},
+    onUserClicked: () -> Unit,
+
+    ) {
     Surface(
         color = MaterialTheme.colors.onSurface.copy(
             alpha = TextFieldDefaults.BackgroundOpacity
@@ -160,8 +178,9 @@ fun GithubUserInput(
 fun GithubResponse(
     commitsState: MainViewModel.Commits,
     scaffoldState: ScaffoldState,
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier,
+    onUserClicked: () -> Unit,
+    ) {
     Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         when (commitsState) {
             is MainViewModel.Commits.Loading ->
@@ -170,26 +189,35 @@ fun GithubResponse(
                 LaunchedEffect(scaffoldState.snackbarHostState) {
                     scaffoldState.snackbarHostState.showSnackbar(message = commitsState.message)
                 }
-            is MainViewModel.Commits.Result -> CommitList(commits = commitsState.commits)
+            is MainViewModel.Commits.Result -> CommitList(
+                commits = commitsState.commits,
+                onUserClicked = onUserClicked
+            )
         }
     }
 }
 
 @Composable
-fun CommitList(commits: List<Commit>) {
+fun CommitList(
+    commits: List<Commit>,
+    onUserClicked: () -> Unit
+) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(commits) { commit ->
-            CommitItem(commit)
+            CommitItem(
+                commit = commit,
+                onUserClicked = onUserClicked
+            )
         }
     }
 }
 
-@Preview(name = "Github Commit")
+//@Preview(name = "Github Commit")
 @Composable
 fun CommitItem(
     @PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit,
+    onUserClicked: () -> Unit
 ) {
-    var clicked by remember {mutableStateOf(false) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -197,7 +225,9 @@ fun CommitItem(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
-                        clicked = !clicked
+                        Timber.d("Matthew: Press Registered at view")
+                        onUserClicked()
+
                     }
                 )
             },
@@ -207,19 +237,12 @@ fun CommitItem(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            if(clicked) {
-                //Goal is to navigate to commit details Rather than just display some text
-//                GitInfoNavigation()
-                Text("clicked")
-            }
-            else {
-                Text(
-                    text = commit.commitMessage,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                Text(text = stringResource(id = R.string.author_format, commit.author))
-            }
+            Text(
+                text = commit.commitMessage,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(text = stringResource(id = R.string.author_format, commit.author))
         }
     }
 }

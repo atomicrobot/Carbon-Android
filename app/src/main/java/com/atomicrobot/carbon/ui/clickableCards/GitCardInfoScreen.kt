@@ -34,7 +34,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Preview
 @Composable
-fun GitInfoScreen(
+fun GitCardInfoScreen(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
 ) {
     val viewModel: GitCardInfoViewModel = getViewModel()
@@ -83,14 +83,8 @@ fun DetailedGitInfoResponse(
     }
 }
 
-/*Hopefully renders A lazy column of the info in the detailed commit but preview is not working*/
 @Composable
 fun Details(details: DetailedCommit?) {
-//    LazyColumn(modifier = Modifier.fillMaxSize()) {
-//        items(details) {commit ->
-//            TextBoxForDetail(detailedCommit = commit)
-//        }
-//    }
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(16.dp)
