@@ -168,7 +168,6 @@ class Modules {
             GitCardInfoViewModel(
                 app = androidApplication(),
                 gitHubInteractor = get(),
-                loadingDelayMs = get(qualifier = named("loading_delay_ms")),
             )
         }
     }

@@ -19,19 +19,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.atomicrobot.carbon.data.api.github.model.DetailedCommit
 import org.koin.androidx.compose.getViewModel
 
 
-//@Preview
 @Composable
 fun GitCardInfoScreen(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
@@ -43,9 +39,6 @@ fun GitCardInfoScreen(
     LaunchedEffect(key1 = true) {
         viewModel.fetchDetailedCommit(sha = sha)
     }
-    val navController = rememberNavController()
-    val scope = rememberCoroutineScope()
-    val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
     Scaffold { padding ->
 
         Column(
@@ -107,5 +100,11 @@ fun Details(details: DetailedCommit?) {
             Text(text = "An error has occurred retrieving or displaying this commit")
         }
     }
+}
+
+@Preview
+@Composable
+fun CardInfoscreenPreview() {
+    GitCardInfoScreen(sha = "3650f33f0234077c709c9767d0a43db17e0a190d")
 }
 

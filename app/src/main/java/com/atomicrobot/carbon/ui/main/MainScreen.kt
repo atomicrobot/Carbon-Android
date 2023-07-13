@@ -2,7 +2,6 @@
 
 package com.atomicrobot.carbon.ui.main
 
-//import com.atomicrobot.carbon.ui.navigation.CommitItem
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -20,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.atomicrobot.carbon.BuildConfig
@@ -29,7 +27,6 @@ import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
-import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -46,7 +43,6 @@ fun MainScreen(scaffoldState: ScaffoldState, navController: NavController) {
                 is MainViewModel.ClickAction.Success -> {
                     navController.navigate("${CarbonScreens.GitInfo.route}/${viewModel.uiState.value.sha}")
                 }
-
             }
         }
     }
@@ -127,7 +123,7 @@ fun MainContentPreview(
     )
 }
 
-//@Preview(name = "User Input")
+@Preview(name = "User Input")
 @Composable
 fun GithubUserInput(
     username: String = MainViewModel.DEFAULT_USERNAME,
@@ -135,8 +131,6 @@ fun GithubUserInput(
     isLoading: Boolean = false,
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
-//    onUserClicked: () -> Unit,
-
     ) {
     Surface(
         color = MaterialTheme.colors.onSurface.copy(
@@ -208,11 +202,9 @@ fun CommitList(
         }
     }
 }
-
-//@Preview(name = "Github Commit")
 @Composable
 fun CommitItem(
-    @PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit,
+    commit: Commit,
     onUserClicked: (String) -> Unit
 ) {
     Card(
@@ -241,6 +233,12 @@ fun CommitItem(
             Text(text = stringResource(id = R.string.author_format, commit.author))
         }
     }
+}
+
+@Preview
+@Composable
+fun CommitItemPreview(){
+    CommitItem(commit = dummyCommits[0], onUserClicked = {})
 }
 
 private fun createNotificationChannel(context: Context) {

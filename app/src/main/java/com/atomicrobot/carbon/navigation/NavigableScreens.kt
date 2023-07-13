@@ -106,7 +106,7 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
     )
 
     object GitInfo : CarbonScreens (
-        "More Card Details",
+        "Card Details",
         "gitInfo",
         ScreenIcon(Icons.Filled.Info, R.string.git_info)
     )

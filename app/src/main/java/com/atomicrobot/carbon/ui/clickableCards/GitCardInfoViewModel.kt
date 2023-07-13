@@ -15,7 +15,6 @@ import timber.log.Timber
 class GitCardInfoViewModel (
     private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
-    private val loadingDelayMs: Long,
     ) : ViewModel() {
     sealed class GitHubResponse {
         object Loading: GitHubResponse()
