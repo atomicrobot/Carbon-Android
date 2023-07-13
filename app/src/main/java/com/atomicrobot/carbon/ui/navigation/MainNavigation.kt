@@ -243,10 +243,14 @@ fun NavGraphBuilder.mainFlowGraph(
                 LicenseScreen()
             }
         }
-        composable(CarbonScreens.GitInfo.route) {
-            CarbonAndroidTheme {
-                GitCardInfoScreen()
+        composable("${CarbonScreens.GitInfo.route}/{sha}") {
+            val sha = it.arguments?.getString("sha")
+            sha?.let {
+                CarbonAndroidTheme {
+                    GitCardInfoScreen(sha = it)
+                }
             }
+
         }
     }
 }

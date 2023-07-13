@@ -11,10 +11,6 @@ data class Author(
 )
 
 @JsonClass(generateAdapter = true)
-data class help(
-    @Json(name = "sha") val sha: String
-)
-@JsonClass(generateAdapter = true)
 data class CommitDetails(
     @Json(name = "message") val message: String,
     @Json(name = "author") val author: Author,
@@ -22,7 +18,8 @@ data class CommitDetails(
 
 @JsonClass(generateAdapter = true)
 data class Commit(
-    @Json(name = "commit") val commit: CommitDetails
+    @Json(name = "commit") val commit: CommitDetails,
+    @Json(name = "sha") val sha: String
 ) {
 
     val commitMessage: String

@@ -31,7 +31,6 @@ import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
 import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
-import timber.log.Timber
 
 @Composable
 fun MainScreen(scaffoldState: ScaffoldState, navController: NavController) {
@@ -45,8 +44,7 @@ fun MainScreen(scaffoldState: ScaffoldState, navController: NavController) {
         viewModel.clickAction.collect { event ->
             when(event) {
                 is MainViewModel.ClickAction.Success -> {
-                    Timber.d("Matthew: Your Card Click was Registered!!!!")
-                    navController.navigate(CarbonScreens.GitInfo.route)
+                    navController.navigate("${CarbonScreens.GitInfo.route}/${viewModel.uiState.value.sha}")
                 }
 
             }
@@ -60,8 +58,7 @@ fun MainScreen(scaffoldState: ScaffoldState, navController: NavController) {
         onUserInputChanged = viewModel::updateUserInput,
         onUserSelectedFetchCommits = viewModel::fetchCommits,
         onUserClicked = {
-            Timber.d("Matthew: Click Registered at onUserClicked")
-            viewModel.onAction(MainViewModel.CardClicked.Clicked)
+            viewModel.onAction(MainViewModel.CardClicked.PassSha(it))
         },
         buildVersion = viewModel.getVersion(),
         fingerprint = viewModel.getVersionFingerprint()
@@ -76,7 +73,7 @@ fun MainContent(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
-    onUserClicked: () -> Unit = {},
+    onUserClicked: (String) -> Unit = {},
     buildVersion: String,
     fingerprint: String
 ) {
@@ -96,7 +93,7 @@ fun MainContent(
             isLoading = false,
             onUserInputChanged = onUserInputChanged,
             onUserSelectedFetchCommits = onUserSelectedFetchCommits,
-            onUserClicked = onUserClicked
+//            onUserClicked = onUserClicked
         )
         GithubResponse(
             commitsState = commitsState,
@@ -138,7 +135,7 @@ fun GithubUserInput(
     isLoading: Boolean = false,
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
-    onUserClicked: () -> Unit,
+//    onUserClicked: () -> Unit,
 
     ) {
     Surface(
@@ -179,7 +176,7 @@ fun GithubResponse(
     commitsState: MainViewModel.Commits,
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
-    onUserClicked: () -> Unit,
+    onUserClicked: (String) -> Unit,
     ) {
     Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         when (commitsState) {
@@ -200,7 +197,7 @@ fun GithubResponse(
 @Composable
 fun CommitList(
     commits: List<Commit>,
-    onUserClicked: () -> Unit
+    onUserClicked: (String) -> Unit
 ) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(commits) { commit ->
@@ -216,7 +213,7 @@ fun CommitList(
 @Composable
 fun CommitItem(
     @PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit,
-    onUserClicked: () -> Unit
+    onUserClicked: (String) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -225,8 +222,7 @@ fun CommitItem(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
-                        Timber.d("Matthew: Press Registered at view")
-                        onUserClicked()
+                        onUserClicked(commit.sha)
 
                     }
                 )

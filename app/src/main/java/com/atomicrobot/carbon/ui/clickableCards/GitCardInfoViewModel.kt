@@ -1,6 +1,8 @@
 package com.atomicrobot.carbon.ui.clickableCards
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.R
@@ -15,9 +17,17 @@ import timber.log.Timber
 class GitCardInfoViewModel (
     private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
+    savedStateHandle: SavedStateHandle,
     private val loadingDelayMs: Long,
     ) : ViewModel() {
+    var sha = mutableStateOf("")
 
+    init {
+        savedStateHandle.get<String>("sha")?.let {
+            sha.value = it
+        }
+    }
+    private val passSha = sha.value
     sealed class GitHubResponse {
         object Loading: GitHubResponse()
         class Result(val commit: DetailedCommit?) : GitHubResponse()
@@ -26,14 +36,12 @@ class GitCardInfoViewModel (
     data class GitInfoScreenUiState(
         val username: String = MainViewModel.DEFAULT_USERNAME, // NON-NLS
         val repository: String = MainViewModel.DEFAULT_REPO, // NON-NLS
-        val sha: String = "3650f33f0234077c709c9767d0a43db17e0a190d",
-        val detailedCommitState: GitHubResponse = GitHubResponse.Result(null)
+        val detailedCommitState: GitHubResponse = GitHubResponse.Result(null),
     )
     private val _uiState = MutableStateFlow(GitInfoScreenUiState())
     val uiState: StateFlow<GitInfoScreenUiState>
         get() = _uiState
-
-    fun fetchDetailedCommit() {
+    fun fetchDetailedCommit(sha:String) {
         // Update the UI state to indicate that we are loading.
         _uiState.value = _uiState.value.copy(
             detailedCommitState = GitHubResponse.Loading
@@ -46,7 +54,7 @@ class GitCardInfoViewModel (
                     GitHubInteractor.LoadDetailedCommitRequest(
                         uiState.value.username,
                         uiState.value.repository,
-                        uiState.value.sha
+                        sha
                     )
                 ).let {
                     _uiState.value = _uiState.value.copy(

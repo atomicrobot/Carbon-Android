@@ -25,7 +25,6 @@ class MainViewModel(
         class Error(val message: String) : Commits()
     }
     sealed class CardClicked {
-        data class OnLongPress(val clicked: Boolean): CardClicked()
         data class PassSha(val sha: String): CardClicked()
         object Clicked: CardClicked()
 
@@ -87,16 +86,15 @@ class MainViewModel(
         when(action) {
             is CardClicked.Clicked -> {
                 viewModelScope.launch {
-                    Timber.d("Matthew: viewModelScope launched from click")
                     clickAction.emit(ClickAction.Success)
                 }
             }
             is CardClicked.PassSha -> {
                 viewModelScope.launch {
-                    Timber.d("Matthew: event.sha: ${action.sha}")
                     _uiState.value = _uiState.value.copy(
                         sha = action.sha
                     )
+                    clickAction.emit(ClickAction.Success)
                 }
 
             }

@@ -110,17 +110,7 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         "gitInfo",
         ScreenIcon(Icons.Filled.Info, R.string.git_info)
     )
-//    {
-//        const val commit = "commit"
-//
-//        val arguments = listOf(
-//            navArgument(commit){
-//                nullable = false
-//                defaultValue = dummyDetailedCommits[0]
-//            }
-//
-//        )
-//    }
+
 }
 
 val appScreens = listOf(

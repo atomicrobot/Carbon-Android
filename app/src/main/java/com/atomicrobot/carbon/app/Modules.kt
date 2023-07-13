@@ -2,6 +2,7 @@ package com.atomicrobot.carbon.app
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.SavedStateHandle
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.data.api.github.DetailedGitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
@@ -169,6 +170,7 @@ class Modules {
                 app = androidApplication(),
                 gitHubInteractor = get(),
                 loadingDelayMs = get(qualifier = named("loading_delay_ms")),
+                savedStateHandle = SavedStateHandle()
             )
         }
     }

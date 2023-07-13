@@ -23,7 +23,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -32,16 +31,17 @@ import com.atomicrobot.carbon.data.api.github.model.DetailedCommit
 import org.koin.androidx.compose.getViewModel
 
 
-@Preview
+//@Preview
 @Composable
 fun GitCardInfoScreen(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
+    sha: String
 ) {
     val viewModel: GitCardInfoViewModel = getViewModel()
     val screenState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = true) {
-        viewModel.fetchDetailedCommit()
+        viewModel.fetchDetailedCommit(sha = sha)
     }
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
