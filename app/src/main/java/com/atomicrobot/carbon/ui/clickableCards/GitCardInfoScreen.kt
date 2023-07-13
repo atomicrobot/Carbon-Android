@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.data.api.github.model.DetailedCommit
+import dummyDetailedCommit
 import org.koin.androidx.compose.getViewModel
 
 
@@ -102,9 +103,9 @@ fun Details(details: DetailedCommit?) {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun CardInfoscreenPreview() {
-    GitCardInfoScreen(sha = "3650f33f0234077c709c9767d0a43db17e0a190d")
+    Details(dummyDetailedCommit[0])
 }
 

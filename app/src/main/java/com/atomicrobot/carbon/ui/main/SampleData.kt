@@ -9,4 +9,3 @@ val dummyCommits = listOf(
     Commit(sha = "", commit = CommitDetails(message = "Sample github commit message #4", author = Author("Joe Smith", email = "email@example.com", date = "2023-01-01"))),
     Commit(sha = "", commit = CommitDetails(message = "Sample github commit message #5", author = Author("Joe Smoe", email = "email@example.com", date = "2023-01-01")))
 )
-
