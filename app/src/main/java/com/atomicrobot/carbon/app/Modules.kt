@@ -63,7 +63,6 @@ class Modules {
                 cache = get(),
                 securityModifier = get()
             )
-
         }
 
         single(named(BASE_URL)) {
@@ -96,7 +95,6 @@ class Modules {
                 retrofit = get()
             )
         }
-
 
         single {
             provideGitHubService(
@@ -175,13 +173,13 @@ class Modules {
 
 private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
     val builder = OkHttpClient.Builder()
-    if(BuildConfig.DEBUG) {
+    if (BuildConfig.DEBUG) {
         builder.cache(cache).apply {
             val logging = HttpLoggingInterceptor()
             logging.level = (HttpLoggingInterceptor.Level.BASIC)
             addInterceptor(logging)
         }
-    }else {
+    } else {
         builder.cache(cache)
     }
     securityModifier.apply(builder)
@@ -211,7 +209,7 @@ fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
     return retrofit.create(GitHubApiService::class.java)
 }
 
-fun provideDetailedGitHubApiService(retrofit: Retrofit):DetailedGitHubApiService {
+fun provideDetailedGitHubApiService(retrofit: Retrofit): DetailedGitHubApiService {
     return retrofit.create(DetailedGitHubApiService::class.java)
 }
 

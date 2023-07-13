@@ -2,9 +2,6 @@ package com.atomicrobot.carbon.data.api.github.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-
-
-
 @JsonClass(generateAdapter = true)
 data class Tree(
     @Json(name = "url") val url: String
@@ -38,5 +35,4 @@ data class DetailedCommit(
 
     val detailedCommitVerified: Boolean
         get() = detailedCommit.verification.verified
-
 }

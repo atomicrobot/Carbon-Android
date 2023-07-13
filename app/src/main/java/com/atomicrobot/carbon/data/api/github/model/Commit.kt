@@ -27,5 +27,4 @@ data class Commit(
 
     val author: String
         get() = commit.author.name
-
 }
