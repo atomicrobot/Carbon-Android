@@ -99,7 +99,6 @@ class MainViewModel(
 
             }
 
-            else -> {}
         }
 
     }

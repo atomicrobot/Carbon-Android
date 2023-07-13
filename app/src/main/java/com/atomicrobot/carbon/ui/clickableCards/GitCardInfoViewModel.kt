@@ -1,8 +1,6 @@
 package com.atomicrobot.carbon.ui.clickableCards
 
 import android.app.Application
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.atomicrobot.carbon.R
@@ -17,17 +15,8 @@ import timber.log.Timber
 class GitCardInfoViewModel (
     private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
-    savedStateHandle: SavedStateHandle,
     private val loadingDelayMs: Long,
     ) : ViewModel() {
-    var sha = mutableStateOf("")
-
-    init {
-        savedStateHandle.get<String>("sha")?.let {
-            sha.value = it
-        }
-    }
-    private val passSha = sha.value
     sealed class GitHubResponse {
         object Loading: GitHubResponse()
         class Result(val commit: DetailedCommit?) : GitHubResponse()

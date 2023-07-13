@@ -106,7 +106,7 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
     )
 
     object GitInfo : CarbonScreens (
-        "Git Info",
+        "More Card Details",
         "gitInfo",
         ScreenIcon(Icons.Filled.Info, R.string.git_info)
     )
@@ -125,8 +125,7 @@ val drawerScreens = listOf(
     CarbonScreens.Design,
     CarbonScreens.About,
     CarbonScreens.AboutHtml,
-    CarbonScreens.License,
-    CarbonScreens.GitInfo
+    CarbonScreens.License
 )
 
 sealed class LumenScreens(

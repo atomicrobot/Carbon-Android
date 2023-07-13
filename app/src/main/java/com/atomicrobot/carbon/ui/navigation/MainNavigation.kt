@@ -264,7 +264,7 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
         CarbonScreens.Lumen.route -> CarbonScreens.Lumen.title
         CarbonScreens.Scanner.route -> CarbonScreens.Scanner.title
         CarbonScreens.License.route -> CarbonScreens.License.title
-        CarbonScreens.GitInfo.route -> CarbonScreens.GitInfo.title
+        "${CarbonScreens.GitInfo.route}/{sha}" -> CarbonScreens.GitInfo.title
         else -> ""
     }
 }
