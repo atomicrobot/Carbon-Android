@@ -1,6 +1,8 @@
 package com.atomicrobot.carbon.ui.main
 
-import com.atomicrobot.carbon.data.api.github.model.*
+import com.atomicrobot.carbon.data.api.github.model.Author
+import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.data.api.github.model.CommitDetails
 
 val dummyCommits = listOf(
     Commit(sha = "", commit = CommitDetails(message = "Sample github commit message #1", author = Author("Smitty Joe", email = "email@example.com", date = "2023-01-01"))),

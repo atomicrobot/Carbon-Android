@@ -51,12 +51,12 @@ fun AboutScreen() {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        aboutBody()
+        AboutBody()
     }
 }
 
 @Composable
-fun aboutBody() {
+fun AboutBody() {
     val context = LocalContext.current
     LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
         item {

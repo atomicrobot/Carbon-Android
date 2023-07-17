@@ -7,11 +7,26 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -39,7 +54,7 @@ fun MainScreen(scaffoldState: ScaffoldState, navController: NavController) {
         viewModel.fetchCommits()
         createNotificationChannel(context)
         viewModel.clickAction.collect { event ->
-            when(event) {
+            when (event) {
                 is MainViewModel.ClickAction.Success -> {
                     navController.navigate("${CarbonScreens.GitInfo.route}/${viewModel.uiState.value.sha}")
                 }
@@ -131,7 +146,7 @@ fun GithubUserInput(
     isLoading: Boolean = false,
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
-    ) {
+) {
     Surface(
         color = MaterialTheme.colors.onSurface.copy(
             alpha = TextFieldDefaults.BackgroundOpacity
@@ -171,7 +186,7 @@ fun GithubResponse(
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
     onUserClicked: (String) -> Unit,
-    ) {
+) {
     Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         when (commitsState) {
             is MainViewModel.Commits.Loading ->
@@ -215,7 +230,6 @@ fun CommitItem(
                 detectTapGestures(
                     onLongPress = {
                         onUserClicked(commit.sha)
-
                     }
                 )
             },
@@ -237,7 +251,7 @@ fun CommitItem(
 
 @Preview
 @Composable
-fun CommitItemPreview(){
+fun CommitItemPreview() {
     CommitItem(commit = dummyCommits[0], onUserClicked = {})
 }
 

@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class GitCardInfoViewModel (
+class GitCardInfoViewModel(
     private val app: Application,
     private val gitHubInteractor: GitHubInteractor,
-    ) : ViewModel() {
+) : ViewModel() {
     sealed class GitHubResponse {
-        object Loading: GitHubResponse()
+        object Loading : GitHubResponse()
         class Result(val commit: DetailedCommit?) : GitHubResponse()
         class Error(val message: String) : GitHubResponse()
     }
@@ -29,7 +29,7 @@ class GitCardInfoViewModel (
     private val _uiState = MutableStateFlow(GitInfoScreenUiState())
     val uiState: StateFlow<GitInfoScreenUiState>
         get() = _uiState
-    fun fetchDetailedCommit(sha:String) {
+    fun fetchDetailedCommit(sha: String) {
         // Update the UI state to indicate that we are loading.
         _uiState.value = _uiState.value.copy(
             detailedCommitState = GitHubResponse.Loading

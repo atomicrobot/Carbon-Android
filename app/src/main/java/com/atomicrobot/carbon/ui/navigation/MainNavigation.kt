@@ -7,10 +7,18 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.*
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
@@ -26,12 +34,12 @@ import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.navigation.drawerScreens
 import com.atomicrobot.carbon.ui.about.AboutHtmlScreen
 import com.atomicrobot.carbon.ui.about.AboutScreen
+import com.atomicrobot.carbon.ui.clickableCards.GitCardInfoScreen
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
 import com.atomicrobot.carbon.ui.license.LicenseScreen
 import com.atomicrobot.carbon.ui.lumen.navigation.DesignLumenNavigation
-import com.atomicrobot.carbon.ui.clickableCards.GitCardInfoScreen
 import com.atomicrobot.carbon.ui.main.MainScreen
 import com.atomicrobot.carbon.ui.scanner.ScannerScreen
 import com.atomicrobot.carbon.ui.settings.SettingsScreen
@@ -250,7 +258,6 @@ fun NavGraphBuilder.mainFlowGraph(
                     GitCardInfoScreen(sha = it)
                 }
             }
-
         }
     }
 }
@@ -268,4 +275,3 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
         else -> ""
     }
 }
-

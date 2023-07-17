@@ -25,13 +25,11 @@ class MainViewModel(
         class Error(val message: String) : Commits()
     }
     sealed class CardClicked {
-        data class PassSha(val sha: String): CardClicked()
-        object Clicked: CardClicked()
-
+        data class PassSha(val sha: String) : CardClicked()
+        object Clicked : CardClicked()
     }
     sealed class ClickAction {
-        object Success: ClickAction()
-
+        object Success : ClickAction()
     }
 
     data class MainScreenUiState(
@@ -83,7 +81,7 @@ class MainViewModel(
     fun getVersionFingerprint() = BuildConfig.VERSION_FINGERPRINT
 
     fun onAction(action: CardClicked) {
-        when(action) {
+        when (action) {
             is CardClicked.Clicked -> {
                 viewModelScope.launch {
                     clickAction.emit(ClickAction.Success)
@@ -96,11 +94,8 @@ class MainViewModel(
                     )
                     clickAction.emit(ClickAction.Success)
                 }
-
             }
-
         }
-
     }
     val clickAction = MutableSharedFlow<ClickAction>()
 
