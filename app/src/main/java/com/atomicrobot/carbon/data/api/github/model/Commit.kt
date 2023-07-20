@@ -13,7 +13,7 @@ data class Author(
 @JsonClass(generateAdapter = true)
 data class CommitDetails(
     @Json(name = "message") val message: String,
-    @Json(name = "author") val author: Author,
+    @Json(name = "author") val author: Author
 )
 
 @JsonClass(generateAdapter = true)

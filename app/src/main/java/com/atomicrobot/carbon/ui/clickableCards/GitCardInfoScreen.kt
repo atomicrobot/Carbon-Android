@@ -105,5 +105,5 @@ fun Details(details: DetailedCommit?) {
 @Preview(showBackground = true)
 @Composable
 fun CardInfoscreenPreview() {
-//    Details(dummyDetailedCommit[0])
+    Details(dummyDetailedCommit[0])
 }

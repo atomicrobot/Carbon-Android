@@ -104,7 +104,6 @@ fun MainContent(
             isLoading = false,
             onUserInputChanged = onUserInputChanged,
             onUserSelectedFetchCommits = onUserSelectedFetchCommits,
-//            onUserClicked = onUserClicked
         )
         GithubResponse(
             commitsState = commitsState,
