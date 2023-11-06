@@ -23,6 +23,7 @@ import retrofit2.Response
 class GitHubInteractorTest {
 
     @Mock lateinit var api: GitHubApiService
+    @Mock lateinit var api2: DetailedGitHubApiService
     private lateinit var interactor: GitHubInteractor
 
     @Before
@@ -31,7 +32,7 @@ class GitHubInteractorTest {
         MockitoAnnotations.openMocks(this)
 
         val context = ApplicationProvider.getApplicationContext<Application>()
-        interactor = GitHubInteractor(context, api)
+        interactor = GitHubInteractor(context, api, api2)
     }
 
     @After

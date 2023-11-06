@@ -2,6 +2,8 @@ package com.atomicrobot.carbon.app
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import com.atomicrobot.carbon.BuildConfig
+import com.atomicrobot.carbon.data.api.github.DetailedGitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubApiService
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.lumen.LumenDatabase
@@ -10,6 +12,7 @@ import com.atomicrobot.carbon.data.lumen.dao.RoomDao
 import com.atomicrobot.carbon.data.lumen.dao.SceneDao
 import com.atomicrobot.carbon.data.lumen.dao.SceneLightDao
 import com.atomicrobot.carbon.deeplink.DeepLinkInteractor
+import com.atomicrobot.carbon.ui.clickableCards.GitCardInfoViewModel
 import com.atomicrobot.carbon.ui.license.LicenseViewModel
 import com.atomicrobot.carbon.ui.lumen.scenes.ScenesViewModel
 import com.atomicrobot.carbon.ui.main.MainViewModel
@@ -19,6 +22,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -87,9 +91,16 @@ class Modules {
         }
 
         single {
+            provideDetailedGitHubApiService(
+                retrofit = get()
+            )
+        }
+
+        single {
             provideGitHubService(
                 context = androidContext(),
-                api = get()
+                api = get(),
+                api2 = get()
             )
         }
 
@@ -150,12 +161,27 @@ class Modules {
         viewModel {
             LicenseViewModel(app = androidApplication())
         }
+
+        viewModel {
+            GitCardInfoViewModel(
+                app = androidApplication(),
+                gitHubInteractor = get(),
+            )
+        }
     }
 }
 
 private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
     val builder = OkHttpClient.Builder()
-    builder.cache(cache)
+    if (BuildConfig.DEBUG) {
+        builder.cache(cache).apply {
+            val logging = HttpLoggingInterceptor()
+            logging.level = (HttpLoggingInterceptor.Level.BASIC)
+            addInterceptor(logging)
+        }
+    } else {
+        builder.cache(cache)
+    }
     securityModifier.apply(builder)
     return builder.build()
 }
@@ -183,11 +209,16 @@ fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
     return retrofit.create(GitHubApiService::class.java)
 }
 
+fun provideDetailedGitHubApiService(retrofit: Retrofit): DetailedGitHubApiService {
+    return retrofit.create(DetailedGitHubApiService::class.java)
+}
+
 private fun provideGitHubService(
     context: Context,
-    api: GitHubApiService
+    api: GitHubApiService,
+    api2: DetailedGitHubApiService
 ): GitHubInteractor {
-    return GitHubInteractor(context, api)
+    return GitHubInteractor(context, api, api2)
 }
 
 private fun provideLumenDatabase(

@@ -112,12 +112,13 @@ fun ScannerScreen(
             topBar = {},
             bottomBar = {}
         ) {
-            CameraContent(viewModel, onBarcodeSelected)
+            CameraContent(modifier = Modifier.padding(it), viewModel, onBarcodeSelected)
         }
     }
 }
 @Composable
 fun CameraContent(
+    modifier: Modifier = Modifier,
     viewModel: ScannerViewModel = getViewModel(),
     onBarcodeSelected: (Barcode) -> Unit = {}
 ) {
@@ -127,7 +128,7 @@ fun CameraContent(
 
     val selectedCamera by viewModel.cameraSelectorState.collectAsState()
     // ConstraintLayout in Jetpack Compose YAY!!!
-    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+    ConstraintLayout(modifier = modifier.fillMaxSize()) {
         val (preview, barcodeOverlay, barcodeChip, shutter) = createRefs()
         CameraPreview(
             Modifier

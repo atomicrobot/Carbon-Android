@@ -5,7 +5,9 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Author(
-    @Json(name = "name") val name: String
+    @Json(name = "name") val name: String,
+    @Json(name = "email") val email: String,
+    @Json(name = "date") val date: String
 )
 
 @JsonClass(generateAdapter = true)
@@ -16,7 +18,8 @@ data class CommitDetails(
 
 @JsonClass(generateAdapter = true)
 data class Commit(
-    @Json(name = "commit") val commit: CommitDetails
+    @Json(name = "commit") val commit: CommitDetails,
+    @Json(name = "sha") val sha: String
 ) {
 
     val commitMessage: String

@@ -1,9 +1,12 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package com.atomicrobot.carbon.ui.main
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
@@ -25,22 +29,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
-import com.atomicrobot.carbon.util.CommitPreviewProvider
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MainScreen(scaffoldState: ScaffoldState) {
+fun MainScreen(scaffoldState: ScaffoldState, navController: NavController) {
     val viewModel: MainViewModel = getViewModel()
     val screenState by viewModel.uiState.collectAsState()
     val context: Context = LocalContext.current
@@ -48,17 +53,23 @@ fun MainScreen(scaffoldState: ScaffoldState) {
     LaunchedEffect(true) {
         viewModel.fetchCommits()
         createNotificationChannel(context)
+        viewModel.clickAction.collect { event ->
+            when (event) {
+                is MainViewModel.ClickAction.Success -> {
+                    navController.navigate("${CarbonScreens.GitInfo.route}/${viewModel.uiState.value.sha}")
+                }
+            }
+        }
     }
     MainContent(
         username = screenState.username,
         repository = screenState.repository,
         commitsState = screenState.commitsState,
         scaffoldState = scaffoldState,
-        onUserInputChanged = { username, repository ->
-            viewModel.updateUserInput(username, repository)
-        },
-        onUserSelectedFetchCommits = {
-            viewModel.fetchCommits()
+        onUserInputChanged = viewModel::updateUserInput,
+        onUserSelectedFetchCommits = viewModel::fetchCommits,
+        onUserClicked = {
+            viewModel.onAction(MainViewModel.CardClicked.PassSha(it))
         },
         buildVersion = viewModel.getVersion(),
         fingerprint = viewModel.getVersionFingerprint()
@@ -73,6 +84,7 @@ fun MainContent(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
+    onUserClicked: (String) -> Unit = {},
     buildVersion: String,
     fingerprint: String
 ) {
@@ -91,12 +103,13 @@ fun MainContent(
             repository = repository,
             isLoading = false,
             onUserInputChanged = onUserInputChanged,
-            onUserSelectedFetchCommits = onUserSelectedFetchCommits
+            onUserSelectedFetchCommits = onUserSelectedFetchCommits,
         )
         GithubResponse(
             commitsState = commitsState,
             scaffoldState = scaffoldState,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            onUserClicked = onUserClicked
         )
         BottomBar(
             buildVersion = buildVersion,
@@ -114,12 +127,13 @@ fun MainContentPreview(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
     onUserSelectedFetchCommits: () -> Unit = {},
+    onUserClicked: () -> Unit = {},
     buildVersion: String = BuildConfig.VERSION_NAME,
     fingerprint: String = BuildConfig.VERSION_FINGERPRINT
 ) {
     MainContent(
         buildVersion = buildVersion,
-        fingerprint = fingerprint
+        fingerprint = fingerprint,
     )
 }
 
@@ -130,7 +144,7 @@ fun GithubUserInput(
     repository: String = MainViewModel.DEFAULT_REPO,
     isLoading: Boolean = false,
     onUserInputChanged: (String, String) -> Unit = { _, _ -> },
-    onUserSelectedFetchCommits: () -> Unit = {}
+    onUserSelectedFetchCommits: () -> Unit = {},
 ) {
     Surface(
         color = MaterialTheme.colors.onSurface.copy(
@@ -169,7 +183,8 @@ fun GithubUserInput(
 fun GithubResponse(
     commitsState: MainViewModel.Commits,
     scaffoldState: ScaffoldState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onUserClicked: (String) -> Unit,
 ) {
     Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         when (commitsState) {
@@ -179,27 +194,44 @@ fun GithubResponse(
                 LaunchedEffect(scaffoldState.snackbarHostState) {
                     scaffoldState.snackbarHostState.showSnackbar(message = commitsState.message)
                 }
-            is MainViewModel.Commits.Result -> CommitList(commits = commitsState.commits)
+            is MainViewModel.Commits.Result -> CommitList(
+                commits = commitsState.commits,
+                onUserClicked = onUserClicked
+            )
         }
     }
 }
 
 @Composable
-fun CommitList(commits: List<Commit>) {
+fun CommitList(
+    commits: List<Commit>,
+    onUserClicked: (String) -> Unit
+) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(commits) { commit ->
-            CommitItem(commit)
+            CommitItem(
+                commit = commit,
+                onUserClicked = onUserClicked
+            )
         }
     }
 }
-
-@Preview(name = "Github Commit")
 @Composable
-fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit: Commit) {
+fun CommitItem(
+    commit: Commit,
+    onUserClicked: (String) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = {
+                        onUserClicked(commit.sha)
+                    }
+                )
+            },
     ) {
         Column(
             modifier = Modifier
@@ -214,6 +246,12 @@ fun CommitItem(@PreviewParameter(CommitPreviewProvider::class, limit = 2) commit
             Text(text = stringResource(id = R.string.author_format, commit.author))
         }
     }
+}
+
+@Preview
+@Composable
+fun CommitItemPreview() {
+    CommitItem(commit = dummyCommits[0], onUserClicked = {})
 }
 
 private fun createNotificationChannel(context: Context) {

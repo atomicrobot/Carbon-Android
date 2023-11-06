@@ -7,6 +7,7 @@ import com.atomicrobot.carbon.BuildConfig
 import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor
 import com.atomicrobot.carbon.data.api.github.model.Commit
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -23,11 +24,19 @@ class MainViewModel(
         class Result(val commits: List<Commit>) : Commits()
         class Error(val message: String) : Commits()
     }
+    sealed class CardClicked {
+        data class PassSha(val sha: String) : CardClicked()
+        object Clicked : CardClicked()
+    }
+    sealed class ClickAction {
+        object Success : ClickAction()
+    }
 
     data class MainScreenUiState(
         val username: String = DEFAULT_USERNAME, // NON-NLS
         val repository: String = DEFAULT_REPO, // NON-NLS
-        val commitsState: Commits = Commits.Result(emptyList())
+        val commitsState: Commits = Commits.Result(emptyList()),
+        val sha: String = ""
     )
 
     private val _uiState = MutableStateFlow(MainScreenUiState())
@@ -70,6 +79,25 @@ class MainViewModel(
     fun getVersion() = BuildConfig.VERSION_NAME
 
     fun getVersionFingerprint() = BuildConfig.VERSION_FINGERPRINT
+
+    fun onAction(action: CardClicked) {
+        when (action) {
+            is CardClicked.Clicked -> {
+                viewModelScope.launch {
+                    clickAction.emit(ClickAction.Success)
+                }
+            }
+            is CardClicked.PassSha -> {
+                viewModelScope.launch {
+                    _uiState.value = _uiState.value.copy(
+                        sha = action.sha
+                    )
+                    clickAction.emit(ClickAction.Success)
+                }
+            }
+        }
+    }
+    val clickAction = MutableSharedFlow<ClickAction>()
 
     companion object {
         const val DEFAULT_USERNAME = "madebyatomicrobot" // NON-NLS

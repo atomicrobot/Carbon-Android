@@ -1,8 +1,11 @@
 [{
+  "sha": "test sha",
   "commit": {
     "message": "test message",
     "author": {
-      "name": "test author"
+      "name": "test author",
+      "email": "testemail@example.com",
+      "date": "01/01/2023"
     }
   }
 }]

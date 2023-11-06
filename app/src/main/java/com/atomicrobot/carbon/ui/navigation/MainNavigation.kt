@@ -34,6 +34,7 @@ import com.atomicrobot.carbon.navigation.appScreens
 import com.atomicrobot.carbon.navigation.drawerScreens
 import com.atomicrobot.carbon.ui.about.AboutHtmlScreen
 import com.atomicrobot.carbon.ui.about.AboutScreen
+import com.atomicrobot.carbon.ui.clickableCards.GitCardInfoScreen
 import com.atomicrobot.carbon.ui.components.BottomNavigationBar
 import com.atomicrobot.carbon.ui.components.TopBar
 import com.atomicrobot.carbon.ui.deeplink.DeepLinkSampleScreen
@@ -62,7 +63,6 @@ fun MainNavigation() {
     val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
 
     val showBottomBar = rememberSaveable { mutableStateOf(true) }
-
     when (navBackStackEntry?.destination?.route) {
         (CarbonScreens.Design.route) -> {
             showBottomBar.value = false
@@ -157,7 +157,7 @@ fun NavGraphBuilder.mainFlowGraph(
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
         composable(CarbonScreens.Home.route) {
             CarbonAndroidTheme {
-                MainScreen(scaffoldState)
+                MainScreen(scaffoldState, navController)
             }
         }
         composable(CarbonScreens.Settings.route) {
@@ -251,6 +251,14 @@ fun NavGraphBuilder.mainFlowGraph(
                 LicenseScreen()
             }
         }
+        composable("${CarbonScreens.GitInfo.route}/{sha}") {
+            val sha = it.arguments?.getString("sha")
+            sha?.let {
+                CarbonAndroidTheme {
+                    GitCardInfoScreen(sha = it)
+                }
+            }
+        }
     }
 }
 
@@ -263,6 +271,7 @@ fun appBarTitle(navBackStackEntry: NavBackStackEntry?): String {
         CarbonScreens.Lumen.route -> CarbonScreens.Lumen.title
         CarbonScreens.Scanner.route -> CarbonScreens.Scanner.title
         CarbonScreens.License.route -> CarbonScreens.License.title
+        "${CarbonScreens.GitInfo.route}/{sha}" -> CarbonScreens.GitInfo.title
         else -> ""
     }
 }

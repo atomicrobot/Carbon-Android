@@ -1,0 +1,26 @@
+{
+  "sha": "test_sha",
+  "commit": {
+    "author": {
+      "name": "test author",
+      "email": "example@example.com",
+      "date": "2023-01-11T18:06:20Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2023-01-11T18:06:20Z"
+    },
+    "message": "test message",
+    "tree": {
+      "sha": "429a55ba62f6a7ba778b0b8b870546fee5b7d534",
+      "url": "test/tree/url"
+    },
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\nTest Signature\n-----END PGP SIGNATURE-----\n",
+      "payload": "test payload"
+    }
+  }
+}

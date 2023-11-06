@@ -17,6 +17,7 @@
 
     <string name="error_unexpected">We encountered an unexpected error. Please try again.</string>
     <string name="error_get_commits_error">Could not find the requested commits</string>
+    <string name="error_get_detailed_commit_error">Could not find the requested commit</string>
     <string name="title_activity_compose_start">ComposeStartActivity</string>
     <string name="title_activity_delete_me">DeleteMeActivity</string>
     <string name="title_activity_lumen_design">LumenDesignActivity</string>
@@ -83,6 +84,8 @@
     <string name="lumen_title">Lumen</string>
     <string name="scanner_title">Scanner</string>
 
+    <string name="git_info">Additional Commit Details</string>
+
     <string name="licenses_error">An error occurred while trying to read the licenses file</string>
 
     <string name="about">About</string>
@@ -132,4 +135,7 @@
         <item>12 hours</item>
         <item>All Day</item>
     </string-array>
+
+
+    <string name="cont_desc_info_icon">More Info</string>
 </resources>

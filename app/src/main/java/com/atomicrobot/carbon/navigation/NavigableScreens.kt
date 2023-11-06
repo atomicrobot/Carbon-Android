@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.DesignServices
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -107,6 +108,12 @@ sealed class CarbonScreens(val title: String, val route: String, val iconData: S
         "About HTML",
         "abouthtml",
         ScreenIcon(Icons.Filled.Home, R.string.cont_desc_about_icon) // Icon value here is a filler
+    )
+
+    object GitInfo : CarbonScreens(
+        "Card Details",
+        "gitInfo",
+        ScreenIcon(Icons.Filled.Info, R.string.git_info)
     )
 }
 
