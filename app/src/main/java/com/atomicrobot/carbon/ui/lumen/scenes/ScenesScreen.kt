@@ -34,11 +34,11 @@ import com.atomicrobot.carbon.data.lumen.dto.LumenScene
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndRoomName
 import com.atomicrobot.carbon.ui.lumen.LumenIndeterminateIndicator
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ScenesScreen(
-    viewModel: ScenesViewModel = getViewModel(),
+    viewModel: ScenesViewModel = koinViewModel(),
     onSceneSelected: (Long) -> Unit = {}
 ) {
     LaunchedEffect(Unit) { viewModel.getScenes() }
@@ -113,7 +113,7 @@ fun ScenesList(
 
 @Composable
 fun AddSceneTask(
-    viewModel: ScenesViewModel = getViewModel(),
+    viewModel: ScenesViewModel = koinViewModel(),
     onDismissed: () -> Unit
 ) {
     val coroutine = rememberCoroutineScope()
@@ -131,7 +131,7 @@ fun AddSceneTask(
 @Composable
 fun EditSceneTask(
     sceneId: Long,
-    viewModel: ScenesViewModel = getViewModel(),
+    viewModel: ScenesViewModel = koinViewModel(),
     onDismissed: () -> Unit
 ) {
     val coroutine = rememberCoroutineScope()
@@ -153,7 +153,7 @@ fun EditSceneTask(
 @Composable
 fun SceneDetailsList(
     sceneId: Long,
-    viewModel: ScenesViewModel = getViewModel(),
+    viewModel: ScenesViewModel = koinViewModel(),
     newScene: Boolean = false,
     showLoadingScrim: Boolean = true,
     onDismissed: () -> Unit = {},

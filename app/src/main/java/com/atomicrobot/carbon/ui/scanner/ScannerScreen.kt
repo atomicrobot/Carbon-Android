@@ -73,7 +73,7 @@ import com.atomicrobot.carbon.ui.permission.RequestPermission
 import com.atomicrobot.carbon.util.LocalActivity
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.flow.StateFlow
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 import kotlin.math.max
 import kotlin.math.min
 
@@ -83,7 +83,7 @@ fun ScannerScreen(
     onBarcodeSelected: (Barcode) -> Unit = {}
 ) {
     val cameraPermRationale = stringResource(id = R.string.camera_perm_rationale)
-    val viewModel: ScannerViewModel = getViewModel()
+    val viewModel: ScannerViewModel = koinViewModel()
     RequestPermission(
         permission = Manifest.permission.CAMERA,
         onShowRationale =
@@ -119,7 +119,7 @@ fun ScannerScreen(
 @Composable
 fun CameraContent(
     modifier: Modifier = Modifier,
-    viewModel: ScannerViewModel = getViewModel(),
+    viewModel: ScannerViewModel = koinViewModel(),
     onBarcodeSelected: (Barcode) -> Unit = {}
 ) {
     val cameraPermissionState by viewModel.cameraPermissionState.collectAsState()

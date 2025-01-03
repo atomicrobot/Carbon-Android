@@ -42,11 +42,11 @@ import com.atomicrobot.carbon.data.api.github.model.Commit
 import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.ui.components.AtomicRobotUI
 import com.atomicrobot.carbon.ui.components.BottomBar
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen(scaffoldState: ScaffoldState, navController: NavController) {
-    val viewModel: MainViewModel = getViewModel()
+    val viewModel: MainViewModel = koinViewModel()
     val screenState by viewModel.uiState.collectAsState()
     val context: Context = LocalContext.current
 

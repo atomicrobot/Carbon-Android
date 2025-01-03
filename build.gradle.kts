@@ -22,6 +22,7 @@ buildscript {
 plugins {
     java
     idea
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29" apply false
 }
 
 idea {

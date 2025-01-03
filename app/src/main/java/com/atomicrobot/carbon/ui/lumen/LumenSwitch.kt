@@ -20,7 +20,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.SwitchColors
 import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -134,7 +134,7 @@ fun BoxScope.LumenSwitchImp(
             .offset { IntOffset(0, -thumbValue.value.roundToInt()) }
             .indication(
                 interactionSource = interactionSource,
-                indication = rememberRipple(bounded = false, radius = ThumbRippleRadius)
+                indication = ripple(bounded = false, radius = ThumbRippleRadius)
             )
             .requiredSize(DefaultThumbDiameter)
             .shadow(properties.thumbElevation, CircleShape, clip = false)

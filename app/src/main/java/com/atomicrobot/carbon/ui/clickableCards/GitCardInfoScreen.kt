@@ -25,14 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.data.api.github.model.DetailedCommit
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun GitCardInfoScreen(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     sha: String
 ) {
-    val viewModel: GitCardInfoViewModel = getViewModel()
+    val viewModel: GitCardInfoViewModel = koinViewModel()
     val screenState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = true) {

@@ -26,13 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import io.noties.markwon.Markwon
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LicenseScreen(
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-    val viewModel: LicenseViewModel = getViewModel()
+    val viewModel: LicenseViewModel = koinViewModel()
     val screenState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(true) {
