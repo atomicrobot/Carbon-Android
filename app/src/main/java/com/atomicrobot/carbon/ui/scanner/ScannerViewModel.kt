@@ -32,24 +32,24 @@ class ScannerViewModel(private val app: Application) :
     ImageAnalysis.Analyzer,
     OnSuccessListener<List<Barcode>>,
     OnFailureListener {
-
     data class BarcodeAnalysisState(
         val sourceImageWidth: Int = 0,
         val sourceImageHeight: Int = 0,
         val isFlipped: Boolean = false,
-        val barcode: Barcode? = null
+        val barcode: Barcode? = null,
     ) {
         val hasBarcodes: Boolean = barcode != null
     }
 
-    private var options: BarcodeScannerOptions = BarcodeScannerOptions.Builder()
-        .setBarcodeFormats(
-            Barcode.FORMAT_EAN_13,
-            Barcode.FORMAT_UPC_E,
-            Barcode.FORMAT_CODE_128,
-            Barcode.FORMAT_QR_CODE
-        )
-        .build()
+    private var options: BarcodeScannerOptions =
+        BarcodeScannerOptions.Builder()
+            .setBarcodeFormats(
+                Barcode.FORMAT_EAN_13,
+                Barcode.FORMAT_UPC_E,
+                Barcode.FORMAT_CODE_128,
+                Barcode.FORMAT_QR_CODE,
+            )
+            .build()
 
     private val barcodeScanner: BarcodeScanner = BarcodeScanning.getClient(options)
 
@@ -64,7 +64,7 @@ class ScannerViewModel(private val app: Application) :
             CameraSelector
                 .Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build()
+                .build(),
         )
 
     private val _barcodeStateState = MutableStateFlow(BarcodeAnalysisState())
@@ -99,7 +99,7 @@ class ScannerViewModel(private val app: Application) :
                         } catch (e: InterruptedException) {
                         }
                     },
-                    ContextCompat.getMainExecutor(app)
+                    ContextCompat.getMainExecutor(app),
                 )
             }
             return _cameraProviderLiveData!!
@@ -116,15 +116,18 @@ class ScannerViewModel(private val app: Application) :
         // when the camera permission is denied
         _cameraProviderLiveData?.value?.let {
             viewModelScope.launch {
-                val newCameraSelector = if (isFrontFacing)
-                    CameraSelector.LENS_FACING_BACK
-                else
-                    CameraSelector.LENS_FACING_FRONT
+                val newCameraSelector =
+                    if (isFrontFacing) {
+                        CameraSelector.LENS_FACING_BACK
+                    } else {
+                        CameraSelector.LENS_FACING_FRONT
+                    }
 
-                val cameraSelector = CameraSelector
-                    .Builder()
-                    .requireLensFacing(newCameraSelector)
-                    .build()
+                val cameraSelector =
+                    CameraSelector
+                        .Builder()
+                        .requireLensFacing(newCameraSelector)
+                        .build()
                 if (!it.hasCamera(cameraSelector)) {
                     // Indicate to the user that the selected camera isn't available
                     return@launch
@@ -153,11 +156,12 @@ class ScannerViewModel(private val app: Application) :
                 _barcodeStateState.value.sourceImageHeight != imageHeight ||
                 _barcodeStateState.value.isFlipped != isFrontFacing
             ) {
-                _barcodeStateState.value = _barcodeStateState.value.copy(
-                    sourceImageWidth = imageWidth,
-                    sourceImageHeight = imageHeight,
-                    isFlipped = isFrontFacing
-                )
+                _barcodeStateState.value =
+                    _barcodeStateState.value.copy(
+                        sourceImageWidth = imageWidth,
+                        sourceImageHeight = imageHeight,
+                        isFlipped = isFrontFacing,
+                    )
             }
             // Pass the image to the barcode scanner then assign a completion listener that will
             // close the image proxy to free-up the analysis pipeline
@@ -175,25 +179,26 @@ class ScannerViewModel(private val app: Application) :
         val newBarcode = barcodes.firstOrNull()
         // We wanna apply some heuristics to improve the UX in case the operator has a shacking
         // handle and the barcode detector can make a accurate read every single frame
-        _barcodeStateState.value = if (currentBarcode == null && newBarcode != null) {
-            _barcodeStateState.value.copy(barcode = newBarcode)
-        } else if (newBarcode?.rawValue != currentBarcode?.rawValue) {
-            val now = SystemClock.elapsedRealtime()
-            if (_elapsedMillis == Long.MAX_VALUE) {
-                _elapsedMillis = now
-            }
-            if ((now - _elapsedMillis) >= MAX_BARCODE_DWELL_MS) {
-                _elapsedMillis = Long.MAX_VALUE
+        _barcodeStateState.value =
+            if (currentBarcode == null && newBarcode != null) {
                 _barcodeStateState.value.copy(barcode = newBarcode)
+            } else if (newBarcode?.rawValue != currentBarcode?.rawValue) {
+                val now = SystemClock.elapsedRealtime()
+                if (_elapsedMillis == Long.MAX_VALUE) {
+                    _elapsedMillis = now
+                }
+                if ((now - _elapsedMillis) >= MAX_BARCODE_DWELL_MS) {
+                    _elapsedMillis = Long.MAX_VALUE
+                    _barcodeStateState.value.copy(barcode = newBarcode)
+                } else {
+                    // Keep returning the current barcode
+                    _barcodeStateState.value.copy(barcode = newBarcode)
+                }
             } else {
-                // Keep returning the current barcode
+                _elapsedMillis = Long.MAX_VALUE
+                // Keep updating the state to have an accurate bounding box
                 _barcodeStateState.value.copy(barcode = newBarcode)
             }
-        } else {
-            _elapsedMillis = Long.MAX_VALUE
-            // Keep updating the state to have an accurate bounding box
-            _barcodeStateState.value.copy(barcode = newBarcode)
-        }
     }
 
     override fun onFailure(exception: Exception) {

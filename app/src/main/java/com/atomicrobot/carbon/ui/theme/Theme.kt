@@ -9,19 +9,20 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = pink700,
-    onPrimary = Color.White,
-    onSurface = Color.White
-)
+private val DarkColorPalette =
+    darkColors(
+        primary = Purple200,
+        primaryVariant = Purple700,
+        secondary = pink700,
+        onPrimary = Color.White,
+        onSurface = Color.White,
+    )
 
-private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = pink700
-
+private val LightColorPalette =
+    lightColors(
+        primary = Purple500,
+        primaryVariant = Purple700,
+        secondary = pink700,
         /* Other default colors to override
         background = Color.White,
         surface = Color.White,
@@ -29,13 +30,13 @@ private val LightColorPalette = lightColors(
         onSecondary = Color.Black,
         onBackground = Color.Black,
         onSurface = Color.Black,
-        */
-)
+         */
+    )
 
 @Composable
 fun CarbonAndroidTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     /**
      * This will allow you to address the system bars (status bar and navigation bar) without
@@ -49,59 +50,66 @@ fun CarbonAndroidTheme(
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setSystemBarsColor(
-            color = Neutron
+            color = Neutron,
         )
     }
 
     MaterialTheme(
-        colors = if (darkTheme) { DarkColorPalette } else { LightColorPalette },
+        colors =
+            if (darkTheme) {
+                DarkColorPalette
+            } else {
+                LightColorPalette
+            },
         typography = Typography,
-        content = content
+        content = content,
     )
 }
 
-private val CarbonShellPalette = lightColors(
-    primary = Neutron,
-    onPrimary = White100,
-    surface = Mono800,
-    onSurface = White100
-)
+private val CarbonShellPalette =
+    lightColors(
+        primary = Neutron,
+        onPrimary = White100,
+        surface = Mono800,
+        onSurface = White100,
+    )
 
 @Composable
 fun CarbonShellTheme(
     @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setSystemBarsColor(
-            color = Neutron
+            color = Neutron,
         )
     }
 
     MaterialTheme(
         colors = CarbonShellPalette,
         shapes = carbonShellShapes,
-        content = content
+        content = content,
     )
 }
 
-private val LumenColorPalette = lightColors(
-    primary = DarkBlurple,
-    onPrimary = White100,
-    surface = DarkBlurple,
-    onSurface = White100
-)
+private val LumenColorPalette =
+    lightColors(
+        primary = DarkBlurple,
+        onPrimary = White100,
+        surface = DarkBlurple,
+        onSurface = White100,
+    )
 
 @Composable
 fun LumenTheme(
     @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setSystemBarsColor(
-            color = Neutron
+            color = Neutron,
         )
     }
 
@@ -109,32 +117,33 @@ fun LumenTheme(
         colors = LumenColorPalette,
         typography = LumenTypography,
         shapes = carbonShapes,
-        content = content
+        content = content,
     )
 }
 
-private val ScannerColorPalette = lightColors(
-    primary = Neutron,
-    onPrimary = White100,
-    surface = Mono800,
-    onSurface = White100
-)
+private val ScannerColorPalette =
+    lightColors(
+        primary = Neutron,
+        onPrimary = White100,
+        surface = Mono800,
+        onSurface = White100,
+    )
 
 @Composable
 fun ScannerTheme(
     @Suppress("UNUSED_PARAMETER") darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setSystemBarsColor(
-            color = Neutron
+            color = Neutron,
         )
     }
 
     MaterialTheme(
         colors = ScannerColorPalette,
         typography = Typography,
-        content = content
+        content = content,
     )
 }

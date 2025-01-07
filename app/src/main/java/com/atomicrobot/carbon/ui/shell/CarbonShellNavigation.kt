@@ -49,21 +49,21 @@ import com.atomicrobot.carbon.ui.theme.carbonShapes
 
 sealed class CarbonShellProject(
     val projectName: Int,
-    val projectImageRes: Int
+    val projectImageRes: Int,
 ) {
     object CarbonAndroid : CarbonShellProject(
         projectName = R.string.main_app_title,
-        projectImageRes = R.drawable.carbon_android_logo
+        projectImageRes = R.drawable.carbon_android_logo,
     )
 
     object Lumen : CarbonShellProject(
         projectName = R.string.lumen_title,
-        projectImageRes = R.drawable.lumen_project
+        projectImageRes = R.drawable.lumen_project,
     )
 
     object Scanner : CarbonShellProject(
         projectName = R.string.scanner_title,
-        projectImageRes = R.drawable.ic_baseline_qr_code_scanner
+        projectImageRes = R.drawable.ic_baseline_qr_code_scanner,
     )
 }
 
@@ -90,26 +90,28 @@ fun CarbonShellMainContent(navController: NavController) {
         scaffoldState = rememberScaffoldState(),
         topBar = {},
         bottomBar = {},
-        backgroundColor = Color.Transparent
+        backgroundColor = Color.Transparent,
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .background(Neutron)
+            modifier =
+                Modifier
+                    .background(Neutron),
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(vertical = 20.dp, horizontal = 16.dp)
+                contentPadding = PaddingValues(vertical = 20.dp, horizontal = 16.dp),
             ) {
-
                 item {
                     CarbonShellBackLayerLogo(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(vertical = 40.dp)
+                        modifier =
+                            Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(vertical = 40.dp),
                     )
                 }
 
@@ -135,14 +137,14 @@ fun CarbonShellBackLayerLogo(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy((-20).dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         FadingCarbonShellLogo()
         Text(
             text = stringResource(id = R.string.carbon_shell_title),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h4,
-            color = White100
+            color = White100,
         )
     }
 }
@@ -152,51 +154,57 @@ fun FadingCarbonShellLogo() {
     Image(
         painter = painterResource(id = R.drawable.carbon_android_logo),
         contentDescription = stringResource(id = R.string.cont_desc_shell),
-        modifier = Modifier
-            // Workaround to enable alpha compositing
-            .graphicsLayer { alpha = 0.99f }
-            .drawWithContent {
-                drawContent()
-                // Draw a Vertical gradient over the image fading from solid to translucent
-                drawRect(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black,
-                            Color.Transparent
-                        ),
-                        startY = 0.5f
-                    ),
-                    blendMode = BlendMode.DstIn
-                )
-            }
+        modifier =
+            Modifier
+                // Workaround to enable alpha compositing
+                .graphicsLayer { alpha = 0.99f }
+                .drawWithContent {
+                    drawContent()
+                    // Draw a Vertical gradient over the image fading from solid to translucent
+                    drawRect(
+                        brush =
+                            Brush.verticalGradient(
+                                colors =
+                                    listOf(
+                                        Color.Black,
+                                        Color.Transparent,
+                                    ),
+                                startY = 0.5f,
+                            ),
+                        blendMode = BlendMode.DstIn,
+                    )
+                },
     )
 }
 
 @Composable
 fun ShellProjectItem(
     project: CarbonShellProject,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Surface(
-        modifier = Modifier
-            .clickable { onClick() }
+        modifier =
+            Modifier
+                .clickable { onClick() }
 //            .clip(MaterialTheme.shapes.medium),
-            .clip(RoundedCornerShape(25.dp)),
-        color = Mono800
+                .clip(RoundedCornerShape(25.dp)),
+        color = Mono800,
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp)
+            modifier =
+                Modifier
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
             Image(
                 painter = painterResource(id = project.projectImageRes),
                 contentDescription = "",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(2.160F)
-                    .clip(carbonShapes.large)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(2.160F)
+                        .clip(carbonShapes.large),
             )
             Text(text = stringResource(id = project.projectName))
         }
@@ -225,7 +233,7 @@ fun CarbonShellBackLayerLogoPreview() {
 @Preview
 @Composable
 fun ShellProjectItemPreview(
-    @PreviewParameter(provider = ProjectItemParamPreview::class) projectItem: CarbonShellProject
+    @PreviewParameter(provider = ProjectItemParamPreview::class) projectItem: CarbonShellProject,
 ) {
     CarbonShellTheme {
         ShellProjectItem(projectItem)

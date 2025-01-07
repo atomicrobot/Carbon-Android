@@ -11,7 +11,7 @@ data class SceneModel(
     val duration: String = "",
     val roomId: Long = 0,
     val roomName: String = "",
-    val lights: List<Long> = emptyList()
+    val lights: List<Long> = emptyList(),
 ) {
     constructor(scene: SceneAndLightsWithRoom) : this(
         sceneId = scene.sceneId,
@@ -20,7 +20,7 @@ data class SceneModel(
         duration = scene.duration,
         roomId = scene.roomId,
         roomName = scene.roomName,
-        lights = scene.lights.map { it.lightId }
+        lights = scene.lights.map { it.lightId },
     )
 }
 
@@ -31,6 +31,6 @@ fun SceneModel.toLumenScene(): LumenScene {
         containingRoomId = this.roomId,
         duration = this.duration,
         active = this.active,
-        favorite = this.favorite
+        favorite = this.favorite,
     )
 }

@@ -48,8 +48,9 @@ import com.atomicrobot.carbon.ui.theme.Orange
 @Composable
 fun AboutScreen() {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
         AboutBody()
     }
@@ -71,7 +72,7 @@ fun AboutBody() {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.feature_about),
-                    contentDescription = "placeholder image"
+                    contentDescription = "placeholder image",
                 )
             }
 
@@ -79,80 +80,81 @@ fun AboutBody() {
 
             Text(
                 text = stringResource(R.string.about_flexible_solutions),
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.h4,
             )
             Text(
                 text = stringResource(R.string.about_flexible_solutions_sub_header),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.h5,
             )
             Text(
                 text = stringResource(R.string.about_flexible_solutions_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = Neutron,
-                        shape = RoundedCornerShape(
-                            topStart = 0.dp,
-                            topEnd = 5.dp,
-                            bottomStart = 0.dp,
-                            bottomEnd = 5.dp
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = Neutron,
+                            shape =
+                                RoundedCornerShape(
+                                    topStart = 0.dp,
+                                    topEnd = 5.dp,
+                                    bottomStart = 0.dp,
+                                    bottomEnd = 5.dp,
+                                ),
                         )
-                    )
-                    .height(IntrinsicSize.Max)
+                        .height(IntrinsicSize.Max),
             ) {
-
                 Box {
                     Column(
-                        modifier = Modifier.width(50.dp)
+                        modifier = Modifier.width(50.dp),
                     ) {
                         StripedLineShape()
                     }
 
                     Column(
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                        modifier =
+                            Modifier
+                                .align(Alignment.Center)
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-
                         Text(
                             text = stringResource(R.string.about_ten_plus),
                             style = MaterialTheme.typography.h3,
-                            color = Color.White
+                            color = Color.White,
                         )
                         Text(
                             text = stringResource(R.string.about_years_in_business),
                             style = MaterialTheme.typography.body1,
-                            color = Color.White
+                            color = Color.White,
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = stringResource(R.string.about_forty_plus),
                             style = MaterialTheme.typography.h3,
-                            color = Color.White
+                            color = Color.White,
                         )
                         Text(
                             text = stringResource(R.string.about_employees),
                             style = MaterialTheme.typography.body1,
-                            color = Color.White
+                            color = Color.White,
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = stringResource(R.string.about_one_hundred_fifty_plus),
                             style = MaterialTheme.typography.h3,
-                            color = Color.White
+                            color = Color.White,
                         )
                         Text(
                             text = stringResource(R.string.about_apps_shipped),
                             style = MaterialTheme.typography.body1,
-                            color = Color.White
+                            color = Color.White,
                         )
                     }
                 }
@@ -162,103 +164,110 @@ fun AboutBody() {
 
             Text(
                 text = stringResource(R.string.about_what_makes_us_different),
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.h4,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.about_what_makes_us_different_craft).toUpperCase(
-                    Locale.current
-                ),
-                style = MaterialTheme.typography.h5
+                text =
+                    stringResource(R.string.about_what_makes_us_different_craft).toUpperCase(
+                        Locale.current,
+                    ),
+                style = MaterialTheme.typography.h5,
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_craft_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.about_what_makes_us_different_collaboration).toUpperCase(
-                    Locale.current
-                ),
-                style = MaterialTheme.typography.h5
+                text =
+                    stringResource(R.string.about_what_makes_us_different_collaboration).toUpperCase(
+                        Locale.current,
+                    ),
+                style = MaterialTheme.typography.h5,
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_collaboration_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.about_what_makes_us_different_curiosity).toUpperCase(
-                    Locale.current
-                ),
-                style = MaterialTheme.typography.h5
+                text =
+                    stringResource(R.string.about_what_makes_us_different_curiosity).toUpperCase(
+                        Locale.current,
+                    ),
+                style = MaterialTheme.typography.h5,
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_curiosity_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.about_what_makes_us_different_impact).toUpperCase(
-                    Locale.current
-                ),
-                style = MaterialTheme.typography.h5
+                text =
+                    stringResource(R.string.about_what_makes_us_different_impact).toUpperCase(
+                        Locale.current,
+                    ),
+                style = MaterialTheme.typography.h5,
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_impact_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.about_what_makes_us_different_partnership).toUpperCase(
-                    Locale.current
-                ),
-                style = MaterialTheme.typography.h5
+                text =
+                    stringResource(R.string.about_what_makes_us_different_partnership).toUpperCase(
+                        Locale.current,
+                    ),
+                style = MaterialTheme.typography.h5,
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_partnership_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.about_what_makes_us_different_transparency).toUpperCase(
-                    Locale.current
-                ),
-                style = MaterialTheme.typography.h5
+                text =
+                    stringResource(R.string.about_what_makes_us_different_transparency).toUpperCase(
+                        Locale.current,
+                    ),
+                style = MaterialTheme.typography.h5,
             )
             Text(
                 text = stringResource(R.string.about_what_makes_us_different_transparency_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = Neutron,
-                        shape = RoundedCornerShape(5.dp)
-                    )
-                    .height(IntrinsicSize.Max)
-                    .padding(8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = Neutron,
+                            shape = RoundedCornerShape(5.dp),
+                        )
+                        .height(IntrinsicSize.Max)
+                        .padding(8.dp),
             ) {
                 Text(
                     text = stringResource(R.string.about_our_success),
                     style = MaterialTheme.typography.h4,
-                    color = Color.White
+                    color = Color.White,
                 )
 
                 Button(
@@ -267,12 +276,12 @@ fun AboutBody() {
                         val uri = Uri.parse("https://atomicrobot.com/careers/")
                         val intent = Intent(Intent.ACTION_VIEW, uri)
                         context.startActivity(intent)
-                    }
+                    },
                 ) {
                     Text(
                         text = stringResource(R.string.about_join_our_team),
                         style = MaterialTheme.typography.body1,
-                        color = Color.White
+                        color = Color.White,
                     )
                 }
             }
@@ -281,15 +290,15 @@ fun AboutBody() {
 
             Text(
                 text = stringResource(R.string.about_awards_and_recognition),
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.h4,
             )
             Text(
                 text = stringResource(R.string.about_awards_and_recognition_apps_created_for_impact),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.h5,
             )
             Text(
                 text = stringResource(R.string.about_awards_and_recognition_apps_created_for_impact_desc),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1,
             )
         }
     }
@@ -299,24 +308,25 @@ class StripedLine : Shape {
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,
-        density: Density
+        density: Density,
     ): Outline {
-        val path = Path().apply {
-            moveTo(0f, 0f)
-            lineTo(size.width, 0f)
-            lineTo(0f, size.height / 7f)
+        val path =
+            Path().apply {
+                moveTo(0f, 0f)
+                lineTo(size.width, 0f)
+                lineTo(0f, size.height / 7f)
 
-            moveTo(size.width, (size.height / 7f) * 2f)
-            lineTo(0f, (size.height / 7f) * 3f)
-            lineTo(0f, (size.height / 7f) * 5f)
-            lineTo(size.width, (size.height / 7f) * 4f)
+                moveTo(size.width, (size.height / 7f) * 2f)
+                lineTo(0f, (size.height / 7f) * 3f)
+                lineTo(0f, (size.height / 7f) * 5f)
+                lineTo(size.width, (size.height / 7f) * 4f)
 
-            moveTo(size.width, (size.height / 7f) * 6f)
-            lineTo(0f, size.height)
-            lineTo(size.width, size.height)
+                moveTo(size.width, (size.height / 7f) * 6f)
+                lineTo(0f, size.height)
+                lineTo(size.width, size.height)
 
-            close()
-        }
+                close()
+            }
         return Outline.Generic(path)
     }
 }
@@ -326,9 +336,10 @@ class StripedLine : Shape {
 fun StripedLineShape(modifier: Modifier = Modifier) {
     val shape = StripedLine()
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clip(shape)
-            .background(Orange)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .clip(shape)
+                .background(Orange),
     )
 }

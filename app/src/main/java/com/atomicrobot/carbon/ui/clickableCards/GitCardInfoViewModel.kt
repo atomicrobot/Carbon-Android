@@ -18,22 +18,30 @@ class GitCardInfoViewModel(
 ) : ViewModel() {
     sealed class GitHubResponse {
         object Loading : GitHubResponse()
+
         class Result(val commit: DetailedCommit?) : GitHubResponse()
+
         class Error(val message: String) : GitHubResponse()
     }
+
     data class GitInfoScreenUiState(
-        val username: String = MainViewModel.DEFAULT_USERNAME, // NON-NLS
-        val repository: String = MainViewModel.DEFAULT_REPO, // NON-NLS
+        // NON-NLS
+        val username: String = MainViewModel.DEFAULT_USERNAME,
+        // NON-NLS
+        val repository: String = MainViewModel.DEFAULT_REPO,
         val detailedCommitState: GitHubResponse = GitHubResponse.Result(null),
     )
+
     private val _uiState = MutableStateFlow(GitInfoScreenUiState())
     val uiState: StateFlow<GitInfoScreenUiState>
         get() = _uiState
+
     fun fetchDetailedCommit(sha: String) {
         // Update the UI state to indicate that we are loading.
-        _uiState.value = _uiState.value.copy(
-            detailedCommitState = GitHubResponse.Loading
-        )
+        _uiState.value =
+            _uiState.value.copy(
+                detailedCommitState = GitHubResponse.Loading,
+            )
         viewModelScope.launch {
             try {
                 /*Passes in active users credentials to interactor which will make use an API
@@ -42,21 +50,24 @@ class GitCardInfoViewModel(
                     GitHubInteractor.LoadDetailedCommitRequest(
                         uiState.value.username,
                         uiState.value.repository,
-                        sha
-                    )
+                        sha,
+                    ),
                 ).let {
-                    _uiState.value = _uiState.value.copy(
-                        detailedCommitState = GitHubResponse.Result(it.commit)
-                    )
+                    _uiState.value =
+                        _uiState.value.copy(
+                            detailedCommitState = GitHubResponse.Result(it.commit),
+                        )
                 }
             } catch (error: Exception) {
                 Timber.e(error)
-                _uiState.value = _uiState.value.copy(
-                    detailedCommitState = GitHubResponse.Error(
-                        error.message
-                            ?: app.getString(R.string.error_unexpected)
+                _uiState.value =
+                    _uiState.value.copy(
+                        detailedCommitState =
+                            GitHubResponse.Error(
+                                error.message
+                                    ?: app.getString(R.string.error_unexpected),
+                            ),
                     )
-                )
             }
         }
     }

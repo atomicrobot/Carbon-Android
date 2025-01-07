@@ -15,15 +15,16 @@ import androidx.compose.runtime.remember
 internal fun <T : Any> rememberSwipeableStateFor(
     value: T,
     onValueChange: (T) -> Unit,
-    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec
+    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
 ): SwipeableState<T> {
-    val swipeableState = remember {
-        SwipeableState(
-            initialValue = value,
-            animationSpec = animationSpec,
-            confirmStateChange = { true }
-        )
-    }
+    val swipeableState =
+        remember {
+            SwipeableState(
+                initialValue = value,
+                animationSpec = animationSpec,
+                confirmStateChange = { true },
+            )
+        }
     val forceAnimationCheck = remember { mutableStateOf(false) }
     LaunchedEffect(value, forceAnimationCheck.value) {
         if (value != swipeableState.currentValue) {

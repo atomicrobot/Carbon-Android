@@ -35,143 +35,148 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 
 class Modules {
-
     companion object {
         private const val LOADING_DELAY_MS: Long = 500
         private const val DISK_CACHE_SIZE = 50 * 1024 * 1024 // 50MB
         const val BASE_URL = "baseUrl"
     }
 
-    val appModules = module {
-        single {
-            Settings(context = androidContext())
+    val appModules =
+        module {
+            single {
+                Settings(context = androidContext())
+            }
+
+            single(named("loading_delay_ms")) {
+                LOADING_DELAY_MS
+            }
         }
 
-        single(named("loading_delay_ms")) {
-            LOADING_DELAY_MS
-        }
-    }
+    val dataModules =
+        module {
+            single {
+                val cacheDir = File(androidApplication().cacheDir, "http")
+                Cache(cacheDir, DISK_CACHE_SIZE.toLong())
+            }
 
-    val dataModules = module {
-        single {
-            val cacheDir = File(androidApplication().cacheDir, "http")
-            Cache(cacheDir, DISK_CACHE_SIZE.toLong())
-        }
+            single {
+                provideOkHttpClient(
+                    cache = get(),
+                    securityModifier = get(),
+                )
+            }
 
-        single {
-            provideOkHttpClient(
-                cache = get(),
-                securityModifier = get()
-            )
-        }
+            single(named(BASE_URL)) {
+                provideBaseUrl(
+                    settings = get(),
+                )
+            }
 
-        single(named(BASE_URL)) {
-            provideBaseUrl(
-                settings = get()
-            )
-        }
+            single {
+                val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+                MoshiConverterFactory.create(moshi) as Converter.Factory
+            }
 
-        single {
-            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-            MoshiConverterFactory.create(moshi) as Converter.Factory
-        }
+            single {
+                provideRetrofit(
+                    client = get(),
+                    baseUrl = get(qualifier = named(BASE_URL)),
+                    converterFactory = get(),
+                )
+            }
 
-        single {
-            provideRetrofit(
-                client = get(),
-                baseUrl = get(qualifier = named(BASE_URL)),
-                converterFactory = get()
-            )
-        }
+            single {
+                provideGitHubApiService(
+                    retrofit = get(),
+                )
+            }
 
-        single {
-            provideGitHubApiService(
-                retrofit = get()
-            )
-        }
+            single {
+                provideDetailedGitHubApiService(
+                    retrofit = get(),
+                )
+            }
 
-        single {
-            provideDetailedGitHubApiService(
-                retrofit = get()
-            )
-        }
+            single {
+                provideGitHubService(
+                    context = androidContext(),
+                    api = get(),
+                    api2 = get(),
+                )
+            }
 
-        single {
-            provideGitHubService(
-                context = androidContext(),
-                api = get(),
-                api2 = get()
-            )
-        }
+            single {
+                DeepLinkInteractor()
+            }
 
-        single {
-            DeepLinkInteractor()
-        }
+            // Initialize the Lumen database and Dao'
+            single {
+                provideLumenDatabase(androidContext())
+            }
 
-        // Initialize the Lumen database and Dao'
-        single {
-            provideLumenDatabase(androidContext())
-        }
+            single {
+                provideSceneDao(get())
+            }
 
-        single {
-            provideSceneDao(get())
-        }
+            single {
+                provideLightDao(get())
+            }
 
-        single {
-            provideLightDao(get())
-        }
+            single {
+                provideRoomDao(get())
+            }
 
-        single {
-            provideRoomDao(get())
-        }
-
-        single {
-            provideSceneLightDao(get())
-        }
-    }
-
-    val viewModelModules = module {
-        viewModel {
-            SplashViewModel(
-                deepLinkInteractor = get()
-            )
+            single {
+                provideSceneLightDao(get())
+            }
         }
 
-        viewModel {
-            MainViewModel(
-                app = androidApplication(),
-                gitHubInteractor = get(),
-                loadingDelayMs = get(qualifier = named("loading_delay_ms"))
-            )
-        }
+    val viewModelModules =
+        module {
+            viewModel {
+                SplashViewModel(
+                    deepLinkInteractor = get(),
+                )
+            }
 
-        viewModel {
-            ScannerViewModel(app = androidApplication())
-        }
+            viewModel {
+                MainViewModel(
+                    app = androidApplication(),
+                    gitHubInteractor = get(),
+                    loadingDelayMs = get(qualifier = named("loading_delay_ms")),
+                )
+            }
 
-        viewModel {
-            ScenesViewModel(
-                sceneDao = get(),
-                lightDao = get(),
-                roomDao = get(),
-                sceneLightDao = get()
-            )
-        }
+            viewModel {
+                ScannerViewModel(app = androidApplication())
+            }
 
-        viewModel {
-            LicenseViewModel(app = androidApplication())
-        }
+            viewModel {
+                ScenesViewModel(
+                    sceneDao = get(),
+                    lightDao = get(),
+                    roomDao = get(),
+                    sceneLightDao = get(),
+                )
+            }
 
-        viewModel {
-            GitCardInfoViewModel(
-                app = androidApplication(),
-                gitHubInteractor = get(),
-            )
+            viewModel {
+                LicenseViewModel(app = androidApplication())
+            }
+
+            viewModel {
+                GitCardInfoViewModel(
+                    app = androidApplication(),
+                    gitHubInteractor = get(),
+                )
+            }
         }
-    }
 }
 
-private fun provideOkHttpClient(cache: Cache, securityModifier: OkHttpSecurityModifier): OkHttpClient {
+private fun provideOkHttpClient(
+    cache: Cache,
+    securityModifier: OkHttpSecurityModifier,
+): OkHttpClient {
     val builder = OkHttpClient.Builder()
     if (BuildConfig.DEBUG) {
         builder.cache(cache).apply {
@@ -194,7 +199,7 @@ private fun provideBaseUrl(settings: Settings): String {
 fun provideRetrofit(
     client: OkHttpClient,
     baseUrl: String,
-    converterFactory: Converter.Factory
+    converterFactory: Converter.Factory,
 ): Retrofit {
     return Retrofit.Builder()
         .client(client)
@@ -216,30 +221,20 @@ fun provideDetailedGitHubApiService(retrofit: Retrofit): DetailedGitHubApiServic
 private fun provideGitHubService(
     context: Context,
     api: GitHubApiService,
-    api2: DetailedGitHubApiService
+    api2: DetailedGitHubApiService,
 ): GitHubInteractor {
     return GitHubInteractor(context, api, api2)
 }
 
-private fun provideLumenDatabase(
-    context: Context
-): LumenDatabase = LumenDatabase.getInstance(context = context)
+private fun provideLumenDatabase(context: Context): LumenDatabase = LumenDatabase.getInstance(context = context)
 
-private fun provideSceneDao(
-    database: LumenDatabase
-): SceneDao = database.sceneDao()
+private fun provideSceneDao(database: LumenDatabase): SceneDao = database.sceneDao()
 
-private fun provideLightDao(
-    database: LumenDatabase
-): LightDao = database.lightDao()
+private fun provideLightDao(database: LumenDatabase): LightDao = database.lightDao()
 
-private fun provideRoomDao(
-    database: LumenDatabase
-): RoomDao = database.roomDao()
+private fun provideRoomDao(database: LumenDatabase): RoomDao = database.roomDao()
 
-private fun provideSceneLightDao(
-    database: LumenDatabase
-): SceneLightDao = database.sceneLightDao()
+private fun provideSceneLightDao(database: LumenDatabase): SceneLightDao = database.sceneLightDao()
 
 interface OkHttpSecurityModifier {
     fun apply(builder: OkHttpClient.Builder)

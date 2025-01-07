@@ -69,7 +69,7 @@ import com.atomicrobot.carbon.util.LumenScreensPreviewProvider
 fun TopBar(
     title: String = CarbonScreens.Home.title,
     buttonIcon: ImageVector = Icons.Filled.Menu,
-    onButtonClicked: () -> Unit = {}
+    onButtonClicked: () -> Unit = {},
 ) = TopAppBar(backgroundColor = Neutron, contentColor = Color.White, contentPadding = PaddingValues(end = 12.dp)) {
     IconButton(onClick = { onButtonClicked() }) {
         Icon(imageVector = buttonIcon, contentDescription = "")
@@ -79,7 +79,7 @@ fun TopBar(
         painter = painterResource(id = R.drawable.carbon_android_logo),
         contentDescription = stringResource(id = R.string.cont_desc_shell),
         modifier = Modifier.size(24.dp),
-        tint = Color.Unspecified
+        tint = Color.Unspecified,
     )
 }
 
@@ -90,23 +90,25 @@ fun TopBar(title: String = "") = TopAppBar(title = { Text(text = title) })
 fun BottomBar(
     modifier: Modifier = Modifier,
     buildVersion: String,
-    fingerprint: String
+    fingerprint: String,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colors.onSurface
-                    .copy(alpha = TextFieldDefaults.BackgroundOpacity)
-            )
-            .padding(16.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    color =
+                        MaterialTheme.colors.onSurface
+                            .copy(alpha = TextFieldDefaults.BackgroundOpacity),
+                )
+                .padding(16.dp),
     ) {
         Text(
             text = stringResource(id = R.string.version_format, buildVersion),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Text(
-            text = stringResource(id = R.string.fingerprint_format, fingerprint)
+            text = stringResource(id = R.string.fingerprint_format, fingerprint),
         )
     }
 }
@@ -116,7 +118,7 @@ fun BottomBar(
 fun BottomBarPreview() {
     BottomBar(
         buildVersion = BuildConfig.VERSION_NAME,
-        fingerprint = BuildConfig.VERSION_FINGERPRINT
+        fingerprint = BuildConfig.VERSION_FINGERPRINT,
     )
 }
 
@@ -125,26 +127,27 @@ fun BottomBarPreview() {
 fun BottomNavigationBar(
     @PreviewParameter(
         AppScreensPreviewProvider::class,
-        limit = 1
+        limit = 1,
     ) destinations: List<CarbonScreens>,
     navController: NavController = rememberNavController(),
-    onDestinationClicked: (CarbonScreens) -> Unit = {}
+    onDestinationClicked: (CarbonScreens) -> Unit = {},
 ) {
     BottomNavigation {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         destinations.forEach { destination ->
             BottomNavigationItem(
-                selected = currentDestination
-                    ?.hierarchy
-                    ?.any { it.route == destination.route } == true,
+                selected =
+                    currentDestination
+                        ?.hierarchy
+                        ?.any { it.route == destination.route } == true,
                 icon = {
                     Icon(
                         destination.iconData.vectorData,
-                        stringResource(id = destination.iconData.iconContentDescription)
+                        stringResource(id = destination.iconData.iconContentDescription),
                     )
                 },
-                onClick = { onDestinationClicked(destination) }
+                onClick = { onDestinationClicked(destination) },
             )
         }
     }
@@ -153,30 +156,31 @@ fun BottomNavigationBar(
 @Composable
 fun CustomSnackbar(
     hostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     SnackbarHost(
         modifier = modifier.fillMaxWidth(),
         hostState = hostState,
         snackbar = { snackbarData: SnackbarData ->
             CustomSnackBarContent(snackbarData.message)
-        }
+        },
     )
 }
 
 @Composable
 private fun CustomSnackBarContent(message: String) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = SnackbarDefaults.backgroundColor
-            )
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(
+                    color = SnackbarDefaults.backgroundColor,
+                )
+                .padding(16.dp),
     ) {
         Text(
             text = message,
-            color = SnackbarDefaults.primaryActionColor
+            color = SnackbarDefaults.primaryActionColor,
         )
     }
 }
@@ -192,16 +196,17 @@ fun CustomSnackBarContentPreview() {
 fun LumenTopAppBar(
     title: String = LumenScreens.Home.title,
     showAction: Boolean = true,
-    bottomSheetTasks: List<LumenBottomSheetTask.LumenMenuTask> = listOf(
-        LumenBottomSheetTask.AddScene,
-    ),
-    onTaskSelected: (LumenBottomSheetTask) -> Unit = {}
+    bottomSheetTasks: List<LumenBottomSheetTask.LumenMenuTask> =
+        listOf(
+            LumenBottomSheetTask.AddScene,
+        ),
+    onTaskSelected: (LumenBottomSheetTask) -> Unit = {},
 ) = TopAppBar(
     title = {
         Text(
             text = title,
             color = Color.White,
-            style = MaterialTheme.typography.ScreenHeading
+            style = MaterialTheme.typography.ScreenHeading,
         )
     },
     actions = {
@@ -209,40 +214,43 @@ fun LumenTopAppBar(
             var expanded by remember { mutableStateOf(false) }
 
             Box(
-                modifier = Modifier
-                    .wrapContentSize(Alignment.TopEnd)
+                modifier =
+                    Modifier
+                        .wrapContentSize(Alignment.TopEnd),
             ) {
                 IconButton(
                     onClick = { expanded = true },
-                    modifier = Modifier
-                        .size(48.dp)
-                        .border(width = 2.dp, color = LightBlurple, shape = CircleShape)
-                        .background(color = Color.White, shape = CircleShape)
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .border(width = 2.dp, color = LightBlurple, shape = CircleShape)
+                            .background(color = Color.White, shape = CircleShape),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_lumen_add),
                         contentDescription = stringResource(id = R.string.cont_desc_scene_add),
-                        colorFilter = ColorFilter.tint(DarkBlurple)
+                        colorFilter = ColorFilter.tint(DarkBlurple),
                     )
                 }
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    modifier = Modifier
-                        .width(450.dp)
-                        .padding(32.dp)
+                    modifier =
+                        Modifier
+                            .width(450.dp)
+                            .padding(32.dp),
                 ) {
                     bottomSheetTasks.forEach {
                         DropdownMenuItem(
                             onClick = {
                                 onTaskSelected(it)
                                 expanded = false
-                            }
+                            },
                         ) {
                             Text(
                                 text = stringResource(id = it.titleRes),
                                 modifier = Modifier.padding(horizontal = 8.dp),
-                                style = MaterialTheme.typography.h3
+                                style = MaterialTheme.typography.h3,
                             )
                         }
                     }
@@ -251,7 +259,7 @@ fun LumenTopAppBar(
         }
     },
     backgroundColor = Color.Transparent,
-    elevation = 0.dp
+    elevation = 0.dp,
 )
 
 @Preview
@@ -259,56 +267,60 @@ fun LumenTopAppBar(
 fun LumenBottomNavigationBar(
     @PreviewParameter(
         LumenScreensPreviewProvider::class,
-        limit = 1
+        limit = 1,
     ) destinations: List<LumenScreens>,
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-    onDestinationClicked: (LumenScreens) -> Unit = {}
+    onDestinationClicked: (LumenScreens) -> Unit = {},
 ) {
     BottomNavigation(modifier = modifier) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         destinations.forEach { destination ->
 
-            val selected = currentDestination
-                ?.hierarchy
-                ?.any { it.route == destination.route } == true
+            val selected =
+                currentDestination
+                    ?.hierarchy
+                    ?.any { it.route == destination.route } == true
 
             BottomNavigationItem(
                 selected = selected,
                 icon = {
                     // Tweak the background if the navigation item is currently selected
                     val backgroundMod =
-                        if (selected)
+                        if (selected) {
                             Modifier
                                 .clip(CircleShape)
                                 .background(LightBlurple)
                                 .border(
                                     width = 2.dp,
-                                    brush = AngledLinearGradient(
-                                        colors = listOf(White25, White15, White3),
-                                        angleInDegrees = 0F,
-                                        useAsCssAngle = false
-                                    ),
-                                    CircleShape
+                                    brush =
+                                        AngledLinearGradient(
+                                            colors = listOf(White25, White15, White3),
+                                            angleInDegrees = 0F,
+                                            useAsCssAngle = false,
+                                        ),
+                                    CircleShape,
                                 )
-                        else
+                        } else {
                             Modifier
                                 .clip(CircleShape)
                                 .background(Color.Transparent)
+                        }
                     Image(
                         painterResource(id = destination.iconResourceId),
                         stringResource(id = destination.iconContentDescription),
-                        modifier = Modifier
-                            .size(48.dp)
-                            .then(backgroundMod)
-                            .padding(
-                                horizontal = 13.67.dp,
-                                vertical = 14.dp
-                            )
+                        modifier =
+                            Modifier
+                                .size(48.dp)
+                                .then(backgroundMod)
+                                .padding(
+                                    horizontal = 13.67.dp,
+                                    vertical = 14.dp,
+                                ),
                     )
                 },
-                onClick = { onDestinationClicked(destination) }
+                onClick = { onDestinationClicked(destination) },
             )
         }
     }

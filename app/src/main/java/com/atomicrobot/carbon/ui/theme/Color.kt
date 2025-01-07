@@ -83,75 +83,86 @@ val PresetSwatches by lazy {
     )
 }
 
-val BlurpleRadial = Brush.radialGradient(
-    colors = listOf(LumenBlue, LumenPurple),
-    center = Offset(Float.POSITIVE_INFINITY, 0.0f)
-)
-
-val CardStrokeLinear = Brush.linearGradient(
-    colors = listOf(White50, White3),
-    start = Offset(0.0f, 0.0f),
-    end = Offset(0.0f, .9897f)
-)
-
-val BrightnessHorizontal = Brush.horizontalGradient(
-    colors = listOf(Black100, White100)
-)
-
-val BrightnessVertical = Brush.verticalGradient(
-    colors = listOf(Black100, White100)
-)
-
-val BrightnessVerticalUp = Brush.horizontalGradient(
-    colors = listOf(White100, Black100)
-)
-
-val PinkishHorizontal = Brush.horizontalGradient(
-    colors = listOf(Pink, White100)
-)
-
-val PinkishVertical = Brush.verticalGradient(
-    colors = listOf(Pink, White100)
-)
-
-val ColorPickerSweep = Brush.sweepGradient(
-    colors = listOf(
-        Color(0xFF4BC5FF),
-        Color(0xFF6785FF),
-        Color(0xFF9470FF),
-        Color(0xFFCE61FF),
-        Color(0xFFFF59EA),
-        Color(0xFFFF54C0),
-        Color(0xFFFF4591),
-        Color(0xFFFF4B61),
-        Color(0xFFFF6F3F),
-        Color(0xFFFFAA53),
-        Color(0xFFFFD865),
-        Color(0xFFFFFD51),
-        Color(0xFFD2FF51),
-        Color(0xFF8DFF6C),
-        Color(0xFF51FFA7),
-        Color(0xFF59FFE7),
+val BlurpleRadial =
+    Brush.radialGradient(
+        colors = listOf(LumenBlue, LumenPurple),
+        center = Offset(Float.POSITIVE_INFINITY, 0.0f),
     )
-)
 
-val ColorPickerVertical = Brush.verticalGradient(
-    colors = listOf(
-        Color(0xFF4BC5FF),
-        Color(0xFF6785FF),
-        Color(0xFF9470FF),
-        Color(0xFFCE61FF),
-        Color(0xFFFF59EA),
-        Color(0xFFFF54C0),
-        Color(0xFFFF4591),
-        Color(0xFFFF4B61),
-        Color(0xFFFF6F3F),
-        Color(0xFFFFAA53),
-        Color(0xFFFFD865),
-        Color(0xFFFFFD51),
-        Color(0xFFD2FF51),
-        Color(0xFF8DFF6C),
-        Color(0xFF51FFA7),
-        Color(0xFF59FFE7),
+val CardStrokeLinear =
+    Brush.linearGradient(
+        colors = listOf(White50, White3),
+        start = Offset(0.0f, 0.0f),
+        end = Offset(0.0f, .9897f),
     )
-)
+
+val BrightnessHorizontal =
+    Brush.horizontalGradient(
+        colors = listOf(Black100, White100),
+    )
+
+val BrightnessVertical =
+    Brush.verticalGradient(
+        colors = listOf(Black100, White100),
+    )
+
+val BrightnessVerticalUp =
+    Brush.horizontalGradient(
+        colors = listOf(White100, Black100),
+    )
+
+val PinkishHorizontal =
+    Brush.horizontalGradient(
+        colors = listOf(Pink, White100),
+    )
+
+val PinkishVertical =
+    Brush.verticalGradient(
+        colors = listOf(Pink, White100),
+    )
+
+val ColorPickerSweep =
+    Brush.sweepGradient(
+        colors =
+            listOf(
+                Color(0xFF4BC5FF),
+                Color(0xFF6785FF),
+                Color(0xFF9470FF),
+                Color(0xFFCE61FF),
+                Color(0xFFFF59EA),
+                Color(0xFFFF54C0),
+                Color(0xFFFF4591),
+                Color(0xFFFF4B61),
+                Color(0xFFFF6F3F),
+                Color(0xFFFFAA53),
+                Color(0xFFFFD865),
+                Color(0xFFFFFD51),
+                Color(0xFFD2FF51),
+                Color(0xFF8DFF6C),
+                Color(0xFF51FFA7),
+                Color(0xFF59FFE7),
+            ),
+    )
+
+val ColorPickerVertical =
+    Brush.verticalGradient(
+        colors =
+            listOf(
+                Color(0xFF4BC5FF),
+                Color(0xFF6785FF),
+                Color(0xFF9470FF),
+                Color(0xFFCE61FF),
+                Color(0xFFFF59EA),
+                Color(0xFFFF54C0),
+                Color(0xFFFF4591),
+                Color(0xFFFF4B61),
+                Color(0xFFFF6F3F),
+                Color(0xFFFFAA53),
+                Color(0xFFFFD865),
+                Color(0xFFFFFD51),
+                Color(0xFFD2FF51),
+                Color(0xFF8DFF6C),
+                Color(0xFF51FFA7),
+                Color(0xFF59FFE7),
+            ),
+    )

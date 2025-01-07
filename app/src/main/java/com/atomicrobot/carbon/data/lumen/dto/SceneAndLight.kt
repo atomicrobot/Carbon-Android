@@ -16,14 +16,14 @@ import androidx.room.Relation
             entity = LumenScene::class,
             parentColumns = arrayOf("sceneId"),
             childColumns = arrayOf("sceneId"),
-            onDelete = CASCADE
+            onDelete = CASCADE,
         ), ForeignKey(
             entity = LumenLight::class,
             parentColumns = arrayOf("lightId"),
             childColumns = arrayOf("lightId"),
-            onDelete = CASCADE
-        )
-    ]
+            onDelete = CASCADE,
+        ),
+    ],
 )
 data class LumenSceneLightCrossRef(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
@@ -35,7 +35,7 @@ data class LumenSceneLightCrossRef(
 
 data class RoomNameAndId(
     val roomId: Long = 0L,
-    val roomName: String = ""
+    val roomName: String = "",
 ) {
     override fun toString(): String = roomName
 }
@@ -48,7 +48,7 @@ data class SceneAndRoomName(
         entityColumn = "roomId",
         entity = LumenRoom::class,
     )
-    val room: RoomNameAndId
+    val room: RoomNameAndId,
 )
 
 data class SceneAndLightsWithRoom(
@@ -57,7 +57,7 @@ data class SceneAndLightsWithRoom(
     @Relation(
         parentColumn = "sceneId",
         entityColumn = "lightId",
-        associateBy = Junction(LumenSceneLightCrossRef::class)
+        associateBy = Junction(LumenSceneLightCrossRef::class),
     )
     val lights: List<LumenLight>,
     @Relation(
@@ -65,18 +65,23 @@ data class SceneAndLightsWithRoom(
         entityColumn = "roomId",
         entity = LumenRoom::class,
     )
-    val room: RoomNameAndId
+    val room: RoomNameAndId,
 ) {
     @Ignore
     val sceneId = scene.sceneId
+
     @Ignore
     val sceneName = scene.sceneName
+
     @Ignore
     val favorite = scene.favorite
+
     @Ignore
     val duration = scene.duration
+
     @Ignore
     val roomId = room.roomId
+
     @Ignore
     val roomName = room.roomName
 }

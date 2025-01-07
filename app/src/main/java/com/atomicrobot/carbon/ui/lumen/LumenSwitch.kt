@@ -55,27 +55,29 @@ fun LumenSwitch(
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     properties: LumenSwitchProperties = LumenSwitchProperties(),
-    colors: SwitchColors = SwitchDefaults.colors()
+    colors: SwitchColors = SwitchDefaults.colors(),
 ) {
     val density = LocalDensity.current
     val minBound = 0f
-    val maxBound = remember {
-        with(density) {
-            (
-                (properties.trackHeight - properties.thumbDiameter) -
-                    properties.thumbPadding * 2
+    val maxBound =
+        remember {
+            with(density) {
+                (
+                    (properties.trackHeight - properties.thumbDiameter) -
+                        properties.thumbPadding * 2
                 ).toPx()
+            }
         }
-    }
     val swipeableState = rememberSwipeableStateFor(checked, onCheckedChange, AnimationSpec)
-    val toggleableModifier = Modifier.toggleable(
-        value = checked,
-        onValueChange = onCheckedChange,
-        enabled = enabled,
-        role = Role.Switch,
-        interactionSource = interactionSource,
-        indication = null
-    )
+    val toggleableModifier =
+        Modifier.toggleable(
+            value = checked,
+            onValueChange = onCheckedChange,
+            enabled = enabled,
+            role = Role.Switch,
+            interactionSource = interactionSource,
+            indication = null,
+        )
 
     Box(
         modifier
@@ -89,16 +91,16 @@ fun LumenSwitch(
                 enabled = enabled,
                 reverseDirection = true,
                 interactionSource = interactionSource,
-                resistance = null
+                resistance = null,
             )
-            .requiredSize(properties.trackWidth, properties.trackHeight)
+            .requiredSize(properties.trackWidth, properties.trackHeight),
     ) {
         LumenSwitchImp(
             checked = checked,
             enabled = enabled,
             colors = colors,
             thumbValue = swipeableState.offset,
-            interactionSource = interactionSource
+            interactionSource = interactionSource,
         )
     }
 }
@@ -116,7 +118,7 @@ fun BoxScope.LumenSwitchImp(
     Canvas(
         Modifier
             .align(Alignment.Center)
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         drawTrack(
             trackColor,
@@ -134,11 +136,11 @@ fun BoxScope.LumenSwitchImp(
             .offset { IntOffset(0, -thumbValue.value.roundToInt()) }
             .indication(
                 interactionSource = interactionSource,
-                indication = ripple(bounded = false, radius = ThumbRippleRadius)
+                indication = ripple(bounded = false, radius = ThumbRippleRadius),
             )
             .requiredSize(DefaultThumbDiameter)
             .shadow(properties.thumbElevation, CircleShape, clip = false)
-            .background(thumbColor, properties.thumbShape)
+            .background(thumbColor, properties.thumbShape),
     )
 }
 
@@ -146,13 +148,13 @@ private fun DrawScope.drawTrack(
     trackColor: Color,
     trackWidth: Float,
     trackHeight: Float,
-    cornerRadius: CornerRadius
+    cornerRadius: CornerRadius,
 ) {
     drawRoundRect(
         trackColor,
         Offset(0F, 0F),
         Size(trackWidth, trackHeight),
-        cornerRadius
+        cornerRadius,
     )
 }
 
@@ -166,40 +168,40 @@ private val DefaultThumbShape = CircleShape
 private val DefaultThumbElevation = 1.dp
 
 class LumenSwitchProperties
-constructor(
-    val trackCornerRadius: CornerRadius = DefaultTrackRadius,
-    val thumbShape: Shape = DefaultThumbShape,
-    val thumbDiameter: Dp = DefaultThumbDiameter,
-    val trackWidth: Dp = DefaultTrackWidth,
-    val trackHeight: Dp = DefaultTrackHeight,
-    val thumbPadding: Dp = DefaultSwitchPadding,
-    val thumbElevation: Dp = DefaultThumbElevation
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    constructor(
+        val trackCornerRadius: CornerRadius = DefaultTrackRadius,
+        val thumbShape: Shape = DefaultThumbShape,
+        val thumbDiameter: Dp = DefaultThumbDiameter,
+        val trackWidth: Dp = DefaultTrackWidth,
+        val trackHeight: Dp = DefaultTrackHeight,
+        val thumbPadding: Dp = DefaultSwitchPadding,
+        val thumbElevation: Dp = DefaultThumbElevation,
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
 
-        other as LumenSwitchProperties
+            other as LumenSwitchProperties
 
-        if (trackCornerRadius != other.trackCornerRadius) return false
-        if (thumbShape != other.thumbShape) return false
-        if (thumbDiameter != other.thumbDiameter) return false
-        if (trackWidth != other.trackWidth) return false
-        if (trackHeight != other.trackHeight) return false
-        if (thumbPadding != other.thumbPadding) return false
-        if (thumbElevation != other.thumbElevation) return false
+            if (trackCornerRadius != other.trackCornerRadius) return false
+            if (thumbShape != other.thumbShape) return false
+            if (thumbDiameter != other.thumbDiameter) return false
+            if (trackWidth != other.trackWidth) return false
+            if (trackHeight != other.trackHeight) return false
+            if (thumbPadding != other.thumbPadding) return false
+            if (thumbElevation != other.thumbElevation) return false
 
-        return true
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = trackCornerRadius.hashCode()
+            result = 31 * result + thumbShape.hashCode()
+            result = 31 * result + thumbDiameter.hashCode()
+            result = 31 * result + trackWidth.hashCode()
+            result = 31 * result + trackHeight.hashCode()
+            result = 31 * result + thumbPadding.hashCode()
+            result = 31 * result + thumbElevation.hashCode()
+            return result
+        }
     }
-
-    override fun hashCode(): Int {
-        var result = trackCornerRadius.hashCode()
-        result = 31 * result + thumbShape.hashCode()
-        result = 31 * result + thumbDiameter.hashCode()
-        result = 31 * result + trackWidth.hashCode()
-        result = 31 * result + trackHeight.hashCode()
-        result = 31 * result + thumbPadding.hashCode()
-        result = 31 * result + thumbElevation.hashCode()
-        return result
-    }
-}

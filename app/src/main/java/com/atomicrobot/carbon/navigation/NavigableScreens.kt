@@ -16,158 +16,166 @@ import com.atomicrobot.carbon.R
 
 data class ScreenIcon(
     val vectorData: ImageVector,
-    @StringRes val iconContentDescription: Int
+    @StringRes val iconContentDescription: Int,
 )
 
 sealed class CarbonScreens(val title: String, val route: String, val iconData: ScreenIcon) {
-
-    object Home : CarbonScreens(
+    data object Home : CarbonScreens(
         "Home",
         "home",
-        ScreenIcon(Icons.Filled.Home, R.string.cont_desc_home_icon)
+        ScreenIcon(Icons.Filled.Home, R.string.cont_desc_home_icon),
     )
 
-    object Settings : CarbonScreens(
+    data object Settings : CarbonScreens(
         "Settings",
         "settings",
-        ScreenIcon(Icons.Filled.Settings, R.string.cont_desc_settings_icon)
+        ScreenIcon(Icons.Filled.Settings, R.string.cont_desc_settings_icon),
     )
 
-    object Design : CarbonScreens(
+    data object Design : CarbonScreens(
         "Design Projects",
         "design",
-        ScreenIcon(Icons.Filled.DesignServices, R.string.cont_desc_view_icon)
+        ScreenIcon(Icons.Filled.DesignServices, R.string.cont_desc_view_icon),
     )
 
-    object DeepLink : CarbonScreens(
+    data object DeepLink : CarbonScreens(
         "Deep Link",
         "deepLinkPath1",
-        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
+        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon),
     ) {
+        const val TEXT_COLOR = "textColor"
+        const val TEXT_SIZE = "textSize"
+        const val PATH = "path"
 
-        const val textColor = "textColor"
-        const val textSize = "textSize"
-        const val path = "path"
+        val routeWithArgs = "deepLink/{$PATH}"
 
-        val routeWithArgs = "deepLink/{$path}"
-
-        val arguments = listOf(
-            navArgument(path) {
-                nullable = false
-                type = NavType.StringType
-            },
-            navArgument(textColor) {
-                nullable = true
-                type = NavType.StringType
-                defaultValue = "black"
-            },
-            navArgument(textSize) {
-                nullable = true
-                type = NavType.StringType
-                defaultValue = "30"
-            }
-        )
-        val deepLink = listOf(
-            navDeepLink {
-                uriPattern = "atomicrobot://carbon-android/{$path}?textSize={$textSize}&textColor={$textColor}"
-            },
-            navDeepLink {
-                uriPattern = "http://www.atomicrobot.com/carbon-android/{$path}?textSize={$textSize}&textColor={$textColor}"
-            },
-            navDeepLink {
-                uriPattern = "https://www.atomicrobot.com/carbon-android/{$path}?textSize={$textSize}&textColor={$textColor}"
-            },
-        )
+        val arguments =
+            listOf(
+                navArgument(PATH) {
+                    nullable = false
+                    type = NavType.StringType
+                },
+                navArgument(TEXT_COLOR) {
+                    nullable = true
+                    type = NavType.StringType
+                    defaultValue = "black"
+                },
+                navArgument(TEXT_SIZE) {
+                    nullable = true
+                    type = NavType.StringType
+                    defaultValue = "30"
+                },
+            )
+        val deepLink =
+            listOf(
+                navDeepLink {
+                    uriPattern = "atomicrobot://carbon-android/{$PATH}?textSize={$TEXT_SIZE}&textColor={$TEXT_COLOR}"
+                },
+                navDeepLink {
+                    uriPattern = "http://www.atomicrobot.com/carbon-android/{$PATH}?textSize={$TEXT_SIZE}&textColor={$TEXT_COLOR}"
+                },
+                navDeepLink {
+                    uriPattern = "https://www.atomicrobot.com/carbon-android/{$PATH}?textSize={$TEXT_SIZE}&textColor={$TEXT_COLOR}"
+                },
+            )
     }
 
-    object Lumen : CarbonScreens(
+    data object Lumen : CarbonScreens(
         "Lumen",
         "lumen",
-        ScreenIcon(Icons.Filled.Home, R.string.lumen_title)
+        ScreenIcon(Icons.Filled.Home, R.string.lumen_title),
     )
 
-    object Scanner : CarbonScreens(
+    data object Scanner : CarbonScreens(
         "Scanner",
         "scanner",
-        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon)
+        ScreenIcon(Icons.Filled.QrCodeScanner, R.string.cont_desc_scanner_icon),
     )
 
-    object License : CarbonScreens(
+    data object License : CarbonScreens(
         "License",
         "license",
-        ScreenIcon(Icons.Filled.Description, R.string.cont_desc_license_icon)
+        ScreenIcon(Icons.Filled.Description, R.string.cont_desc_license_icon),
     )
 
-    object About : CarbonScreens(
+    data object About : CarbonScreens(
         "About",
         "about",
-        ScreenIcon(Icons.Filled.Home, R.string.cont_desc_about_icon) // Icon value here is a filler
+        ScreenIcon(Icons.Filled.Home, R.string.cont_desc_about_icon),
     )
 
-    object AboutHtml : CarbonScreens(
+    data object AboutHtml : CarbonScreens(
         "About HTML",
         "abouthtml",
-        ScreenIcon(Icons.Filled.Home, R.string.cont_desc_about_icon) // Icon value here is a filler
+        ScreenIcon(Icons.Filled.Home, R.string.cont_desc_about_icon),
     )
 
-    object GitInfo : CarbonScreens(
+    data object GitInfo : CarbonScreens(
         "Card Details",
         "gitInfo",
-        ScreenIcon(Icons.Filled.Info, R.string.git_info)
+        ScreenIcon(Icons.Filled.Info, R.string.git_info),
     )
 }
 
-val appScreens = listOf(
-    CarbonScreens.Home,
-    CarbonScreens.Settings,
-    CarbonScreens.Design
-)
+val appScreens =
+    listOf(
+        CarbonScreens.Home,
+        CarbonScreens.Settings,
+        CarbonScreens.Design,
+    )
 
-val drawerScreens = listOf(
-    CarbonScreens.Home,
-    CarbonScreens.Settings,
-    CarbonScreens.Design,
-    CarbonScreens.About,
-    CarbonScreens.AboutHtml,
-    CarbonScreens.License
-)
+val drawerScreens =
+    listOf(
+        CarbonScreens.Home,
+        CarbonScreens.Settings,
+        CarbonScreens.Design,
+        CarbonScreens.About,
+        CarbonScreens.AboutHtml,
+        CarbonScreens.License,
+    )
 
 sealed class LumenScreens(
     val title: String,
     val route: String,
     val iconResourceId: Int,
-    val iconContentDescription: Int
+    val iconContentDescription: Int,
 ) {
-
     val displayTitle: String
         get() = "Lumen -- $title"
 
-    object Home : LumenScreens(
+    data object Home : LumenScreens(
         "Home",
         "home",
         iconResourceId = R.drawable.ic_lumen_home_icon,
-        iconContentDescription = R.string.cont_desc_home_icon
+        iconContentDescription = R.string.cont_desc_home_icon,
     )
-    object Routines : LumenScreens(
-        "Routines", "routines",
+
+    data object Routines : LumenScreens(
+        "Routines",
+        "routines",
         iconResourceId = R.drawable.ic_lumen_schedule_icon,
-        iconContentDescription = R.string.cont_desc_schedule_icon
+        iconContentDescription = R.string.cont_desc_schedule_icon,
     )
-    object Scenes : LumenScreens(
-        "Scenes", "scene",
+
+    data object Scenes : LumenScreens(
+        "Scenes",
+        "scene",
         iconResourceId = R.drawable.ic_lumen_scene_icon,
-        iconContentDescription = R.string.cont_desc_scene_icon
+        iconContentDescription = R.string.cont_desc_scene_icon,
     )
-    object Settings : LumenScreens(
-        "Settings", "settings",
+
+    data object Settings : LumenScreens(
+        "Settings",
+        "settings",
         iconResourceId = R.drawable.ic_lumen_meatball,
-        iconContentDescription = R.string.cont_desc_settings_icon
+        iconContentDescription = R.string.cont_desc_settings_icon,
     )
 }
 
-val lumenScreens = listOf(
-    LumenScreens.Home,
-    LumenScreens.Routines,
-    LumenScreens.Scenes,
-    LumenScreens.Settings,
-)
+val lumenScreens =
+    listOf(
+        LumenScreens.Home,
+        LumenScreens.Routines,
+        LumenScreens.Scenes,
+        LumenScreens.Settings,
+    )

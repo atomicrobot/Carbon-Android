@@ -62,15 +62,17 @@ import com.atomicrobot.carbon.ui.theme.White50
 @Composable
 fun SceneSectionHeader(
     headerTitle: String = "Favorites",
-    modifier: Modifier = Modifier
-        .fillMaxWidth()
+    modifier: Modifier =
+        Modifier
+            .fillMaxWidth(),
 ) {
     Text(
         text = headerTitle,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 14.dp),
-        style = MaterialTheme.typography.h2
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(top = 14.dp),
+        style = MaterialTheme.typography.h2,
     )
 }
 
@@ -79,66 +81,75 @@ fun SceneItem(
     scene: LumenScene,
     roomName: String = "",
     modifier: Modifier = Modifier.fillMaxWidth(),
-    onPlayClicked: () -> Unit
+    onPlayClicked: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .border(
-                width = 1.dp,
-                brush = AngledLinearGradient(
-                    colors = listOf(White50, White3),
-                    angleInDegrees = -135F,
-                    useAsCssAngle = true
-                ),
-                shape = MaterialTheme.shapes.medium
-            )
-            .background(
-                color = if (scene.active) CardBackgroundOn else CardBackgroundOff,
-                shape = MaterialTheme.shapes.medium
-            )
-            .padding(16.dp)
+        modifier =
+            modifier
+                .border(
+                    width = 1.dp,
+                    brush =
+                        AngledLinearGradient(
+                            colors = listOf(White50, White3),
+                            angleInDegrees = -135F,
+                            useAsCssAngle = true,
+                        ),
+                    shape = MaterialTheme.shapes.medium,
+                )
+                .background(
+                    color = if (scene.active) CardBackgroundOn else CardBackgroundOff,
+                    shape = MaterialTheme.shapes.medium,
+                )
+                .padding(16.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = scene.sceneName,
-                    modifier = Modifier
-                        .padding(bottom = 8.dp),
-                    style = MaterialTheme.typography.h3
+                    modifier =
+                        Modifier
+                            .padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.h3,
                 )
                 // Since the non-favorite Scenes are enumerated by the containing 'room',
                 // we only need to show the 'room' label for the favorite Scenes
-                if (scene.favorite)
+                if (scene.favorite) {
                     Text(
                         text = roomName,
-                        modifier = Modifier
-                            .padding(bottom = 4.dp),
-                        style = MaterialTheme.typography.body1
+                        modifier =
+                            Modifier
+                                .padding(bottom = 4.dp),
+                        style = MaterialTheme.typography.body1,
                     )
+                }
 
                 LeftAlignedIconText(
                     scene.duration,
                     painterResource(
-                        id = if (scene.active)
-                            R.drawable.ic_lumen_timer
-                        else
-                            R.drawable.ic_lumen_clock
+                        id =
+                            if (scene.active) {
+                                R.drawable.ic_lumen_timer
+                            } else {
+                                R.drawable.ic_lumen_clock
+                            },
                     ),
-                    stringResource(id = R.string.duration)
+                    stringResource(id = R.string.duration),
                 )
             }
-            val imgData = if (scene.active)
-                Pair(R.drawable.ic_lumen_stop_filled, R.string.cont_desc_stop_scene)
-            else
-                Pair(R.drawable.ic_lumen_play, R.string.cont_desc_start_scene)
+            val imgData =
+                if (scene.active) {
+                    Pair(R.drawable.ic_lumen_stop_filled, R.string.cont_desc_stop_scene)
+                } else {
+                    Pair(R.drawable.ic_lumen_play, R.string.cont_desc_start_scene)
+                }
 
             IconButton(onClick = onPlayClicked) {
                 Icon(
                     painter = painterResource(imgData.first),
                     contentDescription = stringResource(imgData.second),
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(48.dp),
                 )
             }
         }
@@ -155,23 +166,26 @@ fun DualActionRow(
     onAction: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
             onClick = { onAction() },
-            modifier = Modifier
-                .clip(CircleShape),
-            enabled = painter != null
+            modifier =
+                Modifier
+                    .clip(CircleShape),
+            enabled = painter != null,
         ) {
             painter?.let {
                 Icon(
                     painter = painter,
                     contentDescription = actionContextDescription,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .padding(8.dp)
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .padding(8.dp),
                 )
             }
         }
@@ -180,18 +194,19 @@ fun DualActionRow(
             text = title,
             modifier = Modifier.weight(1F),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h2
+            style = MaterialTheme.typography.h2,
         )
 
         IconButton(
             onClick = { onClose() },
-            modifier = Modifier
-                .clip(CircleShape),
+            modifier =
+                Modifier
+                    .clip(CircleShape),
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_lumen_close),
                 contentDescription = stringResource(id = R.string.cont_desc_menu_close),
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
             )
         }
     }
@@ -203,34 +218,37 @@ fun TaskLabeledTextField(
     text: String,
     placeholder: String? = null,
     modifier: Modifier = Modifier,
-    onTextChanged: (String) -> Unit = {}
+    onTextChanged: (String) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         Text(
             text = label,
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
-            style = MaterialTheme.typography.body2
+            modifier =
+                Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+            style = MaterialTheme.typography.body2,
         )
 
         TextField(
             value = text,
             onValueChange = onTextChanged,
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    brush = AngledLinearGradient(
-                        colors = listOf(White50, White3),
-                        angleInDegrees = -135F,
-                        useAsCssAngle = true
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.dp,
+                        brush =
+                            AngledLinearGradient(
+                                colors = listOf(White50, White3),
+                                angleInDegrees = -135F,
+                                useAsCssAngle = true,
+                            ),
+                        shape = MaterialTheme.shapes.medium,
+                    )
+                    .background(
+                        color = CardBackgroundOn,
+                        shape = MaterialTheme.shapes.medium,
                     ),
-                    shape = MaterialTheme.shapes.medium
-                )
-                .background(
-                    color = CardBackgroundOn,
-                    shape = MaterialTheme.shapes.medium
-                ),
             textStyle = MaterialTheme.typography.body1,
             placeholder = {
                 placeholder?.let {
@@ -238,14 +256,15 @@ fun TaskLabeledTextField(
                 }
             },
             singleLine = true,
-            colors = TextFieldDefaults.textFieldColors(
-                cursorColor = White100,
-                disabledTextColor = Color.Transparent,
-                backgroundColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            )
+            colors =
+                TextFieldDefaults.textFieldColors(
+                    cursorColor = White100,
+                    disabledTextColor = Color.Transparent,
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                ),
         )
     }
 }
@@ -259,40 +278,43 @@ fun TaskLabeledDropDownMenu(
     placeholder: String? = null,
     initiallyExpanded: Boolean = false,
     modifier: Modifier = Modifier,
-    onOptionSelected: (Any) -> Unit = {}
+    onOptionSelected: (Any) -> Unit = {},
 ) {
     var expanded by remember { mutableStateOf(initiallyExpanded) }
 
     Column(modifier = modifier) {
         Text(
             text = label,
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
-            style = MaterialTheme.typography.body2
+            modifier =
+                Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+            style = MaterialTheme.typography.body2,
         )
 
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
+            onExpandedChange = { expanded = !expanded },
         ) {
             TextField(
                 value = selectedOption.toString(),
                 onValueChange = { /* Intentionally left blank */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(
-                        width = 1.dp,
-                        brush = AngledLinearGradient(
-                            colors = listOf(White50, White3),
-                            angleInDegrees = -135F,
-                            useAsCssAngle = true
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .border(
+                            width = 1.dp,
+                            brush =
+                                AngledLinearGradient(
+                                    colors = listOf(White50, White3),
+                                    angleInDegrees = -135F,
+                                    useAsCssAngle = true,
+                                ),
+                            shape = MaterialTheme.shapes.medium,
+                        )
+                        .background(
+                            color = CardBackgroundOn,
+                            shape = MaterialTheme.shapes.medium,
                         ),
-                        shape = MaterialTheme.shapes.medium
-                    )
-                    .background(
-                        color = CardBackgroundOn,
-                        shape = MaterialTheme.shapes.medium
-                    ),
                 readOnly = true,
                 textStyle = MaterialTheme.typography.body1,
                 placeholder = {
@@ -302,31 +324,32 @@ fun TaskLabeledDropDownMenu(
                 },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 singleLine = true,
-                colors = ExposedDropdownMenuDefaults.textFieldColors(
-                    cursorColor = White100,
-                    disabledTextColor = Color.Transparent,
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                )
+                colors =
+                    ExposedDropdownMenuDefaults.textFieldColors(
+                        cursorColor = White100,
+                        disabledTextColor = Color.Transparent,
+                        backgroundColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                    ),
             )
 
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier.exposedDropdownSize()
+                modifier = Modifier.exposedDropdownSize(),
             ) {
                 options.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
                             onOptionSelected(selectionOption)
                             expanded = false
-                        }
+                        },
                     ) {
                         Text(
                             text = selectionOption.toString(),
-                            style = MaterialTheme.typography.body1
+                            style = MaterialTheme.typography.body1,
                         )
                     }
                 }
@@ -338,13 +361,13 @@ fun TaskLabeledDropDownMenu(
 @Composable
 fun TaskPlaceHolderText(
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Text(
         text = text,
         modifier = modifier,
         color = White50,
-        style = MaterialTheme.typography.body1
+        style = MaterialTheme.typography.body1,
     )
 }
 
@@ -353,22 +376,23 @@ fun LeftAlignedIconText(
     text: String,
     iconPainter: Painter,
     iconContentDescription: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = iconPainter,
             contentDescription = iconContentDescription,
-            modifier = Modifier
-                .size(24.dp)
-                .padding(end = 8.dp)
+            modifier =
+                Modifier
+                    .size(24.dp)
+                    .padding(end = 8.dp),
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.body1
+            style = MaterialTheme.typography.body1,
         )
     }
 }
@@ -378,53 +402,58 @@ fun SceneLightItem(
     device: LumenLight,
     checked: Boolean = false,
     modifier: Modifier = Modifier.fillMaxWidth(),
-    onLightChecked: (Long, Boolean) -> Unit
+    onLightChecked: (Long, Boolean) -> Unit,
 ) {
     ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                width = 1.dp,
-                brush = AngledLinearGradient(
-                    colors = listOf(White50, White3),
-                    angleInDegrees = -135F,
-                    useAsCssAngle = true
-                ),
-                shape = MaterialTheme.shapes.medium
-            )
-            .background(
-                color = if (device.active) CardBackgroundOn else CardBackgroundOff,
-                shape = MaterialTheme.shapes.medium
-            )
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    brush =
+                        AngledLinearGradient(
+                            colors = listOf(White50, White3),
+                            angleInDegrees = -135F,
+                            useAsCssAngle = true,
+                        ),
+                    shape = MaterialTheme.shapes.medium,
+                )
+                .background(
+                    color = if (device.active) CardBackgroundOn else CardBackgroundOff,
+                    shape = MaterialTheme.shapes.medium,
+                )
+                .padding(16.dp),
     ) {
         val (lightImage, lightLabel, brightnessLabel, tempLabel, timeLabel, switch) = createRefs()
 
         Image(
             painter = painterResource(id = R.drawable.ic_lumen_color_bulb),
             contentDescription = stringResource(id = R.string.cont_desc_scene_light),
-            modifier = Modifier
-                .size(35.dp)
-                .constrainAs(lightImage) {
-                    start.linkTo(parent.start)
-                    top.linkTo(parent.top)
-                }
+            modifier =
+                Modifier
+                    .size(35.dp)
+                    .constrainAs(lightImage) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                    },
         )
         LumenSwitch(
             checked = checked,
             onCheckedChange = { onLightChecked(device.lightId, it) },
-            modifier = Modifier
-                .size(32.dp, 56.dp)
-                .constrainAs(switch) {
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = White100,
-                checkedTrackColor = BrightBlurple,
-                uncheckedThumbColor = White100,
-                uncheckedTrackColor = MediumBlurple,
-            )
+            modifier =
+                Modifier
+                    .size(32.dp, 56.dp)
+                    .constrainAs(switch) {
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                    },
+            colors =
+                SwitchDefaults.colors(
+                    checkedThumbColor = White100,
+                    checkedTrackColor = BrightBlurple,
+                    uncheckedThumbColor = White100,
+                    uncheckedTrackColor = MediumBlurple,
+                ),
         )
 
         Text(
@@ -434,43 +463,46 @@ fun SceneLightItem(
                 end.linkTo(switch.start, 8.dp)
                 width = Dimension.fillToConstraints
             },
-            style = MaterialTheme.typography.h4
+            style = MaterialTheme.typography.h4,
         )
 
         LeftAlignedIconText(
             text = "${ (100 * device.brightness).toInt() }%",
             iconPainter = painterResource(id = R.drawable.ic_lumen_bright_sun),
             iconContentDescription = stringResource(id = R.string.cont_desc_light_bright),
-            modifier = Modifier.constrainAs(tempLabel) {
-                start.linkTo(lightLabel.start)
-                top.linkTo(lightLabel.bottom)
-                end.linkTo(lightLabel.end)
-                width = Dimension.fillToConstraints
-            }
+            modifier =
+                Modifier.constrainAs(tempLabel) {
+                    start.linkTo(lightLabel.start)
+                    top.linkTo(lightLabel.bottom)
+                    end.linkTo(lightLabel.end)
+                    width = Dimension.fillToConstraints
+                },
         )
 
         LeftAlignedIconText(
             text = device.colorTemperature,
             iconPainter = painterResource(id = R.drawable.ic_lumen_color),
             iconContentDescription = stringResource(id = R.string.cont_desc_light_temp),
-            modifier = Modifier.constrainAs(brightnessLabel) {
-                start.linkTo(lightLabel.start)
-                top.linkTo(tempLabel.bottom)
-                end.linkTo(lightLabel.end)
-                width = Dimension.fillToConstraints
-            }
+            modifier =
+                Modifier.constrainAs(brightnessLabel) {
+                    start.linkTo(lightLabel.start)
+                    top.linkTo(tempLabel.bottom)
+                    end.linkTo(lightLabel.end)
+                    width = Dimension.fillToConstraints
+                },
         )
 
         LeftAlignedIconText(
             text = "Time",
             iconPainter = painterResource(id = R.drawable.ic_lumen_clock),
             iconContentDescription = stringResource(id = R.string.cont_desc_light_duration),
-            modifier = Modifier.constrainAs(timeLabel) {
-                start.linkTo(lightLabel.start)
-                top.linkTo(brightnessLabel.bottom)
-                end.linkTo(lightLabel.end)
-                width = Dimension.fillToConstraints
-            }
+            modifier =
+                Modifier.constrainAs(timeLabel) {
+                    start.linkTo(lightLabel.start)
+                    top.linkTo(brightnessLabel.bottom)
+                    end.linkTo(lightLabel.end)
+                    width = Dimension.fillToConstraints
+                },
         )
     }
 }
@@ -478,18 +510,19 @@ fun SceneLightItem(
 @Composable
 fun SceneTaskDescription() {
     Column(
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 40.dp)
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 40.dp)
+                .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(id = R.string.moody_title),
-            style = MaterialTheme.typography.h3
+            style = MaterialTheme.typography.h3,
         )
         Text(
             text = stringResource(id = R.string.moody_description),
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body2,
         )
     }
 }
@@ -498,31 +531,37 @@ fun SceneTaskDescription() {
 fun SceneTaskFavoriteButton(
     favorite: Boolean,
     modifier: Modifier = Modifier,
-    onFavorite: (Boolean) -> Unit = {}
+    onFavorite: (Boolean) -> Unit = {},
 ) {
     Button(
         onClick = { onFavorite(!favorite) },
-        modifier = modifier
-            .clip(shape = MaterialTheme.shapes.medium)
-            .border(
-                width = 1.dp,
-                color = LightBlurple,
-                shape = MaterialTheme.shapes.medium
-            ),
+        modifier =
+            modifier
+                .clip(shape = MaterialTheme.shapes.medium)
+                .border(
+                    width = 1.dp,
+                    color = LightBlurple,
+                    shape = MaterialTheme.shapes.medium,
+                ),
         elevation = null,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
     ) {
         Icon(
-            painter = painterResource(
-                id = if (favorite) R.drawable.ic_lumen_heart_filled
-                else R.drawable.ic_lumen_heart
-            ),
-            contentDescription = stringResource(id = R.string.cont_desc_scene_favorite)
+            painter =
+                painterResource(
+                    id =
+                        if (favorite) {
+                            R.drawable.ic_lumen_heart_filled
+                        } else {
+                            R.drawable.ic_lumen_heart
+                        },
+                ),
+            contentDescription = stringResource(id = R.string.cont_desc_scene_favorite),
         )
         Text(
             text = stringResource(id = R.string.add_favorite),
             modifier = Modifier.padding(horizontal = 6.dp),
-            style = MaterialTheme.typography.h2
+            style = MaterialTheme.typography.h2,
         )
     }
 }
@@ -531,36 +570,38 @@ fun SceneTaskFavoriteButton(
 fun SceneDetailsButton(
     newScene: Boolean,
     enabled: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Button(
         onClick = { onClick() },
-        modifier = Modifier
-            .border(
-                width = 1.dp,
-                brush = AngledLinearGradient(
-                    colors = listOf(White50, White3),
-                    angleInDegrees = -135F,
-                    useAsCssAngle = true
-                ),
-                shape = MaterialTheme.shapes.small
-            )
-            .fillMaxWidth()
-            .height(68.dp),
-
+        modifier =
+            Modifier
+                .border(
+                    width = 1.dp,
+                    brush =
+                        AngledLinearGradient(
+                            colors = listOf(White50, White3),
+                            angleInDegrees = -135F,
+                            useAsCssAngle = true,
+                        ),
+                    shape = MaterialTheme.shapes.small,
+                )
+                .fillMaxWidth()
+                .height(68.dp),
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(backgroundColor = LightBlurple)
+        colors = ButtonDefaults.buttonColors(backgroundColor = LightBlurple),
     ) {
-
-        val buttonText = if (newScene)
-            stringResource(id = R.string.create_scene)
-        else
-            stringResource(id = R.string.save_scene)
+        val buttonText =
+            if (newScene) {
+                stringResource(id = R.string.create_scene)
+            } else {
+                stringResource(id = R.string.save_scene)
+            }
 
         Text(
             text = buttonText,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h2
+            style = MaterialTheme.typography.h2,
         )
     }
 }
@@ -568,13 +609,13 @@ fun SceneDetailsButton(
 fun LazyListScope.sceneDetailsFields(
     scene: SceneModel,
     rooms: List<RoomNameAndId> = emptyList(),
-    onSceneUpdated: (SceneModel) -> Unit
+    onSceneUpdated: (SceneModel) -> Unit,
 ) {
     item {
         TaskLabeledTextField(
             label = stringResource(id = R.string.name),
             text = scene.name,
-            placeholder = stringResource(id = R.string.name_room)
+            placeholder = stringResource(id = R.string.name_room),
         ) {
             onSceneUpdated(scene.copy(name = it))
         }
@@ -585,7 +626,7 @@ fun LazyListScope.sceneDetailsFields(
             options = rooms,
             selectedOption = scene.roomName,
             placeholder = stringResource(id = R.string.select_room),
-            modifier = Modifier.padding(vertical = 16.dp)
+            modifier = Modifier.padding(vertical = 16.dp),
         ) {
             val room = (it as RoomNameAndId)
             onSceneUpdated(scene.copy(roomId = room.roomId, roomName = room.roomName))
@@ -593,8 +634,9 @@ fun LazyListScope.sceneDetailsFields(
 
         TaskLabeledDropDownMenu(
             label = stringResource(id = R.string.duration),
-            options = stringArrayResource(id = R.array.durations)
-                .toList(),
+            options =
+                stringArrayResource(id = R.array.durations)
+                    .toList(),
             selectedOption = scene.duration,
             placeholder = stringResource(id = R.string.select_durations),
         ) {
@@ -605,16 +647,17 @@ fun LazyListScope.sceneDetailsFields(
 
 fun LazyListScope.sceneDetailsFavoriteButton(
     scene: SceneModel,
-    onFavorite: (Boolean) -> Unit
+    onFavorite: (Boolean) -> Unit,
 ) {
     item {
         SceneTaskFavoriteButton(
             favorite = scene.favorite,
-            modifier = Modifier
-                .padding(horizontal = 40.dp, vertical = 16.dp)
-                .fillMaxWidth()
-                .height(56.dp),
-            onFavorite = onFavorite
+            modifier =
+                Modifier
+                    .padding(horizontal = 40.dp, vertical = 16.dp)
+                    .fillMaxWidth()
+                    .height(56.dp),
+            onFavorite = onFavorite,
         )
     }
 }
@@ -622,7 +665,7 @@ fun LazyListScope.sceneDetailsFavoriteButton(
 fun LazyListScope.sceneDetailsLights(
     allLights: List<LumenLight>,
     sceneLights: List<Long>,
-    onLightChecked: (Long, Boolean) -> Unit
+    onLightChecked: (Long, Boolean) -> Unit,
 ) {
     // light section header
     item { SceneSectionHeader(stringResource(id = R.string.lights)) }
@@ -631,7 +674,7 @@ fun LazyListScope.sceneDetailsLights(
         SceneLightItem(
             it,
             checked = sceneLights.contains(it.lightId),
-            onLightChecked = onLightChecked
+            onLightChecked = onLightChecked,
         )
     }
 }

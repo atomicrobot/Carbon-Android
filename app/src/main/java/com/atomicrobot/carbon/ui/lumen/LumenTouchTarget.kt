@@ -17,9 +17,8 @@ import kotlin.math.roundToInt
 private class MinimumTouchTargetModifier(val size: DpSize) : LayoutModifier {
     override fun MeasureScope.measure(
         measurable: Measurable,
-        constraints: Constraints
+        constraints: Constraints,
     ): MeasureResult {
-
         val placeable = measurable.measure(constraints)
 
         // Be at least as big as the minimum dimension in both dimensions
@@ -45,21 +44,23 @@ private class MinimumTouchTargetModifier(val size: DpSize) : LayoutModifier {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Suppress("ModifierInspectorInfo")
-internal fun Modifier.minimumTouchTargetSize(): Modifier = composed(
-    inspectorInfo = debugInspectorInfo {
-        name = "minimumTouchTargetSize"
-        // TODO: b/214589635 - surface this information through the layout inspector in a better way
-        //  - for now just add some information to help developers debug what this size represents.
-        properties["README"] = "Adds outer padding to measure at least 48.dp (default) in " +
-            "size to disambiguate touch interactions if the element would measure smaller"
+internal fun Modifier.minimumTouchTargetSize(): Modifier =
+    composed(
+        inspectorInfo =
+            debugInspectorInfo {
+                name = "minimumTouchTargetSize"
+                // TODO: b/214589635 - surface this information through the layout inspector in a better way
+                //  - for now just add some information to help developers debug what this size represents.
+                properties["README"] = "Adds outer padding to measure at least 48.dp (default) in " +
+                    "size to disambiguate touch interactions if the element would measure smaller"
+            },
+    ) {
+        if (LocalMinimumTouchTargetEnforcement.current) {
+            // TODO: consider using a hardcoded value of 48.dp instead to avoid inconsistent UI if the
+            // LocalViewConfiguration changes across devices / during runtime.
+            val size = LocalViewConfiguration.current.minimumTouchTargetSize
+            MinimumTouchTargetModifier(size)
+        } else {
+            Modifier
+        }
     }
-) {
-    if (LocalMinimumTouchTargetEnforcement.current) {
-        // TODO: consider using a hardcoded value of 48.dp instead to avoid inconsistent UI if the
-        // LocalViewConfiguration changes across devices / during runtime.
-        val size = LocalViewConfiguration.current.minimumTouchTargetSize
-        MinimumTouchTargetModifier(size)
-    } else {
-        Modifier
-    }
-}

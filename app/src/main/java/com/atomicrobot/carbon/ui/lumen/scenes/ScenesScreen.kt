@@ -39,7 +39,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ScenesScreen(
     viewModel: ScenesViewModel = koinViewModel(),
-    onSceneSelected: (Long) -> Unit = {}
+    onSceneSelected: (Long) -> Unit = {},
 ) {
     LaunchedEffect(Unit) { viewModel.getScenes() }
     val screenState by viewModel.mainUiState.collectAsState()
@@ -53,7 +53,7 @@ fun ScenesScreen(
             ScenesList(
                 scenes = mainScreenState.scenes,
                 modifier = Modifier.fillMaxSize(),
-                onSceneSelected = onSceneSelected
+                onSceneSelected = onSceneSelected,
             )
         }
     }
@@ -63,19 +63,20 @@ fun ScenesScreen(
 fun ScenesList(
     scenes: List<SceneAndRoomName> = emptyList(),
     modifier: Modifier = Modifier.fillMaxSize(),
-    onSceneSelected: (Long) -> Unit = {}
+    onSceneSelected: (Long) -> Unit = {},
 ) {
     val favorites: List<SceneAndRoomName> = scenes.filter { it.scene.favorite }
     // Filter out the favorite scenes then map them into rooms so can display scenes by the
     // rooms they belong too (alphabetized)
-    val sceneMap: Map<String, List<LumenScene>> = scenes
-        .filter { !it.scene.favorite }
-        .groupBy({ it.room.roomName }) { it.scene }
+    val sceneMap: Map<String, List<LumenScene>> =
+        scenes
+            .filter { !it.scene.favorite }
+            .groupBy({ it.room.roomName }) { it.scene }
 
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         // Hide the favorites section if there are none
         if (favorites.isNotEmpty()) {
@@ -86,9 +87,10 @@ fun ScenesList(
                 SceneItem(
                     scene = it.scene,
                     roomName = it.room.roomName,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onSceneSelected(it.scene.sceneId) }
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { onSceneSelected(it.scene.sceneId) },
                 ) {
                 }
             }
@@ -101,9 +103,10 @@ fun ScenesList(
                 SceneItem(
                     scene = scene,
                     roomName = room,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onSceneSelected(scene.sceneId) }
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { onSceneSelected(scene.sceneId) },
                 ) {
                 }
             }
@@ -114,14 +117,14 @@ fun ScenesList(
 @Composable
 fun AddSceneTask(
     viewModel: ScenesViewModel = koinViewModel(),
-    onDismissed: () -> Unit
+    onDismissed: () -> Unit,
 ) {
     val coroutine = rememberCoroutineScope()
     SceneDetailsList(
         sceneId = 0L,
         viewModel = viewModel,
         newScene = true,
-        onDismissed = onDismissed
+        onDismissed = onDismissed,
     ) {
         coroutine.launch { viewModel.saveOrUpdateScene(it) }
         onDismissed()
@@ -132,7 +135,7 @@ fun AddSceneTask(
 fun EditSceneTask(
     sceneId: Long,
     viewModel: ScenesViewModel = koinViewModel(),
-    onDismissed: () -> Unit
+    onDismissed: () -> Unit,
 ) {
     val coroutine = rememberCoroutineScope()
     SceneDetailsList(
@@ -143,7 +146,7 @@ fun EditSceneTask(
         onDeleteAction = {
             coroutine.launch { viewModel.removeScene(sceneId) }
             onDismissed()
-        }
+        },
     ) {
         coroutine.launch { viewModel.saveOrUpdateScene(it) }
         onDismissed()
@@ -165,17 +168,18 @@ fun SceneDetailsList(
     val screenState by viewModel.sceneDetailsUIState.collectAsState()
     val sceneDetailsState: ScenesViewModel.SceneDetails = screenState.sceneDetailsState
 
-    val rooms = when (sceneDetailsState) {
-        is ScenesViewModel.SceneDetails.Result -> sceneDetailsState.rooms
-        else -> emptyList()
-    }
+    val rooms =
+        when (sceneDetailsState) {
+            is ScenesViewModel.SceneDetails.Result -> sceneDetailsState.rooms
+            else -> emptyList()
+        }
 
     var scene: SceneModel by remember(sceneDetailsState) {
         mutableStateOf(
             when (sceneDetailsState) {
                 is ScenesViewModel.SceneDetails.Result -> SceneModel(sceneDetailsState.scene)
                 else -> SceneModel()
-            }
+            },
         )
     }
 
@@ -186,15 +190,19 @@ fun SceneDetailsList(
     val lightsState by viewModel.sceneDetailsLightUIState.collectAsState()
     val state: ScenesViewModel.SceneDetailsLights = lightsState.sceneDetailsLightState
 
-    val lights = if (state is ScenesViewModel.SceneDetailsLights.Result) state.lights
-    else emptyList()
+    val lights =
+        if (state is ScenesViewModel.SceneDetailsLights.Result) {
+            state.lights
+        } else {
+            emptyList()
+        }
 
     Box(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxSize()) {
             SceneDetailsToolbar(
                 title = scene.name,
                 newScene = newScene,
-                onDismissed = onDismissed
+                onDismissed = onDismissed,
             ) {
                 onDeleteAction(sceneId)
             }
@@ -202,19 +210,24 @@ fun SceneDetailsList(
             if (newScene) SceneTaskDescription()
 
             LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 sceneDetailsFields(scene, rooms = rooms) { scene = it }
 
                 sceneDetailsLights(lights, scene.lights) { lightId, checked ->
                     // Update the scene's list of enabled light Id's...
-                    val updatedLights = if (checked) scene.lights.toMutableList()
-                        .also { it.add(lightId) }
-                    else scene.lights.toMutableList().also { it.remove(lightId) }
+                    val updatedLights =
+                        if (checked) {
+                            scene.lights.toMutableList()
+                                .also { it.add(lightId) }
+                        } else {
+                            scene.lights.toMutableList().also { it.remove(lightId) }
+                        }
                     scene = scene.copy(lights = updatedLights)
                 }
                 sceneDetailsFavoriteButton(scene) { scene = scene.copy(favorite = it) }
@@ -222,18 +235,20 @@ fun SceneDetailsList(
 
             SceneDetailsButton(
                 newScene = newScene,
-                enabled = (scene.roomId != 0L && scene.name.isNotEmpty())
+                enabled = (scene.roomId != 0L && scene.name.isNotEmpty()),
             ) { onSaveScene(scene) }
         }
 
         if (sceneDetailsState is ScenesViewModel.SceneDetails.LoadingDetails) {
-            if (showLoadingScrim)
+            if (showLoadingScrim) {
                 Canvas(Modifier.fillMaxSize()) { drawRect(color = Color.Black, alpha = .15F) }
+            }
 
             LumenIndeterminateIndicator(
-                modifier = Modifier
-                    .size(206.dp)
-                    .align(Alignment.Center)
+                modifier =
+                    Modifier
+                        .size(206.dp)
+                        .align(Alignment.Center),
             )
         }
     }
@@ -250,17 +265,29 @@ fun SceneDetailsToolbar(
     title: String,
     newScene: Boolean = false,
     onDismissed: () -> Unit = {},
-    onAction: () -> Unit = {}
+    onAction: () -> Unit = {},
 ) {
     DualActionRow(
-        title = if (newScene) stringResource(id = R.string.new_scene)
-        else title,
-        painter = if (newScene) null
-        else painterResource(id = R.drawable.ic_lumen_trash),
-        actionContextDescription = if (newScene) null
-        else stringResource(id = R.string.cont_desc_scene_remove),
+        title =
+            if (newScene) {
+                stringResource(id = R.string.new_scene)
+            } else {
+                title
+            },
+        painter =
+            if (newScene) {
+                null
+            } else {
+                painterResource(id = R.drawable.ic_lumen_trash)
+            },
+        actionContextDescription =
+            if (newScene) {
+                null
+            } else {
+                stringResource(id = R.string.cont_desc_scene_remove)
+            },
         modifier = Modifier.fillMaxWidth(),
         onClose = onDismissed,
-        onAction = onAction
+        onAction = onAction,
     )
 }

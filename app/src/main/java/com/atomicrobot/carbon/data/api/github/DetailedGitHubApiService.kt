@@ -10,6 +10,6 @@ interface DetailedGitHubApiService {
     suspend fun detailedCommit(
         @Path("user") user: String,
         @Path("repository") repository: String,
-        @Path("sha") sha: String
+        @Path("sha") sha: String,
     ): Response<DetailedCommit>
 }

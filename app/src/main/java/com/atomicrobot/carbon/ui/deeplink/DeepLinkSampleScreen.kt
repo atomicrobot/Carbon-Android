@@ -12,14 +12,17 @@ import androidx.compose.ui.graphics.Color as ComposeColor
 
 @Preview(widthDp = 360, heightDp = 720)
 @Composable
-fun DeepLinkSampleScreen(textColor: Int = Color.BLACK, textSize: Float = 30f) {
+fun DeepLinkSampleScreen(
+    textColor: Int = Color.BLACK,
+    textSize: Float = 30f,
+) {
     Surface(
-        modifier = Modifier.background(ComposeColor.White)
+        modifier = Modifier.background(ComposeColor.White),
     ) {
         Text(
             "Deep Link Sample Fragment",
             fontSize = textSize.sp,
-            color = ComposeColor(textColor)
+            color = ComposeColor(textColor),
         )
     }
 }

@@ -6,7 +6,6 @@ import com.google.firebase.messaging.RemoteMessage
 import timber.log.Timber
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
-
     override fun onNewToken(token: String) {
         // Note: Copy the token from logcat and paste into Firebase Cloud Messaging console to
         // target this device directly

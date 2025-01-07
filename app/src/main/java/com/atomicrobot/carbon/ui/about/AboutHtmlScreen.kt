@@ -13,10 +13,11 @@ fun AboutHtmlScreen() {
     val mUrl = "https://atomicrobot.com/about/"
     AndroidView(factory = {
         WebView(it).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
+            layoutParams =
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                )
             webViewClient = WebViewClient()
             loadUrl(mUrl)
         }

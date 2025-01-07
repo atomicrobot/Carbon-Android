@@ -34,7 +34,7 @@ interface LightDao {
     @Query(
         "SELECT lumenLight.* FROM lumenLight " +
             "INNER JOIN LumenSceneLightCrossRef sceneLight ON sceneLight.lightId = lumenLight.lightId " +
-            "WHERE sceneLight.sceneId = :sceneId"
+            "WHERE sceneLight.sceneId = :sceneId",
     )
     fun getAllLightsForScene(sceneId: Long): Flow<List<LumenLight>>
 

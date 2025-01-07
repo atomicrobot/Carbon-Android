@@ -13,26 +13,34 @@ import com.atomicrobot.carbon.StartActivity
 import timber.log.Timber
 
 class Notification {
-    fun sendNotification(context: Context, title: String?, body: String?) {
+    fun sendNotification(
+        context: Context,
+        title: String?,
+        body: String?,
+    ) {
         Timber.d("sendNotification")
         val intent = Intent(context, StartActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            context, 0, intent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-        )
+        val pendingIntent =
+            PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE,
+            )
         val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(
-            context,
-            context.getString(R.string.default_notification_channel_id)
-        )
-            .setSmallIcon(R.drawable.ic_bell_notification)
-            .setColor(ContextCompat.getColor(context.applicationContext, R.color.colorAccent))
-            .setContentTitle(title)
-            .setContentText(body)
-            .setAutoCancel(true)
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent)
+        val notificationBuilder: NotificationCompat.Builder =
+            NotificationCompat.Builder(
+                context,
+                context.getString(R.string.default_notification_channel_id),
+            )
+                .setSmallIcon(R.drawable.ic_bell_notification)
+                .setColor(ContextCompat.getColor(context.applicationContext, R.color.colorAccent))
+                .setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent)
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(0, notificationBuilder.build())
