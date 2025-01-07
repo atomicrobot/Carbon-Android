@@ -21,8 +21,8 @@ import retrofit2.Response
 
 @RunWith(AndroidJUnit4::class)
 class GitHubInteractorTest {
-
     @Mock lateinit var api: GitHubApiService
+
     @Mock lateinit var api2: DetailedGitHubApiService
     private lateinit var interactor: GitHubInteractor
 
@@ -43,22 +43,23 @@ class GitHubInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun testLoadCommits() = runBlocking {
-        val mockResponse = Response.success(listOf(stubCommit("test name", "test message")))
-        whenever(api.listCommits(anyString(), anyString())).thenReturn(mockResponse)
+    fun testLoadCommits() =
+        runBlocking {
+            val mockResponse = Response.success(listOf(stubCommit("test name", "test message")))
+            whenever(api.listCommits(anyString(), anyString())).thenReturn(mockResponse)
 
-        val response = interactor.loadCommits(LoadCommitsRequest("user", "repo"))
+            val response = interactor.loadCommits(LoadCommitsRequest("user", "repo"))
 
-        assertTrue(mockResponse.isSuccessful)
-        assertEquals(mockResponse, interactor.checkResponse(mockResponse, ""))
-        assertTrue(response.commits.isNotEmpty())
+            assertTrue(mockResponse.isSuccessful)
+            assertEquals(mockResponse, interactor.checkResponse(mockResponse, ""))
+            assertTrue(response.commits.isNotEmpty())
 
-        assertEquals("user", response.request.user)
-        assertEquals("repo", response.request.repository)
-        assertEquals(1, response.commits.size.toLong())
+            assertEquals("user", response.request.user)
+            assertEquals("repo", response.request.repository)
+            assertEquals(1, response.commits.size.toLong())
 
-        val commit = response.commits[0]
-        assertEquals("test name", commit.author)
-        assertEquals("test message", commit.commitMessage)
-    }
+            val commit = response.commits[0]
+            assertEquals("test name", commit.author)
+            assertEquals("test message", commit.commitMessage)
+        }
 }

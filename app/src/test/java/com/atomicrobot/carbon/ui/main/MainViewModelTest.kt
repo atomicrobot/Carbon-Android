@@ -20,7 +20,6 @@ import org.mockito.MockitoAnnotations
 
 @RunWith(AndroidJUnit4::class)
 class MainViewModelTest {
-
     @Mock private lateinit var githubInteractor: GitHubInteractor
 
     private lateinit var viewModel: MainViewModel
@@ -31,11 +30,12 @@ class MainViewModelTest {
         MockitoAnnotations.openMocks(this)
 
         val app = ApplicationProvider.getApplicationContext<Application>()
-        viewModel = MainViewModel(
-            app,
-            githubInteractor,
-            0
-        )
+        viewModel =
+            MainViewModel(
+                app,
+                githubInteractor,
+                0,
+            )
     }
 
     @After
@@ -45,23 +45,24 @@ class MainViewModelTest {
     }
 
     @Test
-    fun testFetchCommits() = runBlocking {
-        val mockResult = mock(GitHubInteractor.LoadCommitsResponse::class.java)
-        val mockCommit = mock(Commit::class.java)
-        whenever(mockResult.commits).thenReturn(listOf(mockCommit))
-        whenever(githubInteractor.loadCommits(any())).thenReturn(mockResult)
+    fun testFetchCommits() =
+        runBlocking {
+            val mockResult = mock(GitHubInteractor.LoadCommitsResponse::class.java)
+            val mockCommit = mock(Commit::class.java)
+            whenever(mockResult.commits).thenReturn(listOf(mockCommit))
+            whenever(githubInteractor.loadCommits(any())).thenReturn(mockResult)
 
-        assertTrue(
-            (viewModel.uiState.value.commitsState as? MainViewModel.Commits.Result)
-                ?.commits?.isEmpty()
-                ?: false
-        )
-        viewModel.fetchCommits()
-        assertTrue(
-            (viewModel.uiState.value.commitsState as? MainViewModel.Commits.Result)
-                ?.commits?.size == 1
-        )
-    }
+            assertTrue(
+                (viewModel.uiState.value.commitsState as? MainViewModel.Commits.Result)
+                    ?.commits?.isEmpty()
+                    ?: false,
+            )
+            viewModel.fetchCommits()
+            assertTrue(
+                (viewModel.uiState.value.commitsState as? MainViewModel.Commits.Result)
+                    ?.commits?.size == 1,
+            )
+        }
 
     @Test
     fun testGetVersion() {

@@ -10,7 +10,6 @@ import org.koin.core.context.stopKoin
 import org.mockito.Mockito.mock
 
 class SimpleTests {
-
     @After
     fun teardown() {
         stopKoin()
