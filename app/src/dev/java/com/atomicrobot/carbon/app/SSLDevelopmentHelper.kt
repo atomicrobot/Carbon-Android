@@ -11,7 +11,6 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 object SSLDevelopmentHelper {
-
     fun applyTrustAllSettings(builder: OkHttpClient.Builder): OkHttpClient.Builder {
         return builder.apply {
             hostnameVerifier(buildTrustAllHostnameVerifier())
@@ -49,12 +48,18 @@ object SSLDevelopmentHelper {
 
             @SuppressLint("TrustAllX509TrustManager")
             @Throws(CertificateException::class)
-            override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+            override fun checkClientTrusted(
+                chain: Array<X509Certificate>,
+                authType: String,
+            ) {
             }
 
             @SuppressLint("TrustAllX509TrustManager")
             @Throws(CertificateException::class)
-            override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+            override fun checkServerTrusted(
+                chain: Array<X509Certificate>,
+                authType: String,
+            ) {
             }
         }
     }

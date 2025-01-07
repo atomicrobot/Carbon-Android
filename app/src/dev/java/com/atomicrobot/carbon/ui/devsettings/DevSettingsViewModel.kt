@@ -6,9 +6,8 @@ import com.atomicrobot.carbon.app.Settings
 
 class DevSettingsViewModel(
     private val app: Application,
-    private val settings: Settings
+    private val settings: Settings,
 ) : ViewModel() {
-
     fun setupViewModel() {
         baseUrl = settings.baseUrl
         trustAllSSL = settings.trustAllSSL

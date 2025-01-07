@@ -35,11 +35,11 @@ if (project.hasProperty("fingerprint")) {
     versionFingerprint = "\"${project.property("fingerprint")}\""
 }
 
+/*
 /**
  * Could also consider setting up and using system environment variables from the build server
  * Test by adding these system environment variables to your local machine
  */
-/*
 if (System.getenv("BITRISE_BUILD_NUMBER") != null) {
     buildNumber = Integer.parseInt(System.getenv("BITRISE_BUILD_NUMBER"))
 }
@@ -256,56 +256,63 @@ tasks.withType<Test> {
     }
 }
 // would not build as a private val
-val fileFilter = mutableSetOf(
-    "**/R.class",
-    "**/R\$*.class",
-    "**/BuildConfig.*",
-    "**/Manifest*.*",
-    "**/*Test*.*",
-    "android/**/*.*",
-    /* Parcelize */
-    "**/*Creator.*",
-    /* Data binding */
-    "**/*Binding*.*",
-    "**/BR.**",
-    /* Dagger */
-    "**/*_MembersInjector.*",
-    "**/*_Factory.*",
-    "**/*_*Factory.*",
-    "**/Dagger*Component*.*",
-    "**/Dagger*Subcomponent*.*",
-    "**/devsettings/**/*.*"
-)
-private val classDirectoriesTree = fileTree(layout.buildDirectory) {
-    include(
-        ""
+val fileFilter =
+    mutableSetOf(
+        "**/R.class",
+        "**/R\$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        // Parcelize
+        "**/*Creator.*",
+        // Data binding
+        "**/*Binding*.*",
+        "**/BR.**",
+        // Dagger
+        "**/*_MembersInjector.*",
+        "**/*_Factory.*",
+        "**/*_*Factory.*",
+        "**/Dagger*Component*.*",
+        "**/Dagger*Subcomponent*.*",
+        "**/devsettings/**/*.*",
     )
-    exclude(fileFilter)
-}
+private val classDirectoriesTree =
+    fileTree(layout.buildDirectory) {
+        include(
+            "",
+        )
+        exclude(fileFilter)
+    }
 
-private val sourceDirectoriesTree = fileTree("${layout.buildDirectory}") {
-    include(
-        "src/main/java/**",
-        "src/main/kotlin/**"
-    )
-}
-private val executionDataTree = fileTree(layout.buildDirectory) {
-    include(
-        "outputs/code_coverage/**/*.ec",
-        "jacoco/jacocoTestReportDebug.exec",
-        "jacoco/testDevDebugUnitTest.exec",
-        "jacoco/test.exec"
-    )
-}
+private val sourceDirectoriesTree =
+    fileTree("${layout.buildDirectory}") {
+        include(
+            "src/main/java/**",
+            "src/main/kotlin/**",
+        )
+    }
+private val executionDataTree =
+    fileTree(layout.buildDirectory) {
+        include(
+            "outputs/code_coverage/**/*.ec",
+            "jacoco/jacocoTestReportDebug.exec",
+            "jacoco/testDevDebugUnitTest.exec",
+            "jacoco/test.exec",
+        )
+    }
+
 fun JacocoReportsContainer.reports() {
     xml.required.set(true)
     html.required.set(true)
 }
+
 fun JacocoCoverageVerification.setDirectories() {
     sourceDirectories.setFrom(sourceDirectoriesTree)
     classDirectories.setFrom(classDirectoriesTree)
     executionData.setFrom(executionDataTree)
 }
+
 fun JacocoReport.setDirectories() {
     sourceDirectories.setFrom(sourceDirectoriesTree)
     classDirectories.setFrom(classDirectoriesTree)
