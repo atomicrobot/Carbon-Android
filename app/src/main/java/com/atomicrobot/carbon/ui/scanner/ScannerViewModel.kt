@@ -67,22 +67,22 @@ class ScannerViewModel(private val app: Application) :
                 .build(),
         )
 
-    private val _barcodeStateState = MutableStateFlow(BarcodeAnalysisState())
+    private val barcodeStateState = MutableStateFlow(BarcodeAnalysisState())
 
     val cameraPermissionState = _cameraPermissionState.asStateFlow()
 
     val cameraSelectorState = _cameraSelectorState.asStateFlow()
 
-    val barcodeOverlayState = _barcodeStateState.asStateFlow()
+    val barcodeOverlayState = barcodeStateState.asStateFlow()
 
     private val currentBarcode: Barcode?
-        get() = _barcodeStateState.value.barcode
+        get() = barcodeStateState.value.barcode
 
     private val isFrontFacing
         @SuppressLint("RestrictedApi")
         get() = _cameraSelectorState.value.lensFacing == CameraSelector.LENS_FACING_FRONT
 
-    private var _elapsedMillis: Long = -1L
+    private var elapsedMillis: Long = -1L
 
     private var _cameraProviderLiveData: MutableLiveData<ProcessCameraProvider>? = null
     val cameraProviderLiveData: LiveData<ProcessCameraProvider>
@@ -134,7 +134,7 @@ class ScannerViewModel(private val app: Application) :
                 }
                 _cameraSelectorState.value = cameraSelector
                 // Also clear the barcode when changing cameras
-                _barcodeStateState.value = _barcodeStateState.value.copy(barcode = null)
+                barcodeStateState.value = barcodeStateState.value.copy(barcode = null)
             }
         }
     }
@@ -152,12 +152,12 @@ class ScannerViewModel(private val app: Application) :
                 imageHeight = image.width
             }
             // If the image state has changed, update the barcode overlay
-            if (_barcodeStateState.value.sourceImageWidth != imageWidth ||
-                _barcodeStateState.value.sourceImageHeight != imageHeight ||
-                _barcodeStateState.value.isFlipped != isFrontFacing
+            if (barcodeStateState.value.sourceImageWidth != imageWidth ||
+                barcodeStateState.value.sourceImageHeight != imageHeight ||
+                barcodeStateState.value.isFlipped != isFrontFacing
             ) {
-                _barcodeStateState.value =
-                    _barcodeStateState.value.copy(
+                barcodeStateState.value =
+                    barcodeStateState.value.copy(
                         sourceImageWidth = imageWidth,
                         sourceImageHeight = imageHeight,
                         isFlipped = isFrontFacing,
@@ -179,30 +179,30 @@ class ScannerViewModel(private val app: Application) :
         val newBarcode = barcodes.firstOrNull()
         // We wanna apply some heuristics to improve the UX in case the operator has a shacking
         // handle and the barcode detector can make a accurate read every single frame
-        _barcodeStateState.value =
+        barcodeStateState.value =
             if (currentBarcode == null && newBarcode != null) {
-                _barcodeStateState.value.copy(barcode = newBarcode)
+                barcodeStateState.value.copy(barcode = newBarcode)
             } else if (newBarcode?.rawValue != currentBarcode?.rawValue) {
                 val now = SystemClock.elapsedRealtime()
-                if (_elapsedMillis == Long.MAX_VALUE) {
-                    _elapsedMillis = now
+                if (elapsedMillis == Long.MAX_VALUE) {
+                    elapsedMillis = now
                 }
-                if ((now - _elapsedMillis) >= MAX_BARCODE_DWELL_MS) {
-                    _elapsedMillis = Long.MAX_VALUE
-                    _barcodeStateState.value.copy(barcode = newBarcode)
+                if ((now - elapsedMillis) >= MAX_BARCODE_DWELL_MS) {
+                    elapsedMillis = Long.MAX_VALUE
+                    barcodeStateState.value.copy(barcode = newBarcode)
                 } else {
                     // Keep returning the current barcode
-                    _barcodeStateState.value.copy(barcode = newBarcode)
+                    barcodeStateState.value.copy(barcode = newBarcode)
                 }
             } else {
-                _elapsedMillis = Long.MAX_VALUE
+                elapsedMillis = Long.MAX_VALUE
                 // Keep updating the state to have an accurate bounding box
-                _barcodeStateState.value.copy(barcode = newBarcode)
+                barcodeStateState.value.copy(barcode = newBarcode)
             }
     }
 
     override fun onFailure(exception: Exception) {
-        _barcodeStateState.value = _barcodeStateState.value.copy(barcode = null)
+        barcodeStateState.value = barcodeStateState.value.copy(barcode = null)
     }
 
     companion object {
