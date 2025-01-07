@@ -5,7 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.atomicrobot.carbon.data.api.github.GitHubInteractor.LoadCommitsRequest
 import com.atomicrobot.carbon.data.api.github.model.CommitTestHelper.stubCommit
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
