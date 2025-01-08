@@ -10,10 +10,16 @@ coreSplashscreen = "1.0.1"
 coreVersion = "1.6.1"
 espressoContrib = "3.6.1"
 firebaseBom = "33.7.0"
+firebaseCrashlyticsGradle = "3.0.2"
+googleServices = "4.4.2"
+gradle = "8.7.3"
 junit = "1.2.1"
 junitVersion = "4.13.2"
 koinAndroid = "4.0.1"
 koinAndroidxCompose = "4.0.1"
+kotlinAllopen = "2.1.0"
+kotlinGradlePlugin = "2.1.0"
+ktlintGradle = "12.1.2"
 leakcanaryAndroid = "2.14"
 loggingInterceptor = "4.12.0"
 material = "1.7.6"
@@ -26,6 +32,7 @@ moshiKotlinCodegen = "1.15.2"
 navigationCompose = "2.8.5"
 okhttp = "4.12.0"
 okhttpUrlconnection = "4.12.0"
+orgJacocoCore = "0.8.11"
 playServicesBase = "18.5.0"
 robolectric = "4.14.1"
 roomCompiler = "2.6.1"
@@ -69,10 +76,16 @@ core = { module = "io.noties.markwon:core", version.ref = "core" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 junit = { module = "junit:junit", version.ref = "junitVersion" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+kotlin-allopen = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlinAllopen" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
+ktlint-gradle = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlintGradle" }
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
@@ -83,6 +96,7 @@ moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "mosh
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-urlconnection = { module = "com.squareup.okhttp3:okhttp-urlconnection", version.ref = "okhttpUrlconnection" }
+org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "orgJacocoCore" }
 play-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBase" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "adapterRxjava2" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
