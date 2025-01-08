@@ -11,7 +11,6 @@ import org.koin.core.context.stopKoin
 
 @RunWith(AndroidJUnit4::class)
 class SimpleRobolectricTest {
-
     @After
     fun teardown() {
         stopKoin()

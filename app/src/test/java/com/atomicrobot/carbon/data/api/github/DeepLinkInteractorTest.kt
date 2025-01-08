@@ -14,7 +14,6 @@ import org.mockito.MockitoAnnotations
 
 @RunWith(AndroidJUnit4::class)
 class DeepLinkInteractorTest {
-
     private lateinit var interactor: DeepLinkInteractor
 
     @Before

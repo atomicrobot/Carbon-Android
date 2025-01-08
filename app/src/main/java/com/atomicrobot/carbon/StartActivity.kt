@@ -48,11 +48,13 @@ class StartActivity : ComponentActivity() {
                 Timber.d("appLinkData.queryParameterNames = ${appLinkData.queryParameterNames}")
             }
             true
-        } else false
+        } else {
+            false
+        }
     }
 
     companion object {
-        const val mainPage = "mainScreen"
-        const val deepLinkPath1 = "deepLinkPath1"
+        const val MAIN_PAGE = "mainScreen"
+        const val DEEP_LINK_PATH_1 = "deepLinkPath1"
     }
 }

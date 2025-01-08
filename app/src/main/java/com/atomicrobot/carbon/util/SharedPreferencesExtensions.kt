@@ -2,7 +2,11 @@ package com.atomicrobot.carbon.util
 
 import android.content.SharedPreferences
 
-fun SharedPreferences.putOrClearPreference(key: String, put: Boolean, value: Any) {
+fun SharedPreferences.putOrClearPreference(
+    key: String,
+    put: Boolean,
+    value: Any,
+) {
     if (put) {
         val editor = edit()
         when (value) {

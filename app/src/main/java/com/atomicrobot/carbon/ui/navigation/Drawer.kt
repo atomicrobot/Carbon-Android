@@ -36,23 +36,23 @@ import com.atomicrobot.carbon.util.AppScreensPreviewProvider
 fun Drawer(
     @PreviewParameter(AppScreensPreviewProvider::class, limit = 1) screens: List<CarbonScreens>,
     modifier: Modifier = Modifier,
-    onDestinationClicked: (route: String) -> Unit = { _ -> }
+    onDestinationClicked: (route: String) -> Unit = { _ -> },
 ) {
     Column(
         modifier
             .fillMaxSize()
-            .padding(start = 24.dp, top = 48.dp)
+            .padding(start = 24.dp, top = 48.dp),
     ) {
         Box(
             Modifier
                 .clip(CircleShape)
                 .background(
-                    Color.Gray
-                )
+                    Color.Gray,
+                ),
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "App Icon foreground"
+                contentDescription = "App Icon foreground",
             )
         }
         screens.forEach { screen ->
@@ -66,7 +66,7 @@ fun Drawer(
 @Composable
 fun DrawerAppScreenItem(
     @PreviewParameter(AppScreenPreviewProvider::class, limit = 3) screen: CarbonScreens,
-    onDestinationClicked: (route: String) -> Unit = { _ -> }
+    onDestinationClicked: (route: String) -> Unit = { _ -> },
 ) {
     Row(
         Modifier
@@ -75,24 +75,25 @@ fun DrawerAppScreenItem(
             {
                 onDestinationClicked(screen.route)
             },
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         val contentDesc = stringResource(id = screen.iconData.iconContentDescription)
-        val modifier = Modifier
-            .size(45.dp)
-            .padding(8.dp)
-            .align(Alignment.CenterVertically)
+        val modifier =
+            Modifier
+                .size(45.dp)
+                .padding(8.dp)
+                .align(Alignment.CenterVertically)
         if (screen.route == CarbonScreens.About.route || screen.route == CarbonScreens.AboutHtml.route) {
             Icon(
-                painter = painterResource(id = R.drawable.carbon_android_logo), // Use custom icon
+                painter = painterResource(id = R.drawable.carbon_android_logo),
                 contentDescription = contentDesc,
-                modifier = modifier
+                modifier = modifier,
             )
         } else {
             Icon(
                 imageVector = screen.iconData.vectorData,
                 contentDescription = contentDesc,
-                modifier = modifier
+                modifier = modifier,
             )
         }
         Text(

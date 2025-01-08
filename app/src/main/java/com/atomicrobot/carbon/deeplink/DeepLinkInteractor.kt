@@ -28,7 +28,7 @@ class DeepLinkInteractor {
                 }
                 "/carbon-android/path1" -> {
                     Timber.d("path1 deep link received")
-                    return StartActivity.deepLinkPath1
+                    return StartActivity.DEEP_LINK_PATH_1
                 }
                 else -> {
                     Timber.e("Deep link path not recognized")
@@ -36,7 +36,7 @@ class DeepLinkInteractor {
                 }
             }
         }
-        return StartActivity.mainPage
+        return StartActivity.MAIN_PAGE
     }
 
     fun getDeepLinkTextColor(): Int {

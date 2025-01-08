@@ -6,7 +6,6 @@ import com.atomicrobot.carbon.R
 import com.atomicrobot.carbon.util.putOrClearPreference
 
 open class VariantSettings(private val context: Context) {
-
     private val preferences = context.getSharedPreferences(PREFS_SETTINGS, Context.MODE_PRIVATE)
 
     var baseUrl: String

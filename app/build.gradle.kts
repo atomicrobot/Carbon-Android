@@ -7,13 +7,14 @@ buildscript {
 
 plugins {
     id("com.android.application")
+    id("com.google.devtools.ksp")
     id("com.google.firebase.crashlytics")
     id("com.google.gms.google-services")
     id("jacoco")
     id("kotlin-allopen")
     id("kotlin-android")
-    id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("org.jetbrains.kotlin.plugin.compose") version "2.1.0" // kotlin version
     id("org.jlleitschuh.gradle.ktlint")
     id("pmd")
 }
@@ -34,11 +35,11 @@ if (project.hasProperty("fingerprint")) {
     versionFingerprint = "\"${project.property("fingerprint")}\""
 }
 
+/*
 /**
  * Could also consider setting up and using system environment variables from the build server
  * Test by adding these system environment variables to your local machine
  */
-/*
 if (System.getenv("BITRISE_BUILD_NUMBER") != null) {
     buildNumber = Integer.parseInt(System.getenv("BITRISE_BUILD_NUMBER"))
 }
@@ -139,12 +140,13 @@ android {
         }
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = Dependencies.composeVersion
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += ("/META-INF/{AL2.0,LGPL2.1}")
         }
@@ -186,6 +188,7 @@ dependencies {
     implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
 
     implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshiVersion}")
+    implementation("com.squareup.okhttp3:logging-interceptor:${Dependencies.okHttpVersion}")
     implementation("com.squareup.okhttp3:okhttp:${Dependencies.okHttpVersion}")
     implementation("com.squareup.okhttp3:okhttp-urlconnection:${Dependencies.okHttpVersion}")
     implementation("com.squareup.retrofit2:adapter-rxjava2:${Dependencies.retrofitVersion}")
@@ -195,10 +198,10 @@ dependencies {
     implementation("io.insert-koin:koin-android:${Dependencies.koinVersion}")
     implementation("io.insert-koin:koin-androidx-compose:${Dependencies.koinVersion}")
     implementation("io.noties.markwon:core:${Dependencies.markwonVersion}")
-    implementation("io.reactivex.rxjava2:rxandroid:${Dependencies.rxAndroidVersion}")
+    implementation("io.reactivex.rxjava3:rxandroid:${Dependencies.rxAndroidVersion}")
 
-    kapt("androidx.room:room-compiler:${Dependencies.roomVersion}")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshiVersion}")
+    ksp("androidx.room:room-compiler:${Dependencies.roomVersion}")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshiVersion}")
 
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Dependencies.composeVersion}")
     androidTestImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
@@ -206,8 +209,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:${Dependencies.espressoVersion}")
     androidTestImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
     androidTestImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")
-    androidTestImplementation("androidx.test:runner:${Dependencies.androidTestSupportVersion}")
-    androidTestImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
+    androidTestImplementation("androidx.test:runner:${Dependencies.androidTestRunnerVersion}")
+    androidTestImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependencies.mockitoKotlinVersion}")
     androidTestImplementation("org.mockito:mockito-android:${Dependencies.mockitoVersion}")
 
     debugImplementation("androidx.compose.ui:ui-test-manifest:${Dependencies.composeVersion}")
@@ -221,7 +224,7 @@ dependencies {
     testImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
     testImplementation("org.mockito:mockito-core:${Dependencies.mockitoVersion}")
     testImplementation("org.robolectric:robolectric:${Dependencies.robolectricVersion}")
-    testImplementation("com.nhaarman:mockito-kotlin-kt1.1:${Dependencies.mockitoKotlinVersion}")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependencies.mockitoKotlinVersion}")
     testImplementation("com.squareup.okhttp3:mockwebserver:${Dependencies.okHttpVersion}")
 }
 
@@ -253,56 +256,63 @@ tasks.withType<Test> {
     }
 }
 // would not build as a private val
-val fileFilter = mutableSetOf(
-    "**/R.class",
-    "**/R\$*.class",
-    "**/BuildConfig.*",
-    "**/Manifest*.*",
-    "**/*Test*.*",
-    "android/**/*.*",
-    /* Parcelize */
-    "**/*Creator.*",
-    /* Data binding */
-    "**/*Binding*.*",
-    "**/BR.**",
-    /* Dagger */
-    "**/*_MembersInjector.*",
-    "**/*_Factory.*",
-    "**/*_*Factory.*",
-    "**/Dagger*Component*.*",
-    "**/Dagger*Subcomponent*.*",
-    "**/devsettings/**/*.*"
-)
-private val classDirectoriesTree = fileTree(project.buildDir) {
-    include(
-        ""
+val fileFilter =
+    mutableSetOf(
+        "**/R.class",
+        "**/R\$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        // Parcelize
+        "**/*Creator.*",
+        // Data binding
+        "**/*Binding*.*",
+        "**/BR.**",
+        // Dagger
+        "**/*_MembersInjector.*",
+        "**/*_Factory.*",
+        "**/*_*Factory.*",
+        "**/Dagger*Component*.*",
+        "**/Dagger*Subcomponent*.*",
+        "**/devsettings/**/*.*",
     )
-    exclude(fileFilter)
-}
+private val classDirectoriesTree =
+    fileTree(layout.buildDirectory) {
+        include(
+            "",
+        )
+        exclude(fileFilter)
+    }
 
-private val sourceDirectoriesTree = fileTree("${project.buildDir}") {
-    include(
-        "src/main/java/**",
-        "src/main/kotlin/**"
-    )
-}
-private val executionDataTree = fileTree(project.buildDir) {
-    include(
-        "outputs/code_coverage/**/*.ec",
-        "jacoco/jacocoTestReportDebug.exec",
-        "jacoco/testDevDebugUnitTest.exec",
-        "jacoco/test.exec"
-    )
-}
+private val sourceDirectoriesTree =
+    fileTree("${layout.buildDirectory}") {
+        include(
+            "src/main/java/**",
+            "src/main/kotlin/**",
+        )
+    }
+private val executionDataTree =
+    fileTree(layout.buildDirectory) {
+        include(
+            "outputs/code_coverage/**/*.ec",
+            "jacoco/jacocoTestReportDebug.exec",
+            "jacoco/testDevDebugUnitTest.exec",
+            "jacoco/test.exec",
+        )
+    }
+
 fun JacocoReportsContainer.reports() {
     xml.required.set(true)
     html.required.set(true)
 }
+
 fun JacocoCoverageVerification.setDirectories() {
     sourceDirectories.setFrom(sourceDirectoriesTree)
     classDirectories.setFrom(classDirectoriesTree)
     executionData.setFrom(executionDataTree)
 }
+
 fun JacocoReport.setDirectories() {
     sourceDirectories.setFrom(sourceDirectoriesTree)
     classDirectories.setFrom(classDirectoriesTree)

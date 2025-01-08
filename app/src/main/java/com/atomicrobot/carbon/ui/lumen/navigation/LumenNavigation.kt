@@ -54,21 +54,25 @@ import kotlinx.coroutines.launch
 sealed class LumenBottomSheetTask {
     // I can't think of a better way to blank the task sheet
     object NoTask : LumenBottomSheetTask()
+
     abstract class LumenMenuTask(val titleRes: Int) : LumenBottomSheetTask()
+
     object AddScene : LumenMenuTask(R.string.add_scene)
+
     data class EditScene(val sceneId: Long) : LumenBottomSheetTask()
 }
 
-val bottomSheetTasks: List<LumenBottomSheetTask.LumenMenuTask> = listOf(
-    LumenBottomSheetTask.AddScene,
-)
+val bottomSheetTasks: List<LumenBottomSheetTask.LumenMenuTask> =
+    listOf(
+        LumenBottomSheetTask.AddScene,
+    )
 
 @OptIn(ExperimentalMaterialApi::class)
 class LumenAppState(
     val modalBottomSheetState: ModalBottomSheetState,
     val navController: NavHostController,
     val scaffoldState: ScaffoldState,
-    initialBottomSheetTask: LumenBottomSheetTask
+    initialBottomSheetTask: LumenBottomSheetTask,
 ) {
     var currentBottomSheetTask by mutableStateOf<LumenBottomSheetTask>(initialBottomSheetTask)
         private set
@@ -87,13 +91,14 @@ class LumenAppState(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun rememberLumenAppState(
-    modalBottomSheetState: ModalBottomSheetState = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
-    ),
+    modalBottomSheetState: ModalBottomSheetState =
+        rememberModalBottomSheetState(
+            ModalBottomSheetValue.Hidden,
+            skipHalfExpanded = true,
+        ),
     navController: NavHostController = rememberNavController(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    bottomSheetTask: LumenBottomSheetTask = remember { LumenBottomSheetTask.NoTask }
+    bottomSheetTask: LumenBottomSheetTask = remember { LumenBottomSheetTask.NoTask },
 ) = remember(modalBottomSheetState, navController, scaffoldState, bottomSheetTask) {
     LumenAppState(modalBottomSheetState, navController, scaffoldState, bottomSheetTask)
 }
@@ -109,11 +114,12 @@ fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
 
     ModalBottomSheetLayout(
         sheetContent = { LumenBottomSheet(appState) },
-        modifier = Modifier
-            .statusBarsPadding()
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .statusBarsPadding()
+                .fillMaxSize(),
         sheetState = appState.modalBottomSheetState,
-        scrimColor = Color.Transparent
+        scrimColor = Color.Transparent,
     ) {
         LumenMainContent(appState)
     }
@@ -141,7 +147,7 @@ fun LumenMainContent(appState: LumenAppState) {
 
     // Box representing Lumen blurple radial gradient background
     Box(
-        modifier = Modifier.background(brush = BlurpleRadial)
+        modifier = Modifier.background(brush = BlurpleRadial),
     ) {
         Column {
             Scaffold(
@@ -151,7 +157,7 @@ fun LumenMainContent(appState: LumenAppState) {
                     LumenTopAppBar(
                         title = appBarTitle(navBackStackEntry = navBackStackEntry),
                         showAction = showAppBarAction,
-                        bottomSheetTasks = bottomSheetTasks
+                        bottomSheetTasks = bottomSheetTasks,
                     ) {
                         coroutineScope.launch {
                             appState.showBottomSheetForTask(it)
@@ -159,32 +165,32 @@ fun LumenMainContent(appState: LumenAppState) {
                     }
                 },
                 bottomBar =
-                {
-                    LumenBottomNavigationBar(
-                        modifier = Modifier.height(88.dp),
-                        destinations = lumenScreens,
-                        navController = appState.navController,
-                    ) {
-                        if (appState.navController.currentBackStackEntry?.destination?.route != it.route) {
-                            appState.navController.navigate(it.route) {
-                                // Make sure the back stack only consists of the current graphs main
-                                // destination
-                                popUpTo(LumenScreens.Scenes.route) {
-                                    saveState = true
+                    {
+                        LumenBottomNavigationBar(
+                            modifier = Modifier.height(88.dp),
+                            destinations = lumenScreens,
+                            navController = appState.navController,
+                        ) {
+                            if (appState.navController.currentBackStackEntry?.destination?.route != it.route) {
+                                appState.navController.navigate(it.route) {
+                                    // Make sure the back stack only consists of the current graphs main
+                                    // destination
+                                    popUpTo(LumenScreens.Scenes.route) {
+                                        saveState = true
+                                    }
+                                    // Singular instance of destinations
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                // Singular instance of destinations
-                                launchSingleTop = true
-                                restoreState = true
                             }
                         }
-                    }
-                },
-                backgroundColor = Color.Transparent
+                    },
+                backgroundColor = Color.Transparent,
             ) { innerPadding ->
                 NavHost(
                     modifier = Modifier.padding(innerPadding),
                     navController = appState.navController,
-                    startDestination = "Main"
+                    startDestination = "Main",
                 ) {
                     mainLumenGraph(appState)
                 }
@@ -221,17 +227,18 @@ fun LumenBottomSheet(appState: LumenAppState) {
     Box(
         Modifier
             .fillMaxSize()
-            .navigationBarsPadding()
+            .navigationBarsPadding(),
     ) {
         when (bottomSheetTask) {
             LumenBottomSheetTask.AddScene -> AddSceneTask(onDismissed = dismissBottomSheet)
-            is LumenBottomSheetTask.EditScene -> EditSceneTask(
-                bottomSheetTask.sceneId,
-                onDismissed = dismissBottomSheet
-            )
-            LumenBottomSheetTask.NoTask -> { /* INTENTIONALLY LEFT BLANK */
+            is LumenBottomSheetTask.EditScene ->
+                EditSceneTask(
+                    bottomSheetTask.sceneId,
+                    onDismissed = dismissBottomSheet,
+                )
+            LumenBottomSheetTask.NoTask -> { // INTENTIONALLY LEFT BLANK
             }
-            else -> { /* INTENTIONALLY LEFT BLANK */
+            else -> { // INTENTIONALLY LEFT BLANK
             }
         }
     }

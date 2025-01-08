@@ -45,7 +45,7 @@ interface SceneDao {
     @Query(
         "SELECT * FROM LumenScene as scene " +
             "INNER JOIN LumenSceneLightCrossRef crossRef ON crossRef.sceneId = scene.sceneId " +
-            "INNER JOIN LumenLight light ON light.lightId = crossRef.lightId WHERE scene.sceneId = :sceneId"
+            "INNER JOIN LumenLight light ON light.lightId = crossRef.lightId WHERE scene.sceneId = :sceneId",
     )
     fun getSceneWithLights(sceneId: Long): Flow<Map<LumenScene, List<LumenLight>>>
 

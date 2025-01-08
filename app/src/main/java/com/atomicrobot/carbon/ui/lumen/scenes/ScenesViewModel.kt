@@ -23,36 +23,38 @@ class ScenesViewModel(
     private val sceneDao: SceneDao,
     private val lightDao: LightDao,
     private val roomDao: RoomDao,
-    private val sceneLightDao: SceneLightDao
+    private val sceneLightDao: SceneLightDao,
 ) : ViewModel() {
-
     sealed class Scenes {
         object Loading : Scenes()
+
         class Result(val scenes: List<SceneAndRoomName>) : Scenes()
     }
 
     sealed class SceneDetails {
         object LoadingDetails : SceneDetails()
+
         data class Result(
             val scene: SceneAndLightsWithRoom =
                 SceneAndLightsWithRoom(
                     scene = LumenScene(),
                     lights = emptyList(),
-                    room = RoomNameAndId()
+                    room = RoomNameAndId(),
                 ),
-            val rooms: List<RoomNameAndId> = emptyList()
+            val rooms: List<RoomNameAndId> = emptyList(),
         ) : SceneDetails()
     }
 
     sealed class SceneDetailsLights {
         object LoadingLights : SceneDetailsLights()
+
         data class Result(
-            val lights: List<LumenLight> = emptyList()
+            val lights: List<LumenLight> = emptyList(),
         ) : SceneDetailsLights()
     }
 
     data class MainScenesScreenUiState(
-        val mainScreenState: Scenes = Scenes.Result(emptyList())
+        val mainScreenState: Scenes = Scenes.Result(emptyList()),
     )
 
     data class SceneDetailsUIState(
@@ -91,13 +93,14 @@ class ScenesViewModel(
                 _sceneDetailsUIState.value =
                     _sceneDetailsUIState.value.copy(
                         SceneDetails.Result(
-                            scene = SceneAndLightsWithRoom(
-                                scene = LumenScene(),
-                                lights = emptyList(),
-                                room = RoomNameAndId()
-                            ),
-                            rooms = roomDao.getRoomNamesAndIds()
-                        )
+                            scene =
+                                SceneAndLightsWithRoom(
+                                    scene = LumenScene(),
+                                    lights = emptyList(),
+                                    room = RoomNameAndId(),
+                                ),
+                            rooms = roomDao.getRoomNamesAndIds(),
+                        ),
                     )
             }
             return
@@ -116,19 +119,22 @@ class ScenesViewModel(
     suspend fun getLightsForRoom(roomId: Long) {
         if (roomId == 0L) {
             // Invalid room ID, use an empty light list for the state
-            _sceneDetailsLightUIState.value = _sceneDetailsLightUIState.value.copy(
-                sceneDetailsLightState = SceneDetailsLights.Result(emptyList())
-            )
+            _sceneDetailsLightUIState.value =
+                _sceneDetailsLightUIState.value.copy(
+                    sceneDetailsLightState = SceneDetailsLights.Result(emptyList()),
+                )
         }
 
-        _sceneDetailsLightUIState.value = _sceneDetailsLightUIState.value.copy(
-            sceneDetailsLightState = SceneDetailsLights.LoadingLights
-        )
+        _sceneDetailsLightUIState.value =
+            _sceneDetailsLightUIState.value.copy(
+                sceneDetailsLightState = SceneDetailsLights.LoadingLights,
+            )
         viewModelScope.launch {
             lightDao.getAllLightsForRoom(roomId).collect {
-                _sceneDetailsLightUIState.value = _sceneDetailsLightUIState.value.copy(
-                    sceneDetailsLightState = SceneDetailsLights.Result(it)
-                )
+                _sceneDetailsLightUIState.value =
+                    _sceneDetailsLightUIState.value.copy(
+                        sceneDetailsLightState = SceneDetailsLights.Result(it),
+                    )
             }
         }
     }
@@ -151,22 +157,24 @@ class ScenesViewModel(
 
     suspend fun saveOrUpdateScene(scene: SceneModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            val sceneId: Long = if (scene.sceneId < 1) {
-                // Insert scene
-                sceneDao.insert(scene.toLumenScene())
-            } else {
-                sceneDao.update(scene.toLumenScene())
-                scene.sceneId
-            }
+            val sceneId: Long =
+                if (scene.sceneId < 1) {
+                    // Insert scene
+                    sceneDao.insert(scene.toLumenScene())
+                } else {
+                    sceneDao.update(scene.toLumenScene())
+                    scene.sceneId
+                }
             // Get a list of the lights in the scene so we can detect which lights were added, and
             // which lights were removed
             val sceneLights = sceneDao.getSceneLightReferences(scene.sceneId)
             // Get the removed lights
             val rmvLights = sceneLights.filterNot { scene.lights.contains(it.lightId) }
             sceneLightDao.delete(rmvLights)
-            val newLights = scene.lights
-                .filter { lightId -> !sceneLights.any { it.sceneId == lightId } }
-                .map { LumenSceneLightCrossRef(sceneId = sceneId, lightId = it) }
+            val newLights =
+                scene.lights
+                    .filter { lightId -> !sceneLights.any { it.sceneId == lightId } }
+                    .map { LumenSceneLightCrossRef(sceneId = sceneId, lightId = it) }
             sceneLightDao.insert(newLights)
         }
     }

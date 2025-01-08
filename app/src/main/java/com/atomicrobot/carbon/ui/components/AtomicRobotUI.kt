@@ -31,7 +31,7 @@ object AtomicRobotUI {
             text: String? = null,
             onClick: () -> Unit,
             enabled: Boolean = true,
-            modifier: Modifier = Modifier
+            modifier: Modifier = Modifier,
         ) {
             OutlinedButton(
                 onClick = onClick,
@@ -41,7 +41,7 @@ object AtomicRobotUI {
                     text?.let {
                         Text(text = text)
                     }
-                }
+                },
             )
         }
 
@@ -72,17 +72,17 @@ object AtomicRobotUI {
                         imageBitmap != null -> {
                             MaterialIcon(
                                 bitmap = imageBitmap,
-                                contentDescription = contentDescription
+                                contentDescription = contentDescription,
                             )
                         }
                         imageVector != null -> {
                             MaterialIcon(
                                 imageVector = imageVector,
-                                contentDescription = contentDescription
+                                contentDescription = contentDescription,
                             )
                         }
                     }
-                }
+                },
             )
         }
     }
@@ -93,16 +93,17 @@ object AtomicRobotUI {
             modifier: Modifier = Modifier,
             value: String = stringResource(id = R.string.txtField_placeholder),
             labelResId: Int = R.string.label_placeholder,
-            onValueChanged: (String) -> Unit = { _ -> }
+            onValueChanged: (String) -> Unit = { _ -> },
         ) {
             TextField(
                 value = value,
                 onValueChange = onValueChanged,
                 label = { Text(text = stringResource(id = labelResId)) },
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent)
+                modifier =
+                    modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent),
             )
         }
     }

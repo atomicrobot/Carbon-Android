@@ -10,9 +10,9 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = LumenRoom::class,
             parentColumns = arrayOf("roomId"),
-            childColumns = arrayOf("containingRoomId")
-        )
-    ]
+            childColumns = arrayOf("containingRoomId"),
+        ),
+    ],
 )
 data class LumenScene(
     @PrimaryKey(autoGenerate = true) val sceneId: Long = 0L,
@@ -21,7 +21,7 @@ data class LumenScene(
     val containingRoomId: Long = 0L,
     val duration: String = "1 hour",
     val active: Boolean = false,
-    val favorite: Boolean = false
+    val favorite: Boolean = false,
 ) {
     override fun toString(): String = sceneName
 }

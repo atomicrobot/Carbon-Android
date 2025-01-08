@@ -14,20 +14,21 @@ fun RequestPermission(
     permission: String,
     onShowRationale: suspend CoroutineScope.(String) -> PermissionRationaleResult =
         { PermissionRationaleResult.ActionPerformed },
-    onPermissionResult: (PermissionRequestResult) -> Unit
+    onPermissionResult: (PermissionRequestResult) -> Unit,
 ) {
     val activity = LocalActivity.current
 
     // Create a permission request launcher that will received the result of the perm. request
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            onPermissionResult(PermissionRequestResult.Granted)
-        } else {
-            onPermissionResult(PermissionRequestResult.Denied)
+    val permissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                onPermissionResult(PermissionRequestResult.Granted)
+            } else {
+                onPermissionResult(PermissionRequestResult.Denied)
+            }
         }
-    }
 
     when {
         Common.hasPermission(activity, permission) ->
@@ -53,20 +54,21 @@ fun RequestPermission(
 fun RequestPermissions(
     permissions: Array<String>,
     onShowRationale: suspend CoroutineScope.(String) -> PermissionRationaleResult,
-    onPermissionResult: (PermissionRequestResult) -> Unit
+    onPermissionResult: (PermissionRequestResult) -> Unit,
 ) {
     val activity = LocalActivity.current
 
     // Create a permission request launcher that will received the result of the perm. request
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { results: Map<String, Boolean> ->
-        if (results.all(Map.Entry<String, Boolean>::value)) {
-            onPermissionResult(PermissionRequestResult.Granted)
-        } else {
-            onPermissionResult(PermissionRequestResult.Denied)
+    val permissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
+        ) { results: Map<String, Boolean> ->
+            if (results.all(Map.Entry<String, Boolean>::value)) {
+                onPermissionResult(PermissionRequestResult.Granted)
+            } else {
+                onPermissionResult(PermissionRequestResult.Denied)
+            }
         }
-    }
 
     when {
         permissions.all { Common.hasPermission(activity, it) } ->
@@ -93,10 +95,12 @@ fun RequestPermissions(
 
 sealed class PermissionRequestResult {
     object Granted : PermissionRequestResult()
+
     object Denied : PermissionRequestResult()
 }
 
 sealed class PermissionRationaleResult {
     object Dismissed : PermissionRationaleResult()
+
     object ActionPerformed : PermissionRationaleResult()
 }

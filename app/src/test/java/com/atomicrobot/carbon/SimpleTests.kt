@@ -1,7 +1,7 @@
 package com.atomicrobot.carbon
 
 import android.os.Bundle
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -10,7 +10,6 @@ import org.koin.core.context.stopKoin
 import org.mockito.Mockito.mock
 
 class SimpleTests {
-
     @After
     fun teardown() {
         stopKoin()

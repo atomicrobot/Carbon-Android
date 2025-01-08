@@ -11,16 +11,18 @@ import timber.log.Timber
 import java.io.InputStream
 
 class LicenseViewModel(
-    private val app: Application
+    private val app: Application,
 ) : ViewModel() {
     sealed class Licenses {
         object Loading : Licenses()
+
         class Result(val licenses: String) : Licenses()
+
         class Error(val message: String) : Licenses()
     }
 
     data class LicenseScreenUiState(
-        val licensesState: Licenses = Licenses.Result("")
+        val licensesState: Licenses = Licenses.Result(""),
     )
 
     private val _uiState = MutableStateFlow(LicenseScreenUiState())
@@ -42,19 +44,23 @@ class LicenseViewModel(
                 }.onSuccess {
                     _uiState.value = _uiState.value.copy(licensesState = Licenses.Result(it))
                 }.onFailure {
-                    _uiState.value = _uiState.value.copy(
-                        licensesState = Licenses.Error(
-                            app.getString(R.string.error_unexpected)
+                    _uiState.value =
+                        _uiState.value.copy(
+                            licensesState =
+                                Licenses.Error(
+                                    app.getString(R.string.error_unexpected),
+                                ),
                         )
-                    )
                 }
             } catch (error: Exception) {
                 Timber.e(error)
-                _uiState.value = _uiState.value.copy(
-                    licensesState = Licenses.Error(
-                        error.message ?: app.getString(R.string.error_unexpected)
+                _uiState.value =
+                    _uiState.value.copy(
+                        licensesState =
+                            Licenses.Error(
+                                error.message ?: app.getString(R.string.error_unexpected),
+                            ),
                     )
-                )
             }
         }
     }

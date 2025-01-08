@@ -40,49 +40,52 @@ internal class GitHubCardApiServiceTest {
 
     @Test
     @Throws(Exception::class)
-    fun testDetailedCommitSuccessful() = runBlocking {
-        server.enqueue(
-            MockResponse().setBody("/api/testDetailedCommit_success.json".loadResourceAsString())
-        )
-        server.start()
+    fun testDetailedCommitSuccessful() =
+        runBlocking {
+            server.enqueue(
+                MockResponse().setBody("/api/testDetailedCommit_success.json".loadResourceAsString()),
+            )
+            server.start()
 
-        val api = buildApi(server)
+            val api = buildApi(server)
 
-        val goodResponse = api.detailedCommit("test_user", "test_repository", "test_sha")
+            val goodResponse = api.detailedCommit("test_user", "test_repository", "test_sha")
 
-        val serverRequest = server.takeRequest()
-        assertEquals("GET", serverRequest.method)
-        assertEquals("/repos/test_user/test_repository/commits/test_sha", serverRequest.path)
+            val serverRequest = server.takeRequest()
+            assertEquals("GET", serverRequest.method)
+            assertEquals("/repos/test_user/test_repository/commits/test_sha", serverRequest.path)
 
-        assertTrue(goodResponse.errorBody() == null)
-        assertTrue(goodResponse.isSuccessful)
+            assertTrue(goodResponse.errorBody() == null)
+            assertTrue(goodResponse.isSuccessful)
 
-        val commit = goodResponse.body()
-        assertEquals("test message", commit?.detailedCommitMessage)
-        assertEquals("test author", commit?.detailedCommitAuthor)
-        assertEquals("test/tree/url", commit?.detailedCommitTreeURL)
-        assertEquals(true, commit?.detailedCommitVerified)
-    }
+            val commit = goodResponse.body()
+            assertEquals("test message", commit?.detailedCommitMessage)
+            assertEquals("test author", commit?.detailedCommitAuthor)
+            assertEquals("test/tree/url", commit?.detailedCommitTreeURL)
+            assertEquals(true, commit?.detailedCommitVerified)
+        }
 
     @Test
     @Throws(Exception::class)
-    fun testListCommitsUnsuccessful() = runBlocking {
-        server.enqueue(MockResponse().setResponseCode(404).setBody("{\"message\": \"Not Found\"}"))
-        server.start()
+    fun testListCommitsUnsuccessful() =
+        runBlocking {
+            server.enqueue(MockResponse().setResponseCode(404).setBody("{\"message\": \"Not Found\"}"))
+            server.start()
 
-        val api = buildApi(server)
-        val badResponse = api.detailedCommit("test_user", "test_repository", "test_sha")
+            val api = buildApi(server)
+            val badResponse = api.detailedCommit("test_user", "test_repository", "test_sha")
 
-        assertFalse(badResponse.isSuccessful)
-        assertEquals(404, badResponse.code().toLong())
-    }
+            assertFalse(badResponse.isSuccessful)
+            assertEquals(404, badResponse.code().toLong())
+        }
 
     @Test(expected = UnknownHostException::class)
     @Throws(Exception::class)
-    fun testListCommitsNetworkError(): Unit = runBlocking {
-        val api = buildApi("http://bad_url/")
-        api.detailedCommit("test_user", "test_repository", "test_sha")
-    }
+    fun testListCommitsNetworkError(): Unit =
+        runBlocking {
+            val api = buildApi("http://bad_url/")
+            api.detailedCommit("test_user", "test_repository", "test_sha")
+        }
 
     @Throws(Exception::class)
     private fun buildApi(server: MockWebServer): DetailedGitHubApiService {

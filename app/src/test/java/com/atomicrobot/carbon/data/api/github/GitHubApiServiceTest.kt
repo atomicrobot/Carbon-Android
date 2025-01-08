@@ -22,7 +22,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.net.UnknownHostException
 
 class GitHubApiServiceTest {
-
     private lateinit var server: MockWebServer
 
     @Before
@@ -41,48 +40,51 @@ class GitHubApiServiceTest {
 
     @Test
     @Throws(Exception::class)
-    fun testListCommitsSuccessful() = runBlocking {
-        server.enqueue(
-            MockResponse().setBody("/api/listCommits_success.json".loadResourceAsString())
-        )
-        server.start()
+    fun testListCommitsSuccessful() =
+        runBlocking {
+            server.enqueue(
+                MockResponse().setBody("/api/listCommits_success.json".loadResourceAsString()),
+            )
+            server.start()
 
-        val api = buildApi(server)
-        val goodResponse = api.listCommits("test_user", "test_repository")
+            val api = buildApi(server)
+            val goodResponse = api.listCommits("test_user", "test_repository")
 
-        val serverRequest = server.takeRequest()
-        assertEquals("GET", serverRequest.method)
-        assertEquals("/repos/test_user/test_repository/commits", serverRequest.path)
+            val serverRequest = server.takeRequest()
+            assertEquals("GET", serverRequest.method)
+            assertEquals("/repos/test_user/test_repository/commits", serverRequest.path)
 
-        assertTrue(goodResponse.errorBody() == null)
-        assertTrue(goodResponse.isSuccessful)
+            assertTrue(goodResponse.errorBody() == null)
+            assertTrue(goodResponse.isSuccessful)
 
-        val commits = goodResponse.body()
-        assertEquals(1, commits!!.size.toLong())
-        val commit = commits[0]
-        assertEquals("test message", commit.commitMessage)
-        assertEquals("test author", commit.author)
-    }
+            val commits = goodResponse.body()
+            assertEquals(1, commits!!.size.toLong())
+            val commit = commits[0]
+            assertEquals("test message", commit.commitMessage)
+            assertEquals("test author", commit.author)
+        }
 
     @Test
     @Throws(Exception::class)
-    fun testListCommitsUnsuccessful() = runBlocking {
-        server.enqueue(MockResponse().setResponseCode(404).setBody("{\"message\": \"Not Found\"}"))
-        server.start()
+    fun testListCommitsUnsuccessful() =
+        runBlocking {
+            server.enqueue(MockResponse().setResponseCode(404).setBody("{\"message\": \"Not Found\"}"))
+            server.start()
 
-        val api = buildApi(server)
-        val badResponse = api.listCommits("test_user", "test_repository")
+            val api = buildApi(server)
+            val badResponse = api.listCommits("test_user", "test_repository")
 
-        assertFalse(badResponse.isSuccessful)
-        assertEquals(404, badResponse.code().toLong())
-    }
+            assertFalse(badResponse.isSuccessful)
+            assertEquals(404, badResponse.code().toLong())
+        }
 
     @Test(expected = UnknownHostException::class)
     @Throws(Exception::class)
-    fun testListCommitsNetworkError(): Unit = runBlocking {
-        val api = buildApi("http://bad_url/")
-        api.listCommits("test_user", "test_repository")
-    }
+    fun testListCommitsNetworkError(): Unit =
+        runBlocking {
+            val api = buildApi("http://bad_url/")
+            api.listCommits("test_user", "test_repository")
+        }
 
     @Throws(Exception::class)
     private fun buildApi(server: MockWebServer): GitHubApiService {

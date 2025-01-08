@@ -11,9 +11,9 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = LumenRoom::class,
             parentColumns = arrayOf("roomId"),
-            childColumns = arrayOf("containingRoomId")
-        )
-    ]
+            childColumns = arrayOf("containingRoomId"),
+        ),
+    ],
 )
 data class LumenLight(
     @PrimaryKey(autoGenerate = true) val lightId: Long = 0L,
@@ -22,7 +22,7 @@ data class LumenLight(
     val containingRoomId: Long = 0L,
     val type: LightType = LightType.WHITE,
     val color: Int = Color.WHITE,
-    val brightness: Float = 1F
+    val brightness: Float = 1F,
 ) {
     val active: Boolean
         get() = brightness > 0.0F

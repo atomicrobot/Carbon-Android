@@ -1,0 +1,6 @@
+root = true
+
+[*.{kt,kts}]
+# This property IS supported and is used to ignore ktlint errors for Composable function names.
+# Please don't remove it.
+ktlint_function_naming_ignore_when_annotated_with=Composable

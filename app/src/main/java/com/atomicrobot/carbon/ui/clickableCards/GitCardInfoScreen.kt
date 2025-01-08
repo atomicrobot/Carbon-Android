@@ -25,14 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.data.api.github.model.DetailedCommit
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun GitCardInfoScreen(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    sha: String
+    sha: String,
 ) {
-    val viewModel: GitCardInfoViewModel = getViewModel()
+    val viewModel: GitCardInfoViewModel = koinViewModel()
     val screenState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = true) {
@@ -41,16 +41,17 @@ fun GitCardInfoScreen(
     Scaffold { padding ->
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             DetailedGitInfoResponse(
                 detailedCommitState = screenState.detailedCommitState,
                 scaffoldState = scaffoldState,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
     }
@@ -60,7 +61,7 @@ fun GitCardInfoScreen(
 fun DetailedGitInfoResponse(
     detailedCommitState: GitCardInfoViewModel.GitHubResponse,
     scaffoldState: ScaffoldState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         when (detailedCommitState) {
@@ -78,13 +79,14 @@ fun DetailedGitInfoResponse(
 @Composable
 fun Details(details: DetailedCommit?) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
     ) {
         if (details?.detailedCommitMessage != null) {
-            Row() {
+            Row {
                 Text(text = "Author: ", fontWeight = FontWeight.Bold)
                 Text(details.detailedCommitAuthor)
             }
@@ -92,7 +94,7 @@ fun Details(details: DetailedCommit?) {
             Text(text = details.detailedCommitMessage)
             Text(text = "TreeUrl :", fontWeight = FontWeight.Bold)
             Text(text = details.detailedCommitTreeURL)
-            Row() {
+            Row {
                 Text(text = "Verified: ", fontWeight = FontWeight.Bold)
                 Checkbox(checked = details.detailedCommitVerified, onCheckedChange = null)
             }

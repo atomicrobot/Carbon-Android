@@ -18,36 +18,46 @@ class MainViewModel(
     private val gitHubInteractor: GitHubInteractor,
     private val loadingDelayMs: Long,
 ) : ViewModel() {
-
     sealed class Commits {
         object Loading : Commits()
+
         class Result(val commits: List<Commit>) : Commits()
+
         class Error(val message: String) : Commits()
     }
+
     sealed class CardClicked {
         data class PassSha(val sha: String) : CardClicked()
+
         object Clicked : CardClicked()
     }
+
     sealed class ClickAction {
         object Success : ClickAction()
     }
 
     data class MainScreenUiState(
-        val username: String = DEFAULT_USERNAME, // NON-NLS
-        val repository: String = DEFAULT_REPO, // NON-NLS
+        // NON-NLS
+        val username: String = DEFAULT_USERNAME,
+        // NON-NLS
+        val repository: String = DEFAULT_REPO,
         val commitsState: Commits = Commits.Result(emptyList()),
-        val sha: String = ""
+        val sha: String = "",
     )
 
     private val _uiState = MutableStateFlow(MainScreenUiState())
     val uiState: StateFlow<MainScreenUiState>
         get() = _uiState
 
-    fun updateUserInput(username: String?, repository: String?) {
-        _uiState.value = _uiState.value.copy(
-            username = username ?: _uiState.value.username,
-            repository = repository ?: _uiState.value.repository
-        )
+    fun updateUserInput(
+        username: String?,
+        repository: String?,
+    ) {
+        _uiState.value =
+            _uiState.value.copy(
+                username = username ?: _uiState.value.username,
+                repository = repository ?: _uiState.value.repository,
+            )
     }
 
     fun fetchCommits() {
@@ -59,19 +69,21 @@ class MainViewModel(
                 gitHubInteractor.loadCommits(
                     GitHubInteractor.LoadCommitsRequest(
                         uiState.value.username,
-                        uiState.value.repository
-                    )
+                        uiState.value.repository,
+                    ),
                 ).let {
                     _uiState.value = _uiState.value.copy(commitsState = Commits.Result(it.commits))
                 }
             } catch (error: Exception) {
                 Timber.e(error)
-                _uiState.value = _uiState.value.copy(
-                    commitsState = Commits.Error(
-                        error.message
-                            ?: app.getString(R.string.error_unexpected)
+                _uiState.value =
+                    _uiState.value.copy(
+                        commitsState =
+                            Commits.Error(
+                                error.message
+                                    ?: app.getString(R.string.error_unexpected),
+                            ),
                     )
-                )
             }
         }
     }
@@ -89,14 +101,16 @@ class MainViewModel(
             }
             is CardClicked.PassSha -> {
                 viewModelScope.launch {
-                    _uiState.value = _uiState.value.copy(
-                        sha = action.sha
-                    )
+                    _uiState.value =
+                        _uiState.value.copy(
+                            sha = action.sha,
+                        )
                     clickAction.emit(ClickAction.Success)
                 }
             }
         }
     }
+
     val clickAction = MutableSharedFlow<ClickAction>()
 
     companion object {

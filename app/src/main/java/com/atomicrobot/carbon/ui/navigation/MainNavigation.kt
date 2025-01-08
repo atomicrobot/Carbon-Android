@@ -92,7 +92,7 @@ fun MainNavigation() {
                     scope.launch {
                         scaffoldState.drawerState.open()
                     }
-                }
+                },
             )
         },
         bottomBar = {
@@ -113,7 +113,7 @@ fun MainNavigation() {
                                 restoreState = true
                             }
                         }
-                    }
+                    },
                 )
             }
         },
@@ -130,16 +130,16 @@ fun MainNavigation() {
                             launchSingleTop = true
                         }
                     }
-                }
+                },
             )
         },
         snackbarHost = { SnackbarHost(scaffoldState.snackbarHostState) },
-        scaffoldState = scaffoldState
+        scaffoldState = scaffoldState,
     ) { innerPadding ->
         NavHost(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
-            startDestination = "Main"
+            startDestination = "Main",
         ) {
             mainFlowGraph(navController, scaffoldState)
         }
@@ -152,7 +152,7 @@ fun MainNavigation() {
 @Suppress("UNUSED_PARAMETER")
 fun NavGraphBuilder.mainFlowGraph(
     navController: NavHostController,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
 ) {
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
         composable(CarbonScreens.Home.route) {
@@ -173,7 +173,7 @@ fun NavGraphBuilder.mainFlowGraph(
         composable(
             route = CarbonScreens.DeepLink.routeWithArgs,
             arguments = CarbonScreens.DeepLink.arguments,
-            deepLinks = CarbonScreens.DeepLink.deepLink
+            deepLinks = CarbonScreens.DeepLink.deepLink,
         ) {
             val textColor = it.arguments?.getString("textColor")
             var color = Color.BLACK
@@ -194,19 +194,20 @@ fun NavGraphBuilder.mainFlowGraph(
             CarbonAndroidTheme {
                 DeepLinkSampleScreen(
                     textColor = color,
-                    textSize = size
+                    textSize = size,
                 )
             }
         }
         composable(CarbonScreens.Lumen.route) {
             LumenTheme {
-                val customTextSelectionColors = TextSelectionColors(
-                    handleColor = LightBlurple,
-                    backgroundColor = LightBlurple.copy(alpha = 0.4f)
-                )
+                val customTextSelectionColors =
+                    TextSelectionColors(
+                        handleColor = LightBlurple,
+                        backgroundColor = LightBlurple.copy(alpha = 0.4f),
+                    )
                 CompositionLocalProvider(
                     LocalContentColor provides White100,
-                    LocalTextSelectionColors provides customTextSelectionColors
+                    LocalTextSelectionColors provides customTextSelectionColors,
                 ) {
                     DesignLumenNavigation()
                 }
@@ -231,7 +232,7 @@ fun NavGraphBuilder.mainFlowGraph(
                     Toast.makeText(
                         activity,
                         "Barcode clicked: ${it.displayValue}",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                 }
             }

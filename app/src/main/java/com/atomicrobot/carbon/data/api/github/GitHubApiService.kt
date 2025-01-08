@@ -9,6 +9,6 @@ interface GitHubApiService {
     @GET("repos/{user}/{repository}/commits")
     suspend fun listCommits(
         @Path("user") user: String,
-        @Path("repository") repository: String
+        @Path("repository") repository: String,
     ): Response<List<Commit>>
 }

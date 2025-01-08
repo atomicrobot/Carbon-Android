@@ -23,15 +23,17 @@ fun LumenIndeterminateIndicator(modifier: Modifier = Modifier) {
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0F,
         targetValue = 360F,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000, easing = LinearEasing)
-        )
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 1000, easing = LinearEasing),
+            ),
     )
     Image(
         painter = painterResource(id = R.drawable.ic_loading_icon),
         contentDescription = stringResource(id = R.string.cont_desc_loading),
-        modifier = modifier
-            .progressSemantics()
-            .graphicsLayer { rotationZ = rotation }
+        modifier =
+            modifier
+                .progressSemantics()
+                .graphicsLayer { rotationZ = rotation },
     )
 }
