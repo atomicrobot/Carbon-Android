@@ -59,13 +59,13 @@ android {
         jvmTarget = "11"
     }
 
-    compileSdk = ConfigVals.compileSdkVersion
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.atomicrobot.carbon"
 
-        minSdk = ConfigVals.minSdkVersion
-        targetSdk = ConfigVals.targetSdkVersion
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
 
         multiDexEnabled = true
 
@@ -144,7 +144,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Dependencies.composeVersion
+        kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
     packaging {
         resources {
@@ -246,7 +246,7 @@ tasks.named<Pmd>("pmd").configure {
 }
 
 jacoco {
-    toolVersion = Dependencies.jacocoVersion
+    toolVersion = libs.versions.jacoco.get()
 }
 
 tasks.withType<Test> {
