@@ -1,22 +1,15 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
 plugins {
-    id("com.android.application")
-    id("com.google.devtools.ksp")
-    id("com.google.firebase.crashlytics")
-    id("com.google.gms.google-services")
-    id("jacoco")
-    id("kotlin-allopen")
-    id("kotlin-android")
-    id("kotlin-parcelize")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.1.0" // kotlin version
-    id("org.jlleitschuh.gradle.ktlint")
-    id("pmd")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.allopen)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.ktlint)
+    jacoco
+    pmd
 }
 
 // Version variables
@@ -350,5 +343,3 @@ if (tasks.findByName("jacocoAndroidCoverageVerification") == null) {
 allOpen {
     annotation("com.atomicrobot.carbon.Mockable")
 }
-
-apply(plugin = "com.google.gms.google-services")
