@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterialApi::class)
-
 package com.atomicrobot.carbon.ui.main
 
 import android.app.NotificationChannel
@@ -14,14 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -150,10 +146,7 @@ fun GithubUserInput(
     onUserSelectedFetchCommits: () -> Unit = {},
 ) {
     Surface(
-        color =
-            MaterialTheme.colors.onSurface.copy(
-                alpha = TextFieldDefaults.BackgroundOpacity,
-            ),
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
     ) {
         Column(
             modifier =

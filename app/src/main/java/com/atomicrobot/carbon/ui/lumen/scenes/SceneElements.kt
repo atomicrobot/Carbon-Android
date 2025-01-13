@@ -12,20 +12,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.ExposedDropdownMenuDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -72,7 +72,7 @@ fun SceneSectionHeader(
             modifier
                 .fillMaxWidth()
                 .padding(top = 14.dp),
-        style = MaterialTheme.typography.h2,
+        style = MaterialTheme.typography.displayLarge,
     )
 }
 
@@ -111,7 +111,7 @@ fun SceneItem(
                     modifier =
                         Modifier
                             .padding(bottom = 8.dp),
-                    style = MaterialTheme.typography.h3,
+                    style = MaterialTheme.typography.displayMedium,
                 )
                 // Since the non-favorite Scenes are enumerated by the containing 'room',
                 // we only need to show the 'room' label for the favorite Scenes
@@ -121,7 +121,7 @@ fun SceneItem(
                         modifier =
                             Modifier
                                 .padding(bottom = 4.dp),
-                        style = MaterialTheme.typography.body1,
+                        style = MaterialTheme.typography.bodyLarge,
                     )
                 }
 
@@ -194,7 +194,7 @@ fun DualActionRow(
             text = title,
             modifier = Modifier.weight(1F),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h2,
+            style = MaterialTheme.typography.displayLarge,
         )
 
         IconButton(
@@ -226,7 +226,7 @@ fun TaskLabeledTextField(
             modifier =
                 Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.bodyMedium,
         )
 
         TextField(
@@ -249,7 +249,7 @@ fun TaskLabeledTextField(
                         color = CardBackgroundOn,
                         shape = MaterialTheme.shapes.medium,
                     ),
-            textStyle = MaterialTheme.typography.body1,
+            textStyle = MaterialTheme.typography.bodyLarge,
             placeholder = {
                 placeholder?.let {
                     TaskPlaceHolderText(placeholder, Modifier.fillMaxWidth())
@@ -257,19 +257,14 @@ fun TaskLabeledTextField(
             },
             singleLine = true,
             colors =
-                TextFieldDefaults.textFieldColors(
+                TextFieldDefaults.colors(
                     cursorColor = White100,
-                    disabledTextColor = Color.Transparent,
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                ),
+                )
         )
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskLabeledDropDownMenu(
     label: String = "Label",
@@ -288,7 +283,7 @@ fun TaskLabeledDropDownMenu(
             modifier =
                 Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.bodyMedium,
         )
 
         ExposedDropdownMenuBox(
@@ -316,7 +311,7 @@ fun TaskLabeledDropDownMenu(
                             shape = MaterialTheme.shapes.medium,
                         ),
                 readOnly = true,
-                textStyle = MaterialTheme.typography.body1,
+                textStyle = MaterialTheme.typography.bodyLarge,
                 placeholder = {
                     placeholder?.let {
                         TaskPlaceHolderText(placeholder, Modifier.fillMaxWidth())
@@ -328,7 +323,10 @@ fun TaskLabeledDropDownMenu(
                     ExposedDropdownMenuDefaults.textFieldColors(
                         cursorColor = White100,
                         disabledTextColor = Color.Transparent,
-                        backgroundColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                        errorContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
@@ -346,12 +344,13 @@ fun TaskLabeledDropDownMenu(
                             onOptionSelected(selectionOption)
                             expanded = false
                         },
-                    ) {
-                        Text(
-                            text = selectionOption.toString(),
-                            style = MaterialTheme.typography.body1,
-                        )
-                    }
+                        text = {
+                            Text(
+                                text = selectionOption.toString(),
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                        }
+                    )
                 }
             }
         }
@@ -367,7 +366,7 @@ fun TaskPlaceHolderText(
         text = text,
         modifier = modifier,
         color = White50,
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.bodyLarge,
     )
 }
 
@@ -392,7 +391,7 @@ fun LeftAlignedIconText(
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }
@@ -463,7 +462,7 @@ fun SceneLightItem(
                 end.linkTo(switch.start, 8.dp)
                 width = Dimension.fillToConstraints
             },
-            style = MaterialTheme.typography.h4,
+            style = MaterialTheme.typography.headlineLarge,
         )
 
         LeftAlignedIconText(
@@ -518,11 +517,11 @@ fun SceneTaskDescription() {
     ) {
         Text(
             text = stringResource(id = R.string.moody_title),
-            style = MaterialTheme.typography.h3,
+            style = MaterialTheme.typography.displayMedium,
         )
         Text(
             text = stringResource(id = R.string.moody_description),
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
@@ -544,7 +543,7 @@ fun SceneTaskFavoriteButton(
                     shape = MaterialTheme.shapes.medium,
                 ),
         elevation = null,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
     ) {
         Icon(
             painter =
@@ -561,7 +560,7 @@ fun SceneTaskFavoriteButton(
         Text(
             text = stringResource(id = R.string.add_favorite),
             modifier = Modifier.padding(horizontal = 6.dp),
-            style = MaterialTheme.typography.h2,
+            style = MaterialTheme.typography.displayLarge,
         )
     }
 }
@@ -589,7 +588,7 @@ fun SceneDetailsButton(
                 .fillMaxWidth()
                 .height(68.dp),
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(backgroundColor = LightBlurple),
+        colors = ButtonDefaults.buttonColors(containerColor = LightBlurple),
     ) {
         val buttonText =
             if (newScene) {
@@ -601,7 +600,7 @@ fun SceneDetailsButton(
         Text(
             text = buttonText,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h2,
+            style = MaterialTheme.typography.displayLarge,
         )
     }
 }

@@ -27,16 +27,16 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PhotoCamera
 import androidx.compose.material.icons.rounded.PhotoCameraBack
@@ -261,7 +261,7 @@ fun NoCameraPermissionPreview(modifier: Modifier = Modifier) {
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.camera_perm_denied),
                 color = Color.White,
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
             )
         }
     }
@@ -456,7 +456,7 @@ fun CameraButton(
         enabled = cameraPermissionGranted,
         shape = CircleShape,
         border = BorderStroke(2.dp, Color.White),
-        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Transparent),
+        colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
         contentPadding = PaddingValues(5.dp),
     ) {
         Surface(
