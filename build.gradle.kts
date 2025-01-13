@@ -1,28 +1,15 @@
-buildscript {
-
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("https://plugins.gradle.org/m2/")
-        }
-    }
-
-    dependencies {
-        classpath("com.android.tools.build:gradle:${Dependencies.androidPluginVersion}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:${Dependencies.firebaseCrashlyticsGradleVersion}")
-        classpath("com.google.gms:google-services:${Dependencies.googleServicesVersion}")
-        classpath("org.jacoco:org.jacoco.core:${Dependencies.jacocoVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-allopen:${Dependencies.kotlinVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.kotlinVersion}")
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:${Dependencies.ktlintVersion}")
-    }
-}
-
 plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.kotlin.allopen) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.parcelize) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.ktlint) apply false
+    jacoco
     java
     idea
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29" apply false
 }
 
 idea {
@@ -33,12 +20,6 @@ idea {
 }
 
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url = uri("https://jitpack.io") }
-    }
-
     // Verbose output for usage of deprecated APIs
     tasks.withType<JavaCompile> {
         options.compilerArgs = mutableListOf("-Xlint:deprecation")

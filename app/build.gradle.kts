@@ -1,22 +1,15 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
 plugins {
-    id("com.android.application")
-    id("com.google.devtools.ksp")
-    id("com.google.firebase.crashlytics")
-    id("com.google.gms.google-services")
-    id("jacoco")
-    id("kotlin-allopen")
-    id("kotlin-android")
-    id("kotlin-parcelize")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.1.0" // kotlin version
-    id("org.jlleitschuh.gradle.ktlint")
-    id("pmd")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.allopen)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.ktlint)
+    jacoco
+    pmd
 }
 
 // Version variables
@@ -59,13 +52,13 @@ android {
         jvmTarget = "11"
     }
 
-    compileSdk = ConfigVals.compileSdkVersion
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.atomicrobot.carbon"
 
-        minSdk = ConfigVals.minSdkVersion
-        targetSdk = ConfigVals.targetSdkVersion
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
 
         multiDexEnabled = true
 
@@ -144,7 +137,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Dependencies.composeVersion
+        kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
     packaging {
         resources {
@@ -161,71 +154,71 @@ android {
 
 dependencies {
 
-    annotationProcessor("androidx.room:room-compiler:${Dependencies.roomVersion}")
+    annotationProcessor(libs.androidx.room.compiler)
 
-    implementation("androidx.camera:camera-camera2:${Dependencies.cameraxVersion}")
-    implementation("androidx.camera:camera-lifecycle:${Dependencies.cameraxVersion}")
-    implementation("androidx.camera:camera-mlkit-vision:${Dependencies.cameraxMlkitVersion}")
-    implementation("androidx.compose.material:material:${Dependencies.composeVersion}")
-    implementation("androidx.compose.material:material-icons-extended:${Dependencies.composeVersion}")
-    implementation("androidx.compose.ui:ui:${Dependencies.composeVersion}")
-    implementation("androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}")
-    implementation("androidx.constraintlayout:constraintlayout-compose:${Dependencies.composeConstraintVersion}")
-    implementation("androidx.core:core-ktx:${Dependencies.coreVersion}")
-    implementation("androidx.core:core-splashscreen:${Dependencies.splashVersion}")
-    implementation("androidx.navigation:navigation-compose:${Dependencies.composeNavigationVersion}")
-    implementation("androidx.room:room-ktx:${Dependencies.roomVersion}")
-    implementation("androidx.room:room-runtime:${Dependencies.roomVersion}")
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.mlkit.vision)
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
 
-    implementation("com.google.accompanist:accompanist-systemuicontroller:${Dependencies.googleAccompanistVersion}")
-    implementation("com.google.android.gms:play-services-base:${Dependencies.playServicesVersion}")
-    implementation(platform("com.google.firebase:firebase-bom:${Dependencies.firebaseBomVersion}"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.firebase:firebase-messaging")
-    implementation("com.google.mlkit:barcode-scanning:${Dependencies.mlBarcodeScannerVersion}")
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.play.services.base)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.barcode.scanning)
 
-    implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
+    implementation(libs.timber)
 
-    implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshiVersion}")
-    implementation("com.squareup.okhttp3:logging-interceptor:${Dependencies.okHttpVersion}")
-    implementation("com.squareup.okhttp3:okhttp:${Dependencies.okHttpVersion}")
-    implementation("com.squareup.okhttp3:okhttp-urlconnection:${Dependencies.okHttpVersion}")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:${Dependencies.retrofitVersion}")
-    implementation("com.squareup.retrofit2:converter-moshi:${Dependencies.retrofitVersion}")
-    implementation("com.squareup.retrofit2:retrofit:${Dependencies.retrofitVersion}")
+    implementation(libs.moshi.kotlin)
+    implementation(libs.logging.interceptor)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.urlconnection)
+    implementation(libs.adapter.rxjava2)
+    implementation(libs.converter.moshi)
+    implementation(libs.retrofit)
 
-    implementation("io.insert-koin:koin-android:${Dependencies.koinVersion}")
-    implementation("io.insert-koin:koin-androidx-compose:${Dependencies.koinVersion}")
-    implementation("io.noties.markwon:core:${Dependencies.markwonVersion}")
-    implementation("io.reactivex.rxjava3:rxandroid:${Dependencies.rxAndroidVersion}")
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.core)
+    implementation(libs.rxandroid)
 
-    ksp("androidx.room:room-compiler:${Dependencies.roomVersion}")
-    ksp("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshiVersion}")
+    ksp(libs.androidx.room.compiler)
+    ksp(libs.moshi.kotlin.codegen)
 
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Dependencies.composeVersion}")
-    androidTestImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:${Dependencies.espressoVersion}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Dependencies.espressoVersion}")
-    androidTestImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
-    androidTestImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")
-    androidTestImplementation("androidx.test:runner:${Dependencies.androidTestRunnerVersion}")
-    androidTestImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependencies.mockitoKotlinVersion}")
-    androidTestImplementation("org.mockito:mockito-android:${Dependencies.mockitoVersion}")
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.core)
+    androidTestImplementation(libs.androidx.espresso.contrib)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.mockito.kotlin)
+    androidTestImplementation(libs.mockito.android)
 
-    debugImplementation("androidx.compose.ui:ui-test-manifest:${Dependencies.composeVersion}")
-    debugImplementation("androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}")
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}")
-    debugImplementation("com.squareup.okhttp3:logging-interceptor:${Dependencies.okHttpVersion}")
+    debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.leakcanary.android)
+    debugImplementation(libs.logging.interceptor)
 
-    testImplementation("junit:junit:${Dependencies.junitVersion}")
-    testImplementation("androidx.test:rules:${Dependencies.androidTestSupportVersion}")
-    testImplementation("androidx.test:core:${Dependencies.androidTestSupportVersion}")
-    testImplementation("androidx.test.ext:junit:${Dependencies.junitTestVersion}")
-    testImplementation("org.mockito:mockito-core:${Dependencies.mockitoVersion}")
-    testImplementation("org.robolectric:robolectric:${Dependencies.robolectricVersion}")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependencies.mockitoKotlinVersion}")
-    testImplementation("com.squareup.okhttp3:mockwebserver:${Dependencies.okHttpVersion}")
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.rules)
+    testImplementation(libs.androidx.core)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockwebserver)
 }
 
 tasks.register<Pmd>("pmd") {}
@@ -246,7 +239,7 @@ tasks.named<Pmd>("pmd").configure {
 }
 
 jacoco {
-    toolVersion = Dependencies.jacocoVersion
+    toolVersion = libs.versions.jacoco.get()
 }
 
 tasks.withType<Test> {
@@ -350,5 +343,3 @@ if (tasks.findByName("jacocoAndroidCoverageVerification") == null) {
 allOpen {
     annotation("com.atomicrobot.carbon.Mockable")
 }
-
-apply(plugin = "com.google.gms.google-services")
