@@ -8,14 +8,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -53,7 +53,7 @@ import kotlinx.coroutines.launch
 
 sealed class LumenBottomSheetTask {
     // I can't think of a better way to blank the task sheet
-    object NoTask : LumenBottomSheetTask()
+    data object NoTask : LumenBottomSheetTask()
 
     abstract class LumenMenuTask(val titleRes: Int) : LumenBottomSheetTask()
 
@@ -67,11 +67,11 @@ val bottomSheetTasks: List<LumenBottomSheetTask.LumenMenuTask> =
         LumenBottomSheetTask.AddScene,
     )
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 class LumenAppState(
-    val modalBottomSheetState: ModalBottomSheetState,
+    val modalBottomSheetState: SheetState,
     val navController: NavHostController,
-    val scaffoldState: ScaffoldState,
+    val snackbarHostState: SnackbarHostState,
     initialBottomSheetTask: LumenBottomSheetTask,
 ) {
     var currentBottomSheetTask by mutableStateOf<LumenBottomSheetTask>(initialBottomSheetTask)
@@ -88,31 +88,27 @@ class LumenAppState(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun rememberLumenAppState(
-    modalBottomSheetState: ModalBottomSheetState =
-        rememberModalBottomSheetState(
-            ModalBottomSheetValue.Hidden,
-            skipHalfExpanded = true,
-        ),
+    modalBottomSheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     navController: NavHostController = rememberNavController(),
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     bottomSheetTask: LumenBottomSheetTask = remember { LumenBottomSheetTask.NoTask },
-) = remember(modalBottomSheetState, navController, scaffoldState, bottomSheetTask) {
-    LumenAppState(modalBottomSheetState, navController, scaffoldState, bottomSheetTask)
+) = remember(modalBottomSheetState, navController, snackbarHostState, bottomSheetTask) {
+    LumenAppState(modalBottomSheetState, navController, snackbarHostState, bottomSheetTask)
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
     LaunchedEffect(appState.modalBottomSheetState.currentValue) {
-        if (appState.modalBottomSheetState.currentValue == ModalBottomSheetValue.Hidden) {
+        if (appState.modalBottomSheetState.currentValue == SheetValue.Hidden) {
             appState.clearBottomSheetTask()
         }
     }
 
-    ModalBottomSheetLayout(
+    ModalBottomSheet(
         sheetContent = { LumenBottomSheet(appState) },
         modifier =
             Modifier
@@ -152,7 +148,9 @@ fun LumenMainContent(appState: LumenAppState) {
         Column {
             Scaffold(
                 modifier = Modifier.navigationBarsPadding(),
-                scaffoldState = appState.scaffoldState,
+                snackbarHost = {
+                    SnackbarHost(hostState = appState.snackbarHostState)
+                },
                 topBar = {
                     LumenTopAppBar(
                         title = appBarTitle(navBackStackEntry = navBackStackEntry),
@@ -185,7 +183,7 @@ fun LumenMainContent(appState: LumenAppState) {
                             }
                         }
                     },
-                backgroundColor = Color.Transparent,
+                containerColor = Color.Transparent,
             ) { innerPadding ->
                 NavHost(
                     modifier = Modifier.padding(innerPadding),

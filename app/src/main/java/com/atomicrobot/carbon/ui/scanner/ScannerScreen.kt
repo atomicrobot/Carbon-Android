@@ -31,8 +31,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
@@ -42,7 +40,8 @@ import androidx.compose.material.icons.rounded.PhotoCamera
 import androidx.compose.material.icons.rounded.PhotoCameraBack
 import androidx.compose.material.icons.rounded.PhotoCameraFront
 import androidx.compose.material.icons.rounded.QrCode
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -79,7 +78,7 @@ import kotlin.math.min
 
 @Composable
 fun ScannerScreen(
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onBarcodeSelected: (Barcode) -> Unit = {},
 ) {
     val cameraPermRationale = stringResource(id = R.string.camera_perm_rationale)
@@ -89,10 +88,11 @@ fun ScannerScreen(
         onShowRationale =
             {
                 // Show the permission rationale to the user as a snackbar message
-                val result: SnackbarResult =
-                    scaffoldState
-                        .snackbarHostState
-                        .showSnackbar(cameraPermRationale, "Grant", SnackbarDuration.Short)
+                val result: SnackbarResult = snackbarHostState.showSnackbar(
+                    message = cameraPermRationale,
+                    actionLabel = "Grant",
+                    duration = SnackbarDuration.Short,
+                )
                 return@RequestPermission if (result == SnackbarResult.ActionPerformed) {
                     PermissionRationaleResult.ActionPerformed
                 } else {
@@ -217,7 +217,7 @@ fun LivePreview(
                 Preview
                     .Builder()
                     .build()
-                    .apply { setSurfaceProvider(it.surfaceProvider) }
+                    .apply { surfaceProvider = it.surfaceProvider }
             val usesCases: MutableList<UseCase> = mutableListOf(previewUseCase)
             // Create a use-case for for analyzing the camera feed
             val inferenceUseCase =

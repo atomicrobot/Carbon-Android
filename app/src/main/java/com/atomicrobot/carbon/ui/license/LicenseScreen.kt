@@ -12,12 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,7 +29,7 @@ import io.noties.markwon.Markwon
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LicenseScreen(scaffoldState: ScaffoldState = rememberScaffoldState()) {
+fun LicenseScreen(snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }) {
     val viewModel: LicenseViewModel = koinViewModel()
     val screenState by viewModel.uiState.collectAsState()
 
@@ -44,7 +44,7 @@ fun LicenseScreen(scaffoldState: ScaffoldState = rememberScaffoldState()) {
     ) {
         LicensesResponse(
             screenState.licensesState,
-            scaffoldState,
+            snackbarHostState,
         )
     }
 }
@@ -52,7 +52,7 @@ fun LicenseScreen(scaffoldState: ScaffoldState = rememberScaffoldState()) {
 @Composable
 fun LicensesResponse(
     licensesState: LicenseViewModel.Licenses,
-    scaffoldState: ScaffoldState,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -60,8 +60,8 @@ fun LicensesResponse(
             is LicenseViewModel.Licenses.Loading ->
                 CircularProgressIndicator()
             is LicenseViewModel.Licenses.Error ->
-                LaunchedEffect(scaffoldState.snackbarHostState) {
-                    scaffoldState.snackbarHostState.showSnackbar(message = licensesState.message)
+                LaunchedEffect(snackbarHostState) {
+                    snackbarHostState.showSnackbar(message = licensesState.message)
                 }
             is LicenseViewModel.Licenses.Result -> LicensesList(licenses = licensesState.licenses)
         }

@@ -16,12 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.SwitchColors
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.ripple
 import androidx.compose.material.swipeable
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -46,7 +46,6 @@ import kotlin.math.roundToInt
 private val AnimationSpec = TweenSpec<Float>(durationMillis = 100)
 
 @Preview
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LumenSwitch(
     checked: Boolean = false,
@@ -81,7 +80,7 @@ fun LumenSwitch(
 
     Box(
         modifier
-            .then(Modifier.minimumTouchTargetSize())
+            .then(Modifier.minimumInteractiveComponentSize())
             .then(toggleableModifier)
             .swipeable(
                 state = swipeableState,
@@ -140,7 +139,7 @@ fun BoxScope.LumenSwitchImp(
             )
             .requiredSize(DefaultThumbDiameter)
             .shadow(properties.thumbElevation, CircleShape, clip = false)
-            .background(thumbColor, properties.thumbShape),
+            .background(color = thumbColor, shape = properties.thumbShape),
     )
 }
 
@@ -167,8 +166,7 @@ private val DefaultTrackRadius = CornerRadius(50F, 50F)
 private val DefaultThumbShape = CircleShape
 private val DefaultThumbElevation = 1.dp
 
-class LumenSwitchProperties
-    constructor(
+class LumenSwitchProperties(
         val trackCornerRadius: CornerRadius = DefaultTrackRadius,
         val thumbShape: Shape = DefaultThumbShape,
         val thumbDiameter: Dp = DefaultThumbDiameter,

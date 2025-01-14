@@ -16,10 +16,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,17 +50,17 @@ sealed class CarbonShellProject(
     val projectName: Int,
     val projectImageRes: Int,
 ) {
-    object CarbonAndroid : CarbonShellProject(
+    data object CarbonAndroid : CarbonShellProject(
         projectName = R.string.main_app_title,
         projectImageRes = R.drawable.carbon_android_logo,
     )
 
-    object Lumen : CarbonShellProject(
+    data object Lumen : CarbonShellProject(
         projectName = R.string.lumen_title,
         projectImageRes = R.drawable.lumen_project,
     )
 
-    object Scanner : CarbonShellProject(
+    data object Scanner : CarbonShellProject(
         projectName = R.string.scanner_title,
         projectImageRes = R.drawable.ic_baseline_qr_code_scanner,
     )
@@ -87,10 +86,9 @@ fun CarbonShellNavigation(navController: NavController) {
 fun CarbonShellMainContent(navController: NavController) {
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
-        scaffoldState = rememberScaffoldState(),
         topBar = {},
         bottomBar = {},
-        backgroundColor = Color.Transparent,
+        containerColor = Color.Transparent,
     ) { innerPadding ->
         Box(
             modifier =

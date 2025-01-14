@@ -8,16 +8,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -59,7 +63,8 @@ import timber.log.Timber
 fun MainNavigation() {
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
 
     val showBottomBar = rememberSaveable { mutableStateOf(true) }
@@ -78,9 +83,9 @@ fun MainNavigation() {
         }
     }
 
-    BackHandler(enabled = scaffoldState.drawerState.isOpen) {
+    BackHandler(enabled = drawerState.isOpen) {
         scope.launch {
-            scaffoldState.drawerState.close()
+            drawerState.close()
         }
     }
     Scaffold(
@@ -90,7 +95,7 @@ fun MainNavigation() {
                 buttonIcon = Icons.Filled.Menu,
                 onButtonClicked = {
                     scope.launch {
-                        scaffoldState.drawerState.open()
+                        drawerState.open()
                     }
                 },
             )
@@ -117,47 +122,45 @@ fun MainNavigation() {
                 )
             }
         },
-        drawerContent = {
-            Drawer(
-                screens = drawerScreens,
-                onDestinationClicked = { route ->
-                    scope.launch {
-                        scaffoldState.drawerState.close()
-                    }
-                    if (navController.currentBackStackEntry?.destination?.route != route) {
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId)
-                            launchSingleTop = true
-                        }
-                    }
-                },
-            )
-        },
-        snackbarHost = { SnackbarHost(scaffoldState.snackbarHostState) },
-        scaffoldState = scaffoldState,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         NavHost(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
             startDestination = "Main",
         ) {
-            mainFlowGraph(navController, scaffoldState)
+            mainFlowGraph(navController, snackbarHostState)
         }
+    }
+    ModalDrawerSheet {
+        Drawer(
+            screens = drawerScreens,
+            onDestinationClicked = { route ->
+                scope.launch {
+                    drawerState.close()
+                }
+                if (navController.currentBackStackEntry?.destination?.route != route) {
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
+                }
+            },
+        )
     }
 }
 
 /**
  * Nested nav. graph dedicated to displaying 'main' app content.
  */
-@Suppress("UNUSED_PARAMETER")
 fun NavGraphBuilder.mainFlowGraph(
     navController: NavHostController,
-    scaffoldState: ScaffoldState,
+    snackbarHostState: SnackbarHostState,
 ) {
     navigation(startDestination = CarbonScreens.Home.route, route = "Main") {
         composable(CarbonScreens.Home.route) {
             CarbonAndroidTheme {
-                MainScreen(scaffoldState, navController)
+                MainScreen(snackbarHostState, navController)
             }
         }
         composable(CarbonScreens.Settings.route) {
