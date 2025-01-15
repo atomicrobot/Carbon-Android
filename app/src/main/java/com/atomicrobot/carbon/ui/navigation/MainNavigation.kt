@@ -14,7 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -88,65 +88,70 @@ fun MainNavigation() {
             drawerState.close()
         }
     }
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = appBarTitle(navBackStackEntry),
-                buttonIcon = Icons.Filled.Menu,
-                onButtonClicked = {
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            Drawer(
+                screens = drawerScreens,
+                onDestinationClicked = { route ->
                     scope.launch {
-                        drawerState.open()
+                        drawerState.close()
+                    }
+                    if (navController.currentBackStackEntry?.destination?.route != route) {
+                        navController.navigate(route) {
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
                     }
                 },
             )
         },
-        bottomBar = {
-            if (showBottomBar.value) {
-                BottomNavigationBar(
-                    destinations = appScreens,
-                    navController = navController,
-                    onDestinationClicked = {
-                        if (navController.currentBackStackEntry?.destination?.route != it.route) {
-                            navController.navigate(it.route) {
-                                // Make sure the back stack only consists of the current graphs main
-                                // destination
-                                popUpTo(CarbonScreens.Home.route) {
-                                    saveState = true
-                                }
-                                // Singular instance of destinations
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+    ) {
+        Scaffold(
+            topBar = {
+                TopBar(
+                    title = appBarTitle(navBackStackEntry),
+                    buttonIcon = Icons.Filled.Menu,
+                    onButtonClicked = {
+                        scope.launch {
+                            drawerState.open()
                         }
                     },
                 )
-            }
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-    ) { innerPadding ->
-        NavHost(
-            modifier = Modifier.padding(innerPadding),
-            navController = navController,
-            startDestination = "Main",
-        ) {
-            mainFlowGraph(navController, snackbarHostState)
-        }
-    }
-    ModalDrawerSheet {
-        Drawer(
-            screens = drawerScreens,
-            onDestinationClicked = { route ->
-                scope.launch {
-                    drawerState.close()
-                }
-                if (navController.currentBackStackEntry?.destination?.route != route) {
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.startDestinationId)
-                        launchSingleTop = true
-                    }
+            },
+            bottomBar = {
+                if (showBottomBar.value) {
+                    BottomNavigationBar(
+                        destinations = appScreens,
+                        navController = navController,
+                        onDestinationClicked = {
+                            if (navController.currentBackStackEntry?.destination?.route != it.route) {
+                                navController.navigate(it.route) {
+                                    // Make sure the back stack only consists of the current graphs main
+                                    // destination
+                                    popUpTo(CarbonScreens.Home.route) {
+                                        saveState = true
+                                    }
+                                    // Singular instance of destinations
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        },
+                    )
                 }
             },
-        )
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+        ) { innerPadding ->
+            NavHost(
+                modifier = Modifier.padding(innerPadding),
+                navController = navController,
+                startDestination = "Main",
+            ) {
+                mainFlowGraph(navController, snackbarHostState)
+            }
+        }
     }
 }
 

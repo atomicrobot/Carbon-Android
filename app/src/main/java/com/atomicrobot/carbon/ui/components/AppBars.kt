@@ -73,7 +73,6 @@ fun TopBar(
     buttonIcon: ImageVector = Icons.Filled.Menu,
     onButtonClicked: () -> Unit = {},
 ) = TopAppBar(
-    modifier = Modifier.padding(end = 12.dp),
     colors = TopAppBarColors(
         containerColor = Neutron,
         titleContentColor = Color.White,
@@ -82,7 +81,10 @@ fun TopBar(
         actionIconContentColor = Color.White,
     ),
     title = {
-        Row {
+        Row(
+            modifier = Modifier.padding(end = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             IconButton(onClick = { onButtonClicked() }) {
                 Icon(imageVector = buttonIcon, contentDescription = "")
             }
@@ -96,10 +98,6 @@ fun TopBar(
         }
     }
 )
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopBar(title: String = "") = TopAppBar(title = { Text(text = title) })
 
 @Composable
 fun BottomBar(
