@@ -102,22 +102,28 @@ fun rememberLumenAppState(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     LaunchedEffect(appState.modalBottomSheetState.currentValue) {
         if (appState.modalBottomSheetState.currentValue == SheetValue.Hidden) {
             appState.clearBottomSheetTask()
         }
     }
 
-    ModalBottomSheet(
-        sheetContent = { LumenBottomSheet(appState) },
-        modifier =
+    LumenMainContent(appState)
+
+    if (appState.currentBottomSheetTask !is LumenBottomSheetTask.NoTask) {
+        ModalBottomSheet(
+            modifier =
             Modifier
                 .statusBarsPadding()
                 .fillMaxSize(),
-        sheetState = appState.modalBottomSheetState,
-        scrimColor = Color.Transparent,
-    ) {
-        LumenMainContent(appState)
+            sheetState = appState.modalBottomSheetState,
+            scrimColor = Color.Transparent,
+            onDismissRequest = { showBottomSheet = false },
+        ) {
+            LumenBottomSheet(appState)
+        }
     }
 }
 
