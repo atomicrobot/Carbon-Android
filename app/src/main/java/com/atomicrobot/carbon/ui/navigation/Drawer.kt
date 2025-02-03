@@ -89,17 +89,20 @@ fun DrawerAppScreenItem(
                 painter = painterResource(id = R.drawable.carbon_android_logo),
                 contentDescription = contentDesc,
                 modifier = modifier,
+                tint = MaterialTheme.colorScheme.onBackground
             )
         } else {
             Icon(
                 imageVector = screen.iconData.vectorData,
                 contentDescription = contentDesc,
                 modifier = modifier,
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
         Text(
             text = screen.title,
             style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onBackground,
         )
     }
 }

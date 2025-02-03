@@ -55,6 +55,7 @@ import com.atomicrobot.carbon.navigation.CarbonScreens
 import com.atomicrobot.carbon.navigation.LumenScreens
 import com.atomicrobot.carbon.ui.lumen.navigation.LumenBottomSheetTask
 import com.atomicrobot.carbon.ui.shader.AngledLinearGradient
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import com.atomicrobot.carbon.ui.theme.DarkBlurple
 import com.atomicrobot.carbon.ui.theme.LightBlurple
 import com.atomicrobot.carbon.ui.theme.Neutron
@@ -131,13 +132,9 @@ fun BottomBarPreview() {
     )
 }
 
-@Preview
 @Composable
 fun BottomNavigationBar(
-    @PreviewParameter(
-        AppScreensPreviewProvider::class,
-        limit = 1,
-    ) destinations: List<CarbonScreens>,
+    destinations: List<CarbonScreens>,
     navController: NavController = rememberNavController(),
     onDestinationClicked: (CarbonScreens) -> Unit = {},
 ) {
@@ -152,13 +149,28 @@ fun BottomNavigationBar(
                         ?.any { it.route == destination.route } == true,
                 icon = {
                     Icon(
-                        destination.iconData.vectorData,
-                        stringResource(id = destination.iconData.iconContentDescription),
+                        imageVector = destination.iconData.vectorData,
+                        contentDescription = stringResource(id = destination.iconData.iconContentDescription),
                     )
                 },
                 onClick = { onDestinationClicked(destination) },
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun BottomNavigationBarPreview(
+    @PreviewParameter(
+        AppScreensPreviewProvider::class,
+        limit = 1,
+    ) destinations: List<CarbonScreens>,
+) {
+    CarbonAndroidTheme {
+        BottomNavigationBar(
+            destinations = destinations
+        )
     }
 }
 
@@ -269,7 +281,9 @@ fun LumenTopAppBar(
             }
         }
     },
-    colors = TopAppBarDefaults.topAppBarColors(),
+    colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = Color.Transparent
+    ),
 )
 
 @Preview
@@ -283,7 +297,10 @@ fun LumenBottomNavigationBar(
     navController: NavController = rememberNavController(),
     onDestinationClicked: (LumenScreens) -> Unit = {},
 ) {
-    NavigationBar(modifier = modifier) {
+    NavigationBar(
+        modifier = modifier,
+        containerColor = Color.Transparent
+    ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         destinations.forEach { destination ->

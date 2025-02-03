@@ -6,31 +6,29 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette =
     darkColorScheme(
         primary = Purple200,
         secondary = Purple700,
-        tertiary = pink700,
-        onPrimary = Color.White,
-        onSurface = Color.White,
+        secondaryContainer = Purple200,
+        onSurfaceVariant = Mono800,
+        surfaceContainer = Purple200,
     )
 
 private val LightColorPalette =
     lightColorScheme(
         primary = Purple500,
         secondary = Purple700,
-        tertiary = pink700,
-        /* Other default colors to override
-        background = Color.White,
-        surface = Color.White,
-        onPrimary = Color.White,
-        onSecondary = Color.Black,
-        onBackground = Color.Black,
-        onSurface = Color.Black,
-         */
+        secondaryContainer = Purple500,
+        onSecondaryContainer = White100,
+        background = White100,
+        onBackground = Black100,
+        onSurface = Black100,
+        onSurfaceVariant = White75,
+        surfaceContainer = Purple500,
+        surfaceContainerHighest = White100,
     )
 
 @Composable
@@ -46,6 +44,10 @@ fun CarbonAndroidTheme(
      * This remember call will persist the system bar changes across all screens. If you need
      * different colors for your system bars in other themes, you will need to override the colors
      * in that theme, as well.
+     *
+     * UPDATE:
+     * If using Material3 and minSdk is set to 35, then you can completely remove systemUiController
+     * logic.
      */
     val systemUiController = rememberSystemUiController()
     SideEffect {

@@ -3,7 +3,9 @@ package com.atomicrobot.carbon.ui.components
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -11,6 +13,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -18,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atomicrobot.carbon.R
+import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import androidx.compose.material3.Icon as MaterialIcon
 
 /**
@@ -41,6 +45,9 @@ object AtomicRobotUI {
                         Text(text = text)
                     }
                 },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.onSecondaryContainer
+                )
             )
         }
 
@@ -102,7 +109,16 @@ object AtomicRobotUI {
                     modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                colors = TextFieldDefaults.colors(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    errorContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                ),
             )
         }
     }
@@ -110,6 +126,19 @@ object AtomicRobotUI {
 
 @Preview
 @Composable
+fun OutlinedButtonPreview() {
+    CarbonAndroidTheme {
+        AtomicRobotUI.Button.Outlined(
+            text = "Test Button",
+            onClick = { },
+        )
+    }
+}
+
+@Preview
+@Composable
 fun TransparentTextFieldPreview() {
-    AtomicRobotUI.TextField.TransparentTextField()
+    CarbonAndroidTheme {
+        AtomicRobotUI.TextField.TransparentTextField()
+    }
 }
