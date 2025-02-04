@@ -113,9 +113,9 @@ fun DesignLumenNavigation(appState: LumenAppState = rememberLumenAppState()) {
     if (appState.currentBottomSheetTask !is LumenBottomSheetTask.NoTask) {
         ModalBottomSheet(
             modifier =
-            Modifier
-                .statusBarsPadding()
-                .fillMaxSize(),
+                Modifier
+                    .statusBarsPadding()
+                    .fillMaxSize(),
             sheetState = appState.modalBottomSheetState,
             scrimColor = Color.Transparent,
             onDismissRequest = { },

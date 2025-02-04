@@ -58,6 +58,7 @@ import com.atomicrobot.carbon.ui.shader.AngledLinearGradient
 import com.atomicrobot.carbon.ui.theme.CarbonAndroidTheme
 import com.atomicrobot.carbon.ui.theme.DarkBlurple
 import com.atomicrobot.carbon.ui.theme.LightBlurple
+import com.atomicrobot.carbon.ui.theme.LumenTheme
 import com.atomicrobot.carbon.ui.theme.Neutron
 import com.atomicrobot.carbon.ui.theme.ScreenHeading
 import com.atomicrobot.carbon.ui.theme.White15
@@ -286,20 +287,15 @@ fun LumenTopAppBar(
     ),
 )
 
-@Preview
 @Composable
 fun LumenBottomNavigationBar(
-    @PreviewParameter(
-        LumenScreensPreviewProvider::class,
-        limit = 1,
-    ) destinations: List<LumenScreens>,
+    destinations: List<LumenScreens>,
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
     onDestinationClicked: (LumenScreens) -> Unit = {},
 ) {
     NavigationBar(
         modifier = modifier,
-        containerColor = Color.Transparent
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
@@ -350,5 +346,18 @@ fun LumenBottomNavigationBar(
                 onClick = { onDestinationClicked(destination) },
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun LumenBottomNavigationBarPreview(
+    @PreviewParameter(
+        LumenScreensPreviewProvider::class,
+        limit = 1,
+    ) destinations: List<LumenScreens>,
+) {
+    LumenTheme {
+        LumenBottomNavigationBar(destinations)
     }
 }

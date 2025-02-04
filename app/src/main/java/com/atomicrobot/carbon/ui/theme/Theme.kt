@@ -6,6 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette =
@@ -46,8 +47,8 @@ fun CarbonAndroidTheme(
      * in that theme, as well.
      *
      * UPDATE:
-     * If using Material3 and minSdk is set to 35, then you can completely remove systemUiController
-     * logic.
+     * With API 35, UI will now draw edge-to-edge by default. If using Material3 and minSdk is set
+     * to 35, then you can completely remove systemUiController logic.
      */
     val systemUiController = rememberSystemUiController()
     SideEffect {
@@ -101,6 +102,11 @@ private val LumenColorPalette =
         onPrimary = White100,
         surface = DarkBlurple,
         onSurface = White100,
+        secondaryContainer = DarkBlurple,
+        onSurfaceVariant = Color.Transparent,
+        surfaceContainer = DarkBlurple,
+        surfaceContainerHighest = Color.Transparent,
+        surfaceContainerLow = LumenPurple,
     )
 
 @Composable
