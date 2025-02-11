@@ -63,10 +63,8 @@ import com.atomicrobot.carbon.ui.theme.White50
 
 @Composable
 fun SceneSectionHeader(
+    modifier: Modifier = Modifier,
     headerTitle: String = "Favorites",
-    modifier: Modifier =
-        Modifier
-            .fillMaxWidth(),
 ) {
     Text(
         text = headerTitle,
@@ -80,14 +78,15 @@ fun SceneSectionHeader(
 
 @Composable
 fun SceneItem(
+    modifier: Modifier = Modifier,
     scene: LumenScene,
     roomName: String = "",
-    modifier: Modifier = Modifier.fillMaxWidth(),
     onPlayClicked: () -> Unit,
 ) {
     Row(
         modifier =
             modifier
+                .fillMaxWidth()
                 .border(
                     width = 1.dp,
                     brush =
@@ -216,10 +215,10 @@ fun DualActionRow(
 
 @Composable
 fun TaskLabeledTextField(
+    modifier: Modifier = Modifier,
     label: String,
     text: String,
     placeholder: String? = null,
-    modifier: Modifier = Modifier,
     onTextChanged: (String) -> Unit = {},
 ) {
     Column(modifier = modifier) {
@@ -262,7 +261,7 @@ fun TaskLabeledTextField(
                 TextFieldDefaults.colors(
                     cursorColor = MaterialTheme.colorScheme.onPrimary,
                 ),
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
         )
     }
 }
@@ -270,12 +269,12 @@ fun TaskLabeledTextField(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskLabeledDropDownMenu(
+    modifier: Modifier = Modifier,
     label: String = "Label",
     options: List<Any> = emptyList(),
     selectedOption: Any = if (options.isNotEmpty()) options[0] else "Example Selected Option",
     placeholder: String? = null,
     initiallyExpanded: Boolean = false,
-    modifier: Modifier = Modifier,
     onOptionSelected: (Any) -> Unit = {},
 ) {
     var expanded by remember { mutableStateOf(initiallyExpanded) }
@@ -352,7 +351,7 @@ fun TaskLabeledDropDownMenu(
                                 text = selectionOption.toString(),
                                 style = MaterialTheme.typography.bodyLarge,
                             )
-                        }
+                        },
                     )
                 }
             }
@@ -401,9 +400,9 @@ fun LeftAlignedIconText(
 
 @Composable
 fun SceneLightItem(
+    modifier: Modifier = Modifier,
     device: LumenLight,
     checked: Boolean = false,
-    modifier: Modifier = Modifier.fillMaxWidth(),
     onLightChecked: (Long, Boolean) -> Unit,
 ) {
     ConstraintLayout(
@@ -440,8 +439,6 @@ fun SceneLightItem(
                     },
         )
         LumenSwitch(
-            checked = checked,
-            onCheckedChange = { onLightChecked(device.lightId, it) },
             modifier =
                 Modifier
                     .size(32.dp, 56.dp)
@@ -449,6 +446,8 @@ fun SceneLightItem(
                         end.linkTo(parent.end)
                         top.linkTo(parent.top)
                     },
+            checked = checked,
+            onCheckedChange = { onLightChecked(device.lightId, it) },
             colors =
                 SwitchDefaults.colors(
                     checkedThumbColor = White100,
@@ -592,7 +591,7 @@ fun SceneDetailsButton(
                 .height(68.dp),
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(containerColor = LightBlurple),
-        shape = RectangleShape
+        shape = RectangleShape,
     ) {
         val buttonText =
             if (newScene) {
@@ -625,11 +624,11 @@ fun LazyListScope.sceneDetailsFields(
 
         // We should load a list of rooms
         TaskLabeledDropDownMenu(
+            modifier = Modifier.padding(vertical = 16.dp),
             label = stringResource(id = R.string.room),
             options = rooms,
             selectedOption = scene.roomName,
             placeholder = stringResource(id = R.string.select_room),
-            modifier = Modifier.padding(vertical = 16.dp),
         ) {
             val room = (it as RoomNameAndId)
             onSceneUpdated(scene.copy(roomId = room.roomId, roomName = room.roomName))
@@ -671,11 +670,11 @@ fun LazyListScope.sceneDetailsLights(
     onLightChecked: (Long, Boolean) -> Unit,
 ) {
     // light section header
-    item { SceneSectionHeader(stringResource(id = R.string.lights)) }
+    item { SceneSectionHeader(headerTitle = stringResource(id = R.string.lights)) }
     // Iterate over available light and check the ones enabled for the scene
     items(allLights, { it.lightId }) {
         SceneLightItem(
-            it,
+            device = it,
             checked = sceneLights.contains(it.lightId),
             onLightChecked = onLightChecked,
         )

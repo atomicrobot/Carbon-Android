@@ -27,21 +27,21 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PhotoCamera
 import androidx.compose.material.icons.rounded.PhotoCameraBack
 import androidx.compose.material.icons.rounded.PhotoCameraFront
 import androidx.compose.material.icons.rounded.QrCode
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -88,11 +88,12 @@ fun ScannerScreen(
         onShowRationale =
             {
                 // Show the permission rationale to the user as a snackbar message
-                val result: SnackbarResult = snackbarHostState.showSnackbar(
-                    message = cameraPermRationale,
-                    actionLabel = "Grant",
-                    duration = SnackbarDuration.Short,
-                )
+                val result: SnackbarResult =
+                    snackbarHostState.showSnackbar(
+                        message = cameraPermRationale,
+                        actionLabel = "Grant",
+                        duration = SnackbarDuration.Short,
+                    )
                 return@RequestPermission if (result == SnackbarResult.ActionPerformed) {
                     PermissionRationaleResult.ActionPerformed
                 } else {

@@ -61,8 +61,8 @@ fun ScenesScreen(
 
 @Composable
 fun ScenesList(
+    modifier: Modifier = Modifier,
     scenes: List<SceneAndRoomName> = emptyList(),
-    modifier: Modifier = Modifier.fillMaxSize(),
     onSceneSelected: (Long) -> Unit = {},
 ) {
     val favorites: List<SceneAndRoomName> = scenes.filter { it.scene.favorite }
@@ -74,7 +74,7 @@ fun ScenesList(
             .groupBy({ it.room.roomName }) { it.scene }
 
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
@@ -82,7 +82,7 @@ fun ScenesList(
         if (favorites.isNotEmpty()) {
             // I don't know if this is recommend but for each room we add a header as an
             // individual list item which means it can be navigated (scrolled) too by an index
-            item { SceneSectionHeader(stringResource(id = R.string.favorites)) }
+            item { SceneSectionHeader(headerTitle = stringResource(id = R.string.favorites)) }
             items(favorites, key = { it.scene.sceneId }) {
                 SceneItem(
                     scene = it.scene,
@@ -98,7 +98,7 @@ fun ScenesList(
         // Enumerate the remaining rooms by scene
         for (room in sceneMap.keys) {
             // Room Section header
-            item { SceneSectionHeader(room) }
+            item { SceneSectionHeader(headerTitle = room) }
             items(sceneMap[room]!!, key = { it.sceneId }) { scene ->
                 SceneItem(
                     scene = scene,
@@ -224,7 +224,11 @@ fun SceneDetailsList(
                     val updatedLights =
                         if (checked) {
                             scene.lights.toMutableList()
-                                .also { it.add(lightId) }
+                                .also {
+                                    if (!it.contains(lightId)) {
+                                        it.add(lightId)
+                                    }
+                                }
                         } else {
                             scene.lights.toMutableList().also { it.remove(lightId) }
                         }
