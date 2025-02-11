@@ -11,22 +11,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -75,17 +75,18 @@ fun TopBar(
     buttonIcon: ImageVector = Icons.Filled.Menu,
     onButtonClicked: () -> Unit = {},
 ) = TopAppBar(
-    colors = TopAppBarColors(
-        containerColor = Neutron,
-        titleContentColor = Color.White,
-        scrolledContainerColor = Neutron,
-        navigationIconContentColor = Color.White,
-        actionIconContentColor = Color.White,
-    ),
+    colors =
+        TopAppBarColors(
+            containerColor = Neutron,
+            titleContentColor = Color.White,
+            scrolledContainerColor = Neutron,
+            navigationIconContentColor = Color.White,
+            actionIconContentColor = Color.White,
+        ),
     title = {
         Row(
             modifier = Modifier.padding(end = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = { onButtonClicked() }) {
                 Icon(imageVector = buttonIcon, contentDescription = "")
@@ -98,7 +99,7 @@ fun TopBar(
                 tint = Color.Unspecified,
             )
         }
-    }
+    },
 )
 
 @Composable
@@ -170,7 +171,7 @@ fun BottomNavigationBarPreview(
 ) {
     CarbonAndroidTheme {
         BottomNavigationBar(
-            destinations = destinations
+            destinations = destinations,
         )
     }
 }
@@ -275,16 +276,17 @@ fun LumenTopAppBar(
                                     modifier = Modifier.padding(horizontal = 8.dp),
                                     style = MaterialTheme.typography.displayMedium,
                                 )
-                            }
+                            },
                         )
                     }
                 }
             }
         }
     },
-    colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = Color.Transparent
-    ),
+    colors =
+        TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent,
+        ),
 )
 
 @Composable

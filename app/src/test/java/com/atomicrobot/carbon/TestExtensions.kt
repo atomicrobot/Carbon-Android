@@ -10,6 +10,6 @@ object TestExtensions
 @Throws(Exception::class)
 fun String.loadResourceAsString(): String {
     val url = TestExtensions::class.java.getResource(this)
-    val file = File(url.file)
+    val file = File(url!!.file)
     return file.source().buffer().readString(Charset.forName("UTF-8"))
 }

@@ -45,9 +45,10 @@ object AtomicRobotUI {
                         Text(text = text)
                     }
                 },
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.onSecondaryContainer
-                )
+                colors =
+                    ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    ),
             )
         }
 
@@ -109,16 +110,17 @@ object AtomicRobotUI {
                     modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    errorContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
-                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
-                ),
+                colors =
+                    TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        errorContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    ),
             )
         }
     }
