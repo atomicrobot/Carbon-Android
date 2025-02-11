@@ -95,21 +95,14 @@ fun LumenSwitch(
             }
         }
     LaunchedEffect(anchoredDraggableState.settledValue) {
-        when (anchoredDraggableState.settledValue) {
-            DragValue.End -> {
-                onCheckedChange(true)
-            }
-            DragValue.Start -> {
-                onCheckedChange(false)
-            }
-        }
+        // set checked if DragValue is at the End (ON position)
+        onCheckedChange(anchoredDraggableState.settledValue == DragValue.End)
     }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     val toggleableModifier =
         Modifier.toggleable(
             value = checked,
             onValueChange = {
-                onCheckedChange(it)
                 coroutineScope.launch {
                     if (it) {
                         anchoredDraggableState.animateTo(DragValue.End)
