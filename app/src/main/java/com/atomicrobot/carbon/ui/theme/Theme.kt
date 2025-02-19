@@ -1,36 +1,35 @@
 package com.atomicrobot.carbon.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette =
-    darkColors(
+    darkColorScheme(
         primary = Purple200,
-        primaryVariant = Purple700,
-        secondary = pink700,
-        onPrimary = Color.White,
-        onSurface = Color.White,
+        secondary = Purple700,
+        secondaryContainer = Purple200,
+        onSurfaceVariant = Mono800,
+        surfaceContainer = Purple200,
     )
 
 private val LightColorPalette =
-    lightColors(
+    lightColorScheme(
         primary = Purple500,
-        primaryVariant = Purple700,
-        secondary = pink700,
-        /* Other default colors to override
-        background = Color.White,
-        surface = Color.White,
-        onPrimary = Color.White,
-        onSecondary = Color.Black,
-        onBackground = Color.Black,
-        onSurface = Color.Black,
-         */
+        secondary = Purple700,
+        secondaryContainer = Purple500,
+        onSecondaryContainer = White100,
+        background = White100,
+        onBackground = Black100,
+        onSurface = Black100,
+        onSurfaceVariant = White75,
+        surfaceContainer = Purple500,
+        surfaceContainerHighest = White100,
     )
 
 @Composable
@@ -46,6 +45,10 @@ fun CarbonAndroidTheme(
      * This remember call will persist the system bar changes across all screens. If you need
      * different colors for your system bars in other themes, you will need to override the colors
      * in that theme, as well.
+     *
+     * UPDATE:
+     * With API 35, UI will now draw edge-to-edge by default. If using Material3 and minSdk is set
+     * to 35, then you can completely remove systemUiController logic.
      */
     val systemUiController = rememberSystemUiController()
     SideEffect {
@@ -55,7 +58,7 @@ fun CarbonAndroidTheme(
     }
 
     MaterialTheme(
-        colors =
+        colorScheme =
             if (darkTheme) {
                 DarkColorPalette
             } else {
@@ -67,7 +70,7 @@ fun CarbonAndroidTheme(
 }
 
 private val CarbonShellPalette =
-    lightColors(
+    lightColorScheme(
         primary = Neutron,
         onPrimary = White100,
         surface = Mono800,
@@ -87,18 +90,23 @@ fun CarbonShellTheme(
     }
 
     MaterialTheme(
-        colors = CarbonShellPalette,
+        colorScheme = CarbonShellPalette,
         shapes = carbonShellShapes,
         content = content,
     )
 }
 
 private val LumenColorPalette =
-    lightColors(
+    lightColorScheme(
         primary = DarkBlurple,
         onPrimary = White100,
         surface = DarkBlurple,
         onSurface = White100,
+        secondaryContainer = DarkBlurple,
+        onSurfaceVariant = Color.Transparent,
+        surfaceContainer = DarkBlurple,
+        surfaceContainerHighest = Color.Transparent,
+        surfaceContainerLow = LumenPurple,
     )
 
 @Composable
@@ -114,7 +122,7 @@ fun LumenTheme(
     }
 
     MaterialTheme(
-        colors = LumenColorPalette,
+        colorScheme = LumenColorPalette,
         typography = LumenTypography,
         shapes = carbonShapes,
         content = content,
@@ -122,7 +130,7 @@ fun LumenTheme(
 }
 
 private val ScannerColorPalette =
-    lightColors(
+    lightColorScheme(
         primary = Neutron,
         onPrimary = White100,
         surface = Mono800,
@@ -142,7 +150,7 @@ fun ScannerTheme(
     }
 
     MaterialTheme(
-        colors = ScannerColorPalette,
+        colorScheme = ScannerColorPalette,
         typography = Typography,
         content = content,
     )

@@ -9,16 +9,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +29,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun GitCardInfoScreen(
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     sha: String,
 ) {
     val viewModel: GitCardInfoViewModel = koinViewModel()
@@ -50,7 +50,7 @@ fun GitCardInfoScreen(
         ) {
             DetailedGitInfoResponse(
                 detailedCommitState = screenState.detailedCommitState,
-                scaffoldState = scaffoldState,
+                snackbarHostState = snackbarHostState,
                 modifier = Modifier.weight(1f),
             )
         }
@@ -60,7 +60,7 @@ fun GitCardInfoScreen(
 @Composable
 fun DetailedGitInfoResponse(
     detailedCommitState: GitCardInfoViewModel.GitHubResponse,
-    scaffoldState: ScaffoldState,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -68,8 +68,8 @@ fun DetailedGitInfoResponse(
             is GitCardInfoViewModel.GitHubResponse.Loading ->
                 CircularProgressIndicator()
             is GitCardInfoViewModel.GitHubResponse.Error ->
-                LaunchedEffect(scaffoldState.snackbarHostState) {
-                    scaffoldState.snackbarHostState.showSnackbar(message = detailedCommitState.message)
+                LaunchedEffect(snackbarHostState) {
+                    snackbarHostState.showSnackbar(message = detailedCommitState.message)
                 }
             is GitCardInfoViewModel.GitHubResponse.Result -> Details(details = detailedCommitState.commit)
         }
@@ -106,6 +106,6 @@ fun Details(details: DetailedCommit?) {
 
 @Preview(showBackground = true)
 @Composable
-fun CardInfoscreenPreview() {
+fun CardInfoScreenPreview() {
     Details(dummyDetailedCommit[0])
 }

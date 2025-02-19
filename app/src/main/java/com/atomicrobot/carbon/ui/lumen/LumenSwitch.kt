@@ -1,9 +1,15 @@
 package com.atomicrobot.carbon.ui.lumen
 
-import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.exponentialDecay
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,16 +22,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.SwitchColors
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.ripple
-import androidx.compose.material.swipeable
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -41,17 +45,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-private val AnimationSpec = TweenSpec<Float>(durationMillis = 100)
-
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LumenSwitch(
+    modifier: Modifier = Modifier,
     checked: Boolean = false,
     onCheckedChange: ((Boolean) -> Unit) = { },
-    modifier: Modifier = Modifier,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     properties: LumenSwitchProperties = LumenSwitchProperties(),
@@ -68,11 +72,45 @@ fun LumenSwitch(
                 ).toPx()
             }
         }
-    val swipeableState = rememberSwipeableStateFor(checked, onCheckedChange, AnimationSpec)
+    val anchoredDraggableState =
+        remember {
+            AnchoredDraggableState(
+                initialValue =
+                    if (checked) {
+                        DragValue.End
+                    } else {
+                        DragValue.Start
+                    },
+                positionalThreshold = { distance: Float -> distance * 0.5f },
+                velocityThreshold = { with(density) { 100.dp.toPx() } },
+                snapAnimationSpec = tween(durationMillis = 100),
+                decayAnimationSpec = exponentialDecay(),
+            ).apply {
+                updateAnchors(
+                    DraggableAnchors {
+                        DragValue.Start at minBound
+                        DragValue.End at maxBound
+                    },
+                )
+            }
+        }
+    LaunchedEffect(anchoredDraggableState.settledValue) {
+        // set checked if DragValue is at the End (ON position)
+        onCheckedChange(anchoredDraggableState.settledValue == DragValue.End)
+    }
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
     val toggleableModifier =
         Modifier.toggleable(
             value = checked,
-            onValueChange = onCheckedChange,
+            onValueChange = {
+                coroutineScope.launch {
+                    if (it) {
+                        anchoredDraggableState.animateTo(DragValue.End)
+                    } else {
+                        anchoredDraggableState.animateTo(DragValue.Start)
+                    }
+                }
+            },
             enabled = enabled,
             role = Role.Switch,
             interactionSource = interactionSource,
@@ -81,17 +119,14 @@ fun LumenSwitch(
 
     Box(
         modifier
-            .then(Modifier.minimumTouchTargetSize())
+            .then(Modifier.minimumInteractiveComponentSize())
             .then(toggleableModifier)
-            .swipeable(
-                state = swipeableState,
-                anchors = mapOf(minBound to false, maxBound to true),
-                thresholds = { _, _ -> FractionalThreshold(0.5f) },
+            .anchoredDraggable(
+                state = anchoredDraggableState,
                 orientation = Orientation.Vertical,
                 enabled = enabled,
                 reverseDirection = true,
                 interactionSource = interactionSource,
-                resistance = null,
             )
             .requiredSize(properties.trackWidth, properties.trackHeight),
     ) {
@@ -99,7 +134,7 @@ fun LumenSwitch(
             checked = checked,
             enabled = enabled,
             colors = colors,
-            thumbValue = swipeableState.offset,
+            thumbValue = anchoredDraggableState.offset,
             interactionSource = interactionSource,
         )
     }
@@ -110,11 +145,16 @@ fun BoxScope.LumenSwitchImp(
     checked: Boolean,
     enabled: Boolean,
     colors: SwitchColors,
-    thumbValue: State<Float>,
+    thumbValue: Float,
     interactionSource: InteractionSource,
     properties: LumenSwitchProperties = LumenSwitchProperties(),
 ) {
-    val trackColor by colors.trackColor(enabled, checked)
+    val trackColor =
+        if (enabled) {
+            if (checked) colors.checkedTrackColor else colors.uncheckedTrackColor
+        } else {
+            if (checked) colors.disabledCheckedTrackColor else colors.disabledUncheckedTrackColor
+        }
     Canvas(
         Modifier
             .align(Alignment.Center)
@@ -128,19 +168,24 @@ fun BoxScope.LumenSwitchImp(
         )
     }
 
-    val thumbColor by colors.thumbColor(enabled, checked)
+    val thumbColor =
+        if (enabled) {
+            if (checked) colors.checkedThumbColor else colors.uncheckedThumbColor
+        } else {
+            if (checked) colors.disabledCheckedThumbColor else colors.disabledUncheckedThumbColor
+        }
     Spacer(
         Modifier
             .align(Alignment.BottomCenter)
             .padding(DefaultSwitchPadding)
-            .offset { IntOffset(0, -thumbValue.value.roundToInt()) }
+            .offset { IntOffset(0, -thumbValue.roundToInt()) }
             .indication(
                 interactionSource = interactionSource,
                 indication = ripple(bounded = false, radius = ThumbRippleRadius),
             )
             .requiredSize(DefaultThumbDiameter)
             .shadow(properties.thumbElevation, CircleShape, clip = false)
-            .background(thumbColor, properties.thumbShape),
+            .background(color = thumbColor, shape = properties.thumbShape),
     )
 }
 
@@ -167,41 +212,45 @@ private val DefaultTrackRadius = CornerRadius(50F, 50F)
 private val DefaultThumbShape = CircleShape
 private val DefaultThumbElevation = 1.dp
 
-class LumenSwitchProperties
-    constructor(
-        val trackCornerRadius: CornerRadius = DefaultTrackRadius,
-        val thumbShape: Shape = DefaultThumbShape,
-        val thumbDiameter: Dp = DefaultThumbDiameter,
-        val trackWidth: Dp = DefaultTrackWidth,
-        val trackHeight: Dp = DefaultTrackHeight,
-        val thumbPadding: Dp = DefaultSwitchPadding,
-        val thumbElevation: Dp = DefaultThumbElevation,
-    ) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
+class LumenSwitchProperties(
+    val trackCornerRadius: CornerRadius = DefaultTrackRadius,
+    val thumbShape: Shape = DefaultThumbShape,
+    val thumbDiameter: Dp = DefaultThumbDiameter,
+    val trackWidth: Dp = DefaultTrackWidth,
+    val trackHeight: Dp = DefaultTrackHeight,
+    val thumbPadding: Dp = DefaultSwitchPadding,
+    val thumbElevation: Dp = DefaultThumbElevation,
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-            other as LumenSwitchProperties
+        other as LumenSwitchProperties
 
-            if (trackCornerRadius != other.trackCornerRadius) return false
-            if (thumbShape != other.thumbShape) return false
-            if (thumbDiameter != other.thumbDiameter) return false
-            if (trackWidth != other.trackWidth) return false
-            if (trackHeight != other.trackHeight) return false
-            if (thumbPadding != other.thumbPadding) return false
-            if (thumbElevation != other.thumbElevation) return false
+        if (trackCornerRadius != other.trackCornerRadius) return false
+        if (thumbShape != other.thumbShape) return false
+        if (thumbDiameter != other.thumbDiameter) return false
+        if (trackWidth != other.trackWidth) return false
+        if (trackHeight != other.trackHeight) return false
+        if (thumbPadding != other.thumbPadding) return false
+        if (thumbElevation != other.thumbElevation) return false
 
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = trackCornerRadius.hashCode()
-            result = 31 * result + thumbShape.hashCode()
-            result = 31 * result + thumbDiameter.hashCode()
-            result = 31 * result + trackWidth.hashCode()
-            result = 31 * result + trackHeight.hashCode()
-            result = 31 * result + thumbPadding.hashCode()
-            result = 31 * result + thumbElevation.hashCode()
-            return result
-        }
+        return true
     }
+
+    override fun hashCode(): Int {
+        var result = trackCornerRadius.hashCode()
+        result = 31 * result + thumbShape.hashCode()
+        result = 31 * result + thumbDiameter.hashCode()
+        result = 31 * result + trackWidth.hashCode()
+        result = 31 * result + trackHeight.hashCode()
+        result = 31 * result + thumbPadding.hashCode()
+        result = 31 * result + thumbElevation.hashCode()
+        return result
+    }
+}
+
+enum class DragValue {
+    Start,
+    End,
+}

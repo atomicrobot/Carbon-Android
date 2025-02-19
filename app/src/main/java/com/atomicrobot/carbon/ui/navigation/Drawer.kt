@@ -7,15 +7,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,13 +35,13 @@ import com.atomicrobot.carbon.util.AppScreensPreviewProvider
 @Composable
 fun Drawer(
     @PreviewParameter(AppScreensPreviewProvider::class, limit = 1) screens: List<CarbonScreens>,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
     onDestinationClicked: (route: String) -> Unit = { _ -> },
 ) {
     Column(
         modifier
-            .fillMaxSize()
-            .padding(start = 24.dp, top = 48.dp),
+            .fillMaxHeight()
+            .padding(start = 24.dp, end = 24.dp, top = 48.dp),
     ) {
         Box(
             Modifier
@@ -62,7 +62,7 @@ fun Drawer(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun DrawerAppScreenItem(
     @PreviewParameter(AppScreenPreviewProvider::class, limit = 3) screen: CarbonScreens,
@@ -70,7 +70,8 @@ fun DrawerAppScreenItem(
 ) {
     Row(
         Modifier
-            .fillMaxWidth()
+            .wrapContentWidth()
+            .padding(end = 8.dp)
             .clickable
             {
                 onDestinationClicked(screen.route)
@@ -88,17 +89,20 @@ fun DrawerAppScreenItem(
                 painter = painterResource(id = R.drawable.carbon_android_logo),
                 contentDescription = contentDesc,
                 modifier = modifier,
+                tint = MaterialTheme.colorScheme.onBackground,
             )
         } else {
             Icon(
                 imageVector = screen.iconData.vectorData,
                 contentDescription = contentDesc,
                 modifier = modifier,
+                tint = MaterialTheme.colorScheme.onBackground,
             )
         }
         Text(
             text = screen.title,
-            style = MaterialTheme.typography.h4,
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onBackground,
         )
     }
 }
