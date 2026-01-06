@@ -17,6 +17,7 @@ import com.atomicrobot.carbon.data.lumen.toLumenScene
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ScenesViewModel(
@@ -77,22 +78,22 @@ class ScenesViewModel(
     val sceneDetailsLightUIState: StateFlow<SceneDetailsLightsUIState>
         get() = _sceneDetailsLightUIState
 
-    suspend fun getScenes() {
+    fun getScenes() {
         // Update the UI state to indicate that we are loading.
-        _mainUiState.value = _mainUiState.value.copy(mainScreenState = Scenes.Loading)
+        _mainUiState.update { it.copy(mainScreenState = Scenes.Loading) }
         viewModelScope.launch {
-            sceneDao.getScenesWithRoom().collect {
-                _mainUiState.value = _mainUiState.value.copy(mainScreenState = Scenes.Result(it))
+            sceneDao.getScenesWithRoom().collect { scenes ->
+                _mainUiState.update { it.copy(mainScreenState = Scenes.Result(scenes)) }
             }
         }
     }
 
-    suspend fun getScene(sceneId: Long) {
+    fun getScene(sceneId: Long) {
         if (sceneId == 0L) {
             viewModelScope.launch {
-                _sceneDetailsUIState.value =
-                    _sceneDetailsUIState.value.copy(
-                        SceneDetails.Result(
+                _sceneDetailsUIState.update {
+                    it.copy(
+                        sceneDetailsState = SceneDetails.Result(
                             scene =
                                 SceneAndLightsWithRoom(
                                     scene = LumenScene(),
@@ -102,60 +103,53 @@ class ScenesViewModel(
                             rooms = roomDao.getRoomNamesAndIds(),
                         ),
                     )
+                }
             }
             return
         }
 
-        _sceneDetailsUIState.value =
-            _sceneDetailsUIState.value.copy(sceneDetailsState = SceneDetails.LoadingDetails)
+        _sceneDetailsUIState.update { it.copy(sceneDetailsState = SceneDetails.LoadingDetails) }
         viewModelScope.launch {
             val scene = sceneDao.getSceneAndLightsWithRoom(sceneId)
             val rooms = roomDao.getRoomNamesAndIds()
-            _sceneDetailsUIState.value =
-                _sceneDetailsUIState.value.copy(sceneDetailsState = SceneDetails.Result(scene, rooms))
+            _sceneDetailsUIState.update { it.copy(sceneDetailsState = SceneDetails.Result(scene, rooms)) }
         }
     }
 
-    suspend fun getLightsForRoom(roomId: Long) {
+    fun getLightsForRoom(roomId: Long) {
         if (roomId == 0L) {
             // Invalid room ID, use an empty light list for the state
-            _sceneDetailsLightUIState.value =
-                _sceneDetailsLightUIState.value.copy(
-                    sceneDetailsLightState = SceneDetailsLights.Result(emptyList()),
-                )
+            _sceneDetailsLightUIState.update {
+                it.copy(sceneDetailsLightState = SceneDetailsLights.Result(emptyList()))
+            }
+            return
         }
 
-        _sceneDetailsLightUIState.value =
-            _sceneDetailsLightUIState.value.copy(
-                sceneDetailsLightState = SceneDetailsLights.LoadingLights,
-            )
+        _sceneDetailsLightUIState.update {
+            it.copy(sceneDetailsLightState = SceneDetailsLights.LoadingLights)
+        }
         viewModelScope.launch {
-            lightDao.getAllLightsForRoom(roomId).collect {
-                _sceneDetailsLightUIState.value =
-                    _sceneDetailsLightUIState.value.copy(
-                        sceneDetailsLightState = SceneDetailsLights.Result(it),
-                    )
+            lightDao.getAllLightsForRoom(roomId).collect { lights ->
+                _sceneDetailsLightUIState.update {
+                    it.copy(sceneDetailsLightState = SceneDetailsLights.Result(lights))
+                }
             }
         }
     }
 
     fun resetSceneDetailsState() {
         // Initialize the details state to loading...
-        _sceneDetailsUIState.value =
-            _sceneDetailsUIState.value
-                .copy(sceneDetailsState = SceneDetails.LoadingDetails)
-        _sceneDetailsLightUIState.value =
-            _sceneDetailsLightUIState.value
-                .copy(sceneDetailsLightState = SceneDetailsLights.LoadingLights)
+        _sceneDetailsUIState.update { it.copy(sceneDetailsState = SceneDetails.LoadingDetails) }
+        _sceneDetailsLightUIState.update { it.copy(sceneDetailsLightState = SceneDetailsLights.LoadingLights) }
     }
 
-    suspend fun removeScene(sceneId: Long) {
+    fun removeScene(sceneId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             sceneDao.delete(sceneId)
         }
     }
 
-    suspend fun saveOrUpdateScene(scene: SceneModel) {
+    fun saveOrUpdateScene(scene: SceneModel) {
         viewModelScope.launch(Dispatchers.IO) {
             val sceneId: Long =
                 if (scene.sceneId < 1) {

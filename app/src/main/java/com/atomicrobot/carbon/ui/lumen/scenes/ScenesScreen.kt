@@ -20,7 +20,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +32,6 @@ import com.atomicrobot.carbon.data.lumen.SceneModel
 import com.atomicrobot.carbon.data.lumen.dto.LumenScene
 import com.atomicrobot.carbon.data.lumen.dto.SceneAndRoomName
 import com.atomicrobot.carbon.ui.lumen.LumenIndeterminateIndicator
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -119,14 +117,13 @@ fun AddSceneTask(
     viewModel: ScenesViewModel = koinViewModel(),
     onDismissed: () -> Unit,
 ) {
-    val coroutine = rememberCoroutineScope()
     SceneDetailsList(
         sceneId = 0L,
         viewModel = viewModel,
         newScene = true,
         onDismissed = onDismissed,
     ) {
-        coroutine.launch { viewModel.saveOrUpdateScene(it) }
+        viewModel.saveOrUpdateScene(it)
         onDismissed()
     }
 }
@@ -137,18 +134,17 @@ fun EditSceneTask(
     viewModel: ScenesViewModel = koinViewModel(),
     onDismissed: () -> Unit,
 ) {
-    val coroutine = rememberCoroutineScope()
     SceneDetailsList(
         sceneId = sceneId,
         viewModel = viewModel,
         newScene = false,
         onDismissed = onDismissed,
         onDeleteAction = {
-            coroutine.launch { viewModel.removeScene(sceneId) }
+            viewModel.removeScene(sceneId)
             onDismissed()
         },
     ) {
-        coroutine.launch { viewModel.saveOrUpdateScene(it) }
+        viewModel.saveOrUpdateScene(it)
         onDismissed()
     }
 }
