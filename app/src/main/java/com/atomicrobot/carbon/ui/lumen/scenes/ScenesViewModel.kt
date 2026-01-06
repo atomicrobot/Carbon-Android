@@ -77,7 +77,7 @@ class ScenesViewModel(
     val sceneDetailsLightUIState: StateFlow<SceneDetailsLightsUIState>
         get() = _sceneDetailsLightUIState
 
-    suspend fun getScenes() {
+    fun getScenes() {
         // Update the UI state to indicate that we are loading.
         _mainUiState.value = _mainUiState.value.copy(mainScreenState = Scenes.Loading)
         viewModelScope.launch {
@@ -87,7 +87,7 @@ class ScenesViewModel(
         }
     }
 
-    suspend fun getScene(sceneId: Long) {
+    fun getScene(sceneId: Long) {
         if (sceneId == 0L) {
             viewModelScope.launch {
                 _sceneDetailsUIState.value =
@@ -116,13 +116,14 @@ class ScenesViewModel(
         }
     }
 
-    suspend fun getLightsForRoom(roomId: Long) {
+    fun getLightsForRoom(roomId: Long) {
         if (roomId == 0L) {
             // Invalid room ID, use an empty light list for the state
             _sceneDetailsLightUIState.value =
                 _sceneDetailsLightUIState.value.copy(
                     sceneDetailsLightState = SceneDetailsLights.Result(emptyList()),
                 )
+            return
         }
 
         _sceneDetailsLightUIState.value =
@@ -149,13 +150,13 @@ class ScenesViewModel(
                 .copy(sceneDetailsLightState = SceneDetailsLights.LoadingLights)
     }
 
-    suspend fun removeScene(sceneId: Long) {
+    fun removeScene(sceneId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             sceneDao.delete(sceneId)
         }
     }
 
-    suspend fun saveOrUpdateScene(scene: SceneModel) {
+    fun saveOrUpdateScene(scene: SceneModel) {
         viewModelScope.launch(Dispatchers.IO) {
             val sceneId: Long =
                 if (scene.sceneId < 1) {
