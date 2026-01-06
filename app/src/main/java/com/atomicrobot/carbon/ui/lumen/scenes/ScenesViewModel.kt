@@ -93,7 +93,7 @@ class ScenesViewModel(
             viewModelScope.launch {
                 _sceneDetailsUIState.update {
                     it.copy(
-                        SceneDetails.Result(
+                        sceneDetailsState = SceneDetails.Result(
                             scene =
                                 SceneAndLightsWithRoom(
                                     scene = LumenScene(),
